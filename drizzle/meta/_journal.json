@@ -43,6 +43,13 @@
       "when": 1759647161457,
       "tag": "0005_add-roleId-default",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1759661494752,
+      "tag": "0006_add-chat-bot-tables",
+      "breakpoints": true
     }
   ]
 }

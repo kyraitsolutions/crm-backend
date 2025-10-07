@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "play": "tsx src/playground.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "db:generate": "drizzle-kit generate",

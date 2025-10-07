@@ -1,8 +1,8 @@
 import express, { Application } from "express";
 import passport from "./config/passport";
-import userRoutes from "./routes/user.routes";
 import { ErrorMiddleware } from "./middleware/auth.middleware";
 import cors from "cors";
+import { appRouter } from "./routes";
 
 export class App {
   public app: Application;
@@ -27,11 +27,11 @@ export class App {
   }
 
   private initializeRoutes(): void {
-    this.app.use("/api", userRoutes);
+    this.app.use("/api", appRouter);
 
     this.app.get("/", (_req, res) => {
       res.json({
-        message: "Express + TypeScript + Drizzle ORM API",
+        message: "Chat API",
         endpoints: {
           register: "POST /api/auth/register",
           login: "POST /api/auth/login",

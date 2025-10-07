@@ -27,4 +27,4 @@ router.delete(
   userController.deleteProfile
 );
 
-export default router;
+export { router as userRouter };
