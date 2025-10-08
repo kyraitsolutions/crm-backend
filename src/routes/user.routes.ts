@@ -2,29 +2,50 @@ import { Router } from "express";
 import { UserController } from "../controllers";
 import { AuthMiddleware } from "../middleware";
 
-const router = Router();
-const userController = new UserController();
+export class UserRouter {
+  public router: Router;
+  private userController: UserController;
 
-router.post("/auth/register", userController.register);
-router.post("/auth/login", userController.login);
+  constructor() {
+    this.router = Router();
+    this.userController = new UserController();
+    this.initializeRoutes();
+  }
 
-router.get("/auth/google", AuthMiddleware.googleAuth());
-router.get(
-  "/auth/google/callback",
-  AuthMiddleware.googleCallback(),
-  userController.googleCallback
-);
+  private initializeRoutes(): void {
+    this.router.post(
+      "/register",
+      this.userController.register.bind(this.userController)
+    );
+    this.router.post(
+      "/login",
+      this.userController.login.bind(this.userController)
+    );
+    this.router.get("/google", AuthMiddleware.googleAuth());
+    this.router.get(
+      "/google/callback",
+      AuthMiddleware.googleCallback(),
+      this.userController.googleCallback.bind(this.userController)
+    );
 
-router.get("/profile", AuthMiddleware.authenticate, userController.getProfile);
-router.put(
-  "/profile",
-  AuthMiddleware.authenticate,
-  userController.updateProfile
-);
-router.delete(
-  "/profile",
-  AuthMiddleware.authenticate,
-  userController.deleteProfile
-);
+    this.router.get(
+      "/profile",
+      AuthMiddleware.authenticate,
+      this.userController.getProfile.bind(this.userController)
+    );
+    this.router.put(
+      "/profile",
+      AuthMiddleware.authenticate,
+      this.userController.updateProfile.bind(this.userController)
+    );
+    this.router.delete(
+      "/profile",
+      AuthMiddleware.authenticate,
+      this.userController.deleteProfile.bind(this.userController)
+    );
+  }
 
-export { router as userRouter };
+  public getRouter(): Router {
+    return this.router;
+  }
+}

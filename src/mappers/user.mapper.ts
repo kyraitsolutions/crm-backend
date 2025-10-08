@@ -1,8 +1,8 @@
 import { UserDto } from "../dtos";
-import { IUser } from "../types";
+import { TUser } from "../types";
 
 export class UserMapper {
-  static toDto(user: IUser): UserDto {
+  static toDto(user: TUser): UserDto {
     return new UserDto({
       id: user.id,
       email: user.email,
@@ -15,7 +15,7 @@ export class UserMapper {
     });
   }
 
-  static toDtoArray(users: IUser[]): UserDto[] {
+  static toDtoArray(users: TUser[]): UserDto[] {
     return users.map((user) => this.toDto(user));
   }
 }

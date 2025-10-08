@@ -1,8 +1,8 @@
 import { UserRepository } from "../repositories";
 import { UserMapper } from "../mappers";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
-import { IUpdateUser, ICreateUser } from "../types/user";
 import { JwtUtil, PasswordUtil } from "../utils";
+import { TCreateUser, TUpdateUser } from "../types";
 
 export class UserService {
   private userRepository: UserRepository;
@@ -19,7 +19,7 @@ export class UserService {
 
     const hashedPassword = await PasswordUtil.hash(dto.password);
 
-    const userData: ICreateUser = {
+    const userData: TCreateUser = {
       email: dto.email,
       password: hashedPassword,
       firstName: dto.firstName,
@@ -65,7 +65,7 @@ export class UserService {
       user = await this.userRepository.findByEmail(email);
 
       if (!user) {
-        const userData: ICreateUser = {
+        const userData: TCreateUser = {
           email,
           googleId: profile.id,
           firstName: profile.name?.givenName,
@@ -92,7 +92,7 @@ export class UserService {
     return userDto;
   }
 
-  async updateUser(id: number, data: IUpdateUser): Promise<UserDto> {
+  async updateUser(id: number, data: TUpdateUser): Promise<UserDto> {
     const user = await this.userRepository.update(id, data);
     if (!user) {
       throw new Error("User not found");

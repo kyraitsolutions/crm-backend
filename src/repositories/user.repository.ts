@@ -1,10 +1,10 @@
 import { eq } from "drizzle-orm";
 import { db } from "../db";
 import { users, roles } from "../db/schema";
-import { ICreateUser, IUpdateUser, IUser } from "../types/user";
+import { TCreateUser, TUpdateUser, TUser } from "../types";
 
 export class UserRepository {
-  async findById(id: number): Promise<IUser | undefined> {
+  async findById(id: number): Promise<TUser | undefined> {
     const result = await db
       .select({
         id: users.id,
@@ -25,12 +25,12 @@ export class UserRepository {
     return result[0];
   }
 
-  async findByEmail(email: string): Promise<IUser | undefined> {
+  async findByEmail(email: string): Promise<TUser | undefined> {
     const result = await db.select().from(users).where(eq(users.email, email));
     return result[0];
   }
 
-  async findByGoogleId(googleId: string): Promise<IUser | undefined> {
+  async findByGoogleId(googleId: string): Promise<TUser | undefined> {
     const result = await db
       .select()
       .from(users)
@@ -38,8 +38,8 @@ export class UserRepository {
     return result[0];
   }
 
-  async create(data: ICreateUser): Promise<IUser> {
-    const newUser: ICreateUser = {
+  async create(data: TCreateUser): Promise<TUser> {
+    const newUser: TCreateUser = {
       email: data.email,
       password: data.password,
       firstName: data.firstName,
@@ -52,8 +52,8 @@ export class UserRepository {
     return result[0];
   }
 
-  async update(id: number, data: IUpdateUser): Promise<IUser | undefined> {
-    const updateData: Partial<IUser> = {
+  async update(id: number, data: TUpdateUser): Promise<TUser | undefined> {
+    const updateData: Partial<TUser> = {
       ...data,
       updatedAt: new Date(),
     };
@@ -72,7 +72,7 @@ export class UserRepository {
     return result.length > 0;
   }
 
-  async findAll(): Promise<IUser[]> {
+  async findAll(): Promise<TUser[]> {
     return db.select().from(users);
   }
 }

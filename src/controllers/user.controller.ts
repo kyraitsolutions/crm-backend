@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { UserService } from "../services/user.service";
 import { RegisterDto, LoginDto, UpdateUserDto } from "../dtos";
 import { ENV } from "../constants";
+import { UserService } from "../services";
 
 export class UserController {
   private userService: UserService;

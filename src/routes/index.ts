@@ -1,10 +1,24 @@
+import { ChatBotRouter } from "./chat-bot.routes";
+import { UserRouter } from "./user.routes";
 import { Router } from "express";
-import { userRouter } from "./user.routes";
-import { chatbotRouter } from "./chat-bot-routes";
 
-const appRouter = Router();
+export class AppRoutes {
+  private chatBotRouter: ChatBotRouter;
+  private userRouter: UserRouter;
+  private router: Router;
 
-appRouter.use("/", userRouter);
-appRouter.use("/chatbot", chatbotRouter);
+  constructor() {
+    this.chatBotRouter = new ChatBotRouter();
+    this.userRouter = new UserRouter();
+    this.router = Router();
+    this.initializeRoutes();
+  }
+  private initializeRoutes(): void {
+    this.router.use("/auth", this.userRouter.getRouter());
+    this.router.use("/chatbot", this.chatBotRouter.getRouter());
+  }
 
-export { appRouter };
+  public getRouter(): Router {
+    return this.router;
+  }
+}
