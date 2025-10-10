@@ -1,78 +1,61 @@
-import { eq } from "drizzle-orm";
-import { db } from "../db";
-import { users, roles } from "../db/schema";
 import { TCreateUser, TUpdateUser, TUser } from "../types";
+import { RoleModel, UserModel } from "../models/user.model";
 
 export class UserRepository {
-  async findById(id: number): Promise<TUser | undefined> {
-    const result = await db
-      .select({
-        id: users.id,
-        email: users.email,
-        password: users.password,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        googleId: users.googleId,
-        profilePicture: users.profilePicture,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        roleId: users.roleId,
-        role: roles.name,
-      })
-      .from(users)
-      .leftJoin(roles, eq(users.roleId, roles.id))
-      .where(eq(users.id, id));
-    return result[0];
+  async findById(id: string): Promise<TUser | null> {
+    const users = await UserModel.aggregate([
+      { $match: { _id: id } },
+      {
+        $lookup: {
+          from: "roles",
+          localField: "roleId",
+          foreignField: "_id",
+          as: "role",
+        },
+      },
+      { $unwind: "$role" },
+      {
+        $project: {
+          id: "$_id",
+          email: 1,
+          password: 1,
+          firstName: 1,
+          lastName: 1,
+          googleId: 1,
+          profilePicture: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          roleId: 1,
+          role: "$role.name",
+        },
+      },
+    ]);
+    return users[0];
   }
 
-  async findByEmail(email: string): Promise<TUser | undefined> {
-    const result = await db.select().from(users).where(eq(users.email, email));
-    return result[0];
+  async findByEmail(email: string): Promise<TUser | null> {
+    return await UserModel.findOne({ email });
   }
 
-  async findByGoogleId(googleId: string): Promise<TUser | undefined> {
-    const result = await db
-      .select()
-      .from(users)
-      .where(eq(users.googleId, googleId));
-    return result[0];
+  async findByGoogleId(googleId: string): Promise<TUser | null> {
+    return await UserModel.findOne({ googleId });
   }
 
   async create(data: TCreateUser): Promise<TUser> {
-    const newUser: TCreateUser = {
-      email: data.email,
-      password: data.password,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      googleId: data.googleId,
-      profilePicture: data.profilePicture,
-    };
-
-    const result = await db.insert(users).values(newUser).returning();
-    return result[0];
+    const role = await RoleModel.findOne({ name: "USER" });
+    return await UserModel.create({ ...data, roleId: role?._id });
   }
 
-  async update(id: number, data: TUpdateUser): Promise<TUser | undefined> {
-    const updateData: Partial<TUser> = {
-      ...data,
-      updatedAt: new Date(),
-    };
-
-    const result = await db
-      .update(users)
-      .set(updateData)
-      .where(eq(users.id, id))
-      .returning();
-
-    return result[0];
+  async update(id: string, data: TUpdateUser): Promise<TUser | null> {
+    return await UserModel.findByIdAndUpdate(id, data, { new: true });
   }
 
-  async delete(id: number): Promise<boolean> {
-    const result = await db.delete(users).where(eq(users.id, id)).returning();
-    return result.length > 0;
+  async delete(id: string): Promise<boolean> {
+    const result = await UserModel.findByIdAndDelete(id);
+    return !!result;
   }
 
   async findAll(): Promise<TUser[]> {
-    return db.select().from(users);
+    return await UserModel.find();
   }
 }

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const ZUserSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   email: z.string(),
   password: z.string().nullable().optional(),
   firstName: z.string().nullable().optional(),
@@ -10,7 +10,7 @@ export const ZUserSchema = z.object({
   profilePicture: z.string().nullable().optional(),
   createdAt: z.date(),
   updatedAt: z.date(),
-  roleId: z.number().nullable().optional(),
+  roleId: z.string().nullable().optional(),
 });
 export const ZCreateUserSchema = z.object({
   email: z.string(),

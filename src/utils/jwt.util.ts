@@ -5,7 +5,7 @@ import { ENV } from "../constants";
 dotenv.config();
 
 export interface JwtPayload {
-  userId: number;
+  userId: string;
   email: string;
 }
 

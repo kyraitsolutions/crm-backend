@@ -37,8 +37,8 @@ export class ChatBotController {
       const chatBotId = req.params.id;
       const user = req.user as any;
       const chatBot = await this.chatBotService.updateChatBot(
-        Number(user.id),
-        Number(chatBotId),
+        user.id,
+        chatBotId,
         updateChatBotDto
       );
       return res.status(200).json(chatBot);

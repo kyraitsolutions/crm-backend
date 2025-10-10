@@ -1,5 +1,4 @@
 import { UserRepository } from "../repositories";
-import { UserMapper } from "../mappers";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
 import { JwtUtil, PasswordUtil } from "../utils";
 import { TCreateUser, TUpdateUser } from "../types";
@@ -27,7 +26,7 @@ export class UserService {
     };
 
     const user = await this.userRepository.create(userData);
-    const userDto = UserMapper.toDto(user);
+    const userDto = new UserDto(user);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -47,7 +46,7 @@ export class UserService {
       throw new Error("Invalid credentials");
     }
 
-    const userDto = UserMapper.toDto(user);
+    const userDto = new UserDto(user);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -83,28 +82,28 @@ export class UserService {
       }
     }
 
-    return UserMapper.toDto(user!);
+    return new UserDto(user!);
   }
 
-  async getUserById(id: number): Promise<UserDto | null> {
+  async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
-    const userDto = user ? UserMapper.toDto(user) : null;
+    const userDto = user ? new UserDto(user) : null;
     return userDto;
   }
 
-  async updateUser(id: number, data: TUpdateUser): Promise<UserDto> {
+  async updateUser(id: string, data: TUpdateUser): Promise<UserDto> {
     const user = await this.userRepository.update(id, data);
     if (!user) {
       throw new Error("User not found");
     }
-    return UserMapper.toDto(user);
+    return new UserDto(user);
   }
 
-  async deleteUser(id: number): Promise<boolean> {
+  async deleteUser(id: string): Promise<boolean> {
     return this.userRepository.delete(id);
   }
 
-  generateToken(userId: number, email: string): string {
+  generateToken(userId: string, email: string): string {
     return JwtUtil.sign({ userId, email });
   }
 }

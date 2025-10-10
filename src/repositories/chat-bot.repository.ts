@@ -1,148 +1,68 @@
-// repositories/chatbot.repository.ts
-import { eq } from "drizzle-orm";
 import {
-  chatbots,
-  chatbotKnowledgeSources,
-  chatbotKnowledgeChunks,
-  chatbotSuggestedQuestions,
-  chatbotConversationSettings,
-  chatbotTheme,
-} from "../db/tables";
-import { PgTransaction } from "drizzle-orm/pg-core"; // type
+  ChatbotModel,
+  ChatbotKnowledgeSourceModel,
+  ChatbotKnowledgeChunkModel,
+  ChatbotSuggestedQuestionModel,
+  ChatbotConversationSettingModel,
+  ChatbotThemeModel,
+} from "../models/chatbot.model";
 
 export class ChatbotRepository {
-  async createChatbot(
-    tx: PgTransaction<any, any, any>,
-    data: typeof chatbots.$inferInsert
-  ) {
-    const [bot] = await tx.insert(chatbots).values(data).returning();
-    return bot;
+  async createChatbot(data: any) {
+    return await ChatbotModel.create(data);
   }
 
-  async addKnowledgeSource(
-    tx: PgTransaction<any, any, any>,
-    data: typeof chatbotKnowledgeSources.$inferInsert
-  ) {
-    const [source] = await tx
-      .insert(chatbotKnowledgeSources)
-      .values(data)
-      .returning();
-    return source;
+  async addKnowledgeSource(data: any) {
+    return await ChatbotKnowledgeSourceModel.create(data);
   }
 
-  async addKnowledgeChunks(
-    tx: PgTransaction<any, any, any>,
-    data: (typeof chatbotKnowledgeChunks.$inferInsert)[]
-  ) {
+  async addKnowledgeChunks(data: any[]) {
     if (!data.length) return [];
-    const chunks = await tx
-      .insert(chatbotKnowledgeChunks)
-      .values(data)
-      .returning();
-    return chunks;
+    return await ChatbotKnowledgeChunkModel.insertMany(data);
   }
 
-  async addSuggestedQuestions(
-    tx: PgTransaction<any, any, any>,
-    data: (typeof chatbotSuggestedQuestions.$inferInsert)[]
-  ) {
+  async addSuggestedQuestions(data: any[]) {
     if (!data.length) return [];
-    const questions = await tx
-      .insert(chatbotSuggestedQuestions)
-      .values(data)
-      .returning();
-    return questions;
+    return await ChatbotSuggestedQuestionModel.insertMany(data);
   }
 
-  async addConversationSettings(
-    tx: PgTransaction<any, any, any>,
-    data: typeof chatbotConversationSettings.$inferInsert
-  ) {
-    const [settings] = await tx
-      .insert(chatbotConversationSettings)
-      .values(data)
-      .returning();
-    return settings;
+  async addConversationSettings(data: any) {
+    return await ChatbotConversationSettingModel.create(data);
   }
 
-  async addTheme(
-    tx: PgTransaction<any, any, any>,
-    data: typeof chatbotTheme.$inferInsert
-  ) {
-    const [theme] = await tx.insert(chatbotTheme).values(data).returning();
-    return theme;
-  }
-  async updateChatbot(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number,
-    data: Partial<typeof chatbots.$inferInsert>
-  ) {
-    const [bot] = await tx
-      .update(chatbots)
-      .set(data)
-      .where(eq(chatbots.id, chatbotId))
-      .returning();
-    return bot;
+  async addTheme(data: any) {
+    return await ChatbotThemeModel.create(data);
   }
 
-  async updateKnowledgeSource(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number,
-    data: Partial<typeof chatbotKnowledgeSources.$inferInsert>
-  ) {
-    const [source] = await tx
-      .update(chatbotKnowledgeSources)
-      .set(data)
-      .where(eq(chatbotKnowledgeSources.chatbotId, chatbotId))
-      .returning();
-    return source;
+  async updateChatbot(chatbotId: string, data: any) {
+    return await ChatbotModel.findByIdAndUpdate(chatbotId, data, { new: true });
   }
 
-  async updateConversationSettings(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number,
-    data: Partial<typeof chatbotConversationSettings.$inferInsert>
-  ) {
-    const [settings] = await tx
-      .update(chatbotConversationSettings)
-      .set(data)
-      .where(eq(chatbotConversationSettings.chatbotId, chatbotId))
-      .returning();
-    return settings;
+  async updateKnowledgeSource(chatbotId: string, data: any) {
+    return await ChatbotKnowledgeSourceModel.findOneAndUpdate({ chatbotId }, data, {
+      new: true,
+    });
   }
 
-  async updateTheme(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number,
-    data: Partial<typeof chatbotTheme.$inferInsert>
-  ) {
-    const [theme] = await tx
-      .update(chatbotTheme)
-      .set(data)
-      .where(eq(chatbotTheme.chatbotId, chatbotId))
-      .returning();
-    return theme;
+  async updateConversationSettings(chatbotId: string, data: any) {
+    return await ChatbotConversationSettingModel.findOneAndUpdate(
+      { chatbotId },
+      data,
+      { new: true }
+    );
   }
 
-  async deleteKnowledgeChunks(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number,
-    sourceId: number
-  ) {
-    return await tx
-      .delete(chatbotKnowledgeChunks)
-      .where(
-        eq(chatbotKnowledgeChunks.chatbotId, chatbotId) &&
-          eq(chatbotKnowledgeChunks.sourceId, sourceId)
-      );
+  async updateTheme(chatbotId: string, data: any) {
+    return await ChatbotThemeModel.findOneAndUpdate({ chatbotId }, data, {
+      new: true,
+    });
   }
 
-  async deleteSuggestedQuestions(
-    tx: PgTransaction<any, any, any>,
-    chatbotId: number
-  ) {
-    return await tx
-      .delete(chatbotSuggestedQuestions)
-      .where(eq(chatbotSuggestedQuestions.chatbotId, chatbotId));
+  async deleteKnowledgeChunks(chatbotId: string, sourceId: string) {
+    return await ChatbotKnowledgeChunkModel.deleteMany({ chatbotId, sourceId });
+  }
+
+  async deleteSuggestedQuestions(chatbotId: string) {
+    return await ChatbotSuggestedQuestionModel.deleteMany({ chatbotId });
   }
 }
