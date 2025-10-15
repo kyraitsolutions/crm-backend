@@ -8,6 +8,6 @@ export const config = {
     clientId: ENV.GOOGLE_CLIENT_ID || "",
     clientSecret: ENV.GOOGLE_CLIENT_SECRET || "",
     callbackUrl:
-      ENV.GOOGLE_CALLBACK_URL || "http://localhost:3000/auth/google/callback",
+      ENV.GOOGLE_CALLBACK_URL || "http://localhost:3000/api/auth/google/callback",
   },
 };

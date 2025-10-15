@@ -9,7 +9,7 @@ export class ChatBotController {
   }
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
-      // const chatBots = await this.chatBotService.getChatBots();
+      const chatBots = await this.chatBotService.getChatBots();
       return res.status(200).json({
         message: "Chatbots fetched successfully",
         data: [],

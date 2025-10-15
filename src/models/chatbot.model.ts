@@ -3,7 +3,10 @@ import { Schema, model } from "mongoose";
 const chatbotSchema = new Schema(
   {
     name: { type: String, required: true },
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: true },
+    // 
+    theme:{}
+
   },
   { timestamps: true }
 );
@@ -37,17 +40,24 @@ const chatbotConversationSettingSchema = new Schema({
   model: { type: String, required: true },
   temperature: { type: Number, required: true },
   prompt: { type: String, required: true },
+  welcomeMessage: {
+    type: String,
+    default: 'Hello! How can I help you today?'
+  },
+  fallbackMessage: {
+    type: String,
+    default: 'I apologize, but I didn\'t understand that. Could you please rephrase your question?'
+  },
+  tenableTypingIndicator: {
+    type: Boolean,
+    default: true
+  },
+  collectUserInfo: {
+      type: Boolean,
+      default: true
+  }
 });
 
-const chatbotThemeSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  primaryColor: { type: String },
-  secondaryColor: { type: String },
-  fontFamily: { type: String },
-  fontSize: { type: Number },
-  chatBubbleColor: { type: String },
-  chatBubbleTextColor: { type: String },
-});
 
 export const ChatbotModel = model("Chatbot", chatbotSchema);
 export const ChatbotKnowledgeSourceModel = model(
@@ -66,4 +76,3 @@ export const ChatbotConversationSettingModel = model(
   "ChatbotConversationSetting",
   chatbotConversationSettingSchema
 );
-export const ChatbotThemeModel = model("ChatbotTheme", chatbotThemeSchema);

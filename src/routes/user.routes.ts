@@ -38,6 +38,11 @@ export class UserRouter {
       AuthMiddleware.authenticate,
       this.userController.updateProfile.bind(this.userController)
     );
+    this.router.post(
+      "/profile",
+      AuthMiddleware.authenticate,
+      this.userController.updateProfile.bind(this.userController)
+    );
     this.router.delete(
       "/profile",
       AuthMiddleware.authenticate,
