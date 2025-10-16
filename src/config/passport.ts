@@ -36,6 +36,7 @@ passport.use(
     async (_accessToken, _refreshToken, profile, done) => {
       try {
         const user = await userService.findOrCreateGoogleUser(profile);
+        console.log("user", user);
         return done(null, user);
       } catch (error) {
         return done(error as Error, undefined);

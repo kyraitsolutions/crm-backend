@@ -5,11 +5,10 @@ const userSchema = new Schema<TUser>(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String },
-    firstName: { type: String },
-    lastName: { type: String },
     googleId: { type: String, unique: true, sparse: true },
     profilePicture: { type: String },
     roleId: { type: Schema.Types.ObjectId, ref: "Role" },
+    isOnboardingCompleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

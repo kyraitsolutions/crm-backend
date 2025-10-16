@@ -21,8 +21,6 @@ export class UserService {
     const userData: TCreateUser = {
       email: dto.email,
       password: hashedPassword,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
     };
 
     const user = await this.userRepository.create(userData);
@@ -67,16 +65,12 @@ export class UserService {
         const userData: TCreateUser = {
           email,
           googleId: profile.id,
-          firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName,
           profilePicture: profile.photos?.[0]?.value,
         };
 
         user = await this.userRepository.create(userData);
       } else {
         user = await this.userRepository.update(user.id, {
-          firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName,
           profilePicture: profile.photos?.[0]?.value,
         });
       }

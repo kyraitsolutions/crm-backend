@@ -1,30 +1,23 @@
 export class UserDto {
   id: number;
   email: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  roleId?: number | null;
   profilePicture?: string | null;
+  isOnboardingCompleted: boolean;
   createdAt: Date;
   updatedAt: Date;
 
   constructor(data: {
     id: number;
     email: string;
-    firstName?: string | null;
-    lastName?: string | null;
-    roleId?: number | null;
-    role?: string | null;
     profilePicture?: string | null;
+    isOnboardingCompleted: boolean;
     createdAt: Date;
     updatedAt: Date;
   }) {
     this.id = data.id;
     this.email = data.email;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
     this.profilePicture = data.profilePicture;
-    this.roleId = data.roleId;
+    this.isOnboardingCompleted = data.isOnboardingCompleted;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
   }
@@ -84,19 +77,10 @@ export class LoginDto {
 export class RegisterDto {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
 
-  constructor(data: {
-    email: string;
-    password: string;
-    firstName?: string;
-    lastName?: string;
-  }) {
+  constructor(data: { email: string; password: string }) {
     this.email = data.email;
     this.password = data.password;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
   }
 }
 
