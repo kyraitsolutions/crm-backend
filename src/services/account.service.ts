@@ -11,7 +11,7 @@ export class AccountService{
 
     async getAllAccounts(id:string):Promise<{} | null>{
         const accounts=await this.accountRepository.findAll(id);
-        return accounts
+        return accounts;
     }
 
     async createAccount(id:string,dto:CreateAccountDto):Promise<AccountDto>{

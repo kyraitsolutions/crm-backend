@@ -5,6 +5,7 @@ export class UserDto {
   lastName?: string | null;
   roleId?: number | null;
   profilePicture?: string | null;
+  onboarding:boolean;
   createdAt: Date;
   updatedAt: Date;
 
@@ -15,6 +16,7 @@ export class UserDto {
     lastName?: string | null;
     roleId?: number | null;
     role?: string | null;
+    onboarding:boolean;
     profilePicture?: string | null;
     createdAt: Date;
     updatedAt: Date;
@@ -25,6 +27,7 @@ export class UserDto {
     this.lastName = data.lastName;
     this.profilePicture = data.profilePicture;
     this.roleId = data.roleId;
+    this.onboarding=data.onboarding;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
   }
@@ -37,6 +40,7 @@ export class CreateUserDto {
   lastName?: string;
   googleId?: string;
   profilePicture?: string;
+  onboarding:boolean;
 
   constructor(data: {
     email: string;
@@ -45,6 +49,7 @@ export class CreateUserDto {
     lastName?: string;
     googleId?: string;
     profilePicture?: string;
+    onboarding:boolean;
   }) {
     this.email = data.email;
     this.password = data.password;
@@ -52,6 +57,7 @@ export class CreateUserDto {
     this.lastName = data.lastName;
     this.googleId = data.googleId;
     this.profilePicture = data.profilePicture;
+    this.onboarding=data.onboarding;
   }
 }
 
@@ -59,15 +65,18 @@ export class UpdateUserDto {
   firstName?: string;
   lastName?: string;
   profilePicture?: string;
+  onboarding:boolean;
 
   constructor(data: {
     firstName?: string;
     lastName?: string;
     profilePicture?: string;
+    onboarding:boolean;
   }) {
     this.firstName = data.firstName;
     this.lastName = data.lastName;
     this.profilePicture = data.profilePicture;
+    this.onboarding=data.onboarding;
   }
 }
 
