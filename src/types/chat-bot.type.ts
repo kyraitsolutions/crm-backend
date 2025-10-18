@@ -8,11 +8,16 @@ export const ZChatBotKnowledgeSchema = z.object({
 });
 
 export const ZChatBotConversationSchema = z.object({
+  temperature:z.string().optional(),
+  promt:z.string().optional(),
   showWelcomeMessage: z.boolean().optional(),
   welcomeMessage: z.string().optional(),
   emailCapture: z.boolean().optional(),
   phoneNumberCapture: z.boolean().optional(),
   fallbackMessage: z.string().optional(),
+  enableTypingIndicator:z.boolean(),
+  collectUserInfo:z.boolean(),
+  theme: z.record(z.string(), z.any()).optional(),
 });
 
 export const ZChatBotSuggestionSchema = z.array(z.string()).optional();
@@ -23,7 +28,6 @@ export const ZChatBotSchema = z.object({
   knowledgeBase: ZChatBotKnowledgeSchema,
   suggestions: ZChatBotSuggestionSchema,
   conversation: ZChatBotConversationSchema,
-  theme: z.record(z.string(), z.any()).optional(),
 });
 
 export type TCreateChatBot = z.infer<typeof ZChatBotSchema>;

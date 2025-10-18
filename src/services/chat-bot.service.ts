@@ -1,26 +1,56 @@
+import { UserProfileRepository } from './../repositories/userprofile.repository';
 import { CreateChatBotDto } from "../dtos";
 import { ChatbotRepository } from "../repositories";
 import { ChatBotUtil, GeminiAIUtil } from "../utils";
+import { AccountRepository } from '../repositories/account.repository';
 
 export class ChatBotService {
   private repo: ChatbotRepository;
+  private userprofileRepository:UserProfileRepository;
+  private accountRepository:AccountRepository;
   private geminiAIUtil: GeminiAIUtil;
 
   constructor() {
     this.repo = new ChatbotRepository();
+    this.accountRepository=new AccountRepository();
+    this.userprofileRepository = new UserProfileRepository();
     this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getChatBots() {
-    // Implement logic to get chatbots
+  async getAllChatBotsByUserId(userId:string):Promise<any> {
+    return await this.repo.findAllByUserId(userId);
+  }
+  async getChatbots(userId:string):Promise<any> {
+    return await this.repo.findAllByAccountId(userId);
   }
 
+
+
   async createChatBot(userId: string, createChatBotDto: CreateChatBotDto) {
-    const chatbot = await this.repo.createChatbot({
-      name: createChatBotDto.name,
-      description: createChatBotDto.description,
-      userId,
-    });
+    const user = await this.userprofileRepository.findByUserId(userId);
+
+    
+    let chatbot;
+
+    if(user?.accountType==="individual"){
+      chatbot = await this.repo.createChatbot({
+        name: createChatBotDto.name,
+        userId,
+        accountId:null
+      });
+    }
+    else{
+      const account=await this.accountRepository.findOne(userId);
+      console.log(account);
+      chatbot = await this.repo.createChatbot({
+        name: createChatBotDto.name,
+        userId,
+        accountId:account?.id
+      });
+    }
+    
+
+    console.log("Create chatbot:", chatbot)
 
     if (createChatBotDto.knowledgeBase) {
       const source = await this.repo.addKnowledgeSource({
@@ -60,22 +90,28 @@ export class ChatBotService {
         chatbotId: chatbot._id,
         model: "gemini-pro",
         temperature: createChatBotDto.conversation.temperature || 1,
-        prompt: createChatBotDto.conversation.prompt || "",
+        prompt: createChatBotDto.conversation.prompt || "hi",
+        showWelcomeMessage:createChatBotDto.conversation.showWelcomeMessage ||true,
+        welcomeMessage:createChatBotDto.conversation.welcomeMessage,
+        fallbackMessage:createChatBotDto.conversation.fallbackMessage,
+        enableTypingIndicator:createChatBotDto.conversation.enableTypingIndicator||true,
+        collectUserInfo:createChatBotDto.conversation.collectUserInfo,
+        theme:createChatBotDto.conversation.theme
       });
     }
 
-    if (createChatBotDto.theme) {
-      await this.repo.addTheme({
-        chatbotId: chatbot._id,
-        ...createChatBotDto.theme,
-      });
-    }
+    // if (createChatBotDto.theme) {
+    //   await this.repo.addTheme({
+    //     chatbotId: chatbot._id,
+    //     ...createChatBotDto.theme,
+    //   });
+    // }
 
     return chatbot;
   }
 
   async updateChatBot(
-    userId: string,
+    // userId: string,
     chatbotId: string,
     updateDto: CreateChatBotDto
   ) {

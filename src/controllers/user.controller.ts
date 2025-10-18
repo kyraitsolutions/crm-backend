@@ -2,16 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { RegisterDto, LoginDto, UpdateUserDto } from "../dtos";
 import { ENV } from "../constants";
 import { UserService } from "../services";
-import { AccountService } from "../services/account.service";
 import httpResponse from "../utils/http.response";
 
 export class UserController {
   private userService: UserService;
-  private accountService:AccountService;
 
   constructor() {
     this.userService = new UserService();
-    this.accountService = new AccountService();
   }
 
   register = async (
@@ -63,22 +60,9 @@ export class UserController {
   ): Promise<void> => {
     try {
       const user = req.user;
-      const acountExist=await this.accountService.getAllAccounts(user.id);
-      console.log(user,acountExist)
-
-      if (acountExist){
-        httpResponse(req,res,200,"Account information fetched successfully",{
+      httpResponse(req,res,200,"Account information fetched successfully",{
           docs:user,
-          onboarding:true
         });
-      }
-      else{
-        httpResponse(req,res,200,"Account information fetched successfully",{
-          docs:user,
-          onboarding:false
-        });
-      }
-      
     } catch (error) {
       next(error);
     }

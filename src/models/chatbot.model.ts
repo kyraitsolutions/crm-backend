@@ -3,10 +3,8 @@ import { Schema, model } from "mongoose";
 const chatbotSchema = new Schema(
   {
     name: { type: String, required: true },
-    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: true },
-    // 
-    theme:{}
-
+    userId:{ type: Schema.Types.ObjectId, ref: "User", required: true },
+    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
   },
   { timestamps: true }
 );
@@ -48,14 +46,15 @@ const chatbotConversationSettingSchema = new Schema({
     type: String,
     default: 'I apologize, but I didn\'t understand that. Could you please rephrase your question?'
   },
-  tenableTypingIndicator: {
+  enableTypingIndicator: {
     type: Boolean,
     default: true
   },
   collectUserInfo: {
       type: Boolean,
       default: true
-  }
+  },
+  theme:{}
 });
 
 

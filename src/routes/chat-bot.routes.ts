@@ -12,7 +12,12 @@ export class ChatBotRouter {
   }
   private initializeRoutes(): void {
     this.router.get(
-      "/",
+      "/byuser",
+      AuthMiddleware.authenticate,
+      this.chatBotController.getChatBot.bind(this.chatBotController)
+    );
+    this.router.get(
+      "/byaccount",
       AuthMiddleware.authenticate,
       this.chatBotController.getChatBots.bind(this.chatBotController)
     );

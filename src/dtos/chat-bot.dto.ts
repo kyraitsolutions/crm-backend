@@ -11,13 +11,17 @@ export class CreateChatBotDto {
   };
   suggestions?: string[];
   conversation?: {
+    temperature:string;
+    prompt:string;
     showWelcomeMessage?: boolean;
     welcomeMessage?: string;
     emailCapture?: boolean;
     phoneNumberCapture?: boolean;
     fallbackMessage?: string;
+    enableTypingIndicator?:boolean;
+    collectUserInfo:boolean;
+    theme?: Record<string, any>;
   };
-  theme?: Record<string, any>;
 
   constructor(data: TCreateChatBot) {
     this.name = data.name;
@@ -30,12 +34,14 @@ export class CreateChatBotDto {
     };
     this.suggestions = data.suggestions ?? [];
     this.conversation = {
+      temperature:data.conversation.temperature??"",
+      prompt: data.conversation.promt ?? "",
       showWelcomeMessage: data.conversation?.showWelcomeMessage,
       welcomeMessage: data.conversation?.welcomeMessage,
-      emailCapture: data.conversation?.emailCapture,
-      phoneNumberCapture: data.conversation?.phoneNumberCapture,
       fallbackMessage: data.conversation?.fallbackMessage,
+      enableTypingIndicator:data.conversation?.enableTypingIndicator,
+      collectUserInfo:data.conversation.collectUserInfo,
+      theme: data.conversation.theme ?? {},
     };
-    this.theme = data.theme ?? {};
   }
 }

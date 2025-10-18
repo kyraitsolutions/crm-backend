@@ -1,33 +1,26 @@
 export class UserDto {
   id: number;
   email: string;
-  firstName?: string | null;
-  lastName?: string | null;
-  roleId?: number | null;
   profilePicture?: string | null;
-  onboarding:boolean;
+  onboarding: boolean;
+  roleId:string;
   createdAt: Date;
   updatedAt: Date;
 
   constructor(data: {
     id: number;
     email: string;
-    firstName?: string | null;
-    lastName?: string | null;
-    roleId?: number | null;
-    role?: string | null;
-    onboarding:boolean;
     profilePicture?: string | null;
+    onboarding: boolean;
+    roleId:string;
     createdAt: Date;
     updatedAt: Date;
   }) {
     this.id = data.id;
     this.email = data.email;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
     this.profilePicture = data.profilePicture;
-    this.roleId = data.roleId;
-    this.onboarding=data.onboarding;
+    this.onboarding = data.onboarding;
+    this.roleId=data.roleId
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
   }
@@ -36,45 +29,36 @@ export class UserDto {
 export class CreateUserDto {
   email: string;
   password?: string;
-  firstName?: string;
-  lastName?: string;
   googleId?: string;
   profilePicture?: string;
   onboarding:boolean;
+  roleId:string;
 
   constructor(data: {
     email: string;
     password?: string;
-    firstName?: string;
-    lastName?: string;
     googleId?: string;
     profilePicture?: string;
     onboarding:boolean;
+    roleId:string;
   }) {
     this.email = data.email;
     this.password = data.password;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
     this.googleId = data.googleId;
     this.profilePicture = data.profilePicture;
     this.onboarding=data.onboarding;
+    this.roleId=data.roleId
   }
 }
 
 export class UpdateUserDto {
-  firstName?: string;
-  lastName?: string;
   profilePicture?: string;
   onboarding:boolean;
 
   constructor(data: {
-    firstName?: string;
-    lastName?: string;
     profilePicture?: string;
     onboarding:boolean;
   }) {
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
     this.profilePicture = data.profilePicture;
     this.onboarding=data.onboarding;
   }
@@ -93,19 +77,10 @@ export class LoginDto {
 export class RegisterDto {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
 
-  constructor(data: {
-    email: string;
-    password: string;
-    firstName?: string;
-    lastName?: string;
-  }) {
+  constructor(data: { email: string; password: string }) {
     this.email = data.email;
     this.password = data.password;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
   }
 }
 

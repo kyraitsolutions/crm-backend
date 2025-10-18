@@ -31,8 +31,8 @@ export class UserRepository {
     //   },
     // ]);
     // return users[0];
-    console.log(id)
-    return await UserModel.findOne({_id:id});
+    console.log(id);
+    return await UserModel.findOne({ _id: id });
   }
 
   async findByEmail(email: string): Promise<TUser | null> {
@@ -44,7 +44,7 @@ export class UserRepository {
   }
 
   async create(data: TCreateUser): Promise<TUser> {
-    const role = await RoleModel.findOne({ name: "USER" });
+    const role = await RoleModel.findOne({ name: "ADMIN" });
     return await UserModel.create({ ...data, roleId: role?._id });
   }
 

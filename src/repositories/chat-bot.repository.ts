@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   ChatbotModel,
   ChatbotKnowledgeSourceModel,
@@ -11,6 +12,62 @@ export class ChatbotRepository {
     return await ChatbotModel.create(data);
   }
 
+  async findAllByUserId(userId:string):Promise<any[] | null>{
+    return await ChatbotModel.aggregate([
+      {
+        $match: { userId: new mongoose.Types.ObjectId(userId) }
+      },
+      {
+        $lookup: {
+          from: "chatbotconversationsettings",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "conversationSettings"
+        }
+      },
+      // {
+      //   $lookup: {
+      //     from: "chatbotknowledgechunks",
+      //     localField: "_id",
+      //     foreignField: "chatbotId",
+      //     as: "knowledgeChunks"
+      //   }
+      // },
+      {
+        $lookup: {
+          from: "chatbotknowledgesources",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "knowledgeSources"
+        }
+      },
+      {
+        $lookup: {
+          from: "chatbotsuggestedquestions",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "suggestedQuestions"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          userId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          conversationSettings: 1,
+          // knowledgeChunks: 1,
+          knowledgeSources: 1,
+          suggestedQuestions: 1
+        }
+      }
+    ]);
+  }
+
+  async findAllByAccountId(userId:string):Promise<any[]|null>{
+    
+  }
   async addKnowledgeSource(data: any) {
     return await ChatbotKnowledgeSourceModel.create(data);
   }
