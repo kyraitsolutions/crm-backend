@@ -1,178 +1,160 @@
-import { UserProfileRepository } from './../repositories/userprofile.repository';
-import { CreateChatBotDto } from "../dtos";
-import { ChatbotRepository } from "../repositories";
-import { ChatBotUtil, GeminiAIUtil } from "../utils";
-import { AccountRepository } from '../repositories/account.repository';
+import mongoose from "mongoose";
+import { ChatbotRepository } from "../repositories/chat-bot.repository";
+import { CreateChatbotDto, ChatbotDto } from "../dtos/chat-bot.dto";
+import { GeminiAIUtil } from "../utils/gemini-ai.util";
 
-export class ChatBotService {
-  private repo: ChatbotRepository;
-  private userprofileRepository:UserProfileRepository;
-  private accountRepository:AccountRepository;
+export class ChatbotService {
+  private repository: ChatbotRepository;
   private geminiAIUtil: GeminiAIUtil;
 
   constructor() {
-    this.repo = new ChatbotRepository();
-    this.accountRepository=new AccountRepository();
-    this.userprofileRepository = new UserProfileRepository();
+    this.repository = new ChatbotRepository();
     this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getAllChatBotsByUserId(userId:string):Promise<any> {
-    return await this.repo.findAllByUserId(userId);
-  }
-  async getChatbots(userId:string):Promise<any> {
-    return await this.repo.findAllByAccountId(userId);
-  }
+  public async createChatbot(dto: CreateChatbotDto): Promise<void> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const chatbot = await this.repository.createChatbot(dto, session);
 
-
-
-  async createChatBot(userId: string, createChatBotDto: CreateChatBotDto) {
-    const user = await this.userprofileRepository.findByUserId(userId);
-
-    
-    let chatbot;
-
-    if(user?.accountType==="individual"){
-      chatbot = await this.repo.createChatbot({
-        name: createChatBotDto.name,
-        userId,
-        accountId:null
-      });
-    }
-    else{
-      const account=await this.accountRepository.findOne(userId);
-      console.log(account);
-      chatbot = await this.repo.createChatbot({
-        name: createChatBotDto.name,
-        userId,
-        accountId:account?.id
-      });
-    }
-    
-
-    console.log("Create chatbot:", chatbot)
-
-    if (createChatBotDto.knowledgeBase) {
-      const source = await this.repo.addKnowledgeSource({
-        chatbotId: chatbot._id,
-        type: createChatBotDto.knowledgeBase.type ?? "text",
-        name: createChatBotDto.name,
-        source: createChatBotDto.knowledgeBase.url ?? "manual",
-        data: createChatBotDto.knowledgeBase.manual,
-      });
-
-      if (createChatBotDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(
-          createChatBotDto.knowledgeBase.manual
+      for (const ks of dto.knowledgeSources || []) {
+        const sourceDoc = await this.repository.createKnowledgeSources(
+          chatbot._id.toString(),
+          [ks],
+          session
         );
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
-
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId: chatbot._id,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
-        await this.repo.addKnowledgeChunks(chunkData);
+        const sourceId = sourceDoc[0]._id.toString();
+        const chunks = this.geminiAIUtil.chunkText(ks.extractedText, 500, 50);
+        await this.repository.createKnowledgeChunks(
+          chatbot._id.toString(),
+          sourceId,
+          chunks,
+          session
+        );
       }
+      await this.repository.createConversationSetting(
+        chatbot._id.toString(),
+        dto.conversationSettings,
+        session
+      );
+
+      await this.repository.createSuggestedQuestions(
+        chatbot._id.toString(),
+        dto.suggestedQuestions || [],
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      // const fullChatbot = await this.repository.getChatbotById(
+      //   chatbot._id.toString()
+      // );
+      // return fullChatbot as unknown as ChatbotDto;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
     }
-
-    if (createChatBotDto.suggestions?.length) {
-      const questions = createChatBotDto.suggestions.map((q) => ({
-        chatbotId: chatbot._id,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
-
-    if (createChatBotDto.conversation) {
-      await this.repo.addConversationSettings({
-        chatbotId: chatbot._id,
-        model: "gemini-pro",
-        temperature: createChatBotDto.conversation.temperature || 1,
-        prompt: createChatBotDto.conversation.prompt || "hi",
-        showWelcomeMessage:createChatBotDto.conversation.showWelcomeMessage ||true,
-        welcomeMessage:createChatBotDto.conversation.welcomeMessage,
-        fallbackMessage:createChatBotDto.conversation.fallbackMessage,
-        enableTypingIndicator:createChatBotDto.conversation.enableTypingIndicator||true,
-        collectUserInfo:createChatBotDto.conversation.collectUserInfo,
-        theme:createChatBotDto.conversation.theme
-      });
-    }
-
-    // if (createChatBotDto.theme) {
-    //   await this.repo.addTheme({
-    //     chatbotId: chatbot._id,
-    //     ...createChatBotDto.theme,
-    //   });
-    // }
-
-    return chatbot;
   }
 
-  async updateChatBot(
-    // userId: string,
-    chatbotId: string,
-    updateDto: CreateChatBotDto
-  ) {
-    const chatbot = await this.repo.updateChatbot(chatbotId, {
-      name: updateDto.name,
-      description: updateDto.description,
+  public async createChatbotByAccount(
+    dto: CreateChatbotDto
+  ): Promise<ChatbotDto> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const chatbot = await this.repository.createChatbot(dto, session);
+      for (const ks of dto.knowledgeSources || []) {
+        const sourceDoc = await this.repository.createKnowledgeSources(
+          chatbot._id.toString(),
+          [ks],
+          session
+        );
+        const sourceId = sourceDoc[0]._id.toString();
+
+        const chunks = this.geminiAIUtil.chunkText(ks.extractedText, 500, 50);
+        await this.repository.createKnowledgeChunks(
+          chatbot._id.toString(),
+          sourceId,
+          chunks,
+          session
+        );
+      }
+
+      await this.repository.createConversationSetting(
+        chatbot._id.toString(),
+        dto.conversationSettings,
+        session
+      );
+
+      await this.repository.createSuggestedQuestions(
+        chatbot._id.toString(),
+        dto.suggestedQuestions || [],
+        session
+      );
+
+      await session.commitTransaction();
+      session.endSession();
+
+      const fullChatbot = await this.repository.getChatbotById(
+        chatbot._id.toString()
+      );
+      return fullChatbot as unknown as ChatbotDto;
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
+  }
+
+  public async getAllChatbots(userId: string): Promise<ChatbotDto[]> {
+    const chatbots = await this.repository.getAllChatbots(userId);
+    return chatbots as unknown as ChatbotDto[];
+  }
+
+  public async getAllChatbotsByAccount(
+    userId: string,
+    accountId: string
+  ): Promise<ChatbotDto[]> {
+    const chatbots = await this.repository.getAllChatbotsByAccount(
+      userId,
+      accountId
+    );
+    return chatbots as unknown as ChatbotDto[];
+  }
+
+  public async getChatbotById(id: string): Promise<ChatbotDto> {
+    const chatbot = await this.repository.getChatbotById(id);
+    if (!chatbot) throw new Error("Chatbot not found");
+    return chatbot as unknown as ChatbotDto;
+  }
+  public async updateChatbot(
+    id: string,
+    dto: CreateChatbotDto
+  ): Promise<ChatbotDto> {
+    const updated = await this.repository.updateChatbot(id, {
+      name: dto.name,
+      accountId: dto.accountId,
     });
-
-    if (!chatbot) {
-      throw new Error("Chatbot not found");
-    }
-
-    if (updateDto.knowledgeBase) {
-      const source = await this.repo.updateKnowledgeSource(chatbotId, {
-        type: updateDto.knowledgeBase.type ?? "text",
-        name: updateDto.name,
-        source: updateDto.knowledgeBase.url ?? "manual",
-        data: updateDto.knowledgeBase.manual,
-      });
-
-      if (source && updateDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(updateDto.knowledgeBase.manual);
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
-
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
-
-        await this.repo.deleteKnowledgeChunks(chatbotId, source._id);
-        await this.repo.addKnowledgeChunks(chunkData);
-      }
-    }
-
-    if (updateDto.suggestions) {
-      await this.repo.deleteSuggestedQuestions(chatbotId);
-
-      const questions = updateDto.suggestions.map((q) => ({
-        chatbotId,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
-
-    if (updateDto.conversation) {
-      await this.repo.updateConversationSettings(chatbotId, {
-        temperature: updateDto.conversation.temperature,
-        prompt: updateDto.conversation.prompt,
-      });
-    }
-
-    if (updateDto.theme) {
-      await this.repo.updateTheme(chatbotId, updateDto.theme);
-    }
-
-    return chatbot;
+    if (!updated) throw new Error("Chatbot not found");
+    const fullChatbot = await this.repository.getChatbotById(id);
+    return fullChatbot as unknown as ChatbotDto;
   }
 
-  async deleteChatBot() {
-    // Implement logic to delete a chatbot
+  public async deleteChatbot(id: string): Promise<void> {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await this.repository.deleteNestedData(id, session);
+      await this.repository.deleteChatbot(id);
+      await session.commitTransaction();
+      session.endSession();
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
 }

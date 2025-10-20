@@ -1,35 +1,54 @@
 import { z } from "zod";
 
-export const ZChatBotKnowledgeSchema = z.object({
-  url: z.string().optional(),
-  files: z.array(z.string()).optional(),
-  manual: z.string().optional(),
-  type: z.number().nullable().optional(),
-});
-
-export const ZChatBotConversationSchema = z.object({
-  temperature:z.string().optional(),
-  promt:z.string().optional(),
-  showWelcomeMessage: z.boolean().optional(),
-  welcomeMessage: z.string().optional(),
-  emailCapture: z.boolean().optional(),
-  phoneNumberCapture: z.boolean().optional(),
-  fallbackMessage: z.string().optional(),
-  enableTypingIndicator:z.boolean(),
-  collectUserInfo:z.boolean(),
-  theme: z.record(z.string(), z.any()).optional(),
-});
-
-export const ZChatBotSuggestionSchema = z.array(z.string()).optional();
-
-export const ZChatBotSchema = z.object({
-  name: z.string().min(3, "Name is required and must be at least 3 characters"),
+export const KnowledgeSourceZod = z.object({
+  sourceType: z.enum(["file", "text", "website"]),
+  name: z.string().min(1),
   description: z.string().optional(),
-  knowledgeBase: ZChatBotKnowledgeSchema,
-  suggestions: ZChatBotSuggestionSchema,
-  conversation: ZChatBotConversationSchema,
+  filePath: z.string().optional(),
+  mimeType: z.string().optional(),
+  fileSize: z.number().optional(),
+  sourceUrl: z.string().url().optional(),
+  extractedText: z.string(),
+  language: z.string().optional(),
 });
 
-export type TCreateChatBot = z.infer<typeof ZChatBotSchema>;
-export type TUpdateChatBot = z.infer<typeof ZChatBotSchema>;
-export type TChatBot = z.infer<typeof ZChatBotSchema>;
+export type KnowledgeSourceDTO = z.infer<typeof KnowledgeSourceZod>;
+
+export const ThemeZod = z.object({
+  primaryColor: z.string().optional(),
+  backgroundColor: z.string().optional(),
+  textColor: z.string().optional(),
+  bubbleStyle: z.enum(["rounded", "square"]).optional(),
+});
+
+export type ThemeDTO = z.infer<typeof ThemeZod>;
+
+export const ConversationSettingZod = z.object({
+  model: z.string().min(1),
+  temperature: z.number().min(0).max(1).optional(),
+  systemPrompt: z.string().min(1),
+  welcomeMessage: z.string().optional(),
+  fallbackMessage: z.string().optional(),
+  enableTypingIndicator: z.boolean().optional(),
+  collectUserInfo: z.boolean().optional(),
+  theme: ThemeZod.optional(),
+});
+
+export type ConversationSettingDTO = z.infer<typeof ConversationSettingZod>;
+
+export const SuggestedQuestionZod = z.object({
+  question: z.string().min(1),
+});
+
+export type SuggestedQuestionDTO = z.infer<typeof SuggestedQuestionZod>;
+
+export const CreateChatbotZod = z.object({
+  name: z.string().min(1),
+  userId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid userId"),
+  accountId: z.string().optional(),
+  knowledgeSources: z.array(KnowledgeSourceZod).optional(),
+  conversationSettings: ConversationSettingZod,
+  suggestedQuestions: z.array(SuggestedQuestionZod).optional(),
+});
+
+export type CreateChatbotDTO = z.infer<typeof CreateChatbotZod>;

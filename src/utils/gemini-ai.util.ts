@@ -9,6 +9,18 @@ export class GeminiAIUtil {
       apiKey: apiKey || ENV.GOOGLE_GENAI_API_KEY,
     });
   }
+  public chunkText(text: string, chunkSize = 500, overlap = 50): string[] {
+    const chunks: string[] = [];
+    let start = 0;
+
+    while (start < text.length) {
+      const end = Math.min(start + chunkSize, text.length);
+      const chunk = text.slice(start, end);
+      chunks.push(chunk);
+      start += chunkSize - overlap;
+    }
+    return chunks;
+  }
 
   public async generateEmbedding(text: string | string[]) {
     const contents = Array.isArray(text) ? text : [text];

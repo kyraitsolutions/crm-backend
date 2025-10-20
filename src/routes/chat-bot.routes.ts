@@ -1,41 +1,54 @@
 import { Router } from "express";
-import { ChatBotController } from "../controllers";
 import { AuthMiddleware } from "../middleware";
+import { ChatbotController } from "../controllers";
 
 export class ChatBotRouter {
   public router: Router;
-  private chatBotController: ChatBotController;
+  private chatbotController: ChatbotController;
+
   constructor() {
     this.router = Router();
-    this.chatBotController = new ChatBotController();
+    this.chatbotController = new ChatbotController();
     this.initializeRoutes();
   }
+
   private initializeRoutes(): void {
-    this.router.get(
-      "/byuser",
-      AuthMiddleware.authenticate,
-      this.chatBotController.getChatBot.bind(this.chatBotController)
-    );
-    this.router.get(
-      "/byaccount",
-      AuthMiddleware.authenticate,
-      this.chatBotController.getChatBots.bind(this.chatBotController)
-    );
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
-      this.chatBotController.createChatBot.bind(this.chatBotController)
+      this.chatbotController.createChatbot.bind(this.chatbotController)
     );
+
+    this.router.get(
+      "/:id",
+      AuthMiddleware.authenticate,
+      this.chatbotController.getChatbotById.bind(this.chatbotController)
+    );
+
+    this.router.get(
+      "/",
+      AuthMiddleware.authenticate,
+      this.chatbotController.getAllChatbots.bind(this.chatbotController)
+    );
+    this.router.get(
+      "/by-account",
+      AuthMiddleware.authenticate,
+      this.chatbotController.getAllChatbotsByAccount.bind(
+        this.chatbotController
+      )
+    );
+
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
-      this.chatBotController.updateChatBot.bind(this.chatBotController)
+      this.chatbotController.updateChatbot.bind(this.chatbotController)
     );
+
     this.router.delete(
       "/:id",
       AuthMiddleware.authenticate,
-      this.chatBotController.deleteChatBot.bind(this.chatBotController)
-    );
+      this.chatbotController.deleteChatbot.bind(this.chatbotController)
+    ); // delete chatbot and all related data
   }
 
   public getRouter(): Router {

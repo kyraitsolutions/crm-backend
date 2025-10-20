@@ -1,124 +1,117 @@
 import mongoose from "mongoose";
+import { CreateChatbotDto } from "../dtos";
 import {
   ChatbotModel,
-  ChatbotKnowledgeSourceModel,
-  ChatbotKnowledgeChunkModel,
-  ChatbotSuggestedQuestionModel,
-  ChatbotConversationSettingModel,
+  KnowledgeSourceModel,
+  SuggestedQuestionModel,
+  ConversationSettingModel,
+  KnowledgeChunkModel,
 } from "../models/chatbot.model";
 
 export class ChatbotRepository {
-  async createChatbot(data: any) {
-    return await ChatbotModel.create(data);
+  async createChatbot(dto: CreateChatbotDto, session: mongoose.ClientSession) {
+    return ChatbotModel.create(
+      [
+        {
+          name: dto.name,
+          userId: dto.userId,
+          accountId: dto.accountId,
+        },
+      ],
+      { session }
+    ).then((res) => res[0]);
   }
 
-  async findAllByUserId(userId:string):Promise<any[] | null>{
-    return await ChatbotModel.aggregate([
-      {
-        $match: { userId: new mongoose.Types.ObjectId(userId) }
-      },
-      {
-        $lookup: {
-          from: "chatbotconversationsettings",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "conversationSettings"
-        }
-      },
-      // {
-      //   $lookup: {
-      //     from: "chatbotknowledgechunks",
-      //     localField: "_id",
-      //     foreignField: "chatbotId",
-      //     as: "knowledgeChunks"
-      //   }
-      // },
-      {
-        $lookup: {
-          from: "chatbotknowledgesources",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "knowledgeSources"
-        }
-      },
-      {
-        $lookup: {
-          from: "chatbotsuggestedquestions",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "suggestedQuestions"
-        }
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          userId: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          conversationSettings: 1,
-          // knowledgeChunks: 1,
-          knowledgeSources: 1,
-          suggestedQuestions: 1
-        }
-      }
-    ]);
+  async createKnowledgeSources(
+    chatbotId: string,
+    knowledgeSources: any[],
+    session: mongoose.ClientSession
+  ) {
+    if (!knowledgeSources?.length) return [];
+    const sources = knowledgeSources.map((k) => ({ ...k, chatbotId }));
+    return KnowledgeSourceModel.insertMany(sources, { session });
+  }
+  async createKnowledgeChunks(
+    chatbotId: string,
+    sourceId: string,
+    chunks: string[],
+    session: mongoose.ClientSession
+  ) {
+    if (!chunks?.length) return [];
+    const docs = chunks.map((text, index) => ({
+      chatbotId,
+      sourceId,
+      text,
+      embedding: [], // placeholder for embedding
+      tokenCount: text.length, // or actual token count
+      chunkIndex: index,
+    }));
+    return KnowledgeChunkModel.insertMany(docs, { session });
   }
 
-  async findAllByAccountId(userId:string):Promise<any[]|null>{
-    
-  }
-  async addKnowledgeSource(data: any) {
-    return await ChatbotKnowledgeSourceModel.create(data);
-  }
-
-  async addKnowledgeChunks(data: any[]) {
-    if (!data.length) return [];
-    return await ChatbotKnowledgeChunkModel.insertMany(data);
-  }
-
-  async addSuggestedQuestions(data: any[]) {
-    if (!data.length) return [];
-    return await ChatbotSuggestedQuestionModel.insertMany(data);
-  }
-
-  async addConversationSettings(data: any) {
-    return await ChatbotConversationSettingModel.create(data);
+  async createConversationSetting(
+    chatbotId: string,
+    setting: any,
+    session: mongoose.ClientSession
+  ) {
+    return ConversationSettingModel.create(
+      [
+        {
+          ...setting,
+          chatbotId,
+        },
+      ],
+      { session }
+    ).then((res) => res[0]);
   }
 
-  // async addTheme(data: any) {
-  //   return await ChatbotThemeModel.create(data);
-  // }
-
-  async updateChatbot(chatbotId: string, data: any) {
-    return await ChatbotModel.findByIdAndUpdate(chatbotId, data, { new: true });
+  async createSuggestedQuestions(
+    chatbotId: string,
+    questions: any[],
+    session: mongoose.ClientSession
+  ) {
+    if (!questions?.length) return [];
+    const q = questions.map((q) => ({ ...q, chatbotId }));
+    return SuggestedQuestionModel.insertMany(q, { session });
   }
 
-  async updateKnowledgeSource(chatbotId: string, data: any) {
-    return await ChatbotKnowledgeSourceModel.findOneAndUpdate({ chatbotId }, data, {
-      new: true,
-    });
+  async getChatbotById(id: string) {
+    return ChatbotModel.findById(id)
+      .populate("knowledgeSources")
+      .populate("conversationSettings")
+      .populate("suggestedQuestions")
+      .lean();
   }
 
-  async updateConversationSettings(chatbotId: string, data: any) {
-    return await ChatbotConversationSettingModel.findOneAndUpdate(
-      { chatbotId },
-      data,
-      { new: true }
+  async getAllChatbots(userId: string) {
+    return (
+      ChatbotModel.find({ userId })
+        .populate("knowledgeSources")
+        // .populate("conversationSettings")
+        // .populate("suggestedQuestions")
+        .lean()
     );
   }
 
-//   async updateTheme(chatbotId: string, data: any) {
-//     return await ChatbotThemeModel.findOneAndUpdate({ chatbotId }, data, {
-//       new: true,
-//     });
-//   }
+  async getAllChatbotsByAccount(userId: string, accountId: string) {
+    return ChatbotModel.find({ accountId, userId })
+      .populate("knowledgeSources")
+      .populate("conversationSettings")
+      .populate("suggestedQuestions")
+      .lean();
+  }
 
-//   async deleteKnowledgeChunks(chatbotId: string, sourceId: string) {
-//     return await ChatbotKnowledgeChunkModel.deleteMany({ chatbotId, sourceId });
-//   }
+  async updateChatbot(id: string, dto: any) {
+    return ChatbotModel.findByIdAndUpdate(id, dto, { new: true });
+  }
 
-//   async deleteSuggestedQuestions(chatbotId: string) {
-//     return await ChatbotSuggestedQuestionModel.deleteMany({ chatbotId });
-//   }
+  async deleteChatbot(id: string) {
+    return ChatbotModel.findByIdAndDelete(id);
+  }
+
+  async deleteNestedData(chatbotId: string, session: mongoose.ClientSession) {
+    await KnowledgeSourceModel.deleteMany({ chatbotId }, { session });
+    await SuggestedQuestionModel.deleteMany({ chatbotId }, { session });
+    await ConversationSettingModel.deleteMany({ chatbotId }, { session });
+  }
 }

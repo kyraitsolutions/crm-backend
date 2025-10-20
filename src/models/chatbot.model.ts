@@ -3,75 +3,115 @@ import { Schema, model } from "mongoose";
 const chatbotSchema = new Schema(
   {
     name: { type: String, required: true },
-    userId:{ type: Schema.Types.ObjectId, ref: "User", required: true },
-    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    accountId: { type: Schema.Types.ObjectId, ref: "Account" },
   },
   { timestamps: true }
 );
 
-const chatbotKnowledgeSourceSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  source: { type: String, required: true },
-  type: { type: String, enum: ["file", "text", "website"], required: true },
-  data: { type: String, required: true },
-  name: { type: String, required: true },
-});
+const knowledgeSourceSchema = new Schema(
+  {
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
 
-const chatbotKnowledgeChunkSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  sourceId: {
-    type: Schema.Types.ObjectId,
-    ref: "ChatbotKnowledgeSource",
-    required: true,
-  },
-  text: { type: String, required: true },
-  embedding: { type: [Number], required: true },
-});
+    sourceType: {
+      type: String,
+      enum: ["file", "text", "website"],
+      required: true,
+    },
 
-const chatbotSuggestedQuestionSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  question: { type: String, required: true },
-});
+    name: { type: String, required: true },
+    description: { type: String },
 
-const chatbotConversationSettingSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  model: { type: String, required: true },
-  temperature: { type: Number, required: true },
-  prompt: { type: String, required: true },
-  welcomeMessage: {
-    type: String,
-    default: 'Hello! How can I help you today?'
+    filePath: { type: String },
+    mimeType: { type: String },
+    fileSize: { type: Number },
+    sourceUrl: { type: String },
+    extractedText: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["pending", "processing", "complete", "failed"],
+      default: "complete",
+    },
+    language: { type: String },
+    uploadedAt: { type: Date, default: Date.now },
   },
-  fallbackMessage: {
-    type: String,
-    default: 'I apologize, but I didn\'t understand that. Could you please rephrase your question?'
-  },
-  enableTypingIndicator: {
-    type: Boolean,
-    default: true
-  },
-  collectUserInfo: {
-      type: Boolean,
-      default: true
-  },
-  theme:{}
-});
+  { timestamps: true }
+);
 
+const knowledgeChunkSchema = new Schema(
+  {
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
+    sourceId: {
+      type: Schema.Types.ObjectId,
+      ref: "KnowledgeSource",
+      required: true,
+    },
+    text: { type: String, required: true },
+    embedding: { type: [Number], required: true },
+
+    tokenCount: Number,
+    chunkIndex: Number,
+  },
+  { timestamps: true }
+);
+
+const suggestedQuestionSchema = new Schema(
+  {
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
+    question: { type: String, required: true },
+  },
+  { timestamps: true }
+);
+
+const conversationSettingSchema = new Schema(
+  {
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
+
+    model: { type: String, required: true },
+    temperature: { type: Number, default: 0.7 },
+    systemPrompt: { type: String, required: true },
+
+    welcomeMessage: {
+      type: String,
+      default: "Hello! How can I help you today?",
+    },
+    fallbackMessage: {
+      type: String,
+      default:
+        "I apologize, but I didn’t understand that. Could you please rephrase?",
+    },
+
+    enableTypingIndicator: { type: Boolean, default: true },
+    collectUserInfo: { type: Boolean, default: true },
+
+    theme: {
+      primaryColor: { type: String, default: "#4F46E5" },
+      backgroundColor: { type: String, default: "#FFFFFF" },
+      textColor: { type: String, default: "#000000" },
+      bubbleStyle: {
+        type: String,
+        enum: ["rounded", "square"],
+        default: "rounded",
+      },
+    },
+  },
+  { timestamps: true }
+);
 
 export const ChatbotModel = model("Chatbot", chatbotSchema);
-export const ChatbotKnowledgeSourceModel = model(
-  "ChatbotKnowledgeSource",
-  chatbotKnowledgeSourceSchema
+export const KnowledgeSourceModel = model(
+  "KnowledgeSource",
+  knowledgeSourceSchema
 );
-export const ChatbotKnowledgeChunkModel = model(
-  "ChatbotKnowledgeChunk",
-  chatbotKnowledgeChunkSchema
+export const KnowledgeChunkModel = model(
+  "KnowledgeChunk",
+  knowledgeChunkSchema
 );
-export const ChatbotSuggestedQuestionModel = model(
-  "ChatbotSuggestedQuestion",
-  chatbotSuggestedQuestionSchema
+export const SuggestedQuestionModel = model(
+  "SuggestedQuestion",
+  suggestedQuestionSchema
 );
-export const ChatbotConversationSettingModel = model(
-  "ChatbotConversationSetting",
-  chatbotConversationSettingSchema
+export const ConversationSettingModel = model(
+  "ConversationSetting",
+  conversationSettingSchema
 );
