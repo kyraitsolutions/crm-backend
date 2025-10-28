@@ -12,9 +12,10 @@ export class AccountService{
     async getAccountById(id:string):Promise<{} | null>{
         return await this.accountRepository.findOne(id);
     }
-    async getAllAccounts(id:string):Promise<{} | null>{
+    async getAllAccounts(id:string):Promise<AccountDto[] | null>{
         const accounts=await this.accountRepository.findAll(id);
-        return accounts;
+        console.log(accounts)
+        return accounts?.map((account)=>new AccountDto(account))??[];
     }
 
     async createAccount(id:string,dto:CreateAccountDto):Promise<AccountDto>{

@@ -6,23 +6,37 @@ export class UserDto {
   roleId:string;
   createdAt: Date;
   updatedAt: Date;
+  userprofile:{
+    accountType:string;
+    firstName:string | null;
+    lastName:string | null;
+    organizationName:string | null;
+  }
 
   constructor(data: {
-    id: number;
+    _id: number;
     email: string;
     profilePicture?: string | null;
     onboarding: boolean;
     roleId:string;
     createdAt: Date;
     updatedAt: Date;
+    userprofile:{
+      accountType:string;
+      firstName:string | null;
+      lastName:string | null;
+      organizationName:string | null;
+    }
   }) {
-    this.id = data.id;
+    this.id = data._id;
     this.email = data.email;
     this.profilePicture = data.profilePicture;
     this.onboarding = data.onboarding;
     this.roleId=data.roleId
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
+    this.userprofile=data.userprofile
+
   }
 }
 

@@ -1,38 +1,50 @@
 import { TCreateUser, TUpdateUser, TUser } from "../types";
 import { RoleModel, UserModel } from "../models/user.model";
+import mongoose from "mongoose";
+import { OnboardingDto } from "../dtos/userprofile.dto";
 
 export class UserRepository {
   async findById(id: string): Promise<TUser | null> {
-    // const users = await UserModel.aggregate([
-    //   { $match: { _id: id } },
-    //   {
-    //     $lookup: {
-    //       from: "roles",
-    //       localField: "roleId",
-    //       foreignField: "_id",
-    //       as: "role",
-    //     },
-    //   },
-    //   { $unwind: "$role" },
-    //   {
-    //     $project: {
-    //       id: "$_id",
-    //       email: 1,
-    //       password: 1,
-    //       firstName: 1,
-    //       lastName: 1,
-    //       googleId: 1,
-    //       profilePicture: 1,
-    //       createdAt: 1,
-    //       updatedAt: 1,
-    //       roleId: 1,
-    //       role: "$role.name",
-    //     },
-    //   },
-    // ]);
-    // return users[0];
-    console.log(id);
-    return await UserModel.findOne({ _id: id });
+    const user = await UserModel.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(id) },
+      },
+      {
+        $lookup: {
+          from: "userprofiles", // collection name is plural by default
+          localField: "_id",
+          foreignField: "userId",
+          as: "userprofile",
+        },
+      },
+      {
+        $unwind: {
+          path: "$userprofile",
+          preserveNullAndEmptyArrays: true, // if user doesn't have profile
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          email: 1,
+          password: 1,
+          googleId: 1,
+          onboarding:1,
+          profilePicture: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          roleId: 1,
+          "userprofile.firstName": 1,
+          "userprofile.lastName": 1,
+          "userprofile.organizationName": 1,
+          "userprofile.accountType": 1,
+        },
+      },
+    ]);
+    console.log(user[0])
+    // Return single object if found
+    return user[0] || null;
+    // return await UserModel.findOne({ _id: id });
   }
 
   async findByEmail(email: string): Promise<TUser | null> {

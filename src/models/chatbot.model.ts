@@ -46,6 +46,10 @@ const chatbotConversationSettingSchema = new Schema({
     type: String,
     default: 'I apologize, but I didn\'t understand that. Could you please rephrase your question?'
   },
+  showWelcomeMessage: {
+    type: Boolean,
+    default: true
+  },
   enableTypingIndicator: {
     type: Boolean,
     default: true

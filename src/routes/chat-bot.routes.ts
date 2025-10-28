@@ -11,26 +11,35 @@ export class ChatBotRouter {
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
+    // get All chatbot for user
     this.router.get(
-      "/byuser",
+      "/",
       AuthMiddleware.authenticate,
       this.chatBotController.getChatBot.bind(this.chatBotController)
     );
+
+    // get particular chatbot data
     this.router.get(
-      "/byaccount",
+      "/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.getChatBots.bind(this.chatBotController)
+      this.chatBotController.getChatBotById.bind(this.chatBotController)
     );
+
+    // create chatbot for user
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
       this.chatBotController.createChatBot.bind(this.chatBotController)
     );
+
+    // update chatbot for user
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
       this.chatBotController.updateChatBot.bind(this.chatBotController)
     );
+
+    // delete chatbot for user
     this.router.delete(
       "/:id",
       AuthMiddleware.authenticate,

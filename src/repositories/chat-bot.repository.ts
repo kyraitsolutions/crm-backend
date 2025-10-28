@@ -25,14 +25,58 @@ export class ChatbotRepository {
           as: "conversationSettings"
         }
       },
-      // {
-      //   $lookup: {
-      //     from: "chatbotknowledgechunks",
-      //     localField: "_id",
-      //     foreignField: "chatbotId",
-      //     as: "knowledgeChunks"
-      //   }
-      // },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          userId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        }
+      }
+    ]);
+  }
+
+  async findAllByAccountId(accountId:string):Promise<any[]|null>{
+    return await ChatbotModel.aggregate([
+      {
+        $match: {accountId: new mongoose.Types.ObjectId(accountId) }
+      },
+      {
+        $lookup: {
+          from: "chatbotconversationsettings",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "conversationSettings"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          userId: 1,
+          accountId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        }
+      }
+    ]);
+  } 
+
+
+  async findByIdAndUserId(chatBotId:string,userId:string):Promise<any|null>{
+    return await ChatbotModel.aggregate([
+      {
+        $match: { _id: new mongoose.Types.ObjectId(chatBotId), userId: new mongoose.Types.ObjectId(userId) }
+      },
+      {
+        $lookup: {
+          from: "chatbotconversationsettings",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "conversationSettings"
+        }
+      },
       {
         $lookup: {
           from: "chatbotknowledgesources",
@@ -54,19 +98,16 @@ export class ChatbotRepository {
           _id: 1,
           name: 1,
           userId: 1,
+          accountId: 1,
           createdAt: 1,
           updatedAt: 1,
           conversationSettings: 1,
-          // knowledgeChunks: 1,
+          knowledgeChunks: 1,
           knowledgeSources: 1,
           suggestedQuestions: 1
         }
       }
     ]);
-  }
-
-  async findAllByAccountId(userId:string):Promise<any[]|null>{
-    
   }
   async addKnowledgeSource(data: any) {
     return await ChatbotKnowledgeSourceModel.create(data);

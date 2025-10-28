@@ -69,10 +69,10 @@ export class UserService {
         };
 
         user = await this.userRepository.create(userData);
-      } else {
-        user = await this.userRepository.update(user.id, {
-          profilePicture: profile.photos?.[0]?.value,
-        });
+      // } else {
+      //   user = await this.userRepository.update(user.id, {
+      //     profilePicture: profile.photos?.[0]?.value,
+      //   });
       }
     }
 
@@ -82,6 +82,7 @@ export class UserService {
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
     const userDto = user ? new UserDto(user) : null;
+    console.log("Respnse dto :",userDto)
     return userDto;
   }
 

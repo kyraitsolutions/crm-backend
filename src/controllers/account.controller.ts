@@ -17,7 +17,14 @@ export class AccountController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
+
+      if (user.userprofile?.accountType==="individual"){
+        httpResponse(req, res, 404, "No accounts for individual users", {
+          docs: [],
+        });
+      }
       const accounts = await this.accountService.getAllAccounts(user.id);
+      console.log(accounts)
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
         limit: 10,

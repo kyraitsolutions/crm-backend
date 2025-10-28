@@ -23,24 +23,47 @@ export class ChatBotController {
       next(error)
     }
   }
-  async getChatBots(req: Request, res: Response, next: NextFunction) {
+
+  async getChatBotById(req:Request,res:Response,next:NextFunction):Promise<void>{
     try {
       const user=req.user as any;
-      const chatBots = await this.chatBotService.getChatBots(user.id);
-      return res.status(200).json({
-        message: "Chatbots fetched successfully",
-        data: [],
+      const chatBotId=req.params.chatbotId;
+      const chatbot= await this.chatBotService.getChatBotById(user.id,chatBotId)
+      httpResponse(req, res, 200, "Chatbot details fetched successfully", {
+        docs: chatbot,
+      });
+    } catch (error) {
+      next(error)
+    }
+  }
+  
+  async getChatBots(req: Request, res: Response, next: NextFunction) {
+    try {
+      // const user=req.user as any;
+      const accountId=req.params.accountId;
+      const chatBots = await this.chatBotService.getChatBots(accountId);
+      httpResponse(req, res, 200, "Chatbot fetched successfully", {
+        docs: chatBots,
+        limit: 10,
+        skip: 0,
+        count:chatBots.length
       });
     } catch (error) {
       next(error);
     }
   }
+
+
+
+
   async createChatBot(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
+      const accountId=req.params.accountId;
       const createChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
+        accountId,
         createChatBotDto
       );
       httpResponse(req,res,201,"Chatbot Created successfully",{
@@ -50,6 +73,11 @@ export class ChatBotController {
       next(error);
     }
   }
+
+
+
+
+
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
       const updateChatBotDto = new CreateChatBotDto(req.body);

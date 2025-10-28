@@ -1,176 +1,193 @@
-import { UserProfileRepository } from './../repositories/userprofile.repository';
-import { CreateChatBotDto } from "../dtos";
+// import { UserProfileRepository } from './../repositories/userprofile.repository';
+import { ChatBotDetailDto, ChatBotListDto, CreateChatBotDto } from "../dtos";
 import { ChatbotRepository } from "../repositories";
 import { ChatBotUtil, GeminiAIUtil } from "../utils";
-import { AccountRepository } from '../repositories/account.repository';
+// import { AccountRepository } from '../repositories/account.repository';
 
 export class ChatBotService {
   private repo: ChatbotRepository;
-  private userprofileRepository:UserProfileRepository;
-  private accountRepository:AccountRepository;
+  // private userprofileRepository:UserProfileRepository;
+  // private accountRepository:AccountRepository;
   private geminiAIUtil: GeminiAIUtil;
 
   constructor() {
     this.repo = new ChatbotRepository();
-    this.accountRepository=new AccountRepository();
-    this.userprofileRepository = new UserProfileRepository();
+    // this.accountRepository=new AccountRepository();
+    // this.userprofileRepository = new UserProfileRepository();
     this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getAllChatBotsByUserId(userId:string):Promise<any> {
-    return await this.repo.findAllByUserId(userId);
+  async getAllChatBotsByUserId(userId:string):Promise<ChatBotListDto[]|[]> {
+    const chatbots= await this.repo.findAllByUserId(userId);
+    return chatbots?.map((chatbot)=>new ChatBotListDto(chatbot))??[];
   }
-  async getChatbots(userId:string):Promise<any> {
-    return await this.repo.findAllByAccountId(userId);
-  }
-
-
-
-  async createChatBot(userId: string, createChatBotDto: CreateChatBotDto) {
-    const user = await this.userprofileRepository.findByUserId(userId);
-
-    
-    let chatbot;
-
-    if(user?.accountType==="individual"){
-      chatbot = await this.repo.createChatbot({
-        name: createChatBotDto.name,
-        userId,
-        accountId:null
-      });
-    }
-    else{
-      const account=await this.accountRepository.findOne(userId);
-      console.log(account);
-      chatbot = await this.repo.createChatbot({
-        name: createChatBotDto.name,
-        userId,
-        accountId:account?.id
-      });
-    }
-    
-
-    console.log("Create chatbot:", chatbot)
-
-    if (createChatBotDto.knowledgeBase) {
-      const source = await this.repo.addKnowledgeSource({
-        chatbotId: chatbot._id,
-        type: createChatBotDto.knowledgeBase.type ?? "text",
-        name: createChatBotDto.name,
-        source: createChatBotDto.knowledgeBase.url ?? "manual",
-        data: createChatBotDto.knowledgeBase.manual,
-      });
-
-      if (createChatBotDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(
-          createChatBotDto.knowledgeBase.manual
-        );
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
-
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId: chatbot._id,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
-        await this.repo.addKnowledgeChunks(chunkData);
-      }
-    }
-
-    if (createChatBotDto.suggestions?.length) {
-      const questions = createChatBotDto.suggestions.map((q) => ({
-        chatbotId: chatbot._id,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
-
-    if (createChatBotDto.conversation) {
-      await this.repo.addConversationSettings({
-        chatbotId: chatbot._id,
-        model: "gemini-pro",
-        temperature: createChatBotDto.conversation.temperature || 1,
-        prompt: createChatBotDto.conversation.prompt || "hi",
-        showWelcomeMessage:createChatBotDto.conversation.showWelcomeMessage ||true,
-        welcomeMessage:createChatBotDto.conversation.welcomeMessage,
-        fallbackMessage:createChatBotDto.conversation.fallbackMessage,
-        enableTypingIndicator:createChatBotDto.conversation.enableTypingIndicator||true,
-        collectUserInfo:createChatBotDto.conversation.collectUserInfo,
-        theme:createChatBotDto.conversation.theme
-      });
-    }
-
-    // if (createChatBotDto.theme) {
-    //   await this.repo.addTheme({
-    //     chatbotId: chatbot._id,
-    //     ...createChatBotDto.theme,
-    //   });
-    // }
-
-    return chatbot;
+  async getChatBots(accountId:string):Promise<ChatBotListDto[]|[]> {
+    const chatbots= await this.repo.findAllByAccountId(accountId);
+    return chatbots?.map((chatbot)=>new ChatBotListDto(chatbot))??[];
   }
 
-  async updateChatBot(
-    // userId: string,
-    chatbotId: string,
-    updateDto: CreateChatBotDto
-  ) {
-    const chatbot = await this.repo.updateChatbot(chatbotId, {
-      name: updateDto.name,
-      description: updateDto.description,
+
+  async getChatBotById(userId:string,chatBotId:string):Promise<ChatBotDetailDto| null> {
+    const chatbot= await this.repo.findByIdAndUserId(chatBotId,userId);
+    console.log("m,cvxc", chatbot[0].knowledgeSources);
+    console.log("m,cvxc", chatbot[0]);
+    return new ChatBotDetailDto(chatbot[0])??null;
+  }
+
+
+
+  async createChatBot(
+    userId: string,
+    accountId: string,
+    createChatBotDto: CreateChatBotDto
+  ): Promise<ChatBotListDto> {
+    // 1️⃣ Create the chatbot
+    const chatbot = await this.repo.createChatbot({
+      name: createChatBotDto.name,
+      userId,
+      accountId: accountId || null,
     });
 
-    if (!chatbot) {
-      throw new Error("Chatbot not found");
-    }
+    console.log("✅ Created chatbot:", chatbot);
 
-    if (updateDto.knowledgeBase) {
-      const source = await this.repo.updateKnowledgeSource(chatbotId, {
-        type: updateDto.knowledgeBase.type ?? "text",
-        name: updateDto.name,
-        source: updateDto.knowledgeBase.url ?? "manual",
-        data: updateDto.knowledgeBase.manual,
-      });
+    // 2️⃣ Handle Knowledge Sources
+    if (
+      Array.isArray(createChatBotDto.knowledgeSources) &&
+      createChatBotDto.knowledgeSources.length > 0
+    ) {
+      for (const ks of createChatBotDto.knowledgeSources) {
+        if (!ks.data?.trim()) {
+          console.warn("⚠️ Skipping empty knowledge source:", ks);
+          continue;
+        }
 
-      if (source && updateDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(updateDto.knowledgeBase.manual);
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
+        const source = await this.repo.addKnowledgeSource({
+          chatbotId: chatbot._id,
+          type: ks.type ?? "text",
+          name: ks.name || createChatBotDto.name,
+          source: ks.source || "manual",
+          data: ks.data,
+        });
 
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
+        // If manual text provided, split and embed
+        if (ks.data) {
+          const chunks = ChatBotUtil.chunkText(ks.data);
+          const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
 
-        await this.repo.deleteKnowledgeChunks(chatbotId, source._id);
-        await this.repo.addKnowledgeChunks(chunkData);
+          const chunkData = chunks.map((c, idx) => ({
+            chatbotId: chatbot._id,
+            sourceId: source._id,
+            text: c,
+            embedding: embeddings[idx],
+          }));
+
+          await this.repo.addKnowledgeChunks(chunkData);
+        }
       }
     }
 
-    if (updateDto.suggestions) {
-      await this.repo.deleteSuggestedQuestions(chatbotId);
-
-      const questions = updateDto.suggestions.map((q) => ({
-        chatbotId,
+    // 3️⃣ Suggested Questions
+    if (createChatBotDto.suggestedQuestions?.length) {
+      const questions = createChatBotDto.suggestedQuestions.map((q) => ({
+        chatbotId: chatbot._id,
         question: q,
       }));
       await this.repo.addSuggestedQuestions(questions);
     }
 
-    if (updateDto.conversation) {
-      await this.repo.updateConversationSettings(chatbotId, {
-        temperature: updateDto.conversation.temperature,
-        prompt: updateDto.conversation.prompt,
+    // 4️⃣ Conversation Settings
+    if (createChatBotDto.conversationSettings) {
+      const settings = createChatBotDto.conversationSettings;
+      await this.repo.addConversationSettings({
+        chatbotId: chatbot._id,
+        model: settings.model || "gemini-pro",
+        temperature: settings.temperature || 1,
+        prompt: settings.prompt || "hi",
+        showWelcomeMessage: settings.showWelcomeMessage ?? true,
+        welcomeMessage: settings.welcomeMessage,
+        fallbackMessage: settings.fallbackMessage,
+        enableTypingIndicator: settings.enableTypingIndicator ?? true,
+        collectUserInfo: settings.collectUserInfo,
+        theme: settings.theme,
       });
     }
 
-    if (updateDto.theme) {
-      await this.repo.updateTheme(chatbotId, updateDto.theme);
-    }
-
-    return chatbot;
+    return new ChatBotListDto(chatbot);
   }
+
+
+  // async updateChatBot(chatbotId: string, updateDto: CreateChatBotDto) {
+  //   const chatbot = await this.repo.updateChatbot(chatbotId, {
+  //     name: updateDto.name,
+  //     description: updateDto.description,
+  //   });
+
+  //   if (!chatbot) {
+  //     throw new Error("Chatbot not found");
+  //   }
+
+  //   // ✅ Handle Knowledge Base Update
+  //   if (updateDto.knowledgeSources) {
+  //     const { type, source, manual } = updateDto.knowledgeSources;
+
+  //     // Only pass `data` if manual content exists
+  //     const sourceData: any = {
+  //       type: type ?? "text",
+  //       name: updateDto.name,
+  //       source: url ?? "manual",
+  //     };
+
+  //     if (manual && manual.trim() !== "") {
+  //       sourceData.data = manual;
+  //     }
+
+  //     const source = await this.repo.updateKnowledgeSource(chatbotId, sourceData);
+
+  //     // ✅ Only update embeddings if manual data is present
+  //     if (source && manual && manual.trim() !== "") {
+  //       const chunks = ChatBotUtil.chunkText(manual);
+  //       const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
+
+  //       const chunkData = chunks.map((c, idx) => ({
+  //         chatbotId,
+  //         sourceId: source._id,
+  //         text: c,
+  //         embedding: embeddings[idx],
+  //       }));
+
+  //       await this.repo.deleteKnowledgeChunks(chatbotId, source._id);
+  //       await this.repo.addKnowledgeChunks(chunkData);
+  //     }
+  //   }
+
+  //   // ✅ Update Suggested Questions
+  //   if (updateDto.suggestions?.length) {
+  //     await this.repo.deleteSuggestedQuestions(chatbotId);
+
+  //     const questions = updateDto.suggestions.map((q) => ({
+  //       chatbotId,
+  //       question: q,
+  //     }));
+
+  //     await this.repo.addSuggestedQuestions(questions);
+  //   }
+
+  //   // ✅ Update Conversation Settings
+  //   if (updateDto.conversation) {
+  //     await this.repo.updateConversationSettings(chatbotId, {
+  //       temperature: updateDto.conversation.temperature,
+  //       prompt: updateDto.conversation.prompt,
+  //     });
+  //   }
+
+  //   // ✅ Update Theme Settings
+  //   if (updateDto.theme) {
+  //     await this.repo.updateTheme(chatbotId, updateDto.theme);
+  //   }
+
+  //   return chatbot;
+  // }
+
 
   async deleteChatBot() {
     // Implement logic to delete a chatbot

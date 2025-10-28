@@ -29,7 +29,6 @@ const accountSchema = new mongoose.Schema(
     versionKey: false,
     toJSON: {
       transform(_, ret) {
-        delete (ret as any)._id;
         delete (ret as any).__v;
         return ret;
       },

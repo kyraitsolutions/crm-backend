@@ -10,7 +10,7 @@ export class AccountDto{
 
 
     constructor(data:{
-        id:string;
+        _id:string;
         userId:string;
         accountName:string;
         email:string;    
@@ -18,7 +18,7 @@ export class AccountDto{
         createdAt: Date;
         updatedAt: Date;
     }){
-        this.id=data.id;
+        this.id=data._id;
         this.userId=data.userId;
         this.accountName=data.accountName;
         this.email=data.email;
