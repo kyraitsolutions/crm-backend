@@ -70,15 +70,9 @@ export class AccountController {
       const result = await this.accountService.deleteAccount(id);
       console.log("result", result);
       if (!result) {
-        httpResponse(
-          req,
-          res,
-          404,
-          "Account with the user id does not exist!",
-          {
+        httpResponse(req,res,404,"Account with the user id does not exist!",{
             data: null,
-          }
-        );
+        });
       }
       httpResponse(req, res, 200, "Account deleted successfully", {
         data: {},

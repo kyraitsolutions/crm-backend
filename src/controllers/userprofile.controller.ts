@@ -20,6 +20,7 @@ export class UserProfileController {
             const createOnboardingDto = new CreateOnboardingDto(req.body);
             const result = await this.userprofileService.createOnboarding(
                 user.id,
+                user.email,
                 createOnboardingDto
             );
             httpResponse(req, res, 201, "Client onbaorded successfully", {

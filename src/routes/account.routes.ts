@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AccountController } from "../controllers/account.controller";
 import { AuthMiddleware } from "../middleware";
 import { ChatBotController } from "../controllers";
+import { FormController } from "../controllers/form.controller";
 
 
 
@@ -10,12 +11,14 @@ export class AccountRouter{
     public router:Router;
     private accountController:AccountController;
     private chatBotController: ChatBotController;
+    private formController: FormController;
 
     // constructor
     constructor(){
         this.router=Router();
         this.accountController=new AccountController();
         this.chatBotController = new ChatBotController();
+        this.formController = new FormController();
         this.initializeRoutes();
     }
 
@@ -61,6 +64,32 @@ export class AccountRouter{
             "/:accountId/chatbot/:chatbotId",
             AuthMiddleware.authenticate,
             this.chatBotController.createChatBot.bind(this.chatBotController)
+        );
+
+
+
+
+
+        // Form routes can be added here
+        this.router.get(
+            "/:accountId/forms",
+            AuthMiddleware.authenticate,
+            // this.formController.getForms.bind(this.formController)
+        );
+        this.router.post(
+            "/:accountId/form",
+            AuthMiddleware.authenticate,
+            this.formController.createForm.bind(this.formController)
+        );
+        this.router.put(
+            "/:accountId/form/:formId",
+            AuthMiddleware.authenticate,
+            // this.formController.updateForm.bind(this.formController)
+        );
+        this.router.delete(
+            "/:accountId/form/:formId",
+            AuthMiddleware.authenticate,
+            // this.formController.deleteForm.bind(this.formController)
         );
 
         // and so on....
