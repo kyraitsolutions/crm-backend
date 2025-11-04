@@ -17,24 +17,24 @@ export class ChatBotService {
     this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getAllChatBotsByUserId(userId:string):Promise<ChatBotListDto[]|[]> {
-    const chatbots= await this.repo.findAllByUserId(userId);
-    return chatbots?.map((chatbot)=>new ChatBotListDto(chatbot))??[];
+  async getAllChatBotsByUserId(userId: string): Promise<ChatBotListDto[] | []> {
+    const chatbots = await this.repo.findAllByUserId(userId);
+    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
-  async getChatBots(accountId:string):Promise<ChatBotListDto[]|[]> {
-    const chatbots= await this.repo.findAllByAccountId(accountId);
-    return chatbots?.map((chatbot)=>new ChatBotListDto(chatbot))??[];
+  async getChatBots(accountId: string): Promise<ChatBotListDto[] | []> {
+    const chatbots = await this.repo.findAllByAccountId(accountId);
+    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 
-
-  async getChatBotById(userId:string,chatBotId:string):Promise<ChatBotDetailDto| null> {
-    const chatbot= await this.repo.findByIdAndUserId(chatBotId,userId);
+  async getChatBotById(
+    userId: string,
+    chatBotId: string
+  ): Promise<ChatBotDetailDto | null> {
+    const chatbot = await this.repo.findByIdAndUserId(chatBotId, userId);
     console.log("m,cvxc", chatbot[0].knowledgeSources);
     console.log("m,cvxc", chatbot[0]);
-    return new ChatBotDetailDto(chatbot[0])??null;
+    return new ChatBotDetailDto(chatbot[0]) ?? null;
   }
-
-
 
   async createChatBot(
     userId: string,
@@ -51,49 +51,49 @@ export class ChatBotService {
     console.log("✅ Created chatbot:", chatbot);
 
     // 2️⃣ Handle Knowledge Sources
-    if (
-      Array.isArray(createChatBotDto.knowledgeSources) &&
-      createChatBotDto.knowledgeSources.length > 0
-    ) {
-      for (const ks of createChatBotDto.knowledgeSources) {
-        if (!ks.data?.trim()) {
-          console.warn("⚠️ Skipping empty knowledge source:", ks);
-          continue;
-        }
+    // if (
+    //   Array.isArray(createChatBotDto.knowledgeSources) &&
+    //   createChatBotDto.knowledgeSources.length > 0
+    // ) {
+    //   for (const ks of createChatBotDto.knowledgeSources) {
+    //     if (!ks.data?.trim()) {
+    //       console.warn("⚠️ Skipping empty knowledge source:", ks);
+    //       continue;
+    //     }
 
-        const source = await this.repo.addKnowledgeSource({
-          chatbotId: chatbot._id,
-          type: ks.type ?? "text",
-          name: ks.name || createChatBotDto.name,
-          source: ks.source || "manual",
-          data: ks.data,
-        });
+    //     const source = await this.repo.addKnowledgeSource({
+    //       chatbotId: chatbot._id,
+    //       type: ks.type ?? "text",
+    //       name: ks.name || createChatBotDto.name,
+    //       source: ks.source || "manual",
+    //       data: ks.data,
+    //     });
 
-        // If manual text provided, split and embed
-        if (ks.data) {
-          const chunks = ChatBotUtil.chunkText(ks.data);
-          const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
+    //     // If manual text provided, split and embed
+    //     if (ks.data) {
+    //       const chunks = ChatBotUtil.chunkText(ks.data);
+    //       const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
 
-          const chunkData = chunks.map((c, idx) => ({
-            chatbotId: chatbot._id,
-            sourceId: source._id,
-            text: c,
-            embedding: embeddings[idx],
-          }));
+    //       const chunkData = chunks.map((c, idx) => ({
+    //         chatbotId: chatbot._id,
+    //         sourceId: source._id,
+    //         text: c,
+    //         embedding: embeddings[idx],
+    //       }));
 
-          await this.repo.addKnowledgeChunks(chunkData);
-        }
-      }
-    }
+    //       await this.repo.addKnowledgeChunks(chunkData);
+    //     }
+    //   }
+    // }
 
     // 3️⃣ Suggested Questions
-    if (createChatBotDto.suggestedQuestions?.length) {
-      const questions = createChatBotDto.suggestedQuestions.map((q) => ({
-        chatbotId: chatbot._id,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
+    // if (createChatBotDto.suggestedQuestions?.length) {
+    //   const questions = createChatBotDto.suggestedQuestions.map((q) => ({
+    //     chatbotId: chatbot._id,
+    //     question: q,
+    //   }));
+    //   await this.repo.addSuggestedQuestions(questions);
+    // }
 
     // 4️⃣ Conversation Settings
     if (createChatBotDto.conversationSettings) {
@@ -114,7 +114,6 @@ export class ChatBotService {
 
     return new ChatBotListDto(chatbot);
   }
-
 
   // async updateChatBot(chatbotId: string, updateDto: CreateChatBotDto) {
   //   const chatbot = await this.repo.updateChatbot(chatbotId, {
@@ -187,7 +186,6 @@ export class ChatBotService {
 
   //   return chatbot;
   // }
-
 
   async deleteChatBot() {
     // Implement logic to delete a chatbot

@@ -29,7 +29,7 @@ export class UserRepository {
           email: 1,
           password: 1,
           googleId: 1,
-          onboarding:1,
+          onboarding: 1,
           profilePicture: 1,
           createdAt: 1,
           updatedAt: 1,
@@ -41,7 +41,7 @@ export class UserRepository {
         },
       },
     ]);
-    console.log(user[0])
+
     // Return single object if found
     return user[0] || null;
     // return await UserModel.findOne({ _id: id });
