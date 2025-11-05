@@ -9,24 +9,24 @@ export class UserProfileController {
   constructor() {
     this.userprofileService = new UserProfileService();
   }
-
-  createOnboarding = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const user = req.user as any;
-      const createOnboardingDto = new CreateOnboardingDto(req.body);
-      const result = await this.userprofileService.createOnboarding(
-        user.id,
-        createOnboardingDto
-      );
-      httpResponse(req, res, 201, "Client onbaorded successfully", {
-        docs: result,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+    createOnboarding = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ): Promise<void> => {
+        try {
+            const user = req.user as any;
+            const createOnboardingDto = new CreateOnboardingDto(req.body);
+            const result = await this.userprofileService.createOnboarding(
+                user.id,
+                user.email,
+                createOnboardingDto
+            );
+            httpResponse(req, res, 201, "Client onbaorded successfully", {
+                docs: result,
+            });
+        } catch (error) {
+            next(error);
+        }
+    };
 }

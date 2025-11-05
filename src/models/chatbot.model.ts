@@ -6,7 +6,119 @@ const chatbotSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  }
+);
+
+const chatbotSettingSchema = new Schema(
+  {
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
+    welcomeMessage: {
+      type: String,
+      default: "Hello! How can I help you today?",
+    },
+    fallbackMessage: {
+      type: String,
+      default:
+        "I apologize, but I didn't understand that. Could you please rephrase your question?",
+    },
+    showWelcomeMessage: {
+      type: Boolean,
+      default: true,
+    },
+    thankyouMessage: {
+      type: String,
+      default:
+        "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
+    },
+    waitingMessage: {
+      type: String,
+      default: "Please wait while we connect you to our support representative",
+    },
+    enableTypingIndicator: {
+      type: Boolean,
+      default: true,
+    },
+    enableWidgetMessage: {
+      type: Boolean,
+      default: true,
+    },
+    widgetMessageOnline: {
+      content: {
+        type: String,
+        default: "Hey there!",
+      },
+      subHeading: {
+        type: String,
+        default: "How can we help you?",
+      },
+    },
+    widgetMessageOffline: {
+      content: {
+        type: String,
+        default: "We're offline",
+      },
+      subHeading: {
+        type: String,
+        default: "Leave a message",
+      },
+    },
+    widgetPosition: {
+      type: String,
+      enum: ["left-bottom", "right-bottom"],
+      default: "right-bottom",
+    },
+    language: {
+      type: String,
+      enum: ["english", "hindi"],
+    },
+    enableRantingAndFeedback: {
+      type: Boolean,
+      default: true,
+    },
+    ratingAndFeedback: {
+      rating: {
+        type: Number,
+        emum: [1, 2, 3, 4, 5],
+        default: 5,
+      },
+      feedback: {
+        type: String,
+      },
+    },
+    chat_transcript: {
+      type: Boolean,
+      default: true,
+    },
+    enableVoiceNote: {
+      type: Boolean,
+      default: false,
+    },
+    responseInterval: {
+      type: Number,
+      enum: [0, 1, 2],
+      default: 0,
+    },
+    theme: {},
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  }
 );
 
 // const chatbotKnowledgeSourceSchema = new Schema({
@@ -32,35 +144,6 @@ const chatbotSchema = new Schema(
 //   chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
 //   question: { type: String, required: true },
 // });
-
-const chatbotConversationSettingSchema = new Schema({
-  chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
-  model: { type: String, required: true },
-  temperature: { type: Number, required: true },
-  prompt: { type: String, required: true },
-  welcomeMessage: {
-    type: String,
-    default: "Hello! How can I help you today?",
-  },
-  fallbackMessage: {
-    type: String,
-    default:
-      "I apologize, but I didn't understand that. Could you please rephrase your question?",
-  },
-  showWelcomeMessage: {
-    type: Boolean,
-    default: true,
-  },
-  enableTypingIndicator: {
-    type: Boolean,
-    default: true,
-  },
-  collectUserInfo: {
-    type: Boolean,
-    default: true,
-  },
-  theme: {},
-});
 
 const chatbotNodesSchema = new Schema({
   id: String, // use UUID (from frontend)
@@ -119,8 +202,7 @@ export const ChatbotModel = model("Chatbot", chatbotSchema);
 //   "ChatbotSuggestedQuestion",
 //   chatbotSuggestedQuestionSchema
 // );
-
-export const ChatbotConversationSettingModel = model(
+export const ChatbotSettingModel = model(
   "ChatbotConversationSetting",
-  chatbotConversationSettingSchema
+  chatbotSettingSchema
 );
