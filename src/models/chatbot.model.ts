@@ -107,18 +107,19 @@ export const ChatbotFlowModel = model("ChatbotFlow", chatbotFlowSchema);
 
 export const ChatbotModel = model("Chatbot", chatbotSchema);
 
-export const ChatbotKnowledgeSourceModel = model(
-  "ChatbotKnowledgeSource",
-  chatbotKnowledgeSourceSchema
-);
-export const ChatbotKnowledgeChunkModel = model(
-  "ChatbotKnowledgeChunk",
-  chatbotKnowledgeChunkSchema
-);
-export const ChatbotSuggestedQuestionModel = model(
-  "ChatbotSuggestedQuestion",
-  chatbotSuggestedQuestionSchema
-);
+// export const ChatbotKnowledgeSourceModel = model(
+//   "ChatbotKnowledgeSource",
+//   chatbotKnowledgeSourceSchema
+// );
+// export const ChatbotKnowledgeChunkModel = model(
+//   "ChatbotKnowledgeChunk",
+//   chatbotKnowledgeChunkSchema
+// );
+// export const ChatbotSuggestedQuestionModel = model(
+//   "ChatbotSuggestedQuestion",
+//   chatbotSuggestedQuestionSchema
+// );
+
 export const ChatbotConversationSettingModel = model(
   "ChatbotConversationSetting",
   chatbotConversationSettingSchema
