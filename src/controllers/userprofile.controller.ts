@@ -1,15 +1,14 @@
-import {Request,Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { UserProfileService } from "../services/userprofile.service";
 import httpResponse from "../utils/http.response";
 import { CreateOnboardingDto } from "../dtos/userprofile.dto";
 
 export class UserProfileController {
-    private userprofileService: UserProfileService;
+  private userprofileService: UserProfileService;
 
-    constructor() {
-        this.userprofileService = new UserProfileService();
-    }
-    
+  constructor() {
+    this.userprofileService = new UserProfileService();
+  }
     createOnboarding = async (
         req: Request,
         res: Response,

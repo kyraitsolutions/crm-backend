@@ -25,6 +25,14 @@ export class ChatBotRouter {
       this.chatBotController.getChatBotById.bind(this.chatBotController)
     );
 
+    // create chatbot flow for chatbot
+
+    this.router.post(
+      "/create-flow/:accountId",
+      AuthMiddleware.authenticate,
+      this.chatBotController.createChatbotFlow.bind(this.chatBotController)
+    );
+
     // create chatbot for user
     this.router.post(
       "/",

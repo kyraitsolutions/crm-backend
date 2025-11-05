@@ -1,4 +1,4 @@
-import { UserRepository } from './../repositories/user.repository';
+import { UserRepository } from "./../repositories/user.repository";
 import { CreateOnboardingDto, OnboardingDto } from "../dtos/userprofile.dto";
 import { UserProfileRepository } from "../repositories/userprofile.repository";
 import { TCreateUserProfile } from "../types/userprofile.type";
@@ -28,7 +28,6 @@ export class UserProfileService{
             firstName:dto.firstName,
             lastName:dto.lastName,
             organizationName:dto.organizationName,
-            // accountType:dto.accountType
             accountType:dto.accountType
         };
 
@@ -48,7 +47,4 @@ export class UserProfileService{
         await this.userRepository.update(userProfile.userId,dataToUpdate);
         return new OnboardingDto(userProfile);
     }
-
-
-
 }

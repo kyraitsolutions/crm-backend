@@ -4,6 +4,8 @@ import { ErrorMiddleware } from "./middleware/auth.middleware";
 import cors from "cors";
 import { AppRoutes } from "./routes";
 import { initDB } from "./db";
+import { createWebSocketServer } from "./config/wsServer/wsServer";
+import http from "http";
 
 export class App {
   public app: Application;
@@ -39,7 +41,10 @@ export class App {
   }
 
   public listen(port: number): void {
-    this.app.listen(port, () => {
+    const server = http.createServer(this.app);
+    createWebSocketServer(server);
+
+    server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   }
