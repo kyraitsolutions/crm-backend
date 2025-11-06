@@ -23,6 +23,8 @@ export class AccountRouter{
     }
 
     private initializeRoutes():void{
+
+        // Accounts 
         this.router.get("/",AuthMiddleware.authenticate, this.accountController.getAccounts.bind(this.accountController)); //done
         // this.router.get("/:id",AuthMiddleware.authenticate, this.accountController.getAccountById.bind(this.accountController)); //not required for now
         this.router.post("/",AuthMiddleware.authenticate, this.accountController.createAccount.bind(this.accountController)); //done

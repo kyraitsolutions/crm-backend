@@ -1,243 +1,302 @@
-// ----------- ChatBot List DTO -----------
-import { TCreateChatBot } from "../types";
-
 export class CreateChatBotDto {
+  // Basic chatbot info
   name: string;
+  description:string
+  // userId: string;
+  // accountId?: string;
 
-  // Chatbot settings
-  welcomeMessage: string;
-  fallbackMessage: string;
-  showWelcomeMessage: boolean;
-  thankyouMessage: string;
-  waitingMessage: string;
-  enableTypingIndicator: boolean;
-  enableWidgetMessage: boolean;
-
-  widgetMessageOnline: {
-    content: string;
-    subHeading: string;
+  // --- Config ---
+  config: {
+    enableTypingIndicator: boolean;
+    enableWidgetMessage: boolean;
+    widgetMessageOnline: {
+      content: string;
+      subHeading: string;
+    };
+    widgetMessageOffline: {
+      content: string;
+      subHeading: string;
+    };
+    language: "english" | "hindi";
+    enableRantingAndFeedback: boolean;
+    ratingAndFeedback: {
+      rating: number;
+      feedback?: string;
+    };
+    chat_transcript: boolean;
+    enableVoiceNote: boolean;
+    responseInterval: 0 | 1 | 2;
+    initiateChatbot: "immediate" | "action" | "";
+    showBranding: boolean;
   };
 
-  widgetMessageOffline: {
-    content: string;
-    subHeading: string;
+  // --- Theme ---
+  theme: {
+    brandColor: string;
+    contrastColor: string;
+    backgroundColor: string;
+    messageColor: string;
+    userMessageColor: string;
+    typeface: string;
+    fontSize: number;
+    fontWeight: string;
+    avatarStyle: string;
+    avatarUrl?: string;
+    showAvatar?: boolean;
+    roundedCorners?: boolean;
+    borderWidth?: number;
+    borderColor?: string;
+    widgetPosition?: string;
+    showLauncher?: boolean;
+    launcherLabel?: string;
+    launcherSize?: number;
+    messageAlignment?: string;
+    showTimestamps?: boolean;
+    animationStyle?: string;
+    shadowIntensity?: number;
+    opacity?: number;
+    customCSS?: string;
   };
 
-  widgetPosition: "left-bottom" | "right-bottom";
-  language: "english" | "hindi";
-  enableRantingAndFeedback: boolean;
-
-  ratingAndFeedback: {
-    rating: number;
-    feedback?: string;
+  // --- Conversation ---
+  conversation: {
+    welcomeMessage: string;
+    fallbackMessage: string;
+    showWelcomeMessage: boolean;
+    thankyouMessage: string;
+    waitingMessage: string;
   };
 
-  chat_transcript: boolean;
-  enableVoiceNote: boolean;
-  responseInterval: 0 | 1 | 2;
-  theme?: Record<string, any>;
-
-  constructor(data: TCreateChatBot) {
-    // Basic chatbot info
+  constructor(data: any) {
     this.name = data.name;
+    this.description=data.description;
+    // this.userId = data.userId;
+    // this.accountId = data.accountId ?? null;
 
-    this.welcomeMessage =
-      data. ?? "Hello! How can I help you today?";
-    this.fallbackMessage =
-      data.fallbackMessage ??
-      "I apologize, but I didn't understand that. Could you please rephrase your question?";
-    this.showWelcomeMessage =
-      data.showWelcomeMessage ?? true;
-    this.thankyouMessage =
-      data.thankyouMessage ??
-      "It's been a pleasure chatting with you today, Please take a moment to drop us your rating";
-    this.waitingMessage =
-      data.waitingMessage ??
-      "Please wait while we connect you to our support representative";
-    this.enableTypingIndicator =
-      data.enableTypingIndicator ?? true;
-    this.enableWidgetMessage =
-      data.enableWidgetMessage ?? true;
-
-    this.widgetMessageOnline = {
-      content: data.widgetMessageOnline?.content ?? "Hey there!",
-      subHeading:
-        data.widgetMessageOnline?.subHeading ?? "How can we help you?",
+    // Config Section
+    this.config = {
+      enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
+      enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
+      widgetMessageOnline: {
+        content: data.config?.widgetMessageOnline?.content ?? "Hey there!",
+        subHeading:
+          data.config?.widgetMessageOnline?.subHeading ??
+          "How can we help you?",
+      },
+      widgetMessageOffline: {
+        content: data.config?.widgetMessageOffline?.content ?? "We're offline",
+        subHeading:
+          data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
+      },
+      language: data.config?.language ?? "english",
+      enableRantingAndFeedback:
+        data.config?.enableRantingAndFeedback ?? true,
+      ratingAndFeedback: {
+        rating: data.config?.ratingAndFeedback?.rating ?? 5,
+        feedback: data.config?.ratingAndFeedback?.feedback ?? "",
+      },
+      chat_transcript: data.config?.chat_transcript ?? true,
+      enableVoiceNote: data.config?.enableVoiceNote ?? false,
+      responseInterval: data.config?.responseInterval ?? 0,
+      initiateChatbot: data.config?.initiateChatbot ?? "immediate",
+      showBranding: data.config?.showBranding ?? true,
     };
 
-    this.widgetMessageOffline = {
-      content: data.widgetMessageOffline?.content ?? "We're offline",
-      subHeading:
-        data.widgetMessageOffline?.subHeading ?? "Leave a message",
+    // Theme Section
+    this.theme = {
+      brandColor: data.theme?.brandColor ?? "#3b5d50",
+      contrastColor: data.theme?.contrastColor ?? "#fefefe",
+      backgroundColor: data.theme?.backgroundColor ?? "#ffffff",
+      messageColor: data.theme?.messageColor ?? "#f1f5f9",
+      userMessageColor: data.theme?.userMessageColor ?? "#3b5d50",
+      typeface: data.theme?.typeface ?? "Inter",
+      fontSize: data.theme?.fontSize ?? 14,
+      fontWeight: data.theme?.fontWeight ?? "normal",
+      avatarStyle: data.theme?.avatarStyle ?? "bubble",
+      avatarUrl: data.theme?.avatarUrl ?? "",
+      showAvatar: data.theme?.showAvatar ?? true,
+      roundedCorners: data.theme?.roundedCorners ?? true,
+      borderWidth: data.theme?.borderWidth ?? 1,
+      borderColor: data.theme?.borderColor ?? "#e2e8f0",
+      widgetPosition: data.theme?.widgetPosition ?? "bottom-right",
+      showLauncher: data.theme?.showLauncher ?? true,
+      launcherLabel: data.theme?.launcherLabel ?? "",
+      launcherSize: data.theme?.launcherSize ?? 56,
+      messageAlignment: data.theme?.messageAlignment ?? "left",
+      showTimestamps: data.theme?.showTimestamps ?? true,
+      animationStyle: data.theme?.animationStyle ?? "slide",
+      shadowIntensity: data.theme?.shadowIntensity ?? 20,
+      opacity: data.theme?.opacity ?? 100,
+      customCSS: data.theme?.customCSS ?? "",
     };
 
-    this.widgetPosition = data.widgetPosition ?? "right-bottom";
-    this.language = data.language ?? "english";
-    this.enableRantingAndFeedback =
-      data.enableRantingAndFeedback ?? true;
-
-    this.ratingAndFeedback = {
-      rating: data.ratingAndFeedback?.rating ?? 5,
-      feedback: data.ratingAndFeedback?.feedback ?? "",
+    // Conversation Section
+    this.conversation = {
+      welcomeMessage:
+        data.conversation?.welcomeMessage ??
+        "Hello! How can I help you today?",
+      fallbackMessage:
+        data.conversation?.fallbackMessage ??
+        "I apologize, but I didn't understand that. Could you please rephrase your question?",
+      showWelcomeMessage: data.conversation?.showWelcomeMessage ?? true,
+      thankyouMessage:
+        data.conversation?.thankyouMessage ??
+        "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
+      waitingMessage:
+        data.conversation?.waitingMessage ??
+        "Please wait while we connect you to our support representative",
     };
-
-    this.chat_transcript = data.chat_transcript ?? true;
-    this.enableVoiceNote = data.enableVoiceNote ?? false;
-    this.responseInterval = data.responseInterval ?? 0;
-    this.theme = data.theme ?? {};
   }
 }
+export class ResponseChatBotDto {
+  // Basic chatbot info
+  id:string;
+  name: string;
+  description:string
+  // userId: string;
+  // accountId?: string;
 
+  // --- Config ---
+  config: {
+    enableTypingIndicator: boolean;
+    enableWidgetMessage: boolean;
+    widgetMessageOnline: {
+      content: string;
+      subHeading: string;
+    };
+    widgetMessageOffline: {
+      content: string;
+      subHeading: string;
+    };
+    language: "english" | "hindi";
+    enableRantingAndFeedback: boolean;
+    ratingAndFeedback: {
+      rating: number;
+      feedback?: string;
+    };
+    chat_transcript: boolean;
+    enableVoiceNote: boolean;
+    responseInterval: 0 | 1 | 2;
+    initiateChatbot: "immediate" | "action" | "";
+    showBranding: boolean;
+  };
 
-// export class ChatBotListDto {
-//   id: string;
-//   name: string;
-//   userId: string;
-//   accountId?: string;
-//   createdAt: Date;
-//   updatedAt: Date;
+  // --- Theme ---
+  theme: {
+    brandColor: string;
+    contrastColor: string;
+    backgroundColor: string;
+    messageColor: string;
+    userMessageColor: string;
+    typeface: string;
+    fontSize: number;
+    fontWeight: string;
+    avatarStyle: string;
+    avatarUrl?: string;
+    showAvatar?: boolean;
+    roundedCorners?: boolean;
+    borderWidth?: number;
+    borderColor?: string;
+    widgetPosition?: string;
+    showLauncher?: boolean;
+    launcherLabel?: string;
+    launcherSize?: number;
+    messageAlignment?: string;
+    showTimestamps?: boolean;
+    animationStyle?: string;
+    shadowIntensity?: number;
+    opacity?: number;
+    customCSS?: string;
+  };
 
-//   constructor(data: any) {
-//     this.id = data._id;
-//     this.name = data.name;
-//     this.userId = data.userId;
-//     this.accountId = data.accountId;
-//     this.createdAt = data.createdAt;
-//     this.updatedAt = data.updatedAt;
-//   }
-// }
+  // --- Conversation ---
+  conversation: {
+    welcomeMessage: string;
+    fallbackMessage: string;
+    showWelcomeMessage: boolean;
+    thankyouMessage: string;
+    waitingMessage: string;
+  };
 
-// // ----------- ChatBot Detail DTO -----------
-// export class ChatBotDetailDto {
-//   id: string;
-//   name: string;
-//   userId: string;
-//   accountId?: string;
-//   createdAt: Date;
-//   updatedAt: Date;
+  constructor(data: any) {
+    this.id=data._id;
+    this.name = data.name;
+    this.description=data.description;
+    // this.userId = data.userId;
+    // this.accountId = data.accountId ?? null;
 
-//   description?: string;
+    // Config Section
+    this.config = {
+      enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
+      enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
+      widgetMessageOnline: {
+        content: data.config?.widgetMessageOnline?.content ?? "Hey there!",
+        subHeading:
+          data.config?.widgetMessageOnline?.subHeading ??
+          "How can we help you?",
+      },
+      widgetMessageOffline: {
+        content: data.config?.widgetMessageOffline?.content ?? "We're offline",
+        subHeading:
+          data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
+      },
+      language: data.config?.language ?? "english",
+      enableRantingAndFeedback:
+        data.config?.enableRantingAndFeedback ?? true,
+      ratingAndFeedback: {
+        rating: data.config?.ratingAndFeedback?.rating ?? 5,
+        feedback: data.config?.ratingAndFeedback?.feedback ?? "",
+      },
+      chat_transcript: data.config?.chat_transcript ?? true,
+      enableVoiceNote: data.config?.enableVoiceNote ?? false,
+      responseInterval: data.config?.responseInterval ?? 0,
+      initiateChatbot: data.config?.initiateChatbot ?? "immediate",
+      showBranding: data.config?.showBranding ?? true,
+    };
 
-//   knowledgeSources: {
-//     _id: string;
-//     source: string;
-//     type: "file" | "text" | "website";
-//     data: string;
-//     name: string;
-//   }[];
+    // Theme Section
+    this.theme = {
+      brandColor: data.theme?.brandColor ?? "#3b5d50",
+      contrastColor: data.theme?.contrastColor ?? "#fefefe",
+      backgroundColor: data.theme?.backgroundColor ?? "#ffffff",
+      messageColor: data.theme?.messageColor ?? "#f1f5f9",
+      userMessageColor: data.theme?.userMessageColor ?? "#3b5d50",
+      typeface: data.theme?.typeface ?? "Inter",
+      fontSize: data.theme?.fontSize ?? 14,
+      fontWeight: data.theme?.fontWeight ?? "normal",
+      avatarStyle: data.theme?.avatarStyle ?? "bubble",
+      avatarUrl: data.theme?.avatarUrl ?? "",
+      showAvatar: data.theme?.showAvatar ?? true,
+      roundedCorners: data.theme?.roundedCorners ?? true,
+      borderWidth: data.theme?.borderWidth ?? 1,
+      borderColor: data.theme?.borderColor ?? "#e2e8f0",
+      widgetPosition: data.theme?.widgetPosition ?? "bottom-right",
+      showLauncher: data.theme?.showLauncher ?? true,
+      launcherLabel: data.theme?.launcherLabel ?? "",
+      launcherSize: data.theme?.launcherSize ?? 56,
+      messageAlignment: data.theme?.messageAlignment ?? "left",
+      showTimestamps: data.theme?.showTimestamps ?? true,
+      animationStyle: data.theme?.animationStyle ?? "slide",
+      shadowIntensity: data.theme?.shadowIntensity ?? 20,
+      opacity: data.theme?.opacity ?? 100,
+      customCSS: data.theme?.customCSS ?? "",
+    };
 
-//   suggestedQuestions: string[];
-
-//   conversationdata?: {
-//     model: string;
-//     temperature: number;
-//     prompt: string;
-//     showWelcomeMessage: boolean;
-//     welcomeMessage: string;
-//     fallbackMessage: string;
-//     enableTypingIndicator: boolean;
-//     collectUserInfo: boolean;
-//     theme?: Record<string, any>;
-//   };
-
-//   constructor(data: any) {
-//     this.id = data._id;
-//     this.name = data.name;
-//     this.userId = data.userId;
-//     this.accountId = data.accountId;
-//     this.createdAt = data.createdAt;
-//     this.updatedAt = data.updatedAt;
-//     this.description = data.description ?? "";
-
-//     this.knowledgeSources = (data.knowledgeSources || []).map((src: any) => ({
-//       _id: src._id,
-//       source: src.source,
-//       type: src.type,
-//       data: src.data,
-//       name: src.name,
-//     }));
-
-//     this.suggestedQuestions = (data.suggestedQuestions || []).map(
-//       (q: any) => q.question
-//     );
-
-//     if (data.conversationdata) {
-//       this.conversationdata = {
-//         model: data.conversationdata.model ?? "gemini-pro",
-//         temperature: data.conversationdata.temperature ?? 0.7,
-//         prompt: data.conversationdata.prompt ?? "",
-//         showWelcomeMessage:
-//           data.conversationdata.showWelcomeMessage ?? true,
-//         welcomeMessage:
-//           data.conversationdata.welcomeMessage ??
-//           "Hello! How can I help you today?",
-//         fallbackMessage:
-//           data.conversationdata.fallbackMessage ??
-//           "I apologize, but I didn’t understand that.",
-//         enableTypingIndicator:
-//           data.conversationdata.enableTypingIndicator ?? true,
-//         collectUserInfo: data.conversationdata.collectUserInfo ?? true,
-//         theme: data.conversationdata.theme ?? {},
-//       };
-//     }
-//   }
-// }
-
-// // ----------- Create ChatBot DTO -----------
-// export class CreateChatBotDto {
-//   name: string;
-//   description?: string;
-
-//   knowledgeSources: {
-//     source: string;
-//     type: "file" | "text" | "website";
-//     data: string;
-//     name: string;
-//   }[];
-
-//   suggestedQuestions?: string[];
-
-//   conversationdata?: {
-//     model: string;
-//     temperature: number;
-//     prompt: string;
-//     showWelcomeMessage: boolean;
-//     welcomeMessage: string;
-//     fallbackMessage: string;
-//     enableTypingIndicator: boolean;
-//     collectUserInfo: boolean;
-//     theme?: Record<string, any>;
-//   };
-
-//   constructor(data: TCreateChatBot) {
-//     this.name = data.name;
-//     this.description = data.description ?? "";
-
-//     this.knowledgeSources = Array.isArray(data.knowledgeSources) && data.knowledgeSources.length
-//       ? data.knowledgeSources.map((src: any) => ({
-//           source: src.source || "",
-//           type: src.type || "text",
-//           data: src.data || "",
-//           name: src.name || "",
-//         }))
-//       : [];
-
-//     this.suggestedQuestions = data.suggestedQuestions ?? [];
-
-//     this.conversationdata = {
-//       model: data.conversation?.model ?? "gemini-pro",
-//       temperature: Number(data.conversation?.temperature ?? 0.7),
-//       prompt: data.conversation?.prompt ?? "",
-//       showWelcomeMessage: data.conversation?.showWelcomeMessage ?? true,
-//       welcomeMessage:
-//         data.conversation?.welcomeMessage ??
-//         "Hello! How can I help you today?",
-//       fallbackMessage:
-//         data.conversation?.fallbackMessage ??
-//         "I apologize, but I didn’t understand that.",
-//       enableTypingIndicator: data.conversation?.enableTypingIndicator ?? true,
-//       collectUserInfo: data.conversation?.collectUserInfo ?? true,
-//       theme: data.conversation?.theme ?? {},
-//     };
-//   }
-// }
+    // Conversation Section
+    this.conversation = {
+      welcomeMessage:
+        data.conversation?.welcomeMessage ??
+        "Hello! How can I help you today?",
+      fallbackMessage:
+        data.conversation?.fallbackMessage ??
+        "I apologize, but I didn't understand that. Could you please rephrase your question?",
+      showWelcomeMessage: data.conversation?.showWelcomeMessage ?? true,
+      thankyouMessage:
+        data.conversation?.thankyouMessage ??
+        "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
+      waitingMessage:
+        data.conversation?.waitingMessage ??
+        "Please wait while we connect you to our support representative",
+    };
+  }
+}

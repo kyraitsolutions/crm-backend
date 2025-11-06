@@ -123,7 +123,12 @@ export class ChatBotController {
   async createChatBot(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
+      
       const accountId = req.params.accountId;
+
+      console.log("user id",user.id)
+      console.log("account id",accountId)
+
       const createChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
