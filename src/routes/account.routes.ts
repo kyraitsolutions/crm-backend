@@ -44,7 +44,7 @@ export class AccountRouter{
         this.router.get(
             "/:accountId/chatbots/:chabotId",
             AuthMiddleware.authenticate,
-            this.chatBotController.getChatBots.bind(this.chatBotController)
+            this.chatBotController.getChatBotById.bind(this.chatBotController)
         );
 
         // create chatbot for this account
