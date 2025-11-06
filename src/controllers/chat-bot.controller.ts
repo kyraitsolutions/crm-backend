@@ -124,14 +124,18 @@ export class ChatBotController {
     try {
       const user = req.user as any;
       const accountId = req.params.accountId;
-      const createChatBotDto = new CreateChatBotDto(req.body);
+
+      console.log(req.body);
+
+      // const createChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
         accountId,
-        createChatBotDto
+        req.body
       );
       httpResponse(req, res, 201, "Chatbot Created successfully", {
         docs: chatBot,
+        // docs: {},
       });
     } catch (error) {
       next(error);

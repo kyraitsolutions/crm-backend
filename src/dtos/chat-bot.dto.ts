@@ -3,7 +3,6 @@ import { TCreateChatBot } from "../types";
 
 export class CreateChatBotDto {
   name: string;
-
   // Chatbot settings
   welcomeMessage: string;
   fallbackMessage: string;
@@ -26,7 +25,7 @@ export class CreateChatBotDto {
   widgetPosition: "left-bottom" | "right-bottom";
   language: "english" | "hindi";
   enableRantingAndFeedback: boolean;
-
+ 
   ratingAndFeedback: {
     rating: number;
     feedback?: string;
@@ -37,27 +36,24 @@ export class CreateChatBotDto {
   responseInterval: 0 | 1 | 2;
   theme?: Record<string, any>;
 
-  constructor(data: TCreateChatBot) {
+  constructor(data: any) {
     // Basic chatbot info
     this.name = data.name;
 
     this.welcomeMessage =
-      data. ?? "Hello! How can I help you today?";
+      data.welcomeMessage ?? "Hello! How can I help you today?";
     this.fallbackMessage =
       data.fallbackMessage ??
       "I apologize, but I didn't understand that. Could you please rephrase your question?";
-    this.showWelcomeMessage =
-      data.showWelcomeMessage ?? true;
+    this.showWelcomeMessage = data.showWelcomeMessage ?? true;
     this.thankyouMessage =
       data.thankyouMessage ??
       "It's been a pleasure chatting with you today, Please take a moment to drop us your rating";
     this.waitingMessage =
       data.waitingMessage ??
       "Please wait while we connect you to our support representative";
-    this.enableTypingIndicator =
-      data.enableTypingIndicator ?? true;
-    this.enableWidgetMessage =
-      data.enableWidgetMessage ?? true;
+    this.enableTypingIndicator = data.enableTypingIndicator ?? true;
+    this.enableWidgetMessage = data.enableWidgetMessage ?? true;
 
     this.widgetMessageOnline = {
       content: data.widgetMessageOnline?.content ?? "Hey there!",
@@ -67,14 +63,12 @@ export class CreateChatBotDto {
 
     this.widgetMessageOffline = {
       content: data.widgetMessageOffline?.content ?? "We're offline",
-      subHeading:
-        data.widgetMessageOffline?.subHeading ?? "Leave a message",
+      subHeading: data.widgetMessageOffline?.subHeading ?? "Leave a message",
     };
 
     this.widgetPosition = data.widgetPosition ?? "right-bottom";
     this.language = data.language ?? "english";
-    this.enableRantingAndFeedback =
-      data.enableRantingAndFeedback ?? true;
+    this.enableRantingAndFeedback = data.enableRantingAndFeedback ?? true;
 
     this.ratingAndFeedback = {
       rating: data.ratingAndFeedback?.rating ?? 5,
@@ -85,9 +79,8 @@ export class CreateChatBotDto {
     this.enableVoiceNote = data.enableVoiceNote ?? false;
     this.responseInterval = data.responseInterval ?? 0;
     this.theme = data.theme ?? {};
-  }
+  } 
 }
-
 
 // export class ChatBotListDto {
 //   id: string;

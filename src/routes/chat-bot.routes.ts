@@ -35,7 +35,7 @@ export class ChatBotRouter {
 
     // create chatbot for user
     this.router.post(
-      "/",
+      "/:accountId",
       AuthMiddleware.authenticate,
       this.chatBotController.createChatBot.bind(this.chatBotController)
     );

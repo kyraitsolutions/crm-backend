@@ -1,19 +1,16 @@
 import { z } from "zod";
 
-// export const ZChatBotKnowledgeSchema = z.object({
-//   source: z.string().optional(),
-//   type: z.string().optional(),
-//   data: z.string().optional(),
-//   name: z.string().nullable().optional(),
-// });
-
+export const ZChatBotKnowledgeSchema = z.object({
+  source: z.string().optional(),
+  type: z.string().optional(),
+  data: z.string().optional(),
+  name: z.string().nullable().optional(),
+});
 
 export const ZChatBotSettingSchema = z.object({
   chatbotId: z.string(),
 
-  welcomeMessage: z
-    .string()
-    .default("Hello! How can I help you today?"),
+  welcomeMessage: z.string().default("Hello! How can I help you today?"),
 
   fallbackMessage: z
     .string()
@@ -75,13 +72,13 @@ export const ZChatBotSettingSchema = z.object({
   theme: z.record(z.string(), z.any()).optional().default({}),
 });
 
-// export const ZChatBotSuggestionSchema = z.array(z.string()).optional();
+export const ZChatBotSuggestionSchema = z.array(z.string()).optional();
 
 export const ZChatBotSchema = z.object({
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
   description: z.string().optional(),
-  // knowledgeSources: ZChatBotKnowledgeSchema,
-  // suggestedQuestions: ZChatBotSuggestionSchema,
+  knowledgeSources: ZChatBotKnowledgeSchema,
+  suggestedQuestions: ZChatBotSuggestionSchema,
   chatbotSetting: ZChatBotSettingSchema,
 });
 
