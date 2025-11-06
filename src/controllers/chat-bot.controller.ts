@@ -18,6 +18,7 @@ export class ChatBotController {
   ): Promise<void> {
     try {
       const user = req.user as any;
+      console.log("aaua");
       const chatbots = await this.chatBotService.getAllChatBotsByUserId(
         user.id
       );
@@ -57,6 +58,8 @@ export class ChatBotController {
       // const user=req.user as any;
       const accountId = req.params.accountId;
       const chatBots = await this.chatBotService.getChatBots(accountId);
+
+      console.log(chatBots);
       httpResponse(req, res, 200, "Chatbot fetched successfully", {
         docs: chatBots,
         limit: 10,
@@ -125,9 +128,7 @@ export class ChatBotController {
       const user = req.user as any;
       const accountId = req.params.accountId;
 
-      console.log(req.body);
-
-      // const createChatBotDto = new CreateChatBotDto(req.body);
+      const createChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
         accountId,
@@ -135,7 +136,6 @@ export class ChatBotController {
       );
       httpResponse(req, res, 201, "Chatbot Created successfully", {
         docs: chatBot,
-        // docs: {},
       });
     } catch (error) {
       next(error);
