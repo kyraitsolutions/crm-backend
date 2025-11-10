@@ -2,6 +2,9 @@ import { z } from "zod";
 
 export const ZChatBotSchema = z.object({
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
+  description:z.string().default(
+        "Best chatbot to generate leads."
+      ),
   userId: z.string(),
   accountId: z.string().nullable().optional(),
 

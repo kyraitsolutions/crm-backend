@@ -1,17 +1,26 @@
+import { EmailService } from './email.service';
 import { TCreateAccount } from "./../types/account.type";
 import { AccountDto, CreateAccountDto } from "../dtos/account.dto";
 import { AccountRepository } from "../repositories/account.repository";
 
 export class AccountService {
   private accountRepository: AccountRepository;
+  private emailService: EmailService;
 
   constructor() {
     this.accountRepository = new AccountRepository();
+    this.emailService = new EmailService();
   }
 
-  async getAccountById(id: string): Promise<{} | null> {
-    return await this.accountRepository.findOne(id);
+  async getAccountById(userId: string,accountId:string): Promise<{} | null> {
+    const account= await this.accountRepository.findOne(userId,accountId);
+    if(!account){
+      return null;
+    }
+    return account;
   }
+
+
   async getAllAccounts(id: string): Promise<AccountDto[] | null> {
     const accounts = await this.accountRepository.findAll(id);
     return accounts?.map((account) => new AccountDto(account)) ?? [];
@@ -34,6 +43,9 @@ export class AccountService {
     };
 
     const account = await this.accountRepository.create(accountData);
+
+    this.emailService.queueAccountCreationEmail(account?.email, account?.accountName)    
+    
     return new AccountDto(account);
   }
 

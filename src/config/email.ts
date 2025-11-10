@@ -22,7 +22,7 @@ transporter.verify((error:any, success:any) => {
     if (error) {
         console.log('SMTP Connection Error:', error);
     } else {
-        console.log('SMTP Server ready to take messages');
+        console.log('SMTP Server ready to take messages:',success);
     }
 });
 

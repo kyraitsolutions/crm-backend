@@ -35,14 +35,16 @@ export class AccountController {
     }
   };
 
-  // getAccountById= async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
-  //     try {
-  //         const account=req.user;
-  //         res.status(200).json(account);
-  //     } catch (error) {
-  //         next(error);
-  //     }
-  // }
+  getAccountById= async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+      try {
+          const user=req.user as any;
+          const accountId=req.params.accountId;
+          const result=await this.accountService.getAccountById(user.id,accountId)
+          res.status(200).json(result);
+      } catch (error) {
+          next(error);
+      }
+  }
 
   createAccount = async (
     req: Request,

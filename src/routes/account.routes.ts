@@ -26,7 +26,7 @@ export class AccountRouter{
 
         // Accounts 
         this.router.get("/",AuthMiddleware.authenticate, this.accountController.getAccounts.bind(this.accountController)); //done
-        // this.router.get("/:id",AuthMiddleware.authenticate, this.accountController.getAccountById.bind(this.accountController)); //not required for now
+        this.router.get("/:id",AuthMiddleware.authenticate, this.accountController.getAccountById.bind(this.accountController)); //not required for now
         this.router.post("/",AuthMiddleware.authenticate, this.accountController.createAccount.bind(this.accountController)); //done
         this.router.put('/:id',AuthMiddleware.authenticate, this.accountController.updateAccount.bind(this.accountController)); //yet to be done
         this.router.delete('/:id',AuthMiddleware.authenticate, this.accountController.deleteAccount.bind(this.accountController)); //done
@@ -76,7 +76,7 @@ export class AccountRouter{
         this.router.get(
             "/:accountId/forms",
             AuthMiddleware.authenticate,
-            // this.formController.getForms.bind(this.formController)
+            this.formController.getForms.bind(this.formController)
         );
         this.router.post(
             "/:accountId/form",

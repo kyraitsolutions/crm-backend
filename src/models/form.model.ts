@@ -1,6 +1,12 @@
 import mongoose, { model } from "mongoose";
 
 const formSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+        index: true,
+    },
     accountId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Account",
@@ -45,6 +51,7 @@ const formSchema = new mongoose.Schema({
 );
 
 // Indexes for better performance
+formSchema.index({userId:1});
 formSchema.index({ accountId: 1 });
 formSchema.index({ formName: 1 });
 formSchema.index({ createdAt: -1 });

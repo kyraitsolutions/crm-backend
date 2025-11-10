@@ -2,17 +2,17 @@
 import { ChatBotDetailDto, ChatBotListDto, CreateChatBotDto, ResponseChatBotDto } from "../dtos";
 import { ChatbotRepository } from "../repositories";
 // import { ChatBotUtil, GeminiAIUtil } from "../utils";
-// import { AccountRepository } from '../repositories/account.repository';
+import { AccountRepository } from '../repositories/account.repository';
 
 export class ChatBotService {
   private repo: ChatbotRepository;
   // private userprofileRepository:UserProfileRepository;
-  // private accountRepository:AccountRepository;
+  private accountRepository:AccountRepository;
   // private geminiAIUtil: GeminiAIUtil;
 
   constructor() {
     this.repo = new ChatbotRepository();
-    // this.accountRepository=new AccountRepository();
+    this.accountRepository=new AccountRepository();
     // this.userprofileRepository = new UserProfileRepository();
     // this.geminiAIUtil = new GeminiAIUtil();
   }
@@ -32,7 +32,6 @@ export class ChatBotService {
     chatBotId: string
   ): Promise<ChatBotDetailDto | null> {
     const chatbot = await this.repo.findChatbotByIdAndUserId(chatBotId, userId);
-    console.log("m,cvxc", chatbot[0]);
     return new ChatBotDetailDto(chatbot[0]) ?? null;
   }
 
@@ -41,6 +40,16 @@ export class ChatBotService {
     accountId: string,
     createChatBotDto:CreateChatBotDto
   ): Promise<ResponseChatBotDto> {
+    
+
+    console.log(userId,accountId)
+    const isAccountExist= await this.accountRepository.findOne(userId,accountId);
+    console.log("sdfdfgdf",isAccountExist)
+
+    if(!isAccountExist){
+      throw new Error("Account not found for this account id");
+    }
+
     const chatbot = await this.repo.createChatbot({
       ...createChatBotDto,
       userId,

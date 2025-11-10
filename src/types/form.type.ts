@@ -17,6 +17,7 @@ export const ZFormFieldSchema = z.object({
 });
 
 export const ZCreateFormSchema = z.object({
+  userId:z.string(),
   accountId: z.string(), // or z.string().uuid() if you're using UUIDs
   formName: z.string().min(1, "Form name is required"),
   formTitle: z.string().min(1, "Form title is required"),

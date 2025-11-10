@@ -1,6 +1,7 @@
 // dto/form.dto.ts
 export class FormDto {
   id: string;
+  userId:string;
   accountId: string;
   formTitle: string;
   formDescription?: string;
@@ -25,6 +26,7 @@ export class FormDto {
 
   constructor(data: {
     _id: string;
+    userId:string;
     accountId: string;
     formTitle: string;
     formDescription?: string;
@@ -48,6 +50,7 @@ export class FormDto {
     updatedAt: Date;
   }) {
     this.id = data._id;
+    this.userId=data.userId;
     this.accountId = data.accountId;
     this.formTitle = data.formTitle;
     this.formDescription = data.formDescription;
