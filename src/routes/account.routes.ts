@@ -52,9 +52,9 @@ export class AccountRouter {
 
     // get particular chatbot data
     this.router.get(
-      "/:accountId/chatbots/:chabotId",
+      "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.getChatBots.bind(this.chatBotController)
+      this.chatBotController.getChatBotById.bind(this.chatBotController)
     );
 
     // create chatbot for this account
@@ -144,15 +144,15 @@ export class AccountRouter {
     // update chatbot by chatbot id for this account
     this.router.put(
       "/:accountId/chatbot/:chatbotId",
-      AuthMiddleware.authenticate
-      // this.chatBotController.createChatBot.bind(this.chatBotController)
+      AuthMiddleware.authenticate,
+      this.chatBotController.updateChatBot.bind(this.chatBotController)
     );
 
     // delete chatbot by chatbot id for this account
     this.router.delete(
       "/:accountId/chatbot/:chatbotId",
-      AuthMiddleware.authenticate
-      // this.chatBotController.createChatBot.bind(this.chatBotController)
+      AuthMiddleware.authenticate,
+      this.chatBotController.deleteChatBot.bind(this.chatBotController)
     );
 
     // Form routes can be added here

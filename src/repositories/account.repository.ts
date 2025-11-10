@@ -11,7 +11,7 @@ export class AccountRepository{
         return await AccountModel.findOne({email})
     }
     async findOne(userId:string,accountId:string):Promise<TAccount |null>{
-        return await AccountModel.findOne({'userId':userId,'_id':accountId})
+        return await AccountModel.findOne({userId,_id:accountId})
     }
 
     async create(data:TCreateAccount):Promise<TAccount>{
