@@ -55,7 +55,7 @@ export class ChatbotRepository {
 
 
   async findChatbotById(userId:string,accountId:string,chatbotId:string,):Promise<any|null>{
-    return await ChatbotModel.findOne({userId,accountId,'_id':chatbotId})
+    return await ChatbotModel.findOne({userId,accountId,_id:chatbotId})
   }
   // async addKnowledgeSource(data: any) {
   //   return await ChatbotKnowledgeSourceModel.create(data);

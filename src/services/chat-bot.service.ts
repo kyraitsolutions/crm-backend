@@ -27,8 +27,13 @@ export class ChatBotService {
     accountId:string,
     chatbotId: string
   ): Promise<ResponseChatBotDto | null> {
+    console.log("sjdfskdj")
     const chatbot = await this.repo.findChatbotById(userId,accountId,chatbotId );
-    return new ResponseChatBotDto(chatbot[0]) ?? null;
+    console.log(chatbot)
+    if(!chatbot){
+      throw new Error("Chatbot not Found");
+    }
+    return new ResponseChatBotDto(chatbot);
   }
 
   async createChatBot(
