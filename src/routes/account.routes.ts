@@ -58,14 +58,14 @@ export class AccountRouter{
         this.router.put(
             "/:accountId/chatbot/:chatbotId",
             AuthMiddleware.authenticate,
-            // this.chatBotController.createChatBot.bind(this.chatBotController)
+            this.chatBotController.updateChatBot.bind(this.chatBotController)
         );
 
         // delete chatbot by chatbot id for this account
         this.router.delete(
             "/:accountId/chatbot/:chatbotId",
             AuthMiddleware.authenticate,
-            // this.chatBotController.createChatBot.bind(this.chatBotController)
+            this.chatBotController.deleteChatBot.bind(this.chatBotController)
         );
 
 

@@ -15,7 +15,7 @@ export class AccountService {
   async getAccountById(userId: string,accountId:string): Promise<{} | null> {
     const account= await this.accountRepository.findOne(userId,accountId);
     if(!account){
-      return null;
+      throw new Error("Account not found");
     }
     return account;
   }
