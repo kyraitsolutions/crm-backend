@@ -1,3 +1,4 @@
+import { EmailService, emailService } from './email.service';
 import { UserRepository } from "../repositories";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
 import { JwtUtil, PasswordUtil } from "../utils";
@@ -5,9 +6,12 @@ import { TCreateUser, TUpdateUser } from "../types";
 
 export class UserService {
   private userRepository: UserRepository;
+  private emailService:EmailService;
+
 
   constructor() {
     this.userRepository = new UserRepository();
+    this.emailService=new EmailService();
   }
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -24,6 +28,7 @@ export class UserService {
     };
 
     const user = await this.userRepository.create(userData);
+
     const userDto = new UserDto(user);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
@@ -69,6 +74,7 @@ export class UserService {
         };
 
         user = await this.userRepository.create(userData);
+        this.emailService.queueWelcomeEmail(userData.email) 
         // } else {
         //   user = await this.userRepository.update(user.id, {
         //     profilePicture: profile.photos?.[0]?.value,

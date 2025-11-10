@@ -6,13 +6,13 @@ export const ZUserProfileSchema=z.object({
     firstName:z.string(),
     lastName:z.string(),
     organizationName:z.string(),
-    accountType: z.string().default("individual"),
+    accountType: z.string().default("organization"),
     createdAt:z.string(),
     updatedAt:z.string()
 })
 
 export const ZCreateUserProfileSchema=z.object({
-    userId:z.string(),
+    userId:z.object(),
     firstName:z.string(),
     lastName:z.string(),
     organizationName:z.string(),

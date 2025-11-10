@@ -10,12 +10,11 @@ export class AccountRepository{
     async findAccountByEmail(email:string):Promise<TAccount |null>{
         return await AccountModel.findOne({email})
     }
-    async findOne(id:string):Promise<TAccount |null>{
-        return await AccountModel.findOne({userId:id})
+    async findOne(userId:string,accountId:string):Promise<TAccount |null>{
+        return await AccountModel.findOne({'userId':userId,'_id':accountId})
     }
 
-
-    async create(data:TCreateAccount):Promise<TAccount | null>{
+    async create(data:TCreateAccount):Promise<TAccount>{
         return await AccountModel.create(data);
     }
 

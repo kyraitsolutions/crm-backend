@@ -1,23 +1,30 @@
 // import { UserProfileRepository } from './../repositories/userprofile.repository';
-import { ChatBotDetailDto, ChatBotListDto, CreateChatBotDto, ResponseChatBotDto } from "../dtos";
+import {
+  ChatBotDetailDto,
+  ChatBotListDto,
+  CreateChatBotDto,
+  ResponseChatBotDto,
+} from "../dtos";
 import { ChatbotRepository } from "../repositories";
 // import { ChatBotUtil, GeminiAIUtil } from "../utils";
-// import { AccountRepository } from '../repositories/account.repository';
+import { AccountRepository } from "../repositories/account.repository";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
   // private userprofileRepository:UserProfileRepository;
-  // private accountRepository:AccountRepository;
+  private accountRepository: AccountRepository;
   // private geminiAIUtil: GeminiAIUtil;
 
   constructor() {
     this.repo = new ChatbotRepository();
-    // this.accountRepository=new AccountRepository();
+    this.accountRepository = new AccountRepository();
     // this.userprofileRepository = new UserProfileRepository();
     // this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getAllChatBotsByUserId(userId: string): Promise<ResponseChatBotDto[] | []> {
+  async getAllChatBotsByUserId(
+    userId: string
+  ): Promise<ResponseChatBotDto[] | []> {
     const chatbots = await this.repo.findAllByUserId(userId);
     return chatbots?.map((chatbot) => new ResponseChatBotDto(chatbot)) ?? [];
   }
@@ -29,18 +36,33 @@ export class ChatBotService {
 
   async getChatBotById(
     userId: string,
-    chatBotId: string
+    chatBotId: string,
+    accountId: string
   ): Promise<ChatBotDetailDto | null> {
-    const chatbot = await this.repo.findChatbotByIdAndUserId(chatBotId, userId);
-    console.log("m,cvxc", chatbot[0]);
+    const chatbot = await this.repo.findChatbotById(
+      userId,
+      chatBotId,
+      accountId
+    );
     return new ChatBotDetailDto(chatbot[0]) ?? null;
   }
 
   async createChatBot(
     userId: string,
     accountId: string,
-    createChatBotDto:CreateChatBotDto
+    createChatBotDto: CreateChatBotDto
   ): Promise<ResponseChatBotDto> {
+    console.log(userId, accountId);
+    const isAccountExist = await this.accountRepository.findOne(
+      userId,
+      accountId
+    );
+    console.log("sdfdfgdf", isAccountExist);
+
+    if (!isAccountExist) {
+      throw new Error("Account not found for this account id");
+    }
+
     const chatbot = await this.repo.createChatbot({
       ...createChatBotDto,
       userId,

@@ -5,4 +5,8 @@ export class FormRepository{
     async create (data:TCreateForm):Promise<TCreateForm>{
         return await FormModel.create(data);
     }
+
+    async findByAccountId(userId:string, accountId:string):Promise<[]| null>{
+        return await FormModel.find({userId:userId,accountId:accountId});
+    }
 }

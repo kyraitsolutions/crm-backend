@@ -1,11 +1,8 @@
+import { TCreateChatBot } from "../types";
+
 export class CreateChatBotDto {
-  // Basic chatbot info
   name: string;
   description: string;
-  // userId: string;
-  // accountId?: string;
-
-  // --- Config ---
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -29,8 +26,6 @@ export class CreateChatBotDto {
     initiateChatbot: "immediate" | "action" | "";
     showBranding: boolean;
   };
-
-  // --- Theme ---
   theme: {
     brandColor: string;
     contrastColor: string;
@@ -57,8 +52,6 @@ export class CreateChatBotDto {
     opacity?: number;
     customCSS?: string;
   };
-
-  // --- Conversation ---
   conversation: {
     welcomeMessage: string;
     fallbackMessage: string;
@@ -67,13 +60,9 @@ export class CreateChatBotDto {
     waitingMessage: string;
   };
 
-  constructor(data: any) {
+  constructor(data: TCreateChatBot) {
     this.name = data.name;
     this.description = data.description;
-    // this.userId = data.userId;
-    // this.accountId = data.accountId ?? null;
-
-    // Config Section
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -100,8 +89,6 @@ export class CreateChatBotDto {
       initiateChatbot: data.config?.initiateChatbot ?? "immediate",
       showBranding: data.config?.showBranding ?? true,
     };
-
-    // Theme Section
     this.theme = {
       brandColor: data.theme?.brandColor ?? "#3b5d50",
       contrastColor: data.theme?.contrastColor ?? "#fefefe",
@@ -128,8 +115,6 @@ export class CreateChatBotDto {
       opacity: data.theme?.opacity ?? 100,
       customCSS: data.theme?.customCSS ?? "",
     };
-
-    // Conversation Section
     this.conversation = {
       welcomeMessage:
         data.conversation?.welcomeMessage ?? "Hello! How can I help you today?",
@@ -147,14 +132,9 @@ export class CreateChatBotDto {
   }
 }
 export class ResponseChatBotDto {
-  // Basic chatbot info
   id: string;
   name: string;
   description: string;
-  // userId: string;
-  // accountId?: string;
-
-  // --- Config ---
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -178,8 +158,6 @@ export class ResponseChatBotDto {
     initiateChatbot: "immediate" | "action" | "";
     showBranding: boolean;
   };
-
-  // --- Theme ---
   theme: {
     brandColor: string;
     contrastColor: string;
@@ -206,8 +184,6 @@ export class ResponseChatBotDto {
     opacity?: number;
     customCSS?: string;
   };
-
-  // --- Conversation ---
   conversation: {
     welcomeMessage: string;
     fallbackMessage: string;
@@ -220,10 +196,6 @@ export class ResponseChatBotDto {
     this.id = data._id;
     this.name = data.name;
     this.description = data.description;
-    // this.userId = data.userId;
-    // this.accountId = data.accountId ?? null;
-
-    // Config Section
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -250,8 +222,6 @@ export class ResponseChatBotDto {
       initiateChatbot: data.config?.initiateChatbot ?? "immediate",
       showBranding: data.config?.showBranding ?? true,
     };
-
-    // Theme Section
     this.theme = {
       brandColor: data.theme?.brandColor ?? "#3b5d50",
       contrastColor: data.theme?.contrastColor ?? "#fefefe",
@@ -278,8 +248,6 @@ export class ResponseChatBotDto {
       opacity: data.theme?.opacity ?? 100,
       customCSS: data.theme?.customCSS ?? "",
     };
-
-    // Conversation Section
     this.conversation = {
       welcomeMessage: data.conversation?.welcomeMessage,
       fallbackMessage: data.conversation?.fallbackMessage,

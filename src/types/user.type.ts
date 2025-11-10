@@ -12,7 +12,7 @@ export const ZUserSchema = z.object({
   updatedAt: z.date(),
   roleId: z.string().nullable().optional(),
   onboarding: z.boolean().default(false),
-  accountType: z.string().default("individual"),
+  accountType: z.string().default("organization"),
 });
 export const ZCreateUserSchema = z.object({
   email: z.string(),

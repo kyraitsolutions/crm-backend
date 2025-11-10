@@ -64,12 +64,32 @@ export class AccountRouter {
       this.chatBotController.createChatBot.bind(this.chatBotController)
     );
 
-    // update chatbot by chatbot id for this account
+    // Accounts
+    this.router.get(
+      "/",
+      AuthMiddleware.authenticate,
+      this.accountController.getAccounts.bind(this.accountController)
+    ); //done
+    this.router.get(
+      "/:id",
+      AuthMiddleware.authenticate,
+      this.accountController.getAccountById.bind(this.accountController)
+    ); //not required for now
+    this.router.post(
+      "/",
+      AuthMiddleware.authenticate,
+      this.accountController.createAccount.bind(this.accountController)
+    ); //done
     this.router.put(
-      "/:accountId/chatbot/:chatbotId",
-      AuthMiddleware.authenticate
-      // this.chatBotController.createChatBot.bind(this.chatBotController)
-    );
+      "/:id",
+      AuthMiddleware.authenticate,
+      this.accountController.updateAccount.bind(this.accountController)
+    ); //yet to be done
+    this.router.delete(
+      "/:id",
+      AuthMiddleware.authenticate,
+      this.accountController.deleteAccount.bind(this.accountController)
+    ); //done
 
     // delete chatbot by chatbot id for this account
     this.router.delete(
@@ -140,6 +160,28 @@ export class AccountRouter {
       "/:accountId/forms",
       AuthMiddleware.authenticate
       // this.formController.getForms.bind(this.formController)
+    );
+    this.router.post(
+      "/:accountId/form",
+      AuthMiddleware.authenticate,
+      this.formController.createForm.bind(this.formController)
+    );
+    this.router.put(
+      "/:accountId/form/:formId",
+      AuthMiddleware.authenticate
+      // this.formController.updateForm.bind(this.formController)
+    );
+    this.router.delete(
+      "/:accountId/form/:formId",
+      AuthMiddleware.authenticate
+      // this.formController.deleteForm.bind(this.formController)
+    );
+
+    // Form routes can be added here
+    this.router.get(
+      "/:accountId/forms",
+      AuthMiddleware.authenticate,
+      this.formController.getForms.bind(this.formController)
     );
     this.router.post(
       "/:accountId/form",

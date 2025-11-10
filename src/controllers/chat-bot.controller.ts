@@ -40,10 +40,11 @@ export class ChatBotController {
   ): Promise<void> {
     try {
       const user = req.user as any;
-      const chatBotId = req.params.chatbotId;
+      const { chatBotId, accountId } = req.params;
       const chatbot = await this.chatBotService.getChatBotById(
         user.id,
-        chatBotId
+        chatBotId,
+        accountId
       );
       httpResponse(req, res, 200, "Chatbot details fetched successfully", {
         docs: chatbot,
@@ -127,7 +128,6 @@ export class ChatBotController {
     try {
       const user = req.user as any;
       const accountId = req.params.accountId;
-
       const createChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
