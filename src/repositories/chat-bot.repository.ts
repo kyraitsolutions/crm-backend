@@ -38,82 +38,80 @@ export class ChatbotRepository {
   }
 
   async findAllByAccountId(accountId: string): Promise<any[] | null> {
-    return await ChatbotModel.aggregate([
-      {
-        $match: { accountId: new mongoose.Types.ObjectId(accountId) },
-      },
-      {
-        $lookup: {
-          from: "chatbotconversationsettings",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "conversationSettings",
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          description: 1,
-          userId: 1,
-          accountId: 1,
-          createdAt: 1,
-          updatedAt: 1,
-        },
-      },
-    ]);
+    return await ChatbotModel.find({ accountId });
+    // return await ChatbotModel.aggregate([
+    //   {
+    //     $match: {accountId: new mongoose.Types.ObjectId(accountId) }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "chatbotconversationsettings",
+    //       localField: "_id",
+    //       foreignField: "chatbotId",
+    //       as: "conversationSettings"
+    //     }
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 1,
+    //       name: 1,
+    //       userId: 1,
+    //       accountId: 1,
+    //       createdAt: 1,
+    //       updatedAt: 1,
+    //     }
+    //   }
+    // ]);
   }
 
-  async findByIdAndUserId(
+  async findChatbotByIdAndUserId(
     chatBotId: string,
     userId: string
   ): Promise<any | null> {
-    return await ChatbotModel.aggregate([
-      {
-        $match: {
-          _id: new mongoose.Types.ObjectId(chatBotId),
-          userId: new mongoose.Types.ObjectId(userId),
-        },
-      },
-      {
-        $lookup: {
-          from: "chatbotconversationsettings",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "conversationSettings",
-        },
-      },
-      {
-        $lookup: {
-          from: "chatbotknowledgesources",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "knowledgeSources",
-        },
-      },
-      {
-        $lookup: {
-          from: "chatbotsuggestedquestions",
-          localField: "_id",
-          foreignField: "chatbotId",
-          as: "suggestedQuestions",
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          userId: 1,
-          accountId: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          conversationSettings: 1,
-          knowledgeChunks: 1,
-          knowledgeSources: 1,
-          suggestedQuestions: 1,
-        },
-      },
-    ]);
+    return await ChatbotModel.findOne({ userId, chatBotId });
+    // return await ChatbotModel.aggregate([
+    //   {
+    //     $match: { _id: new mongoose.Types.ObjectId(chatBotId), userId: new mongoose.Types.ObjectId(userId) }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "chatbotconversationsettings",
+    //       localField: "_id",
+    //       foreignField: "chatbotId",
+    //       as: "conversationSettings"
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "chatbotknowledgesources",
+    //       localField: "_id",
+    //       foreignField: "chatbotId",
+    //       as: "knowledgeSources"
+    //     }
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "chatbotsuggestedquestions",
+    //       localField: "_id",
+    //       foreignField: "chatbotId",
+    //       as: "suggestedQuestions"
+    //     }
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 1,
+    //       name: 1,
+    //       userId: 1,
+    //       accountId: 1,
+    //       createdAt: 1,
+    //       updatedAt: 1,
+    //       conversationSettings: 1,
+    //       knowledgeChunks: 1,
+    //       knowledgeSources: 1,
+    //       suggestedQuestions: 1
+    //     }
+    //   }
+    // ]);
   }
   async addKnowledgeSource(data: any) {
     return await ChatbotKnowledgeSourceModel.create(data);

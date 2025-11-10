@@ -281,18 +281,11 @@ export class ResponseChatBotDto {
 
     // Conversation Section
     this.conversation = {
-      welcomeMessage:
-        data.conversation?.welcomeMessage ?? "Hello! How can I help you today?",
-      fallbackMessage:
-        data.conversation?.fallbackMessage ??
-        "I apologize, but I didn't understand that. Could you please rephrase your question?",
-      showWelcomeMessage: data.conversation?.showWelcomeMessage ?? true,
-      thankyouMessage:
-        data.conversation?.thankyouMessage ??
-        "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
-      waitingMessage:
-        data.conversation?.waitingMessage ??
-        "Please wait while we connect you to our support representative",
+      welcomeMessage: data.conversation?.welcomeMessage,
+      fallbackMessage: data.conversation?.fallbackMessage,
+      showWelcomeMessage: data.conversation?.showWelcomeMessage,
+      thankyouMessage: data.conversation?.thankyouMessage,
+      waitingMessage: data.conversation?.waitingMessage,
     };
   }
 }

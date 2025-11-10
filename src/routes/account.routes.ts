@@ -100,6 +100,63 @@ export class AccountRouter {
       // this.formController.deleteForm.bind(this.formController)
     );
 
+    // get all chatbot of this account
+    this.router.get(
+      "/:accountId/chatbots",
+      AuthMiddleware.authenticate,
+      this.chatBotController.getChatBots.bind(this.chatBotController)
+    );
+
+    // get particular chatbot data
+    this.router.get(
+      "/:accountId/chatbots/:chabotId",
+      AuthMiddleware.authenticate,
+      this.chatBotController.getChatBotById.bind(this.chatBotController)
+    );
+
+    // create chatbot for this account
+    this.router.post(
+      "/:accountId/chatbot",
+      AuthMiddleware.authenticate,
+      this.chatBotController.createChatBot.bind(this.chatBotController)
+    );
+
+    // update chatbot by chatbot id for this account
+    this.router.put(
+      "/:accountId/chatbot/:chatbotId",
+      AuthMiddleware.authenticate
+      // this.chatBotController.createChatBot.bind(this.chatBotController)
+    );
+
+    // delete chatbot by chatbot id for this account
+    this.router.delete(
+      "/:accountId/chatbot/:chatbotId",
+      AuthMiddleware.authenticate
+      // this.chatBotController.createChatBot.bind(this.chatBotController)
+    );
+
+    // Form routes can be added here
+    this.router.get(
+      "/:accountId/forms",
+      AuthMiddleware.authenticate
+      // this.formController.getForms.bind(this.formController)
+    );
+    this.router.post(
+      "/:accountId/form",
+      AuthMiddleware.authenticate,
+      this.formController.createForm.bind(this.formController)
+    );
+    this.router.put(
+      "/:accountId/form/:formId",
+      AuthMiddleware.authenticate
+      // this.formController.updateForm.bind(this.formController)
+    );
+    this.router.delete(
+      "/:accountId/form/:formId",
+      AuthMiddleware.authenticate
+      // this.formController.deleteForm.bind(this.formController)
+    );
+
     // and so on....
   }
   public getRouter(): Router {

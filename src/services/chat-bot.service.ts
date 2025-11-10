@@ -23,6 +23,7 @@ export class ChatBotService {
   }
   async getChatBots(accountId: string): Promise<ResponseChatBotDto[] | []> {
     const chatbots = await this.repo.findAllByAccountId(accountId);
+    // console.log(chatbots)
     return chatbots?.map((chatbot) => new ResponseChatBotDto(chatbot)) ?? [];
   }
 
@@ -30,8 +31,7 @@ export class ChatBotService {
     userId: string,
     chatBotId: string
   ): Promise<ChatBotDetailDto | null> {
-    const chatbot = await this.repo.findByIdAndUserId(chatBotId, userId);
-    console.log("m,cvxc", chatbot[0].knowledgeSources);
+    const chatbot = await this.repo.findChatbotByIdAndUserId(chatBotId, userId);
     console.log("m,cvxc", chatbot[0]);
     return new ChatBotDetailDto(chatbot[0]) ?? null;
   }
