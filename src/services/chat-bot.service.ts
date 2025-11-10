@@ -1,5 +1,5 @@
 // import { UserProfileRepository } from './../repositories/userprofile.repository';
-import { ChatBotDetailDto, ChatBotListDto, CreateChatBotDto, ResponseChatBotDto } from "../dtos";
+import { ChatBotListDto, CreateChatBotDto, ResponseChatBotDto } from "../dtos";
 import { ChatbotRepository } from "../repositories";
 // import { ChatBotUtil, GeminiAIUtil } from "../utils";
 import { AccountRepository } from '../repositories/account.repository';
@@ -17,22 +17,23 @@ export class ChatBotService {
     // this.geminiAIUtil = new GeminiAIUtil();
   }
 
-  async getAllChatBotsByUserId(userId: string): Promise<ResponseChatBotDto[] | []> {
+  async getAllChatBotsByUserId(userId: string): Promise<ChatBotListDto[] | []> {
     const chatbots = await this.repo.findAllByUserId(userId);
-    return chatbots?.map((chatbot) => new ResponseChatBotDto(chatbot)) ?? [];
+    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
-  async getChatBots(accountId: string): Promise<ResponseChatBotDto[] | []> {
+  async getChatBots(accountId: string): Promise<ChatBotListDto[] | []> {
     const chatbots = await this.repo.findAllByAccountId(accountId);
     // console.log(chatbots)
-    return chatbots?.map((chatbot) => new ResponseChatBotDto(chatbot)) ?? [];
+    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 
   async getChatBotById(
     userId: string,
+    accountId:string,
     chatBotId: string
-  ): Promise<ChatBotDetailDto | null> {
-    const chatbot = await this.repo.findChatbotByIdAndUserId(chatBotId, userId);
-    return new ChatBotDetailDto(chatbot[0]) ?? null;
+  ): Promise<ResponseChatBotDto | null> {
+    const chatbot = await this.repo.findChatbotById(userId,accountId,chatBotId );
+    return new ResponseChatBotDto(chatbot[0]) ?? null;
   }
 
   async createChatBot(

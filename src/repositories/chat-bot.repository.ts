@@ -34,35 +34,31 @@ export class ChatbotRepository {
   }
 
   async findAllByAccountId(accountId:string):Promise<any[]|null>{
-    return await ChatbotModel.find({accountId});
-    // return await ChatbotModel.aggregate([
-    //   {
-    //     $match: {accountId: new mongoose.Types.ObjectId(accountId) }
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "chatbotconversationsettings",
-    //       localField: "_id",
-    //       foreignField: "chatbotId",
-    //       as: "conversationSettings"
-    //     }
-    //   },
-    //   {
-    //     $project: {
-    //       _id: 1,
-    //       name: 1,
-    //       userId: 1,
-    //       accountId: 1,
-    //       createdAt: 1,
-    //       updatedAt: 1,
-    //     }
-    //   }
-    // ]);
+    // return await ChatbotModel.find({accountId});
+    return await ChatbotModel.aggregate([
+      {
+        $match: {accountId: new mongoose.Types.ObjectId(accountId) }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          description:1,
+          status:1,
+          
+          // userId: 1,
+          // conversation:1,
+          // accountId: 1,
+          createdAt: 1,
+          // updatedAt: 1,
+        }
+      }
+    ]);
   } 
 
 
-  async findChatbotByIdAndUserId(chatBotId:string,userId:string):Promise<any|null>{
-    return await ChatbotModel.findOne({userId,chatBotId})
+  async findChatbotById(userId:string,accountId:string,chatBotId:string,):Promise<any|null>{
+    return await ChatbotModel.findOne({userId,accountId,'_id':chatBotId})
     // return await ChatbotModel.aggregate([
     //   {
     //     $match: { _id: new mongoose.Types.ObjectId(chatBotId), userId: new mongoose.Types.ObjectId(userId) }

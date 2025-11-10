@@ -40,8 +40,10 @@ export class ChatBotController {
     try {
       const user = req.user as any;
       const chatBotId = req.params.chatbotId;
+      const accountId=req.params.accountId;
       const chatbot = await this.chatBotService.getChatBotById(
         user.id,
+        accountId,
         chatBotId
       );
       httpResponse(req, res, 200, "Chatbot details fetched successfully", {

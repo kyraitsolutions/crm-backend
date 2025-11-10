@@ -2,7 +2,8 @@ import { TCreateChatBot } from "../types";
 
 export class CreateChatBotDto {
   name: string;
-  description:string
+  description:string;
+  status:boolean;
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -63,6 +64,7 @@ export class CreateChatBotDto {
   constructor(data: TCreateChatBot) {
     this.name = data.name;
     this.description=data.description;
+    this.status=data.status
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -136,7 +138,8 @@ export class CreateChatBotDto {
 export class ResponseChatBotDto {
   id:string;
   name: string;
-  description:string
+  description:string;
+  status:boolean;
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -198,6 +201,7 @@ export class ResponseChatBotDto {
     this.id=data._id;
     this.name = data.name;
     this.description=data.description;
+    this.status=data.status;
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -258,5 +262,22 @@ export class ResponseChatBotDto {
       thankyouMessage:data.conversation?.thankyouMessage,
       waitingMessage:data.conversation?.waitingMessage,
     };
+  }
+}
+
+
+export class ChatBotListDto{
+  id:string;
+  name: string;
+  description:string;
+  createdAt:string;
+  status:boolean;
+
+  constructor(data:any){  
+    this.id=data._id;
+    this.name = data.name;
+    this.description=data.description;
+    this.createdAt=data.createdAt;
+    this.status=data.status;
   }
 }

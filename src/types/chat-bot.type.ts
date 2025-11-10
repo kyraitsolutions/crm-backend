@@ -5,6 +5,7 @@ export const ZChatBotSchema = z.object({
   description:z.string().default(
         "Best chatbot to generate leads."
       ),
+  status:z.boolean().default(true),
   userId: z.string(),
   accountId: z.string().nullable().optional(),
 
