@@ -6,6 +6,7 @@ const chatbotSchema = new Schema(
     description:{type:String,required:true},
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
+    status:{type:Boolean,default:true},
     config:{
       enableTypingIndicator: {
         type: Boolean,

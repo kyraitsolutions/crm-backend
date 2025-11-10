@@ -20,7 +20,6 @@ export class AccountService {
     return account;
   }
 
-
   async getAllAccounts(id: string): Promise<AccountDto[] | null> {
     const accounts = await this.accountRepository.findAll(id);
     return accounts?.map((account) => new AccountDto(account)) ?? [];
