@@ -34,8 +34,10 @@ export class ChatBotService {
       accountId,
       chatbotId
     );
-
-    return new ResponseChatBotDto(chatbot) ?? null;
+    if (!chatbot) {
+      throw new Error("Chatbot not Found");
+    }
+    return new ResponseChatBotDto(chatbot);
   }
 
   async createChatBot(

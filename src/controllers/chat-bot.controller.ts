@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { ChatBotService } from "../services";
-import { CreateChatBotDto } from "../dtos";
+import { CreateChatBotDto, ResponseChatBotDto } from "../dtos";
 import httpResponse from "../utils/http.response";
 import { WebSocketServer, WebSocket } from "ws";
 import { ChatbotFlowModel } from "../models/chatbot.model";
-import logger from "../utils/logger";
 
 export class ChatBotController {
   private chatBotService: ChatBotService;
@@ -42,7 +41,6 @@ export class ChatBotController {
     try {
       const user = req.user as any;
       const { accountId, chatbotId } = req.params;
-
       const chatbot = await this.chatBotService.getChatBotById(
         user.id,
         accountId,
@@ -158,7 +156,7 @@ export class ChatBotController {
         updateChatBotDto
       );
       httpResponse(req, res, 200, "Chatbot Updated successfully", {
-        docs: chatBot,
+        docs: new ResponseChatBotDto(chatBot),
       });
     } catch (error) {
       next(error);

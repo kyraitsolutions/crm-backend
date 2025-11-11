@@ -129,7 +129,7 @@ export class AccountRouter {
 
     // get particular chatbot data
     this.router.get(
-      "/:accountId/chatbots/:chabotId",
+      "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
       this.chatBotController.getChatBotById.bind(this.chatBotController)
     );
