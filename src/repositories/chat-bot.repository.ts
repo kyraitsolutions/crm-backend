@@ -1,10 +1,36 @@
 import mongoose from "mongoose";
-import { ChatbotModel } from "../models/chatbot.model";
-import { TCreateChatBot } from "../types";
+import { ChatbotModel, ChatbotFlowModel } from "../models/chatbot.model";
+import { TCreateChatBot, TCreateChatBotFlow } from "../types";
 
 export class ChatbotRepository {
   async createChatbot(data: TCreateChatBot) {
     return await ChatbotModel.create(data);
+  }
+
+  async createChatbotFlow(data: TCreateChatBotFlow) {
+    return await ChatbotFlowModel.create(data);
+  }
+
+  async findChatbotFlowById(accountId: string, chatBotId: string) {
+    return await ChatbotFlowModel.findOne({
+      accountId: new mongoose.Types.ObjectId(accountId),
+      chatbotId: new mongoose.Types.ObjectId(chatBotId),
+    });
+  }
+
+  async updateChatbotFlow(
+    accountId: string,
+    chatBotId: string,
+    data: TCreateChatBotFlow
+  ) {
+    return await ChatbotFlowModel.findOneAndUpdate(
+      {
+        accountId: new mongoose.Types.ObjectId(accountId),
+        chatbotId: new mongoose.Types.ObjectId(chatBotId),
+      },
+      data,
+      { new: true }
+    );
   }
 
   async findAllByUserId(userId: string): Promise<any[] | null> {

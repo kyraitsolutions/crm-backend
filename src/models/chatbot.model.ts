@@ -3,77 +3,78 @@ import { Schema, model } from "mongoose";
 const chatbotSchema = new Schema(
   {
     name: { type: String, required: true },
-    description:{type:String,required:true},
+    description: { type: String, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
-    status:{type:Boolean,default:true},
-    config:{
+    status: { type: Boolean, default: true },
+    config: {
       enableTypingIndicator: {
         type: Boolean,
         default: true,
       },
-      enableWidgetMessage:{
+      enableWidgetMessage: {
         type: Boolean,
         default: true,
       },
-      widgetMessageOnline:{
-        content:{
-          type:String,
-          default:"Hey there!"
+      widgetMessageOnline: {
+        content: {
+          type: String,
+          default: "Hey there!",
         },
-        subHeading:{
-          type:String,
-          default:"How can we help you?"
-        }
-      },
-      widgetMessageOffline:{
-        content:{
-          type:String,
-          default:"We're offline"
+        subHeading: {
+          type: String,
+          default: "How can we help you?",
         },
-        subHeading:{
-          type:String,
-          default:"Leave a message"
-        }
       },
-      language:{
-        type:String, enum:["english","hindi"]
+      widgetMessageOffline: {
+        content: {
+          type: String,
+          default: "We're offline",
+        },
+        subHeading: {
+          type: String,
+          default: "Leave a message",
+        },
       },
-      enableRantingAndFeedback:{
+      language: {
+        type: String,
+        enum: ["english", "hindi"],
+      },
+      enableRantingAndFeedback: {
         type: Boolean,
         default: true,
       },
-      ratingAndFeedback:{
-        rating:{
-          type:Number,
-          emum:[1,2,3,4,5],
-          default:5
+      ratingAndFeedback: {
+        rating: {
+          type: Number,
+          emum: [1, 2, 3, 4, 5],
+          default: 5,
         },
-        feedback:{
-          type:String,
-        }
+        feedback: {
+          type: String,
+        },
       },
-      chat_transcript:{
-        type:Boolean,
-        default:true,
+      chat_transcript: {
+        type: Boolean,
+        default: true,
       },
-      enableVoiceNote:{
-        type:Boolean,
-        default:false,
+      enableVoiceNote: {
+        type: Boolean,
+        default: false,
       },
-      responseInterval:{
-        type:Number,
-        enum:[0,1,2],
-        default:0
+      responseInterval: {
+        type: Number,
+        enum: [0, 1, 2],
+        default: 0,
       },
-      initiateChatbot:{
-        type:String,
-        enum:["immediate","action",""]
+      initiateChatbot: {
+        type: String,
+        enum: ["immediate", "action", ""],
       },
-      showBranding:{
-        type:Boolean,
-        default:true
-      }
+      showBranding: {
+        type: Boolean,
+        default: true,
+      },
     },
     theme: {
       brandColor: { type: String, required: true },
@@ -101,13 +102,28 @@ const chatbotSchema = new Schema(
       opacity: { type: Number, default: 100 },
       customCSS: { type: String, default: "" },
     },
-    conversation:{
-      welcomeMessage: {type: String, default: "Hello! How can I help you today?"},
-      fallbackMessage: {type: String,default:"I apologize, but I didn't understand that. Could you please rephrase your question?"},
-      showWelcomeMessage: {type: Boolean,default: true},
-      thankyouMessage:{type: String,default:"It's been a pleasure chatting with you today, Please take a moment to drop us your rating"},
-      waitingMessage:{type: String,default:"Please wait while we connect you to our support representative"},
-    }
+    conversation: {
+      welcomeMessage: {
+        type: String,
+        default: "Hello! How can I help you today?",
+      },
+      fallbackMessage: {
+        type: String,
+        default:
+          "I apologize, but I didn't understand that. Could you please rephrase your question?",
+      },
+      showWelcomeMessage: { type: Boolean, default: true },
+      thankyouMessage: {
+        type: String,
+        default:
+          "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
+      },
+      waitingMessage: {
+        type: String,
+        default:
+          "Please wait while we connect you to our support representative",
+      },
+    },
   },
   {
     timestamps: true,
@@ -120,11 +136,6 @@ const chatbotSchema = new Schema(
     },
   }
 );
-
-
-
-
-
 
 const chatbotNodesSchema = new Schema({
   id: String, // use UUID (from frontend)
@@ -161,6 +172,7 @@ const chatbotEdgesSchema = new Schema({
 const chatbotFlowSchema = new Schema(
   {
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: true },
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
     nodes: [chatbotNodesSchema],
     edges: [chatbotEdgesSchema],
   },

@@ -1,4 +1,11 @@
-import { TCreateChatBot } from "../types";
+import {
+  ChatbotEdge,
+  ChatbotNode,
+  TChatbotEdge,
+  TChatbotNode,
+  TCreateChatBot,
+  TCreateChatBotFlow,
+} from "../types";
 
 export class CreateChatBotDto {
   name: string;
@@ -133,6 +140,98 @@ export class CreateChatBotDto {
     };
   }
 }
+
+export class CreateChatBotFlowDto {
+  accountId: string;
+  chatbotId: string;
+  nodes: ChatbotNode[];
+  edges: ChatbotEdge[];
+
+  constructor(data: TCreateChatBotFlow) {
+    this.accountId = data.accountId;
+    this.chatbotId = data.chatbotId;
+
+    // Nodes
+    this.nodes = (data.nodes ?? []).map((node) => ({
+      id: node.id,
+      type: node.type ?? "chat",
+      position: {
+        x: node.position?.x ?? 0,
+        y: node.position?.y ?? 0,
+      },
+      width: node.width ?? 250,
+      height: node.height ?? 100,
+      selected: node.selected ?? false,
+      dragging: node.dragging ?? false,
+      data: {
+        label: node.data?.label ?? "",
+        value: node.data?.value ?? "",
+        elements: (node.data?.elements ?? []).map((el) => ({
+          id: el.id,
+          type: el.type ?? "text",
+          content: el.content ?? "",
+          date: el.date ?? new Date().toISOString(),
+        })),
+      },
+    }));
+
+    // Edges
+    this.edges = (data.edges ?? []).map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      animated: edge.animated ?? false,
+      sourceHandle: edge.sourceHandle ?? null,
+      targetHandle: edge.targetHandle ?? null,
+    }));
+  }
+}
+
+export class ResponseChatBotFlowDto {
+  id: string;
+  nodes: TChatbotNode[];
+  edges: TChatbotEdge[];
+  update?: boolean;
+  docs?: ResponseChatBotFlowDto;
+
+  constructor(data: any) {
+    this.id = data.id;
+    this.update = data.update;
+    // Nodes
+    this.nodes = (data.nodes ?? []).map((node) => ({
+      id: node.id,
+      type: node.type ?? "chat",
+      position: {
+        x: node.position?.x ?? 0,
+        y: node.position?.y ?? 0,
+      },
+      width: node.width ?? 250,
+      height: node.height ?? 100,
+      selected: node.selected ?? false,
+      dragging: node.dragging ?? false,
+      data: {
+        label: node.data?.label ?? "",
+        value: node.data?.value ?? "",
+        elements: (node.data?.elements ?? []).map((el) => ({
+          id: el.id,
+          type: el.type ?? "text",
+          content: el.content ?? "",
+          date: el.date ?? new Date().toISOString(),
+        })),
+      },
+    }));
+    // Edges
+    this.edges = (data.edges ?? []).map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      animated: edge.animated ?? false,
+      sourceHandle: edge.sourceHandle ?? null,
+      targetHandle: edge.targetHandle ?? null,
+    }));
+  }
+}
+
 export class ResponseChatBotDto {
   id: string;
   name: string;
