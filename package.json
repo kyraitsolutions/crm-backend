@@ -2,7 +2,7 @@
   "name": "node-starter",
   "private": true,
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
     "play": "tsx src/playground.ts",
     "build": "tsc",
     "start": "node dist/server.js",

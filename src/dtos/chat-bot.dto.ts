@@ -1,9 +1,16 @@
-import { TCreateChatBot } from "../types";
+import {
+  ChatbotEdge,
+  ChatbotNode,
+  TChatbotEdge,
+  TChatbotNode,
+  TCreateChatBot,
+  TCreateChatBotFlow,
+} from "../types";
 
 export class CreateChatBotDto {
   name: string;
-  description:string;
-  status:boolean;
+  description: string;
+  status: boolean;
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -63,8 +70,8 @@ export class CreateChatBotDto {
 
   constructor(data: TCreateChatBot) {
     this.name = data.name;
-    this.description=data.description;
-    this.status=data.status
+    this.description = data.description;
+    this.status = data.status;
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -80,8 +87,7 @@ export class CreateChatBotDto {
           data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
       },
       language: data.config?.language ?? "english",
-      enableRantingAndFeedback:
-        data.config?.enableRantingAndFeedback ?? true,
+      enableRantingAndFeedback: data.config?.enableRantingAndFeedback ?? true,
       ratingAndFeedback: {
         rating: data.config?.ratingAndFeedback?.rating ?? 5,
         feedback: data.config?.ratingAndFeedback?.feedback ?? "",
@@ -120,8 +126,7 @@ export class CreateChatBotDto {
     };
     this.conversation = {
       welcomeMessage:
-        data.conversation?.welcomeMessage ??
-        "Hello! How can I help you today?",
+        data.conversation?.welcomeMessage ?? "Hello! How can I help you today?",
       fallbackMessage:
         data.conversation?.fallbackMessage ??
         "I apologize, but I didn't understand that. Could you please rephrase your question?",
@@ -135,11 +140,103 @@ export class CreateChatBotDto {
     };
   }
 }
+
+export class CreateChatBotFlowDto {
+  accountId: string;
+  chatbotId: string;
+  nodes: ChatbotNode[];
+  edges: ChatbotEdge[];
+
+  constructor(data: TCreateChatBotFlow) {
+    this.accountId = data.accountId;
+    this.chatbotId = data.chatbotId;
+
+    // Nodes
+    this.nodes = (data.nodes ?? []).map((node) => ({
+      id: node.id,
+      type: node.type ?? "chat",
+      position: {
+        x: node.position?.x ?? 0,
+        y: node.position?.y ?? 0,
+      },
+      width: node.width ?? 250,
+      height: node.height ?? 100,
+      selected: node.selected ?? false,
+      dragging: node.dragging ?? false,
+      data: {
+        label: node.data?.label ?? "",
+        value: node.data?.value ?? "",
+        elements: (node.data?.elements ?? []).map((el) => ({
+          id: el.id,
+          type: el.type ?? "text",
+          content: el.content ?? "",
+          date: el.date ?? new Date().toISOString(),
+        })),
+      },
+    }));
+
+    // Edges
+    this.edges = (data.edges ?? []).map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      animated: edge.animated ?? false,
+      sourceHandle: edge.sourceHandle ?? null,
+      targetHandle: edge.targetHandle ?? null,
+    }));
+  }
+}
+
+export class ResponseChatBotFlowDto {
+  id: string;
+  nodes: TChatbotNode[];
+  edges: TChatbotEdge[];
+  update?: boolean;
+  docs?: ResponseChatBotFlowDto;
+
+  constructor(data: any) {
+    this.id = data.id;
+    this.update = data.update;
+    // Nodes
+    this.nodes = (data.nodes ?? []).map((node) => ({
+      id: node.id,
+      type: node.type ?? "chat",
+      position: {
+        x: node.position?.x ?? 0,
+        y: node.position?.y ?? 0,
+      },
+      width: node.width ?? 250,
+      height: node.height ?? 100,
+      selected: node.selected ?? false,
+      dragging: node.dragging ?? false,
+      data: {
+        label: node.data?.label ?? "",
+        value: node.data?.value ?? "",
+        elements: (node.data?.elements ?? []).map((el) => ({
+          id: el.id,
+          type: el.type ?? "text",
+          content: el.content ?? "",
+          date: el.date ?? new Date().toISOString(),
+        })),
+      },
+    }));
+    // Edges
+    this.edges = (data.edges ?? []).map((edge) => ({
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      animated: edge.animated ?? false,
+      sourceHandle: edge.sourceHandle ?? null,
+      targetHandle: edge.targetHandle ?? null,
+    }));
+  }
+}
+
 export class ResponseChatBotDto {
-  id:string;
+  id: string;
   name: string;
-  description:string;
-  status:boolean;
+  description: string;
+  status: boolean;
   config: {
     enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
@@ -198,10 +295,10 @@ export class ResponseChatBotDto {
   };
 
   constructor(data: any) {
-    this.id=data._id;
+    this.id = data._id;
     this.name = data.name;
-    this.description=data.description;
-    this.status=data.status;
+    this.description = data.description;
+    this.status = data.status;
     this.config = {
       enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
@@ -217,8 +314,7 @@ export class ResponseChatBotDto {
           data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
       },
       language: data.config?.language ?? "english",
-      enableRantingAndFeedback:
-        data.config?.enableRantingAndFeedback ?? true,
+      enableRantingAndFeedback: data.config?.enableRantingAndFeedback ?? true,
       ratingAndFeedback: {
         rating: data.config?.ratingAndFeedback?.rating ?? 5,
         feedback: data.config?.ratingAndFeedback?.feedback ?? "",
@@ -256,28 +352,27 @@ export class ResponseChatBotDto {
       customCSS: data.theme?.customCSS ?? "",
     };
     this.conversation = {
-      welcomeMessage:data.conversation?.welcomeMessage,
-      fallbackMessage:data.conversation?.fallbackMessage,
+      welcomeMessage: data.conversation?.welcomeMessage,
+      fallbackMessage: data.conversation?.fallbackMessage,
       showWelcomeMessage: data.conversation?.showWelcomeMessage,
-      thankyouMessage:data.conversation?.thankyouMessage,
-      waitingMessage:data.conversation?.waitingMessage,
+      thankyouMessage: data.conversation?.thankyouMessage,
+      waitingMessage: data.conversation?.waitingMessage,
     };
   }
 }
 
-
-export class ChatBotListDto{
-  id:string;
+export class ChatBotListDto {
+  id: string;
   name: string;
-  description:string;
-  createdAt:string;
-  status:boolean;
+  description: string;
+  createdAt: string;
+  status: boolean;
 
-  constructor(data:any){  
-    this.id=data._id;
+  constructor(data: any) {
+    this.id = data._id;
     this.name = data.name;
-    this.description=data.description;
-    this.createdAt=data.createdAt;
-    this.status=data.status;
+    this.description = data.description;
+    this.createdAt = data.createdAt;
+    this.status = data.status;
   }
 }

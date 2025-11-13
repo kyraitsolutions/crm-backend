@@ -1,24 +1,26 @@
-import dotenv from "dotenv"
-import Queue from 'bull';
-import logger from '../utils/logger';
+import dotenv from "dotenv";
+import Queue from "bull";
+import logger from "../utils/logger";
 
-dotenv.config()
+dotenv.config();
 // Create queues
-const emailQueue = new Queue('email processing', {
-    redis: {
-        host: process.env.REDIS_HOST || 'redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com',
-        port: parseInt(process.env.REDIS_PORT || '14482'),
-        password: process.env.REDIS_PASS||'uObO37toZgN8yO0AmkB4D73E4cpHe0MH', // this must be correct
+const emailQueue = new Queue("email processing", {
+  redis: {
+    host:
+      process.env.REDIS_HOST ||
+      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
+    port: parseInt(process.env.REDIS_PORT || "14482"),
+    password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH", // this must be correct
+  },
+  defaultJobOptions: {
+    removeOnComplete: 10,
+    removeOnFail: 5,
+    attempts: 3,
+    backoff: {
+      type: "exponential",
+      delay: 2000,
     },
-    defaultJobOptions: {
-        removeOnComplete: 10,
-        removeOnFail: 5,
-        attempts: 3,
-        backoff: {
-            type: 'exponential',
-            delay: 2000,
-        },
-    },
+  },
 });
 
 // const notificationQueue = new Queue('notification processing', {
@@ -56,29 +58,28 @@ const emailQueue = new Queue('email processing', {
 // Queue event handlers
 
 // Connection events
-emailQueue.on('ready', () => {
-    console.log('✅ Redis queue connected');
+emailQueue.on("ready", () => {
+  console.log("✅ Redis queue connected");
 });
 
-emailQueue.on('error', (err) => {
-    console.error('❌ Redis queue connection error:', err);
+emailQueue.on("error", (err) => {
+  console.error("❌ Redis queue connection error:", err);
 });
 
 // Job lifecycle logs
-emailQueue.on('active', (job) => {
-    console.log(`🚀 Job ${job.id} started`);
+emailQueue.on("active", (job) => {
+  console.log(`🚀 Job ${job.id} started`);
 });
 
-emailQueue.on('completed', (job) => {
-    console.log("✅ yes here");
-    logger.info(`Email job ${job.id} completed`);
+emailQueue.on("completed", (job) => {
+  console.log("✅ yes here");
+  logger.info(`Email job ${job.id} completed`);
 });
 
-emailQueue.on('failed', (job, err) => {
-    console.log("❌ it is failed");
-    logger.error(`Email job ${job.id} failed:`, err);
+emailQueue.on("failed", (job, err) => {
+  console.log("❌ it is failed");
+  logger.error(`Email job ${job.id} failed:`, err);
 });
-
 
 // notificationQueue.on('completed', (job) => {
 //     logger.info(`Notification job ${job.id} completed`);
@@ -135,19 +136,19 @@ emailQueue.on('failed', (job, err) => {
 
 // Graceful shutdown
 const gracefulShutdown = async () => {
-    logger.info('Shutting down queues...');
+  logger.info("Shutting down queues...");
 
-    await Promise.all([
-        emailQueue.close(),
-        // notificationQueue.close(),
-        // leadProcessingQueue.close(),
-    ]);
+  await Promise.all([
+    emailQueue.close(),
+    // notificationQueue.close(),
+    // leadProcessingQueue.close(),
+  ]);
 
-    logger.info('All queues closed');
+  logger.info("All queues closed");
 };
 
-process.on('SIGTERM', gracefulShutdown);
-process.on('SIGINT', gracefulShutdown);
+process.on("SIGTERM", gracefulShutdown);
+process.on("SIGINT", gracefulShutdown);
 
 // export { emailQueue, notificationQueue, leadProcessingQueue };
 // export default { emailQueue, notificationQueue, leadProcessingQueue };

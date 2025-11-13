@@ -1,36 +1,48 @@
-import { string } from "zod";
-import { ChatBotListDto, CreateChatBotDto, ResponseChatBotDto } from "../dtos";
+import {
+  ChatBotListDto,
+  CreateChatBotDto,
+  ResponseChatBotDto,
+  ResponseChatBotFlowDto,
+} from "../dtos";
 import { ChatbotRepository } from "../repositories";
-import { AccountRepository } from '../repositories/account.repository';
+import { AccountRepository } from "../repositories/account.repository";
+import { TCreateChatBotFlow } from "../types";
+import httpResponse from "../utils/http.response";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
-  private accountRepository:AccountRepository;
+  private accountRepository: AccountRepository;
+  // private chatbotFlowRepository :;
 
   constructor() {
     this.repo = new ChatbotRepository();
-    this.accountRepository=new AccountRepository();
+    this.accountRepository = new AccountRepository();
   }
 
   async getAllChatBotsByUserId(userId: string): Promise<ChatBotListDto[] | []> {
     const chatbots = await this.repo.findAllByUserId(userId);
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
-  async getChatBots(userId:string,accountId: string): Promise<ChatBotListDto[] | []> {
-    const chatbots = await this.repo.findAllByAccountId(userId,accountId);
+  async getChatBots(
+    userId: string,
+    accountId: string
+  ): Promise<ChatBotListDto[] | []> {
+    const chatbots = await this.repo.findAllByAccountId(userId, accountId);
     // console.log(chatbots)
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 
   async getChatBotById(
     userId: string,
-    accountId:string,
+    accountId: string,
     chatbotId: string
   ): Promise<ResponseChatBotDto | null> {
-    console.log("sjdfskdj")
-    const chatbot = await this.repo.findChatbotById(userId,accountId,chatbotId );
-    console.log(chatbot)
-    if(!chatbot){
+    const chatbot = await this.repo.findChatbotById(
+      userId,
+      accountId,
+      chatbotId
+    );
+    if (!chatbot) {
       throw new Error("Chatbot not Found");
     }
     return new ResponseChatBotDto(chatbot);
@@ -39,12 +51,14 @@ export class ChatBotService {
   async createChatBot(
     userId: string,
     accountId: string,
-    createChatBotDto:CreateChatBotDto
+    createChatBotDto: CreateChatBotDto
   ): Promise<ResponseChatBotDto> {
-    
-    const isAccountExist= await this.accountRepository.findOne(userId,accountId);
+    const isAccountExist = await this.accountRepository.findOne(
+      userId,
+      accountId
+    );
 
-    if(!isAccountExist){
+    if (!isAccountExist) {
       throw new Error("Account not found for this account id");
     }
 
@@ -54,9 +68,72 @@ export class ChatBotService {
       accountId: accountId,
     });
 
-    console.log("✅ Created chatbot:", chatbot);
-
     return new ResponseChatBotDto(chatbot);
+  }
+
+  async getChatBotFlowById(
+    userId: string,
+    accountId: string,
+    chatbotId: string
+  ): Promise<ResponseChatBotFlowDto | null> {
+    const isAccountExist = await this.accountRepository.findOne(
+      userId,
+      accountId
+    );
+
+    if (!isAccountExist) {
+      throw new Error("Account not found for this account id");
+    }
+
+    const chatbotFlow = await this.repo.findChatbotFlowById(
+      accountId,
+      chatbotId
+    );
+
+    if (!chatbotFlow) {
+      throw new Error("Chatbot flow not Found");
+    }
+    return new ResponseChatBotFlowDto(chatbotFlow);
+  }
+
+  async createChatBotFlow(
+    userId: string,
+    accountId: string,
+    chatBotId: string,
+    createChatBotFlowDto: TCreateChatBotFlow
+  ) {
+    const isAccountExist = await this.accountRepository.findOne(
+      userId,
+      accountId
+    );
+
+    if (!isAccountExist) {
+      throw new Error("Account not found for this account id");
+    }
+
+    const chatbotFlowPayload = {
+      ...createChatBotFlowDto,
+      userId,
+      accountId,
+      chatBotId,
+    };
+
+    const isChatbotFlowExist = await this.repo.findChatbotFlowById(
+      accountId,
+      chatBotId
+    );
+
+    if (isChatbotFlowExist) {
+      this.repo.updateChatbotFlow(accountId, chatBotId, chatbotFlowPayload);
+      return {
+        update: true,
+        docs: new ResponseChatBotFlowDto(isChatbotFlowExist),
+      };
+    }
+
+    const chatbotFlow = await this.repo.createChatbotFlow(chatbotFlowPayload);
+
+    return new ResponseChatBotFlowDto(chatbotFlow);
   }
 
   // async updateChatBot(chatbotId: string, updateDto: CreateChatBotDto) {
@@ -131,19 +208,37 @@ export class ChatBotService {
   //   return chatbot;
   // }
 
-  async updateChatBot(userId:string,accountId:string,chatbotId: string, updateDto: CreateChatBotDto) {
-      const result =await this.repo.updateChatbot(userId,accountId,chatbotId,updateDto);
-      if(!result){
-        throw new Error("Chatbot not found");
-      }
-      return result
-  } 
+  async updateChatBot(
+    userId: string,
+    accountId: string,
+    chatbotId: string,
+    updateDto: CreateChatBotDto
+  ) {
+    const result = await this.repo.updateChatbot(
+      userId,
+      accountId,
+      chatbotId,
+      updateDto
+    );
+    if (!result) {
+      throw new Error("Chatbot not found");
+    }
+    return result;
+  }
 
-  async deleteChatBot(userId:string,accountId:string,chatbotId:string):Promise<boolean> {
-      const result=await this.repo.deleteChatbotById(userId,accountId,chatbotId);
-      if(!result){
-        throw new Error("Chatbot not Found for this Chatbot Id");
-      }
-      return true;
+  async deleteChatBot(
+    userId: string,
+    accountId: string,
+    chatbotId: string
+  ): Promise<boolean> {
+    const result = await this.repo.deleteChatbotById(
+      userId,
+      accountId,
+      chatbotId
+    );
+    if (!result) {
+      throw new Error("Chatbot not Found for this Chatbot Id");
+    }
+    return true;
   }
 }

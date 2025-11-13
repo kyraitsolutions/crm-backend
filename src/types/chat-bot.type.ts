@@ -2,10 +2,8 @@ import { z } from "zod";
 
 export const ZChatBotSchema = z.object({
   name: z.string().min(3, "Name is required and must be at least 3 characters"),
-  description:z.string().default(
-        "Best chatbot to generate leads."
-      ),
-  status:z.boolean().default(true),
+  description: z.string().default("Best chatbot to generate leads."),
+  status: z.boolean().default(true),
   userId: z.string(),
   accountId: z.string().nullable().optional(),
 
@@ -75,9 +73,7 @@ export const ZChatBotSchema = z.object({
 
   // --- Conversation Section ---
   conversation: z.object({
-    welcomeMessage: z
-      .string()
-      .default("Hello! How can I help you today?"),
+    welcomeMessage: z.string().default("Hello! How can I help you today?"),
     fallbackMessage: z
       .string()
       .default(
@@ -91,9 +87,84 @@ export const ZChatBotSchema = z.object({
       ),
     waitingMessage: z
       .string()
-      .default("Please wait while we connect you to our support representative"),
+      .default(
+        "Please wait while we connect you to our support representative"
+      ),
   }),
 });
+
+// chatbot flow types
+
+export const ChatbotElementSchema = z.object({
+  id: z.string(), // frontend UUID or id
+  type: z.enum(["text", "image", "video", "audio"]).default("text"),
+  content: z.string().default(""),
+  // default to current ISO timestamp if not provided
+  date: z
+    .string()
+    .optional()
+    .default(() => new Date().toISOString()),
+});
+
+/* -------------------------
+   Node data schema
+   ------------------------- */
+export const ChatbotNodeDataSchema = z.object({
+  label: z.string().default(""),
+  value: z.string().default(""),
+  elements: z.array(ChatbotElementSchema).default([]),
+});
+
+/* -------------------------
+   Node schema
+   ------------------------- */
+export const ChatbotNodeSchema = z.object({
+  id: z.string(), // use UUID from frontend
+  type: z.enum(["chat", "form"]).default("chat"),
+  position: z
+    .object({
+      x: z.number().default(0),
+      y: z.number().default(0),
+    })
+    .default({ x: 0, y: 0 }),
+  width: z.number().optional().default(250),
+  height: z.number().optional().default(100),
+  selected: z.boolean().optional().default(false),
+  dragging: z.boolean().optional().default(false),
+  data: ChatbotNodeDataSchema.default({ label: "", value: "", elements: [] }),
+});
+
+/* -------------------------
+   Edge schema
+   ------------------------- */
+export const ChatbotEdgeSchema = z.object({
+  id: z.string(),
+  source: z.string(),
+  target: z.string(),
+  animated: z.boolean().optional().default(false),
+  sourceHandle: z.string().nullable().optional().default(null),
+  targetHandle: z.string().nullable().optional().default(null),
+});
+
+/* -------------------------
+   Main flow schema
+   ------------------------- */
+export const CreateChatBotFlowSchema = z.object({
+  // If you don't want to enforce ObjectId format, change to z.string()
+  accountId: z.string(),
+  chatbotId: z.string(),
+  nodes: z.array(ChatbotNodeSchema).default([]),
+  edges: z.array(ChatbotEdgeSchema).default([]),
+});
+
+/* -------------------------
+   Export TypeScript types
+   ------------------------- */
+export type ChatbotElement = z.infer<typeof ChatbotElementSchema>;
+export type ChatbotNodeData = z.infer<typeof ChatbotNodeDataSchema>;
+export type TChatbotNode = z.infer<typeof ChatbotNodeSchema>;
+export type TChatbotEdge = z.infer<typeof ChatbotEdgeSchema>;
+export type TCreateChatBotFlow = z.infer<typeof CreateChatBotFlowSchema>;
 
 export type TChatBot = z.infer<typeof ZChatBotSchema>;
 export type TCreateChatBot = z.infer<typeof ZChatBotSchema>;
