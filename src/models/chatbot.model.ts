@@ -176,8 +176,20 @@ const chatbotFlowSchema = new Schema(
     nodes: [chatbotNodesSchema],
     edges: [chatbotEdgesSchema],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  }
 );
+
+// index on this table
+chatbotFlowSchema.index({ accountId: 1, chatbotId: 1 });
 
 export const ChatbotFlowModel = model("ChatbotFlow", chatbotFlowSchema);
 
