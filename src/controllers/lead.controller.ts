@@ -36,4 +36,9 @@ export class LeadController {
             next(error);
         }
     }
+
+
+    createLead = async (req: Request, res: Response, next: NextFunction) => {
+        return null
+    }
 }
