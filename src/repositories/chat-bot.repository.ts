@@ -83,6 +83,45 @@ export class ChatbotRepository {
     ]);
   }
 
+  async findChatbotWithFlow(accountId: string, chatbotId: string) {
+    const chatbotWithFlow = await ChatbotModel.aggregate([
+      {
+        $match: {
+          accountId: new mongoose.Types.ObjectId(accountId),
+          _id: new mongoose.Types.ObjectId(chatbotId),
+        },
+      },
+      {
+        $lookup: {
+          from: "chatbotflows",
+          localField: "_id",
+          foreignField: "chatbotId",
+          as: "flow",
+        },
+      },
+      { $unwind: "$flow" },
+      {
+        $project: {
+          name: 1,
+          description: 1,
+          userId: 1,
+          accountId: 1,
+          status: 1,
+          config: 1,
+          theme: 1,
+          conversation: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          flow: {
+            nodes: "$flow.nodes",
+            edges: "$flow.edges",
+          },
+        },
+      },
+    ]);
+    return chatbotWithFlow[0];
+  }
+
   async findChatbotById(
     userId: string,
     accountId: string,

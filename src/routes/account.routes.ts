@@ -127,6 +127,11 @@ export class AccountRouter {
       this.chatBotController.getChatBots.bind(this.chatBotController)
     );
 
+    // get individual chatbot with chatbot flow of this account
+    this.router.get(
+      "/:accountId/chatbot/:chatbotId/get",
+      this.chatBotController.getChatBotWithFlow.bind(this.chatBotController)
+    );
     // get particular chatbot data
     this.router.get(
       "/:accountId/chatbot/:chatbotId",
