@@ -1,25 +1,25 @@
 import { WebSocket, WebSocketServer } from "ws";
-import { chatEvents } from "./events/chatEvents";
+import { chatbotEvents } from "./events/chatbotEvents";
 
 export type EventHandler = (
-  data: any,
   ws: WebSocket,
-  wss: WebSocketServer
+  wss: WebSocketServer,
+  data: any
 ) => void;
 
 const eventMap: Record<string, EventHandler> = {
-  ...chatEvents,
+  ...chatbotEvents,
 };
 
 export const handleEvent = (
   event: string,
-  data: any,
   ws: WebSocket,
-  wss: WebSocketServer
+  wss: WebSocketServer,
+  data = {}
 ) => {
   const handler = eventMap[event];
   if (handler) {
-    handler(data, ws, wss);
+    handler(ws, wss, data);
   } else {
     console.warn(`⚠️ Unknown event: ${event}`);
   }

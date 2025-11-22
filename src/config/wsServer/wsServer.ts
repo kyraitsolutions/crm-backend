@@ -1,25 +1,26 @@
 // src/config/wsServer.ts
 import http from "http";
+import url from "url";
 import { WebSocket, WebSocketServer } from "ws";
 import { handleEvent } from "./handleEvent";
 
 export const createWebSocketServer = (server: http.Server) => {
   // ✅ Attach WS to the same HTTP server (no extra port)
   const wss = new WebSocketServer({ server });
-  console.log("✅ WebSocket server attached to HTTP server");
 
-  wss.on("connection", (ws: WebSocket) => {
-    console.log("🔗 New WS client connected");
+  wss.on("connection", (ws: WebSocket, req) => {
+    const query = new url.URL(req.url || "", "http://localhost");
+    const accountId = query.searchParams.get("accountId");
 
+    ws.accountId = accountId;
     ws.on("message", (raw) => {
       try {
         const { event, data } = JSON.parse(raw.toString());
-
         // ✅ Dispatch event to handlers
         if (data) {
-          handleEvent(event, data, ws, wss);
+          handleEvent(event, ws, wss, data);
         } else {
-          handleEvent(event, {}, ws, wss);
+          handleEvent(event, ws, wss);
         }
       } catch {
         console.error("Invalid WS message:", raw.toString());

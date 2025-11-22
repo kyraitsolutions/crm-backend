@@ -212,7 +212,6 @@ export class ChatBotController {
   }
 
   // ws event handlers
-
   static async getAllChatBotMessages(
     data: any,
     ws: WebSocket,
