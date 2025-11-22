@@ -94,7 +94,7 @@ export class CreateChatBotDto {
       },
       chat_transcript: data.config?.chat_transcript ?? true,
       enableVoiceNote: data.config?.enableVoiceNote ?? false,
-      responseInterval: data.config?.responseInterval ?? 0,
+      responseInterval: data.config?.responseInterval as any ?? 0,
       initiateChatbot: data.config?.initiateChatbot ?? "immediate",
       showBranding: data.config?.showBranding ?? true,
     };
