@@ -1,39 +1,29 @@
 import mongoose from "mongoose";
 
-const teamSchema = new mongoose.Schema({
+const teamTeamMembersSchema = new mongoose.Schema({
+    orgId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    teamMemberId: {
+    roleId:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Role',
         required: true
-    },
-    accountsId: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true
-    }],
-    teamMemberName: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    teamMemberEmail: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    teamMemberPhone: {
-        type: String,
-        required: true,
-        trim: true
     },
     status: {
-        type: String,
+        type: Boolean,
         default: true,
+    },
+    inviteStatus:{
+        type:String,
+        enum:['PENDING','ACCEPTED','DECLINED'],
+        default:'PENDING'
     },
 
 }, {
@@ -48,16 +38,51 @@ const teamSchema = new mongoose.Schema({
 });
 
 // Indexes for better performance
-teamSchema.index({ userId: 1 });
-teamSchema.index({ teamMemberId: 1 });
-teamSchema.index({ accountsId: 1 });
-teamSchema.index({ teamMemberName: 1 });
-teamSchema.index({ teamMemberEmail: 1 });
-teamSchema.index({ teamMemberPhone: 1 });
-teamSchema.index({ status: 1 });
-teamSchema.index({ createdAt: -1 });
+teamTeamMembersSchema.index({ userId: 1 });
+teamTeamMembersSchema.index({ teamMemberId: 1 });
+teamTeamMembersSchema.index({ accountsId: 1 });
+teamTeamMembersSchema.index({ teamMemberName: 1 });
+teamTeamMembersSchema.index({ teamMemberEmail: 1 });
+teamTeamMembersSchema.index({ teamMemberPhone: 1 });
+teamTeamMembersSchema.index({ status: 1 });
+teamTeamMembersSchema.index({ createdAt: -1 });
 
 
-const Team = mongoose.model.Team || mongoose.model("Team", teamSchema);
 
-export { Team }
+const teamMemberAccountLeadsSchema = new mongoose.Schema({
+    teamMemberId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TeamMember',
+        required: true
+    },
+    accountsId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
+        required: true
+    },
+    leadId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Lead',
+        required: true
+    },
+}, {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+        transform(_, ret) {
+            delete (ret as any).__v;
+            return ret;
+        }
+    },
+});
+
+teamMemberAccountLeadsSchema.index({ teamMemberId: 1 });
+teamMemberAccountLeadsSchema.index({ accountsId: 1 });
+teamMemberAccountLeadsSchema.index({ leadId: 1 });
+
+
+
+const TeamMember = mongoose.model.TeamMember || mongoose.model("TeamMember", teamTeamMembersSchema);
+const TeamMemberAccountLeads = mongoose.model.TeamMemberAccountLeads || mongoose.model("TeamMemberAccountLeads", teamMemberAccountLeadsSchema);
+
+export { TeamMember, TeamMemberAccountLeads };

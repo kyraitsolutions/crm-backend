@@ -1,8 +1,10 @@
+import { TeamRepository } from './../repositories/team.repository';
 import { EmailService, emailService } from './email.service';
 import { UserRepository } from "../repositories";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
 import { JwtUtil, PasswordUtil } from "../utils";
 import { TCreateUser, TUpdateUser } from "../types";
+import { TeamMember } from '../models/team.model';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -56,33 +58,51 @@ export class UserService {
   }
 
   async findOrCreateGoogleUser(profile: any): Promise<UserDto> {
-    let user = await this.userRepository.findByGoogleId(profile.id);
+    // console.log("Print profile",profile)
 
-    if (!user) {
-      const email = profile.emails?.[0]?.value;
-      if (!email) {
-        throw new Error("Google profile does not contain email");
-      }
 
-      user = await this.userRepository.findByEmail(email);
+    const googleId = profile.id;
+    const email = profile.emails?.[0]?.value;
+    const profilePicture = profile.photos?.[0]?.value;
 
-      if (!user) {
-        const userData: TCreateUser = {
-          email,
-          googleId: profile.id,
-          profilePicture: profile.photos?.[0]?.value,
-        };
 
-        user = await this.userRepository.create(userData);
-        this.emailService.queueWelcomeEmail(userData.email) 
-        // } else {
-        //   user = await this.userRepository.update(user.id, {
-        //     profilePicture: profile.photos?.[0]?.value,
-        //   });
-      }
+    if (!email) throw new Error("Google profile does not contain email");
+
+    // 1. Check if user already registered with this googleId
+    let user = await this.userRepository.findByGoogleId(googleId);
+    if (user) {
+      // User already connected with Google → do NOT update email/googleId
+      return new UserDto(user);
     }
 
-    return new UserDto(user!);
+
+    // 2. If googleId not found, check if user exists by email
+    user = await this.userRepository.findByEmail(email);
+    if (user) {
+      // Existing user (ex: team member), but missing googleId
+      user = await this.userRepository.update(user.id, {
+        googleId,
+        profilePicture,
+      });
+
+      const teamMember = await TeamMember.findOne({ userId: user?.id });
+      if(teamMember){
+        await TeamMember.updateOne({ userId: user?.id }, { inviteStatus: "ACCEPTED" });
+      }
+      return new UserDto(user);
+    }
+
+    // 3. New Google user → create user
+    const userData: TCreateUser = {
+      email,
+      googleId,
+      profilePicture,
+    };
+
+    const newUser = await this.userRepository.create(userData);
+    this.emailService.queueWelcomeEmail(email,"https://crm.kyraitsolutions.com/login");
+
+    return new UserDto(newUser);
   }
 
   async getUserById(id: string): Promise<UserDto | null> {

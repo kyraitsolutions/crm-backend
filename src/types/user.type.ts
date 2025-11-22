@@ -23,7 +23,9 @@ export const ZCreateUserSchema = z.object({
 });
 
 export const ZUpdateUserSchema = z.object({
-  onboarding: z.boolean().default(false),
+  googleId: z.string().nullable().optional(),
+  profilePicture: z.string().nullable().optional(),
+  onboarding: z.boolean().default(false).optional(),
 });
 
 

@@ -31,6 +31,7 @@ export class UserProfileService{
             accountType:dto.accountType
         };
 
+        // console.log("Onboarding data",onboardingData)
         const accountData: TCreateAccount={
             userId:id,
             accountName:dto.organizationName,
@@ -38,8 +39,14 @@ export class UserProfileService{
             status:"active"
         };
 
+        // console.log("account data",accountData)
+
         const userProfile=await this.userprofileRepository.create(onboardingData);
-        await this.accountRepository.create(accountData);
+
+        // console.log("user profile after aupadte",userProfile)
+        const accountUpdate=await this.accountRepository.create(accountData);
+
+        // console.log("account data",accountUpdate)
 
         const dataToUpdate:TUpdateUser={
             onboarding:true

@@ -2,10 +2,10 @@ export class TeamMemberDto {
     id: string;
     userId: string;
     teamMemberId: string;
-    accountsId: string[];
-    teamMemberName: string;
-    teamMemberEmail: string;
-    teamMemberPhone: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
     status: string;
     createdAt: Date;
     updatedAt: Date;
@@ -13,10 +13,10 @@ export class TeamMemberDto {
         _id: string;
         userId: string;
         teamMemberId: string;
-        accountsId: string[];
-        teamMemberName: string;
-        teamMemberEmail: string;
-        teamMemberPhone: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
@@ -24,10 +24,10 @@ export class TeamMemberDto {
         this.id = data._id;
         this.userId = data.userId;
         this.teamMemberId = data.teamMemberId;
-        this.accountsId = data.accountsId;
-        this.teamMemberName = data.teamMemberName;
-        this.teamMemberEmail = data.teamMemberEmail;
-        this.teamMemberPhone = data.teamMemberPhone;
+        this.firstName = data.firstName;
+        this.lastName = data.lastName;
+        this.email = data.email;
+        this.phone = data.phone;
         this.status = data.status;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;
@@ -35,16 +35,19 @@ export class TeamMemberDto {
 }
 
 export class CreateTeamMemberDto {
-    teamMemberName: string;
-    teamMemberEmail: string;
-    teamMemberPhone: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
     constructor(data: {
-        teamMemberName: string;
-        teamMemberEmail: string;
-        teamMemberPhone: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
     }) {
-        this.teamMemberName = data.teamMemberName;
-        this.teamMemberEmail = data.teamMemberEmail;
-        this.teamMemberPhone = data.teamMemberPhone;
+        this.firstName = data.firstName;
+        this.lastName = data.lastName;
+        this.email = data.email;
+        this.phone = data.phone;
     }
 }

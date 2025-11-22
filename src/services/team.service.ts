@@ -1,22 +1,65 @@
 import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto";
+import { RoleModel } from "../models/user.model";
+import { UserRepository } from "../repositories";
 import { TeamRepository } from "../repositories/team.repository";
+import { UserProfileRepository } from "../repositories/userprofile.repository";
+import { TCreateUserProfile } from "../types/userprofile.type";
+import { EmailService } from "./email.service";
 
 export class TeamService {
     private teamRepository: TeamRepository;
+    private userRepository: UserRepository;
+    private emailService:EmailService;
+    private userprofileRepository:UserProfileRepository;
     constructor() {
+        this.userRepository = new UserRepository();
+        this.emailService=new EmailService();
         this.teamRepository = new TeamRepository();
+        this.userprofileRepository=new UserProfileRepository();
     }
-    async getTeamMembers(accountId: string): Promise<any[]> {
-        const teamMembers = await this.teamRepository.getTeamMembers(accountId);
+    async getTeamMembers(orgId: string): Promise<any[]> {
+        const teamMembers = await this.teamRepository.getTeamMembers(orgId);
         return teamMembers?.map((teamMember: any) => new TeamMemberDto(teamMember)) ?? [];
     }
     async getTeamMemberById(id: string): Promise<any> {
         const teamMember = await this.teamRepository.getTeamMemberById(id);
         return teamMember ? new TeamMemberDto(teamMember) : null;
     }
-    async createTeamMember(teamMember: CreateTeamMemberDto): Promise<any> {
-        const newTeamMember = await this.teamRepository.createTeamMember(teamMember);
+    async createTeamMember(orgId:string,teamMember: CreateTeamMemberDto): Promise<any> {
+        console.log("Team member in service",teamMember)
+
+        // user create
+        const newTeamMember = await this.userRepository.createTeamUser(teamMember.email);
+
+        // user profile
+        const onboardingData: TCreateUserProfile={
+            userId: newTeamMember._id,
+            firstName:teamMember.firstName,
+            lastName:teamMember.lastName,
+            organizationName:"",
+            accountType:"individual",
+        };
+
+        await this.userprofileRepository.create(onboardingData);
+
+        const role = await RoleModel.findOne({ name: "TEAM_MEMBER" });
+        // team member create
+        const teamMemberData={
+            orgId:orgId,
+            userId:newTeamMember._id,
+            roleId:role?._id,
+            status:true,
+            inviteStatus:"PENDING",
+        };
+
+        await this.teamRepository.createTeamMember(teamMemberData);
+
+        // call email service to send invitation email
+        const url=`${process.env.FRONTEND_URL}/login`;
+        this.emailService.queueWelcomeEmail(teamMember.email,url);
+
         return newTeamMember ? new TeamMemberDto(newTeamMember) : null;
+        // return null;
     }
     async updateTeamMember(id: string, teamMember: any): Promise<any> {
         const updatedTeamMember = await this.teamRepository.updateTeamMember(id, teamMember);
@@ -25,5 +68,23 @@ export class TeamService {
     async deleteTeamMember(id: string): Promise<any> {
         const deletedTeamMember = await this.teamRepository.deleteTeamMember(id);
         return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
+    }
+
+    // async inviteTeamMember(ordId:string,data:any):Promise<void>{
+    //     const payload = {
+    //         orgId: ordId,
+    //         accountId: data?.accountId,
+    //         leadId: data?.leadId,
+    //     };
+    //     const token=JwtUtil.inviteToken(payload)
+    //     const url=`${process.env.FRONTEND_URL}/invite-team-member?token=${token}`;  
+    //     // call email service to send invitation email
+    //     this.emailService.queueWelcomeEmail(email,url);
+    // }
+
+
+    async assignTaskToMember(memberId:string,accountId:string,leadId:string):Promise<any>{
+        const assignment=await this.teamRepository.assignTaskToMember(memberId,accountId,leadId);
+        return assignment;
     }
 }

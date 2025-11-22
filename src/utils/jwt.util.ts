@@ -16,6 +16,9 @@ export class JwtUtil {
   static sign(payload: JwtPayload): string {
     return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRES_IN });
   }
+  static inviteToken(payload: any): string {
+    return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRES_IN });
+  }
 
   static verify(token: string): JwtPayload {
     return jwt.verify(token, this.SECRET) as JwtPayload;

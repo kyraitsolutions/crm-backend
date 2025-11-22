@@ -50,7 +50,7 @@ export class EmailService {
     }
 
     // SignUp welcome mail
-    async sendWelcomeEmail(email: string): Promise<boolean> {
+    async sendWelcomeEmail(email: string,url:string): Promise<boolean> {
         const subject = 'Welcome to Kyra CRM';
         const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -58,6 +58,7 @@ export class EmailService {
                 <p>Hello ${email.split('@')[0]},</p>
                 <p>Thank you for signing up with our Kyra CRM. You can now start creating chatbots and managing your leads.</p>
                 <p>Here's what you can do next:</p>
+                <a href="${url}">Click on this url</a>
                 <ul>
                     <li>Onboard yourself to get a base account</li>
                     <li>Create your first chatbot</li>
@@ -73,10 +74,10 @@ export class EmailService {
         return await this.sendEmail(email, subject, html);
     }
 
-    async queueWelcomeEmail(email: string): Promise<void> {
+    async queueWelcomeEmail(email: string,url:string): Promise<void> {
         console.log("Here isn the service of queue")
         const result=await emailQueue.add('send-welcome-email', {
-            email
+            email,url
         });
         console.log("queueWelcomeEmail result: ",result)
         logger.info(`Welcome email queued for ${email}`);

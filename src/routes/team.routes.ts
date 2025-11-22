@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { TeamController } from "../controllers/team.controller";
+import { AuthMiddleware } from "../middleware";
 
 export class TeamRouter {
     public router: Router;
@@ -10,9 +11,10 @@ export class TeamRouter {
         this.initializeRoutes();
     }
     private initializeRoutes(): void {
-        this.router.get('/', this.teamController.getTeamMembers.bind(this.teamController));
+        
+        this.router.get('/',AuthMiddleware.authenticate, this.teamController.getTeamMembers.bind(this.teamController));
         this.router.get('/:id', this.teamController.getTeamMemberById.bind(this.teamController));
-        this.router.post('/', this.teamController.createTeamMember.bind(this.teamController));
+        this.router.post('/',AuthMiddleware.authenticate, this.teamController.createTeamMember.bind(this.teamController));
         this.router.put('/:id', this.teamController.updateTeamMember.bind(this.teamController));
         this.router.delete('/:id', this.teamController.deleteTeamMember.bind(this.teamController));
     }

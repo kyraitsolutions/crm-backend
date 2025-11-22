@@ -60,6 +60,12 @@ export class UserRepository {
     return await UserModel.create({ ...data, roleId: role?._id });
   }
 
+  async createTeamUser(email:any): Promise<any> {
+    const role = await RoleModel.findOne({ name: "TEAM_MEMBER" });
+    return await UserModel.create({email:email, roleId: role?._id, onboarding:true });
+    // return null;
+  }
+
   async update(id: string, data: TUpdateUser): Promise<TUser | null> {
     return await UserModel.findByIdAndUpdate(id, data, { new: true });
   }
