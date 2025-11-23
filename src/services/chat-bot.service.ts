@@ -1,5 +1,6 @@
 import {
   ChatBotListDto,
+  ChatbotWithFlowDto,
   CreateChatBotDto,
   ResponseChatBotDto,
   ResponseChatBotFlowDto,
@@ -28,6 +29,17 @@ export class ChatBotService {
   ): Promise<ChatBotListDto[] | []> {
     const chatbots = await this.repo.findAllByAccountId(userId, accountId);
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
+  }
+
+  async getChatBotWithFlow(
+    accountId: string,
+    chatbotId: string
+  ): Promise<ChatbotWithFlowDto | null> {
+    const chatbotWithFlow = await this.repo.findChatbotWithFlow(
+      accountId,
+      chatbotId
+    );
+    return new ChatbotWithFlowDto(chatbotWithFlow);
   }
 
   async getChatBotById(

@@ -25,7 +25,12 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    this.app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+    this.app.use(
+      cors({
+        origin: ["http://localhost:5173", "http://localhost:3001"],
+        credentials: true,
+      })
+    );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(passport.initialize());

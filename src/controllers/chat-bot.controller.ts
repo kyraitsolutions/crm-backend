@@ -75,6 +75,22 @@ export class ChatBotController {
     }
   }
 
+  async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accountId, chatbotId } = req.params;
+      const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
+        accountId,
+        chatbotId
+      );
+
+      httpResponse(req, res, 200, "Chatbot fetched successfully", {
+        docs: chatBotsWithFlow,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async createChatBot(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
@@ -151,6 +167,7 @@ export class ChatBotController {
 
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("here")
       const user = req.user as any;
       const { accountId, chatbotId } = req.params;
       const updateChatBotDto = new CreateChatBotDto(req.body);
@@ -193,7 +210,6 @@ export class ChatBotController {
   }
 
   // ws event handlers
-
   static async getAllChatBotMessages(
     data: any,
     ws: WebSocket,

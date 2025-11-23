@@ -10,7 +10,7 @@ export class AccountRouter {
   private accountController: AccountController;
   private chatBotController: ChatBotController;
   private formController: FormController;
-  private leadController: LeadController
+  private leadController: LeadController;
 
   // constructor
   constructor() {
@@ -59,6 +59,11 @@ export class AccountRouter {
       this.chatBotController.getChatBots.bind(this.chatBotController)
     );
 
+    // get individual chatbot with chatbot flow of this account
+    this.router.get(
+      "/:accountId/chatbot/:chatbotId/get",
+      this.chatBotController.getChatBotWithFlow.bind(this.chatBotController)
+    );
     // get particular chatbot data
     this.router.get(
       "/:accountId/chatbot/:chatbotId",
@@ -66,7 +71,7 @@ export class AccountRouter {
       this.chatBotController.getChatBotById.bind(this.chatBotController)
     );
 
-    // create chatbotflow for this account
+    //get chatbotflow for this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/flow",
       AuthMiddleware.authenticate,
@@ -100,7 +105,6 @@ export class AccountRouter {
       this.chatBotController.deleteChatBot.bind(this.chatBotController)
     );
 
-
     // =============================================================================================
 
     // Form routes can be added here
@@ -127,11 +131,14 @@ export class AccountRouter {
 
     // and so on....
 
-
     // =============================================================================================
 
     // leads route
-    this.router.get('/:accountId/leads', AuthMiddleware.authenticate, this.leadController.getLeads.bind(this.formController))
+    this.router.get(
+      "/:accountId/leads",
+      AuthMiddleware.authenticate,
+      this.leadController.getLeads.bind(this.formController)
+    );
   }
   public getRouter(): Router {
     return this.router;
