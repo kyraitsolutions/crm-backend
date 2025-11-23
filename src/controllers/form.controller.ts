@@ -42,7 +42,6 @@ export class FormController {
       const accountId = req.params.accountId;
 
       const forms = await this.formService.getForms(user.id, accountId);
-      console.log(forms);
       httpResponse(req, res, 200, "Forms fetched successfully", {
         docs: forms,
         limit: 10,

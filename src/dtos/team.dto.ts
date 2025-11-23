@@ -1,12 +1,16 @@
 export class TeamMemberDto {
     id: string;
     userId: string;
+    roleId:string;
     teamMemberId: string;
     firstName: string;
     lastName: string;
     email: string;
-    phone: string;
+    // phone: string;
+    inviteStatus: string;
+    roleName:string;
     status: string;
+    accountIds?:string[];
     createdAt: Date;
     updatedAt: Date;
     constructor(data: {
@@ -16,7 +20,11 @@ export class TeamMemberDto {
         firstName: string;
         lastName: string;
         email: string;
-        phone: string;
+        // phone: string;
+        roleId:string;
+        inviteStatus: string;
+        accountIds?:string[];
+        roleName:string;
         status: string;
         createdAt: Date;
         updatedAt: Date;
@@ -27,7 +35,11 @@ export class TeamMemberDto {
         this.firstName = data.firstName;
         this.lastName = data.lastName;
         this.email = data.email;
-        this.phone = data.phone;
+        this.roleId=data.roleId;
+        this.inviteStatus = data.inviteStatus;
+        this.roleName=data.roleName;
+        this.accountIds=data.accountIds;
+        // this.phone = data.phone;
         this.status = data.status;
         this.createdAt = data.createdAt;
         this.updatedAt = data.updatedAt;

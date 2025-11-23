@@ -1,14 +1,18 @@
+import { TeamRepository } from './../repositories/team.repository';
 import { EmailService } from './email.service';
 import { TCreateAccount } from "./../types/account.type";
 import { AccountDto, CreateAccountDto } from "../dtos/account.dto";
 import { AccountRepository } from "../repositories/account.repository";
-
+import { USERROLE } from '../enums/user.enum';
+import { ObjectId } from "mongodb";
 export class AccountService {
   private accountRepository: AccountRepository;
+  private teamRepository: TeamRepository;
   private emailService: EmailService;
 
   constructor() {
     this.accountRepository = new AccountRepository();
+    this.teamRepository = new TeamRepository();
     this.emailService = new EmailService();
   }
 
@@ -20,8 +24,21 @@ export class AccountService {
     return account;
   }
 
-  async getAllAccounts(id: string): Promise<AccountDto[] | null> {
-    const accounts = await this.accountRepository.findAll(id);
+  async getAllAccounts(user:any): Promise<AccountDto[] | null> {
+
+    const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
+    const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(user.roleId);
+    
+    let accounts:any=[]
+    if(isAdmin){
+      accounts = await this.accountRepository.findAll(user.id);
+    }
+    else if(isTeamMember){
+      const teamMember = await this.teamRepository.getAccountsByTeamMember(user.id);
+
+      let AccountIds=teamMember.map((acc:any)=>acc.accountId);
+      accounts = await this.accountRepository.findAccountsByIds(AccountIds);
+    }
     return accounts?.map((account) => new AccountDto(account)) ?? [];
   }
 

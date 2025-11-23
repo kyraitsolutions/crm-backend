@@ -2,12 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { ChatBotService } from "../services";
 import {
   CreateChatBotDto,
-  CreateChatBotFlowDto,
   ResponseChatBotDto,
 } from "../dtos";
 import httpResponse from "../utils/http.response";
 import { WebSocketServer, WebSocket } from "ws";
-import { ChatbotFlowModel } from "../models/chatbot.model";
 
 export class ChatBotController {
   private chatBotService: ChatBotService;
@@ -22,7 +20,6 @@ export class ChatBotController {
   ): Promise<void> {
     try {
       const user = req.user as any;
-      console.log("aaua");
       const chatbots = await this.chatBotService.getAllChatBotsByUserId(
         user.id
       );

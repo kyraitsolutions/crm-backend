@@ -20,4 +20,8 @@ export class AccountRepository {
   async delete(id: string): Promise<boolean | null> {
     return await AccountModel.findByIdAndDelete(id);
   }
+
+  async findAccountsByIds(accountIds: string[]): Promise<TAccount[] | null> {
+    return await AccountModel.find({ _id: { $in: accountIds } });
+  }
 }

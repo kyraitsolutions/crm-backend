@@ -40,7 +40,6 @@ export class EmailService {
             };
 
             const result = await this.transporter.sendMail(mailOptions);
-            console.log(result)
             logger.info(`Email sent successfully to ${to}:`, result.messageId);
             return true;
         } catch (error) {
@@ -75,11 +74,9 @@ export class EmailService {
     }
 
     async queueWelcomeEmail(email: string,url:string): Promise<void> {
-        console.log("Here isn the service of queue")
         const result=await emailQueue.add('send-welcome-email', {
             email,url
         });
-        console.log("queueWelcomeEmail result: ",result)
         logger.info(`Welcome email queued for ${email}`);
     }
     
@@ -139,7 +136,6 @@ export class EmailService {
             accountEmail,
             accountName
         });
-        console.log("Account created email result: ",result)
         logger.info(`Account Creation email queued for ${accountEmail}`);
     }
 

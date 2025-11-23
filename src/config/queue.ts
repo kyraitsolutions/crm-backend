@@ -72,12 +72,10 @@ emailQueue.on("active", (job) => {
 });
 
 emailQueue.on("completed", (job) => {
-  console.log("✅ yes here");
   logger.info(`Email job ${job.id} completed`);
 });
 
 emailQueue.on("failed", (job, err) => {
-  console.log("❌ it is failed");
   logger.error(`Email job ${job.id} failed:`, err);
 });
 
@@ -99,7 +97,6 @@ emailQueue.on("failed", (job, err) => {
 
 // Queue processing functions
 // emailQueue.process('send-welcome-email', async (job) => {
-//     console.log("Job Id:",job)
 //     const { email, name, profileId } = job.data;
 //     logger.info(`Processing welcome email for ${email}`);
 

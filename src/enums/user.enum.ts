@@ -1,0 +1,7 @@
+export enum USERROLE {
+  ACCOUNT_MANAGER = "690f5bd1f994f739c8865eea",
+  ADMIN = "690f5bbcf994f739c8865ee9",
+//   USER = "user",
+  TEAM_MEMBER = "690f5c09f994f739c8865eeb",
+  LEAD_MANAGER = "6921aabc4dddba5a1b2b7b4d",
+}

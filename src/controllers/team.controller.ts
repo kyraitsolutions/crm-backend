@@ -24,6 +24,7 @@ export class TeamController {
             next(error as Error);
         }
     }
+
     getTeamMemberById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const user = req.user as any;
@@ -51,7 +52,6 @@ export class TeamController {
         try {
             logger.info(`Creating team member: ${req.body}`);
             const user=req.user as any;
-            console.log("req.body",user,req.body);
             const teamMember = await this.teamService.createTeamMember(user.id,req.body);
             httpResponse(req, res, 200, "Team member created successfully", {
                 docs: teamMember,
@@ -89,10 +89,13 @@ export class TeamController {
             next(error as Error);
         }
     }
-    assignTaskToMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+
+
+    assignAccountToTeamMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { memberId, accountId, leadId } = req.body;
-            const assignment = await this.teamService.assignTaskToMember(memberId,accountId,leadId);
+            const { id} = req.params;
+            const { accountIds,leadId} = req.body;
+            const assignment = await this.teamService.assignAccountToMember(id,accountIds,leadId);
             httpResponse(req, res, 200, "Task assigned to member successfully", {
                 docs: assignment,
                 limit: 10,
@@ -104,5 +107,4 @@ export class TeamController {
             next(error as Error);
         }
     }
-
 }

@@ -26,7 +26,6 @@ export class TeamService {
         return teamMember ? new TeamMemberDto(teamMember) : null;
     }
     async createTeamMember(orgId:string,teamMember: CreateTeamMemberDto): Promise<any> {
-        console.log("Team member in service",teamMember)
 
         // user create
         const newTeamMember = await this.userRepository.createTeamUser(teamMember.email);
@@ -70,21 +69,8 @@ export class TeamService {
         return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
     }
 
-    // async inviteTeamMember(ordId:string,data:any):Promise<void>{
-    //     const payload = {
-    //         orgId: ordId,
-    //         accountId: data?.accountId,
-    //         leadId: data?.leadId,
-    //     };
-    //     const token=JwtUtil.inviteToken(payload)
-    //     const url=`${process.env.FRONTEND_URL}/invite-team-member?token=${token}`;  
-    //     // call email service to send invitation email
-    //     this.emailService.queueWelcomeEmail(email,url);
-    // }
-
-
-    async assignTaskToMember(memberId:string,accountId:string,leadId:string):Promise<any>{
-        const assignment=await this.teamRepository.assignTaskToMember(memberId,accountId,leadId);
+    async assignAccountToMember(memberId:string,accountIds:any,leadId:string):Promise<any>{
+        const assignment=await this.teamRepository.assignAccountToMember(memberId,accountIds,leadId);
         return assignment;
     }
 }

@@ -58,7 +58,6 @@ export class UserService {
   }
 
   async findOrCreateGoogleUser(profile: any): Promise<UserDto> {
-    // console.log("Print profile",profile)
 
 
     const googleId = profile.id;
@@ -108,7 +107,6 @@ export class UserService {
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
     const userDto = user ? new UserDto(user) : null;
-    // console.log("Respnse dto :",userDto)
     return userDto;
   }
 

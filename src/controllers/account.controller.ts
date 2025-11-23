@@ -17,14 +17,7 @@ export class AccountController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-
-      if (user.userprofile?.accountType==="individual"){
-        httpResponse(req, res, 404, "No accounts for individual users", {
-          docs: [],
-        });
-      }
-      const accounts = await this.accountService.getAllAccounts(user.id);
-      console.log(accounts)
+      const accounts = await this.accountService.getAllAccounts(user);
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
         limit: 10,
@@ -70,7 +63,6 @@ export class AccountController {
     try {
       const id = req.params.id;
       const result = await this.accountService.deleteAccount(id);
-      console.log("result", result);
       if (!result) {
         httpResponse(req,res,404,"Account with the user id does not exist!",{
             data: null,

@@ -55,7 +55,7 @@ const teamMemberAccountLeadsSchema = new mongoose.Schema({
         ref: 'TeamMember',
         required: true
     },
-    accountsId: {
+    accountId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account',
         required: true
@@ -63,8 +63,13 @@ const teamMemberAccountLeadsSchema = new mongoose.Schema({
     leadId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Lead',
-        required: true
+        required: false
     },
+    roleId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role',
+        required: true
+    }
 }, {
     timestamps: true,
     versionKey: false,
@@ -79,6 +84,8 @@ const teamMemberAccountLeadsSchema = new mongoose.Schema({
 teamMemberAccountLeadsSchema.index({ teamMemberId: 1 });
 teamMemberAccountLeadsSchema.index({ accountsId: 1 });
 teamMemberAccountLeadsSchema.index({ leadId: 1 });
+teamMemberAccountLeadsSchema.index({ roleId: 1 });
+
 
 
 
