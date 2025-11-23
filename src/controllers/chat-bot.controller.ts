@@ -170,6 +170,7 @@ export class ChatBotController {
 
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
+      console.log("here")
       const user = req.user as any;
       const { accountId, chatbotId } = req.params;
       const updateChatBotDto = new CreateChatBotDto(req.body);

@@ -32,12 +32,16 @@ export class LeadController {
       delete rawFilters.skip;
 
       // Use filters only for querying (status, stage, etc.), not for pagination
+
+      console.log(user.id,accountId)
       const leads = await this.leadService.getLeads(
         user.id,
         accountId,
         rawFilters,
         { limit, skip }
       );
+
+      console.log("yaha aya",leads)
 
       httpResponse(req, res, 200, "Leads fetched successfully", {
         docs: leads,
@@ -52,6 +56,8 @@ export class LeadController {
 
   createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
+
+      console.log("sdfjshfsd",data)
       const lead = await this.leadService.createLeadWs(data);
 
       console.log(data);

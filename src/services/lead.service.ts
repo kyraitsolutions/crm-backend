@@ -26,7 +26,7 @@ export class LeadService {
     // Only fetch leads that belong to the user and account
     // Add additional filters if provided
     const criteria = {
-      userId,
+      // userId,
       accountId,
       ...(queryFilters || {}),
     };
