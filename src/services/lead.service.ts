@@ -22,7 +22,10 @@ export class LeadService {
     accountId: string,
     queryFilters?: any, // Define/expand as needed
     paginationOptions?: { limit?: number; skip?: number }
-  ): Promise<Lead[]> {
+  ): Promise<{
+    leads: Lead[];
+    totalDocs: number;
+  }> {
     // Only fetch leads that belong to the user and account
     // Add additional filters if provided
     const criteria = {
@@ -30,7 +33,15 @@ export class LeadService {
       accountId,
       ...(queryFilters || {}),
     };
-    return await this.leadRepository.find(criteria, paginationOptions);
+    const leads = await this.leadRepository.find(criteria, paginationOptions);
+    const count = await this.leadRepository.countDocuments({
+      accountId,
+    });
+
+    return {
+      leads,
+      totalDocs: count,
+    };
   }
 
   async createLeadWs(lead: Lead): Promise<Lead> {
@@ -38,7 +49,7 @@ export class LeadService {
   }
 
   async updateLeadWs(lead: Lead): Promise<Lead> {
-    console.log(lead)
+    console.log(lead);
     return await this.leadRepository.update(lead);
   }
 }
