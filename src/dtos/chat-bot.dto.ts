@@ -24,7 +24,7 @@ export class CreateChatBotDto {
     language: "english" | "hindi";
     enableRantingAndFeedback: boolean;
     ratingAndFeedback: {
-      rating: number;
+      rating?: number;
       feedback?: string;
     };
     chat_transcript: boolean;

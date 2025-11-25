@@ -12,7 +12,7 @@ export const ZUserProfileSchema=z.object({
 })
 
 export const ZCreateUserProfileSchema=z.object({
-    userId:z.object(),
+    userId:z.string(),
     firstName:z.string(),
     lastName:z.string(),
     organizationName:z.string(),

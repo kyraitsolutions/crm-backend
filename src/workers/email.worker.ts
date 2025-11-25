@@ -9,9 +9,9 @@ dotenv.config();
 const emailService = new EmailService();
 
 emailQueue.process("send-welcome-email", async (job) => {
-  const { email } = job.data;
+  const { email,url } = job.data;
   logger.info(`Processing welcome email for ${email}`);
-  await emailService.sendWelcomeEmail(email);
+  await emailService.sendWelcomeEmail(email,url);
 });
 
 emailQueue.process("send-account-creation-email", async (job) => {

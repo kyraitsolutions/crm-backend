@@ -21,7 +21,11 @@ export class UserProfileService{
 
         const isExist= await this.userprofileRepository.findByUserId(id);
         if(isExist){
-            return new OnboardingDto(isExist);;
+            return new OnboardingDto({
+                ...isExist,
+                createdAt: new Date(isExist.createdAt),
+                updatedAt: new Date(isExist.updatedAt)
+            });
         }
         const onboardingData: TCreateUserProfile={
             userId:id,
@@ -41,13 +45,17 @@ export class UserProfileService{
 
         const userProfile=await this.userprofileRepository.create(onboardingData);
 
-        const accountUpdate=await this.accountRepository.create(accountData);
+        await this.accountRepository.create(accountData);
 
 
         const dataToUpdate:TUpdateUser={
             onboarding:true
         };
         await this.userRepository.update(userProfile.userId,dataToUpdate);
-        return new OnboardingDto(userProfile);
+        return new OnboardingDto({
+            ...userProfile,
+            createdAt: new Date(userProfile.createdAt),
+            updatedAt: new Date(userProfile.updatedAt)
+        });
     }
 }

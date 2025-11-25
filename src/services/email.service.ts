@@ -74,7 +74,7 @@ export class EmailService {
     }
 
     async queueWelcomeEmail(email: string,url:string): Promise<void> {
-        const result=await emailQueue.add('send-welcome-email', {
+        await emailQueue.add('send-welcome-email', {
             email,url
         });
         logger.info(`Welcome email queued for ${email}`);
@@ -132,7 +132,7 @@ export class EmailService {
 
     async queueAccountCreationEmail(accountEmail:string,accountName:string): Promise<void> {
         logger.info(`Account created email ${accountEmail}`,);
-        const result = await emailQueue.add('send-account-creation-email', {
+        await emailQueue.add('send-account-creation-email', {
             accountEmail,
             accountName
         });

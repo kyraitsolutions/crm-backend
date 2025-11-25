@@ -55,8 +55,10 @@ const logger = winston.createLogger({
 });
 
 // Create a stream object with a 'write' function that will be used by morgan
-logger.stream = {
-    write: (message) => {
+// Using a type assertion to avoid TypeScript errors since winston's Logger type
+// doesn't include a 'stream' property used by morgan.
+(logger as any).stream = {
+    write: (message: string) => {
         logger.http(message.trim());
     },
 };

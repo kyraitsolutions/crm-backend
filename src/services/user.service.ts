@@ -1,5 +1,4 @@
-import { TeamRepository } from './../repositories/team.repository';
-import { EmailService, emailService } from './email.service';
+import { EmailService } from './email.service';
 import { UserRepository } from "../repositories";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
 import { JwtUtil, PasswordUtil } from "../utils";
