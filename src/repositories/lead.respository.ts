@@ -13,6 +13,10 @@ export class LeadRespository {
     return await query.exec();
   }
 
+  async countDocuments(criteria: any) {
+    return await LeadModel.find(criteria).countDocuments();
+  }
+
   async create(lead: any) {
     return await LeadModel.create(lead);
   }

@@ -33,22 +33,21 @@ export class LeadController {
       delete rawFilters.skip;
 
       // Use filters only for querying (status, stage, etc.), not for pagination
-
-      console.log(user.id,accountId)
-      const leads = await this.leadService.getLeads(
+      const { leads, totalDocs } = await this.leadService.getLeads(
         user.id,
         accountId,
         rawFilters,
         { limit, skip }
       );
 
-      console.log("yaha aya",leads)
-
       httpResponse(req, res, 200, "Leads fetched successfully", {
         docs: leads,
-        total: leads.length,
-        limit,
-        skip,
+        pagination: {
+          limit,
+          skip,
+          total: leads.length,
+          totalDocs: totalDocs,
+        },
       });
     } catch (error) {
       next(error);
@@ -57,27 +56,25 @@ export class LeadController {
 
   createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
-
-      console.log("sdfjshfsd=======================================",data)
+      console.log("sdfjshfsd=======================================", data);
 
       const leadData = {
-          accountId: new mongoose.Types.ObjectId(data.accountId),
-          name: data.name,
-          email: data?.email || "",
-          phone: data?.phone || "",
-          customFields: data?.customFields || {},
-          source: {
-            name: data.source.name,
-            url: data.source.url,
-            chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId)
-          },
+        accountId: new mongoose.Types.ObjectId(data.accountId),
+        name: data.name,
+        email: data?.email || "",
+        phone: data?.phone || "",
+        customFields: data?.customFields || {},
+        source: {
+          name: data.source.name,
+          url: data.source.url,
+          chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId),
+        },
 
-          stage: "Intake",
-          status: "Active"
+        stage: "Intake",
+        status: "Active",
       };
 
-
-      console.log("Prepare lead Payload",leadData)
+      console.log("Prepare lead Payload", leadData);
       const lead = await this.leadService.createLeadWs(data);
 
       console.log(data);
@@ -115,8 +112,7 @@ export class LeadController {
 
   updateLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
-
-      console.log("Data at the time of update============",data)
+      console.log("Data at the time of update============", data);
       const lead = await this.leadService.updateLeadWs(data);
 
       wss.clients.forEach((client) => {
