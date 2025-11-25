@@ -1,12 +1,11 @@
 import { LeadModel } from "../models/lead.model";
 import { Router, Request, Response } from "express";
 
-
 // "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
 
 export class LeadRespository {
   async find(criteria: any, pagination?: { limit?: number; skip?: number }) {
-    const query = LeadModel.find(criteria).sort({ createdAt: -1 });
+    const query = LeadModel.find(criteria).sort({ createdAt: -1 }).lean();
     if (pagination?.limit !== undefined) {
       query.limit(pagination.limit);
     }
@@ -39,7 +38,9 @@ export class LeadRespository {
       });
     }
 
-    return await LeadModel.findByIdAndUpdate(id, updateData, { new: true });
+    return await LeadModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).lean();
     // return await LeadModel.findOneAndUpdate({ _id: lead.id }, lead, {
     //   new: true,
     // });

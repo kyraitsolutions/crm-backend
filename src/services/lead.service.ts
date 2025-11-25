@@ -49,7 +49,6 @@ export class LeadService {
   }
 
   async updateLeadWs(lead: Lead): Promise<Lead> {
-    console.log(lead);
     return await this.leadRepository.update(lead);
   }
 }

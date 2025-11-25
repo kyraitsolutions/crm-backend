@@ -56,8 +56,6 @@ export class LeadController {
 
   createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
-      console.log("sdfjshfsd=======================================", data);
-
       const leadData = {
         accountId: new mongoose.Types.ObjectId(data.accountId),
         name: data.name,
@@ -112,8 +110,9 @@ export class LeadController {
 
   updateLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
-      console.log("Data at the time of update============", data);
+      // console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
+      console.log(lead);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {
@@ -122,7 +121,7 @@ export class LeadController {
               event: WEBSOCKET_EVENTS["Chatbot Lead Updated"],
               data: {
                 lead: {
-                  ...lead.toObject(),
+                  ...lead,
                 },
               },
             })
