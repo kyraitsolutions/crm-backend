@@ -139,6 +139,12 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.leadController.getLeads.bind(this.formController)
     );
+
+    this.router.put(
+      "/:accountId/lead/:leadId/update",
+      AuthMiddleware.authenticate,
+      this.leadController.updateLead.bind(this.formController)
+    );
   }
   public getRouter(): Router {
     return this.router;

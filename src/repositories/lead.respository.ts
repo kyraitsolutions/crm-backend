@@ -23,6 +23,12 @@ export class LeadRespository {
     return await LeadModel.create(lead);
   }
 
+  async updateLeadById(id: string, lead: any) {
+    return await LeadModel.findByIdAndUpdate(id, lead, {
+      new: true,
+    }).lean();
+  }
+
   async update(lead: any) {
     const { id, customFields, ...rest } = lead;
 
