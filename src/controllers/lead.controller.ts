@@ -23,14 +23,14 @@ export class LeadController {
 
       // Separate pagination params (limit, skip) from filter criteria
       const rawFilters = { ...req.query };
-      const limit = rawFilters.limit
-        ? parseInt(String(rawFilters.limit), 10)
+      const limit = rawFilters.rowPerPage
+        ? parseInt(String(rawFilters.rowPerPage), 10)
         : 10;
-      const skip = rawFilters.skip ? parseInt(String(rawFilters.skip), 10) : 0;
+      const skip = (Math.max(Number(rawFilters.pageIndex), 1) - 1) * limit;
 
       // Remove pagination params from filter object
-      delete rawFilters.limit;
-      delete rawFilters.skip;
+      delete rawFilters.rowPerPage;
+      delete rawFilters.pageIndex;
 
       // Use filters only for querying (status, stage, etc.), not for pagination
       const { leads, totalDocs } = await this.leadService.getLeads(

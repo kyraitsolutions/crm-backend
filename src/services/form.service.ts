@@ -12,7 +12,7 @@ export class FormService {
         this.formRepository = new FormRepository();
         this.accountRepository=new AccountRepository();
     }
-    async createForm(userId: string,accountId:string, createFormDto: CreateFormDto): Promise<FormDto> {
+    async createForm(userId: string,accountId:string, createFormDto: CreateFormDto): Promise<FormDto|null> {
         const isAccountExist= await this.accountRepository.findOne(userId,accountId);
         if(!isAccountExist){
             throw new Error("Account not found for this account id");
@@ -25,7 +25,7 @@ export class FormService {
         const newForm = await this.formRepository.create(formData);
         return new FormDto(newForm);
     }
-    async getForms(userId: string,accountId:string): Promise<FormDto|null> {
+    async getForms(userId: string,accountId:string): Promise<FormDto[]|null> {
         const forms = await this.formRepository.findByAccountId(userId,accountId);
         return forms?.map((form) => new FormDto(form)) ?? [];
     }

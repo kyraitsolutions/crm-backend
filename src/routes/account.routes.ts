@@ -4,6 +4,7 @@ import { AuthMiddleware } from "../middleware";
 import { ChatBotController } from "../controllers";
 import { FormController } from "../controllers/form.controller";
 import { LeadController } from "../controllers/lead.controller";
+import AnalyticsController from "../controllers/analytics.controller";
 
 export class AccountRouter {
   public router: Router;
@@ -11,6 +12,7 @@ export class AccountRouter {
   private chatBotController: ChatBotController;
   private formController: FormController;
   private leadController: LeadController;
+  private analyticsController:AnalyticsController;
 
   // constructor
   constructor() {
@@ -19,6 +21,7 @@ export class AccountRouter {
     this.chatBotController = new ChatBotController();
     this.formController = new FormController();
     this.leadController = new LeadController();
+    this.analyticsController = new AnalyticsController();
     this.initializeRoutes();
   }
 
@@ -139,6 +142,14 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.leadController.getLeads.bind(this.formController)
     );
+
+
+
+    // =============================================================================================
+    
+    // Analytics Overview
+    this.router.get("/:accountId/overview",AuthMiddleware.authenticate,this.analyticsController.getOverview.bind(this.analyticsController))
+
   }
   public getRouter(): Router {
     return this.router;

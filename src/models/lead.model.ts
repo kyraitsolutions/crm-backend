@@ -18,7 +18,10 @@ export interface Lead extends Document {
   status: "Active" | "Inactive" | "Pending";
 
   source: {
-    name: string; // e.g. Webform, Chatbot, Referral
+    name: {
+      type:String,
+      enum:["Chatbot", "Website", "Google Ads", "WhatsApp", "Facebook", "Instagram", "Webform", "Manual"]
+    };
     url?: string;
     formId?: string;
     chatbotId?: string;
@@ -85,8 +88,22 @@ const leadSchema = new Schema<Lead>(
         createdBy: { type: Schema.Types.ObjectId, ref: "User" },
         createdAt: { type: Date, default: Date.now },
       },
+
+      
     ],
 
+    // timeline:[
+    //     {
+    //       type:{
+    //         type:String,
+    //         enum: ["phone", "whatsapp", "instagram","note"],
+    //         default:'note'
+    //       },
+    //       message: { type: String, required: true },
+    //       createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    //       createdAt: { type: Date, default: Date.now },
+    //     }
+    //   ],
     meta: {
       ip: String,
       userAgent: String,

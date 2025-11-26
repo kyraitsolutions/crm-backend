@@ -59,9 +59,10 @@ export class ChatBotController {
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
+      // console.log(user)
       const accountId = req.params.accountId;
       const chatBots = await this.chatBotService.getChatBots(
-        user.id,
+        user,
         accountId
       );
       httpResponse(req, res, 200, "Chatbot fetched successfully", {

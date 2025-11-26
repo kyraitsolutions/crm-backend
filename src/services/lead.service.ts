@@ -1,6 +1,7 @@
 import { LeadRespository } from "../repositories/lead.respository";
 import { Lead } from "../models/lead.model";
 
+
 export class LeadService {
   private leadRepository: LeadRespository;
 

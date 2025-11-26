@@ -5,9 +5,12 @@ import {
   ResponseChatBotDto,
   ResponseChatBotFlowDto,
 } from "../dtos";
+import { USERROLE } from "../enums/user.enum";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
 import { ChatbotRepository } from "../repositories";
 import { AccountRepository } from "../repositories/account.repository";
 import { TCreateChatBotFlow } from "../types";
+import { ObjectId } from "mongodb";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
@@ -24,10 +27,28 @@ export class ChatBotService {
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
   async getChatBots(
-    userId: string,
+    user: any,
     accountId: string
   ): Promise<ChatBotListDto[] | []> {
-    const chatbots = await this.repo.findAllByAccountId(userId, accountId);
+
+    let chatbots: any = []
+    const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
+    if (isAdmin) {
+      chatbots = await this.repo.findAllByAccountId(user.id, accountId);
+    }
+    else {
+      console.log("else", user.id);
+      const isAccessed = await TeamMember.findOne({ userId: user.id });
+
+      console.log(isAccessed)
+
+      const isAccountAccess = await TeamMemberAccountLeads.findOne({ teamMemberId: isAccessed._id, accountId: accountId });
+
+      console.log(isAccountAccess);
+      if (isAccountAccess) {
+        chatbots = await this.repo.findAllByAccountId(isAccessed.orgId, accountId);
+      }
+    }
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 

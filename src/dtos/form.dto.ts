@@ -12,7 +12,7 @@ export class FormDto {
     phoneNumber: boolean;
     email: boolean;
     message: boolean;
-    customFields: Array<{
+    customFields?: Array<{
       label: string;
       key: string;
       required: boolean;

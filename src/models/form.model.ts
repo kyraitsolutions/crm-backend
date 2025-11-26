@@ -13,6 +13,7 @@ const formSchema = new mongoose.Schema({
         required: true,
         index: true,
     },
+    status:{type:Boolean,require:true,default:true},
     formTitle: { type: String, required: true },
     formDescription: { type: String },
     headerImage: { type: String },

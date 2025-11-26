@@ -30,6 +30,7 @@ export class AccountService {
     const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(user.roleId);
     
     let accounts:any=[]
+    
     if(isAdmin){
       accounts = await this.accountRepository.findAll(user.id);
     }
