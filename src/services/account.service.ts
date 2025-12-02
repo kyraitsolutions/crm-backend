@@ -43,13 +43,13 @@ export class AccountService {
     return accounts?.map((account) => new AccountDto(account)) ?? [];
   }
 
-  async createAccount(id: string, dto: CreateAccountDto): Promise<AccountDto> {
+  async createAccount(id: string, dto: CreateAccountDto): Promise<AccountDto|any> {
     let existingAccount = await this.accountRepository.findAccountByEmail(
       dto.email
     );
 
     if (existingAccount) {
-      throw new Error("User with this email already exists");
+      return {messgae:"Account with this email exist already",isExist:true}
     }
 
     const accountData: TCreateAccount = {
