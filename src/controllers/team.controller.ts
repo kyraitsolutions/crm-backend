@@ -78,7 +78,10 @@ export class TeamController {
     }
     deleteTeamMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const teamMember = await this.teamService.deleteTeamMember(req.params.id);
+            const {id}=req.params;
+
+            console.log("id on Controller",id)
+            const teamMember = await this.teamService.deleteTeamMember(id);
             httpResponse(req, res, 200, "Team member deleted successfully", {
                 docs: teamMember,
                 limit: 10,

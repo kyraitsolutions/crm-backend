@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { RoleModel } from "../models/user.model";
-
+import { RoleModel, UserModel } from "../models/user.model";
+import { ObjectId } from "mongodb";
 
 export class TeamRepository {
     
@@ -106,7 +106,28 @@ export class TeamRepository {
         return await TeamMember.findByIdAndUpdate(id, teamMember);
     }
     async deleteTeamMember(id: string): Promise<any> {
-        return await TeamMember.findByIdAndDelete(id);
+
+
+        const teamMemberId = new ObjectId(id);
+        console.log("Id in repo",teamMemberId)
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        try {
+            // 1. Delete user from User table
+            const user=await UserModel.findByIdAndDelete({_id:teamMemberId},{session});
+            // 2. Delete user from Team member table
+            await TeamMember.findOneAndDelete({userId:teamMemberId},{session});
+            // 3. Delete all assigned accounts to this user
+            await TeamMemberAccountLeads.deleteMany({teamMemberId:teamMemberId},{session})
+            // commit
+            await session.commitTransaction();
+            session.endSession();
+            return user;
+        } catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     }
 
     async assignAccountToMember(

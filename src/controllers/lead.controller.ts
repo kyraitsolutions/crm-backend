@@ -54,6 +54,23 @@ export class LeadController {
     }
   };
 
+  updateLead = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { accountId, leadId } = req.params;
+      const leadData = req.body;
+
+      const lead = await this.leadService.updateLead(
+        accountId,
+        leadId,
+        leadData
+      );
+      console.log(lead);
+      httpResponse(req, res, 200, "Lead updated successfully", lead);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
     try {
       const leadData = {

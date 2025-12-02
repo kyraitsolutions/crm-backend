@@ -65,6 +65,7 @@ export class TeamService {
         return updatedTeamMember ? new TeamMemberDto(updatedTeamMember) : null;
     }
     async deleteTeamMember(id: string): Promise<any> {
+        console.log("id in service", id)
         const deletedTeamMember = await this.teamRepository.deleteTeamMember(id);
         return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
     }

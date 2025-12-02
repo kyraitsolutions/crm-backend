@@ -49,6 +49,14 @@ export class LeadService {
     return await this.leadRepository.create(lead);
   }
 
+  async updateLead(
+    accountId: string,
+    leadId: string,
+    lead: Lead
+  ): Promise<Lead> {
+    return await this.leadRepository.updateLeadById(leadId, lead);
+  }
+
   async updateLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.update(lead);
   }

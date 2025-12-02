@@ -150,6 +150,11 @@ export class AccountRouter {
     // Analytics Overview
     this.router.get("/:accountId/overview",AuthMiddleware.authenticate,this.analyticsController.getOverview.bind(this.analyticsController))
 
+    this.router.put(
+      "/:accountId/lead/:leadId/update",
+      AuthMiddleware.authenticate,
+      this.leadController.updateLead.bind(this.formController)
+    );
   }
   public getRouter(): Router {
     return this.router;
