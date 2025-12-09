@@ -38,7 +38,9 @@ export const ZChatBotSchema = z.object({
 
     chat_transcript: z.boolean().default(true),
     enableVoiceNote: z.boolean().default(false),
-    responseInterval: z.union([z.literal(0), z.literal(1), z.literal(2), z.number().int()]).default(0),
+    responseInterval: z
+      .union([z.literal(0), z.literal(1), z.literal(2), z.number().int()])
+      .default(0),
     initiateChatbot: z.enum(["immediate", "action", ""]).default("immediate"),
     showBranding: z.boolean().default(true),
   }),
@@ -100,6 +102,8 @@ export const ChatbotElementSchema = z.object({
   type: z.enum(["text", "image", "video", "audio"]).default("text"),
   content: z.string().default(""),
   // default to current ISO timestamp if not provided
+  choices: z.array(z.string()).optional(),
+
   date: z
     .string()
     .optional()

@@ -30,23 +30,24 @@ export class ChatBotService {
     user: any,
     accountId: string
   ): Promise<ChatBotListDto[] | []> {
-
-    let chatbots: any = []
+    let chatbots: any = [];
     const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
     if (isAdmin) {
       chatbots = await this.repo.findAllByAccountId(user.id, accountId);
-    }
-    else {
-      console.log("else", user.id);
+    } else {
       const isAccessed = await TeamMember.findOne({ userId: user.id });
 
-      console.log(isAccessed)
-
-      const isAccountAccess = await TeamMemberAccountLeads.findOne({ teamMemberId: isAccessed._id, accountId: accountId });
+      const isAccountAccess = await TeamMemberAccountLeads.findOne({
+        teamMemberId: isAccessed._id,
+        accountId: accountId,
+      });
 
       console.log(isAccountAccess);
       if (isAccountAccess) {
-        chatbots = await this.repo.findAllByAccountId(isAccessed.orgId, accountId);
+        chatbots = await this.repo.findAllByAccountId(
+          isAccessed.orgId,
+          accountId
+        );
       }
     }
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];

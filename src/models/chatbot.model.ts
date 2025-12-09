@@ -152,9 +152,16 @@ const chatbotNodesSchema = new Schema({
     elements: [
       {
         id: String,
-        type: { type: String, enum: ["text", "image", "video", "audio"] },
+        type: {
+          type: String,
+          enum: ["text", "image", "video", "audio", "option"],
+        },
         content: String,
         date: String,
+
+        // Option-specific fields
+        choices: [String],
+        title: String,
       },
     ],
   },
