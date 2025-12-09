@@ -52,14 +52,14 @@ export class AccountController {
         createAccountDto
       );
       if(result.isExist){
-        httpResponse(req, res, 201, result?.message, {
+        httpResponse(req, res, 409, result?.message, {
           docs: result,
         });
-      }
-      httpResponse(req, res, 201, "Account created successfully", {
-        docs: result,
-      });
-      
+      }else{
+        httpResponse(req, res, 201, "Account created successfully", {
+          docs: result,
+        });
+      }      
     } catch (error) {
       next(error);
     }

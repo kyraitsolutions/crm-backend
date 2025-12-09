@@ -5,6 +5,8 @@ import { Router, Request, Response } from "express";
 
 export class LeadRespository {
   async find(criteria: any, pagination?: { limit?: number; skip?: number }) {
+
+    console.log("ajhsdgjafasj",criteria)
     const query = LeadModel.find(criteria).sort({ createdAt: -1 }).lean();
     if (pagination?.limit !== undefined) {
       query.limit(pagination.limit);
@@ -97,8 +99,8 @@ tempLeadSeedRouter.post(
             budget: "₹30,000",
             platform: "Web",
           },
-          stage: "Qualified",
-          status: "Active",
+          stage: "qualified",
+          status: "active",
           source: {
             name: "Chatbot",
             url: "https://example.com/chat1",

@@ -26,18 +26,25 @@ export class LeadService {
   ): Promise<{
     leads: Lead[];
     totalDocs: number;
-  }> {
+  }|null> {
     // Only fetch leads that belong to the user and account
     // Add additional filters if provided
+    if(!accountId){
+      return null;
+    }
     const criteria = {
       // userId,
       accountId,
       ...(queryFilters || {}),
     };
+
+    console.log("query filter",queryFilters)
     const leads = await this.leadRepository.find(criteria, paginationOptions);
     const count = await this.leadRepository.countDocuments({
       accountId,
     });
+
+    // console.log("Leads",leads)
 
     return {
       leads,

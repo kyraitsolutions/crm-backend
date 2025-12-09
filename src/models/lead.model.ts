@@ -14,13 +14,13 @@ export interface Lead extends Document {
   message?: string;
   customFields: Record<string, any>;
 
-  stage: "Intake" | "Qualified" | "Converted";
-  status: "Active" | "Inactive" | "Pending";
+  stage: "intake" | "qualified" | "converted";
+  status: "active" | "inactive" | "pending";
 
   source: {
     name: {
       type:String,
-      enum:["Chatbot", "Website", "Google Ads", "WhatsApp", "Facebook", "Instagram", "Webform", "Manual"]
+      enum:["chatbot", "website", "google_ads", "whatsapp", "facebook", "instagram", "webform", "manual"]
     };
     url?: string;
     formId?: string;
@@ -62,17 +62,32 @@ const leadSchema = new Schema<Lead>(
 
     stage: {
       type: String,
-      enum: ["Intake", "Qualified", "Converted"],
-      default: "Intake",
+      enum: ["intake", "qualified", "converted"],
+      default: "intake",
+      set: (v: string) => v?.toLowerCase(),
     },
     status: {
       type: String,
-      enum: ["Active", "Inactive", "Pending"],
-      default: "Active",
+      enum: ["active", "inactive", "pending"],
+      default: "active",
+      set: (v: string) => v?.toLowerCase(),
     },
 
     source: {
-      name: { type: String, required: true },
+      name: { 
+        type: String,
+        enum: [
+          "chatbot",
+          "website",
+          "google_ads",
+          "whatsapp",
+          "facebook",
+          "instagram",
+          "webform",
+          "manual"
+        ],
+        set: (v: string) => v?.toLowerCase(),
+        required: true },
       url: { type: String },
       formId: { type: Schema.Types.ObjectId, ref: "WebForm" },
       chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot" },

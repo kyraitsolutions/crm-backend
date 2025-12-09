@@ -132,7 +132,6 @@ export class AccountRouter {
       // this.formController.deleteForm.bind(this.formController)
     );
 
-    // and so on....
 
     // =============================================================================================
 
@@ -140,9 +139,13 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
-      this.leadController.getLeads.bind(this.formController)
+      this.leadController.getLeads.bind(this.leadController)
     );
-
+    this.router.put(
+      "/:accountId/lead/:leadId/update",
+      AuthMiddleware.authenticate,
+      this.leadController.updateLead.bind(this.leadController)
+    );
 
 
     // =============================================================================================
@@ -150,11 +153,7 @@ export class AccountRouter {
     // Analytics Overview
     this.router.get("/:accountId/overview",AuthMiddleware.authenticate,this.analyticsController.getOverview.bind(this.analyticsController))
 
-    this.router.put(
-      "/:accountId/lead/:leadId/update",
-      AuthMiddleware.authenticate,
-      this.leadController.updateLead.bind(this.formController)
-    );
+    
   }
   public getRouter(): Router {
     return this.router;
