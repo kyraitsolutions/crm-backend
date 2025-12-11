@@ -51,4 +51,19 @@ export class FormController {
       next(error);
     }
   };
+
+
+  deleteForm=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+    try {
+      const user=req.user as any;
+      const {accountId,formId} = req.params;
+      const form=await this.formService.deleteFormById(user.id,accountId,formId)
+      console.log(form)
+      httpResponse(req, res, 200, "Forms Deleted successfully", {
+        docs: form
+      });
+    } catch (error) {
+      next(error)
+    }
+  }
 }

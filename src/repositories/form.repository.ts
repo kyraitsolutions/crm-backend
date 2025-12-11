@@ -9,4 +9,8 @@ export class FormRepository{
     async findByAccountId(userId:string, accountId:string):Promise<[]| null>{
         return await FormModel.find({userId:userId,accountId:accountId});
     }
+
+    async deleteByFormId(userId:string, accountId:string,formId:string):Promise<{}|null>{
+        return await FormModel.findOneAndDelete({userId:userId,accountId:accountId,_id:formId})
+    }
 }

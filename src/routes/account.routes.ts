@@ -128,8 +128,8 @@ export class AccountRouter {
     );
     this.router.delete(
       "/:accountId/form/:formId",
-      AuthMiddleware.authenticate
-      // this.formController.deleteForm.bind(this.formController)
+      AuthMiddleware.authenticate,
+      this.formController.deleteForm.bind(this.formController)
     );
 
 

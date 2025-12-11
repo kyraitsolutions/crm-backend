@@ -29,4 +29,9 @@ export class FormService {
         const forms = await this.formRepository.findByAccountId(userId,accountId);
         return forms?.map((form) => new FormDto(form)) ?? [];
     }
+
+    async deleteFormById(userId: string,accountId:string,formId:string):Promise<FormDto|null>{
+        const form=await this.formRepository.deleteByFormId(userId,accountId,formId);
+        return new FormDto(form)??{}
+    }
 }
