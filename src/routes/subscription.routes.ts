@@ -1,20 +1,24 @@
 import { Router } from "express";
-import { subscriptionController } from "../controllers";
+import { SubscriptionController } from "../controllers/subscription.controller";
 
 export class SubscriptionRouter {
   public router: Router;
-  private subscriptionController: subscriptionController;
+  private subscriptionController: SubscriptionController;
 
   constructor() {
     this.router = Router();
-    this.subscriptionController = new subscriptionController();
+    this.subscriptionController = new SubscriptionController();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
+    this.router.get(
+      "/",
+      this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
+    );
     this.router.post(
-      "/register",
-      this.subscriptionController.register.bind(this.subscriptionController)
+      "/susbcribe",
+      this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
     );
   }
 

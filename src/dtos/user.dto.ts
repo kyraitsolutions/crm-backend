@@ -11,7 +11,10 @@ export class UserDto {
     firstName:string | null;
     lastName:string | null;
     organizationName:string | null;
-  }
+  };
+  usersubscription:{
+    planId:string
+  };
 
   constructor(data: {
     _id: number;
@@ -26,7 +29,11 @@ export class UserDto {
       firstName:string | null;
       lastName:string | null;
       organizationName:string | null;
-    }
+    };
+    usersubscription:{
+      planId:string
+    };
+
   }) {
     this.id = data._id;
     this.email = data.email;
@@ -35,7 +42,8 @@ export class UserDto {
     this.roleId=data.roleId
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
-    this.userprofile=data.userprofile
+    this.userprofile=data.userprofile;
+    this.usersubscription=data.usersubscription
 
   }
 }

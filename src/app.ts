@@ -6,6 +6,7 @@ import { AppRoutes } from "./routes";
 import { initDB } from "./db";
 import { createWebSocketServer } from "./config/wsServer/wsServer";
 import http from "http";
+// import { seedPlans } from "./scripts/seedPlan";
 
 export class App {
   public app: Application;
@@ -48,7 +49,7 @@ export class App {
   public listen(port: number): void {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-
+    // seedPlans();
     server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

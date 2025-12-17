@@ -1,18 +1,22 @@
+import { SubscriptionRepository } from './../repositories/subscription.repository';
 import { EmailService } from './email.service';
 import { UserRepository } from "../repositories";
 import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
 import { JwtUtil, PasswordUtil } from "../utils";
 import { TCreateUser, TUpdateUser } from "../types";
 import { TeamMember } from '../models/team.model';
+import { SubscriptionPlan } from '../enums/subscription.enum';
 
 export class UserService {
   private userRepository: UserRepository;
   private emailService:EmailService;
+  private subscriptionRepository:SubscriptionRepository
 
 
   constructor() {
     this.userRepository = new UserRepository();
     this.emailService=new EmailService();
+    this.subscriptionRepository= new SubscriptionRepository();
   }
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -98,6 +102,8 @@ export class UserService {
     };
 
     const newUser = await this.userRepository.create(userData);
+    console.log("New user",newUser)
+    const susbcription=await this.subscriptionRepository.create(newUser.id,SubscriptionPlan.FREE)
     this.emailService.queueWelcomeEmail(email,"https://crm.kyraitsolutions.com/login");
 
     return new UserDto(newUser);
@@ -105,6 +111,7 @@ export class UserService {
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
+    console.log("gfhjklk",user)
     const userDto = user ? new UserDto(user) : null;
     return userDto;
   }

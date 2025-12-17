@@ -5,6 +5,7 @@ const planSchema = new Schema(
     name: {
       type: String, 
       enum: ["free", "gold", "platinum", "payg"],
+      default:"free",
       required: true,
       unique: true
     },
@@ -18,7 +19,16 @@ const planSchema = new Schema(
 
     features: [{ type: String }],
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  }
 );
 
 
@@ -49,8 +59,20 @@ const userSubscriptionSchema = new Schema(
     // For Pay-as-you-go
     credits: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  }
 );
+
+userSubscriptionSchema.index({ userId: 1 });
+userSubscriptionSchema.index({ planId: 1 });
 
 
 export const Plan = model("Plan", planSchema);

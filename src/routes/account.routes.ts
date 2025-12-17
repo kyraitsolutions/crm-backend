@@ -5,6 +5,7 @@ import { ChatBotController } from "../controllers";
 import { FormController } from "../controllers/form.controller";
 import { LeadController } from "../controllers/lead.controller";
 import AnalyticsController from "../controllers/analytics.controller";
+import { checkSubscriptionStatus } from "../middleware/subscription.middleware";
 
 export class AccountRouter {
   public router: Router;
@@ -39,7 +40,7 @@ export class AccountRouter {
     ); //not required for now
     this.router.post(
       "/",
-      AuthMiddleware.authenticate,
+      AuthMiddleware.authenticate,checkSubscriptionStatus,
       this.accountController.createAccount.bind(this.accountController)
     ); //done
     this.router.put(

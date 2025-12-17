@@ -157,10 +157,18 @@ export default class AnalyticsRepository {
         // for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
         //     dates.push(d.toISOString().slice(0, 10));
         // }
-        for (let d = new Date(start); d <= end;) {
-            dates.push(d.toISOString().slice(0, 10));
-            d = new Date(d.getTime() + 24 * 60 * 60 * 1000);
+        for (let i = 0; i < days; i++) {
+            const d = new Date(start);
+            d.setDate(start.getDate() + i);
+
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, "0");
+            const dd = String(d.getDate()).padStart(2, "0");
+
+            dates.push(`${yyyy}-${mm}-${dd}`);
         }
+
+        console.log(dates)
         const mapped = dates.map((date) => {
             const entry = raw.find((r: any) => r.date === date);
             const obj: any = {
@@ -193,6 +201,7 @@ export default class AnalyticsRepository {
             return obj;
         }); 
 
+        console.log(mapped)
         return mapped;
     }
 
@@ -249,7 +258,7 @@ export default class AnalyticsRepository {
                 $group: {
                     _id: "$weekStart",
                     leads: { $sum: 1 },
-                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "Converted"] }, 1, 0] } },
+                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "converted"] }, 1, 0] } },
                 },
             },
             { $sort: { _id: 1 } },
@@ -272,7 +281,7 @@ export default class AnalyticsRepository {
                 $group: {
                     _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
                     leads: { $sum: 1 },
-                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "Converted"] }, 1, 0] } },
+                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "converted"] }, 1, 0] } },
                 },
             },
             {
@@ -300,7 +309,7 @@ export default class AnalyticsRepository {
         return items.map((l: any) => ({
             name: l.name || `${l.firstName ?? ""} ${l.lastName ?? ""}`.trim() || "Unknown",
             source: l.source?.name ?? "Unknown",
-            status: l.stage ?? "Intake",
+            status: l.stage ?? "intake",
             date: l.createdAt ? new Date(l.createdAt).toISOString().slice(0, 10) : "",
             time: l.createdAt ? new Date(l.createdAt).toTimeString().slice(0, 5) : "",
         }));
@@ -308,14 +317,14 @@ export default class AnalyticsRepository {
 
     async channelPerformance(accountId: string): Promise<ChannelPerformanceItem[]> {
         // For each major channel compute leads, conversions and conversion rate
-        const channels = ["Chatbot", "Website", "Google Ads", "WhatsApp", "Facebook", "Instagram", "Webform", "Manual"];
+        const channels = ["chatbot", "website", "google_ads", "whatsapp", "facebook", "instagram", "webform", "manual"]
         const pipeline = [
             { $match: { accountId: new ObjectId(accountId) } },
             {
                 $group: {
                     _id: "$source.name",
                     leads: { $sum: 1 },
-                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "Converted"] }, 1, 0] } },
+                    conversions: { $sum: { $cond: [{ $eq: ["$stage", "converted"] }, 1, 0] } },
                 },
             },
             { $project: { _id: 0, channel: { $ifNull: ["$_id", "Unknown"] }, leads: 1, conversions: 1 } },
@@ -351,7 +360,7 @@ export default class AnalyticsRepository {
                 $group: {
                     _id: null,
                     total: { $sum: 1 },
-                    converted: { $sum: { $cond: [{ $eq: ["$stage", "Converted"] }, 1, 0] } },
+                    converted: { $sum: { $cond: [{ $eq: ["$stage", "converted"] }, 1, 0] } },
                 },
             },
             { $project: { _id: 0, total: 1, converted: 1 } },

@@ -5,6 +5,7 @@ import { Router } from "express";
 import { UserProfileRouter } from "./userprofile.routes";
 import { EmailRouter } from "./email.routes";
 import { TeamRouter } from "./team.routes";
+import { SubscriptionRouter } from "./subscription.routes";
 
 export class AppRoutes {
   private chatBotRouter: ChatBotRouter;
@@ -13,6 +14,7 @@ export class AppRoutes {
   private userProfileRouter: UserProfileRouter;
   private emailRouter: EmailRouter;
   private teamRouter: TeamRouter;
+  private subscriptionRouter:SubscriptionRouter;
   private router: Router;
 
   constructor() {
@@ -22,13 +24,14 @@ export class AppRoutes {
     this.userProfileRouter = new UserProfileRouter();
     this.emailRouter = new EmailRouter();
     this.teamRouter = new TeamRouter();
+    this.subscriptionRouter= new SubscriptionRouter();
     this.router = Router();
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
     this.router.use("/auth", this.userRouter.getRouter());
     this.router.use("/chatbot", this.chatBotRouter.getRouter());
-    this.router.use("/subscription", this.chatBotRouter.getRouter());
+    this.router.use("/subscription", this.subscriptionRouter.getRouter());
     this.router.use("/account", this.accountRouter.getRouter());
     this.router.use("/user/profile", this.userProfileRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());

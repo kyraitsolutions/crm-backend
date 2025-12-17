@@ -1,31 +1,31 @@
 import { NextFunction, Request, Response } from "express";
-import { ChatBotService } from "../services";
+import { SubscriptionService } from "../services/subscription.service";
+import httpResponse from "../utils/http.response";
 
 export class SubscriptionController {
   private subscriptionService: SubscriptionService;
   constructor() {
     this.subscriptionService = new SubscriptionService();
   }
-  async getSubscription(req: Request, res: Response, next: NextFunction) {
+  async getAllSubscription(req: Request, res: Response, next: NextFunction) {
     try {
-      // const chatBots = await this.chatBotService.getChatBots();
-      return res.status(200).json({
-        message: "Subscription fetched successfully",
-        data: [],
+      const subscriptions = await this.subscriptionService.getAllSubscriptionPlan();
+      httpResponse(req, res, 200, "Subscription fetched successfully", {
+        docs: subscriptions,
       });
     } catch (error) {
       next(error);
     }
   }
-  async createSubscription(req: Request, res: Response, next: NextFunction) {
-    try {
-      const chatBot = await this.chatBotService.createSubscription(
-        req.body
-      );
+  // async createSubscription(req: Request, res: Response, next: NextFunction) {
+  //   try {
+  //     const chatBot = await this.chatBotService.createSubscription(
+  //       req.body
+  //     );
 
-      return res.status(201).json(chatBot);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //     return res.status(201).json(chatBot);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 }

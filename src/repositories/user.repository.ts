@@ -1,7 +1,6 @@
 import { TCreateUser, TUpdateUser, TUser } from "../types";
 import { RoleModel, UserModel } from "../models/user.model";
 import mongoose from "mongoose";
-import { OnboardingDto } from "../dtos/userprofile.dto";
 
 export class UserRepository {
   async findById(id: string): Promise<TUser | null> {
@@ -24,6 +23,20 @@ export class UserRepository {
         },
       },
       {
+        $lookup:{
+          from:"usersubscriptions",
+          localField:"_id",
+          foreignField:"userId",
+          as:"usersubscription"
+        }
+      },
+      {
+        $unwind:{
+          path:"$usersubscription",
+          preserveNullAndEmptyArrays: true,
+        }
+      },
+      {
         $project: {
           _id: 1,
           email: 1,
@@ -38,11 +51,13 @@ export class UserRepository {
           "userprofile.lastName": 1,
           "userprofile.organizationName": 1,
           "userprofile.accountType": 1,
+          "usersubscription.planId":1,
         },
       },
     ]);
 
     // Return single object if found
+    console.log(user)
     return user[0] || null;
     // return await UserModel.findOne({ _id: id });
   }
