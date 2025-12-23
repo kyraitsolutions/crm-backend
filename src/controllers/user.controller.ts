@@ -48,13 +48,14 @@ export class UserController {
       const user = req.user as any;
       const token = this.userService.generateToken(user.id, user.email);
 
-      // console.log("jhgf",req.query)
-      // const isMobile = req.query.state === "mobile";
+      console.log("jhgf",req.query.platform)
+      const isMobile = req.query.platform === "mobile";
 
-      // const redirectUrl = isMobile
-      //   ? "kyra://auth/callback"
-      //   : ENV.FRONT_END_CALLBACK_URL;
-      res.redirect(`${ENV.FRONT_END_CALLBACK_URL}?token=${token}`);
+      const redirectUrl = isMobile
+        ? "kyra://auth/callback"
+        : ENV.FRONT_END_CALLBACK_URL;
+      // res.redirect(`${ENV.FRONT_END_CALLBACK_URL}?token=${token}`);
+      res.redirect(`${redirectUrl}?token=${token}`);
     } catch (error) {
       next(error);
     }

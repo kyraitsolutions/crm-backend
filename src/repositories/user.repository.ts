@@ -57,7 +57,7 @@ export class UserRepository {
     ]);
 
     // Return single object if found
-    console.log(user)
+    // console.log(user)
     return user[0] || null;
     // return await UserModel.findOne({ _id: id });
   }

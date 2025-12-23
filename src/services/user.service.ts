@@ -102,7 +102,7 @@ export class UserService {
     };
 
     const newUser = await this.userRepository.create(userData);
-    console.log("New user",newUser)
+    // console.log("New user",newUser)
     const susbcription=await this.subscriptionRepository.create(newUser.id,SubscriptionPlan.FREE)
     this.emailService.queueWelcomeEmail(email,"https://crm.kyraitsolutions.com/login");
 
@@ -111,7 +111,7 @@ export class UserService {
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
-    console.log("gfhjklk",user)
+    // console.log("gfhjklk",user)
     const userDto = user ? new UserDto(user) : null;
     return userDto;
   }
