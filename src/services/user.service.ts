@@ -54,7 +54,7 @@ export class UserService {
       throw new Error("Invalid credentials");
     }
 
-    const userDto = new UserDto(user);
+    const userDto = new UserDto(user as any);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -74,7 +74,7 @@ export class UserService {
     let user = await this.userRepository.findByGoogleId(googleId);
     if (user) {
       // User already connected with Google → do NOT update email/googleId
-      return new UserDto(user);
+      return new UserDto(user as any);
     }
 
 
@@ -91,7 +91,7 @@ export class UserService {
       if (teamMember) {
         await TeamMember.updateOne({ userId: user?.id }, { inviteStatus: "ACCEPTED" });
       }
-      return new UserDto(user);
+      return new UserDto(user as any);
     }
 
     // 3. New Google user → create user
@@ -103,16 +103,17 @@ export class UserService {
 
     const newUser = await this.userRepository.create(userData);
     console.log("New user", newUser)
-    const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    // const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
     this.emailService.queueWelcomeEmail(email, "https://crm.kyraitsolutions.com/login");
 
-    return new UserDto(newUser);
+    return new UserDto(newUser as any);
   }
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
     console.log("gfhjklk", user)
-    const userDto = user ? new UserDto(user) : null;
+    const userDto = user ? new UserDto(user as any) : null;
     return userDto;
   }
 
@@ -121,7 +122,7 @@ export class UserService {
     if (!user) {
       throw new Error("User not found");
     }
-    return new UserDto(user);
+    return new UserDto(user   as any);
   }
 
   async deleteUser(id: string): Promise<boolean> {
