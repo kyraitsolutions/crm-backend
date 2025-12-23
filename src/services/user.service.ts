@@ -9,14 +9,14 @@ import { SubscriptionPlan } from '../enums/subscription.enum';
 
 export class UserService {
   private userRepository: UserRepository;
-  private emailService:EmailService;
-  private subscriptionRepository:SubscriptionRepository
+  private emailService: EmailService;
+  private subscriptionRepository: SubscriptionRepository
 
 
   constructor() {
     this.userRepository = new UserRepository();
-    this.emailService=new EmailService();
-    this.subscriptionRepository= new SubscriptionRepository();
+    this.emailService = new EmailService();
+    this.subscriptionRepository = new SubscriptionRepository();
   }
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -34,7 +34,7 @@ export class UserService {
 
     const user = await this.userRepository.create(userData);
 
-    const userDto = new UserDto(user);
+    const userDto = new UserDto(user as any);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -88,7 +88,7 @@ export class UserService {
       });
 
       const teamMember = await TeamMember.findOne({ userId: user?.id });
-      if(teamMember){
+      if (teamMember) {
         await TeamMember.updateOne({ userId: user?.id }, { inviteStatus: "ACCEPTED" });
       }
       return new UserDto(user);
@@ -102,16 +102,16 @@ export class UserService {
     };
 
     const newUser = await this.userRepository.create(userData);
-    console.log("New user",newUser)
-    const susbcription=await this.subscriptionRepository.create(newUser.id,SubscriptionPlan.FREE)
-    this.emailService.queueWelcomeEmail(email,"https://crm.kyraitsolutions.com/login");
+    console.log("New user", newUser)
+    const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    this.emailService.queueWelcomeEmail(email, "https://crm.kyraitsolutions.com/login");
 
     return new UserDto(newUser);
   }
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
-    console.log("gfhjklk",user)
+    console.log("gfhjklk", user)
     const userDto = user ? new UserDto(user) : null;
     return userDto;
   }

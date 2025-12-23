@@ -27,7 +27,7 @@ export class TeamController {
 
     getTeamMemberById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const user = req.user as any;
+            // const user = req.user as any;
 
             // here i need to work tomorrow
             // i need to get the team member by id
@@ -51,8 +51,8 @@ export class TeamController {
     createTeamMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             logger.info(`Creating team member: ${req.body}`);
-            const user=req.user as any;
-            const teamMember = await this.teamService.createTeamMember(user.id,req.body);
+            const user = req.user as any;
+            const teamMember = await this.teamService.createTeamMember(user.id, req.body);
             httpResponse(req, res, 200, "Team member created successfully", {
                 docs: teamMember,
                 limit: 10,
@@ -78,9 +78,9 @@ export class TeamController {
     }
     deleteTeamMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const {id}=req.params;
+            const { id } = req.params;
 
-            console.log("id on Controller",id)
+            console.log("id on Controller", id)
             const teamMember = await this.teamService.deleteTeamMember(id);
             httpResponse(req, res, 200, "Team member deleted successfully", {
                 docs: teamMember,
@@ -96,9 +96,9 @@ export class TeamController {
 
     assignAccountToTeamMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { id} = req.params;
-            const { accountIds,leadId} = req.body;
-            const assignment = await this.teamService.assignAccountToMember(id,accountIds,leadId);
+            const { id } = req.params;
+            const { accountIds, leadId } = req.body;
+            const assignment = await this.teamService.assignAccountToMember(id, accountIds, leadId);
             httpResponse(req, res, 200, "Task assigned to member successfully", {
                 docs: assignment,
                 limit: 10,

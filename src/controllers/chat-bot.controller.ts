@@ -154,11 +154,12 @@ export class ChatBotController {
         );
       }
 
-      httpResponse(req, res, 201, "Chatbot Flow Created successfully", {
+      return httpResponse(req, res, 201, "Chatbot Flow Created successfully", {
         docs: chatbotFlow,
       });
     } catch (error) {
       next(error);
+      return;
     }
   }
 

@@ -16,40 +16,40 @@ export class AccountService {
     this.emailService = new EmailService();
   }
 
-  async getAccountById(userId: string,accountId:string): Promise<{} | null> {
-    const account= await this.accountRepository.findOne(userId,accountId);
-    if(!account){
+  async getAccountById(userId: string, accountId: string): Promise<{} | null> {
+    const account = await this.accountRepository.findOne(userId, accountId);
+    if (!account) {
       throw new Error("Account not found");
     }
     return account;
   }
 
-  async getAllAccounts(user:any): Promise<AccountDto[] | null> {
+  async getAllAccounts(user: any): Promise<AccountDto[] | null> {
 
     const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
     const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(user.roleId);
-    
-    let accounts:any=[]
-    
-    if(isAdmin){
+
+    let accounts: any = []
+
+    if (isAdmin) {
       accounts = await this.accountRepository.findAll(user.id);
     }
-    else if(isTeamMember){
+    else if (isTeamMember) {
       const teamMember = await this.teamRepository.getAccountsByTeamMember(user.id);
 
-      let AccountIds=teamMember.map((acc:any)=>acc.accountId);
+      let AccountIds = teamMember.map((acc: any) => acc.accountId);
       accounts = await this.accountRepository.findAccountsByIds(AccountIds);
     }
-    return accounts?.map((account) => new AccountDto(account)) ?? [];
+    return accounts?.map((account: any) => new AccountDto(account)) ?? [];
   }
 
-  async createAccount(id: string, dto: CreateAccountDto): Promise<AccountDto|any> {
+  async createAccount(id: string, dto: CreateAccountDto): Promise<AccountDto | any> {
     let existingAccount = await this.accountRepository.findAccountByEmail(
       dto.email
     );
 
     if (existingAccount) {
-      return {messgae:"Account with this email exist already",isExist:true}
+      return { messgae: "Account with this email exist already", isExist: true }
     }
 
     const accountData: TCreateAccount = {
@@ -61,9 +61,9 @@ export class AccountService {
 
     const account = await this.accountRepository.create(accountData);
 
-    this.emailService.queueAccountCreationEmail(account?.email, account?.accountName)    
-    
-    return new AccountDto(account);
+    this.emailService.queueAccountCreationEmail(account?.email, account?.accountName)
+
+    return new AccountDto({ ...account, _id: account.id });
   }
 
   async deleteAccount(id: string): Promise<boolean | null> {

@@ -14,7 +14,7 @@ export class AccountRepository {
   }
 
   async create(data: TCreateAccount): Promise<TAccount> {
-    return await AccountModel.create(data);
+    return await AccountModel.create(data) as unknown as TAccount;
   }
 
   async delete(id: string): Promise<boolean | null> {

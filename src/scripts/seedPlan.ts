@@ -63,7 +63,7 @@ const dummyPlans = [
 
 export const seedPlans = async () => {
   try {
-    await mongoose.connect(ENV.DATABASE_URL);
+    await mongoose.connect(ENV.DATABASE_URL!);
     console.log("✅ MongoDB connected");
 
     for (const plan of dummyPlans) {

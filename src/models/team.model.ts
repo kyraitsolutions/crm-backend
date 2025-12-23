@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const teamTeamMembersSchema = new mongoose.Schema({
-    orgId:{
+    orgId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
@@ -11,7 +11,7 @@ const teamTeamMembersSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    roleId:{
+    roleId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
         required: true
@@ -20,10 +20,10 @@ const teamTeamMembersSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    inviteStatus:{
-        type:String,
-        enum:['PENDING','ACCEPTED','DECLINED'],
-        default:'PENDING'
+    inviteStatus: {
+        type: String,
+        enum: ['PENDING', 'ACCEPTED', 'DECLINED'],
+        default: 'PENDING'
     },
 
 }, {
@@ -65,7 +65,7 @@ const teamMemberAccountLeadsSchema = new mongoose.Schema({
         ref: 'Lead',
         required: false
     },
-    roleId:{
+    roleId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Role',
         required: true
@@ -89,7 +89,7 @@ teamMemberAccountLeadsSchema.index({ roleId: 1 });
 
 
 
-const TeamMember = mongoose.model.TeamMember || mongoose.model("TeamMember", teamTeamMembersSchema);
-const TeamMemberAccountLeads = mongoose.model.TeamMemberAccountLeads || mongoose.model("TeamMemberAccountLeads", teamMemberAccountLeadsSchema);
+const TeamMember = mongoose.model("TeamMember", teamTeamMembersSchema);
+const TeamMemberAccountLeads = mongoose.model("TeamMemberAccountLeads", teamMemberAccountLeadsSchema);
 
 export { TeamMember, TeamMemberAccountLeads };

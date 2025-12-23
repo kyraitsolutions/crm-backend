@@ -4,6 +4,7 @@ import { LeadService } from "../services/lead.service";
 import { WebSocketServer } from "ws";
 import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants";
 import mongoose from "mongoose";
+import { AuthenticatedWebSocket } from "../types";
 
 export class LeadController {
   private leadService: LeadService;
@@ -33,20 +34,21 @@ export class LeadController {
       delete rawFilters.pageIndex;
 
       // Use filters only for querying (status, stage, etc.), not for pagination
-      const { leads, totalDocs } = await this.leadService.getLeads(
+      const response = await this.leadService.getLeads(
         user.id,
         accountId,
         rawFilters,
         { limit, skip }
       );
 
+
       httpResponse(req, res, 200, "Leads fetched successfully", {
-        docs: leads,
+        docs: response?.leads,
         pagination: {
           limit,
           skip,
-          total: leads.length,
-          totalDocs: totalDocs,
+          total: response?.leads.length,
+          totalDocs: response?.totalDocs,
         },
       });
     } catch (error) {
@@ -71,7 +73,7 @@ export class LeadController {
     }
   };
 
-  createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
+  createLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
       const leadData = {
         accountId: new mongoose.Types.ObjectId(data.accountId),
@@ -125,7 +127,7 @@ export class LeadController {
     return null;
   };
 
-  updateLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
+  updateLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
       // console.log(data);
       const lead = await this.leadService.updateLeadWs(data);

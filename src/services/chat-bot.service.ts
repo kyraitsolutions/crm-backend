@@ -37,20 +37,24 @@ export class ChatBotService {
     } else {
       const isAccessed = await TeamMember.findOne({ userId: user.id });
 
+      if (!isAccessed) {
+        throw new Error("Team member not found");
+      }
+
       const isAccountAccess = await TeamMemberAccountLeads.findOne({
         teamMemberId: isAccessed._id,
         accountId: accountId,
       });
 
-      console.log(isAccountAccess);
       if (isAccountAccess) {
+        const orgId = isAccessed?.orgId as unknown as string;
         chatbots = await this.repo.findAllByAccountId(
-          isAccessed.orgId,
+          orgId,
           accountId
         );
       }
     }
-    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
+    return chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
   }
 
   async getChatBotWithFlow(

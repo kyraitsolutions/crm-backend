@@ -17,7 +17,7 @@ passport.use(
     async (email, password, done) => {
       try {
         const result = await userService.login({ email, password });
-        return done(null, result);
+        return done(null, result as unknown as Express.User);
       } catch (error) {
         return done(error, false);
       }
@@ -37,7 +37,7 @@ passport.use(
       try {
         const user = await userService.findOrCreateGoogleUser(profile);
         console.log("user", user);
-        return done(null, user);
+        return done(null, user as unknown as Express.User);
       } catch (error) {
         return done(error as Error, undefined);
       }

@@ -1,8 +1,9 @@
-import { WebSocket, WebSocketServer } from "ws";
+import { WebSocketServer } from "ws";
+import { AuthenticatedWebSocket } from "../../types";
 import { chatbotEvents } from "./events/chatbotEvents";
 
 export type EventHandler = (
-  ws: WebSocket,
+  ws: AuthenticatedWebSocket,
   wss: WebSocketServer,
   data: any
 ) => void;
@@ -13,7 +14,7 @@ const eventMap: Record<string, EventHandler> = {
 
 export const handleEvent = (
   event: string,
-  ws: WebSocket,
+  ws: AuthenticatedWebSocket,
   wss: WebSocketServer,
   data = {}
 ) => {

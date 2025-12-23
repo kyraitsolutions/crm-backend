@@ -7,8 +7,8 @@ import { PlanName, SubscriptionStatus, IUserSubscription } from "../types/core";
 export class SubscriptionService {
   private subscriptionRepository: SubscriptionRepository;
 
-  constructor(){
-    this.subscriptionRepository=new SubscriptionRepository();
+  constructor() {
+    this.subscriptionRepository = new SubscriptionRepository();
   }
   /**
    * Check if a user can create a new account based on their plan limits.
@@ -36,7 +36,7 @@ export class SubscriptionService {
   }
 
 
-  async getAllSubscriptionPlan():Promise<any>{
+  async getAllSubscriptionPlan(): Promise<any> {
     return await this.subscriptionRepository.findAll();
   }
 
@@ -46,7 +46,7 @@ export class SubscriptionService {
    * Handles expiration logic implicitly or explicitly.
    */
 
-  
+
 
   async getCurrentSubscription(userId: string): Promise<IUserSubscription | null> {
     const sub = await UserSubscription.findOne({
@@ -56,14 +56,13 @@ export class SubscriptionService {
 
     if (!sub) return null;
 
-    // Check expiration
     if (new Date() > sub.expiresAt) {
       sub.status = SubscriptionStatus.EXPIRED;
       await sub.save();
       return null;
     }
 
-    return sub;
+    return sub as unknown as IUserSubscription;
   }
 
   /**
@@ -91,7 +90,7 @@ export class SubscriptionService {
       credits: planName === PlanName.PAYG ? 100 : 0 // Example credit assignment
     });
 
-    return newSub;
+    return newSub as unknown as IUserSubscription;
   }
 
   /**

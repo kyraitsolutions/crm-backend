@@ -1,17 +1,17 @@
 // dto/form.dto.ts
 export class FormDto {
   id: string;
-  userId:string;
+  userId: string;
   accountId: string;
   formTitle: string;
   formDescription?: string;
   headerImage?: string;
   formName: string;
   formFields: {
-    name: boolean;
-    phoneNumber: boolean;
-    email: boolean;
-    message: boolean;
+    name?: boolean;
+    phoneNumber?: boolean;
+    email?: boolean;
+    message?: boolean;
     customFields?: Array<{
       label: string;
       key: string;
@@ -21,23 +21,21 @@ export class FormDto {
   successMessage?: string;
   successCTA?: "phone" | "whatsapp" | "sms" | "email" | "open_website";
   successCTADestination?: string;
-  createdAt: Date;
-  updatedAt: Date;
 
   constructor(data: {
     _id: string;
-    userId:string;
+    userId: string;
     accountId: string;
     formTitle: string;
     formDescription?: string;
     headerImage?: string;
     formName: string;
     formFields: {
-      name: boolean;
-      phoneNumber: boolean;
-      email: boolean;
-      message: boolean;
-      customFields: Array<{
+      name?: boolean;
+      phoneNumber?: boolean;
+      email?: boolean;
+      message?: boolean;
+      customFields?: Array<{
         label: string;
         key: string;
         required: boolean;
@@ -46,11 +44,9 @@ export class FormDto {
     successMessage?: string;
     successCTA?: "phone" | "whatsapp" | "sms" | "email" | "open_website";
     successCTADestination?: string;
-    createdAt: Date;
-    updatedAt: Date;
   }) {
     this.id = data._id;
-    this.userId=data.userId;
+    this.userId = data.userId;
     this.accountId = data.accountId;
     this.formTitle = data.formTitle;
     this.formDescription = data.formDescription;
@@ -60,8 +56,6 @@ export class FormDto {
     this.successMessage = data.successMessage;
     this.successCTA = data.successCTA;
     this.successCTADestination = data.successCTADestination;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
   }
 }
 

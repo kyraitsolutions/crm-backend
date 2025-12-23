@@ -1,4 +1,4 @@
-import { LeadModel } from "../models/lead.model";
+import { Lead, LeadModel } from "../models/lead.model";
 import { Router, Request, Response } from "express";
 
 // "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
@@ -6,7 +6,7 @@ import { Router, Request, Response } from "express";
 export class LeadRespository {
   async find(criteria: any, pagination?: { limit?: number; skip?: number }) {
 
-    console.log("ajhsdgjafasj",criteria)
+    console.log("ajhsdgjafasj", criteria)
     const query = LeadModel.find(criteria).sort({ createdAt: -1 }).lean();
     if (pagination?.limit !== undefined) {
       query.limit(pagination.limit);
@@ -31,7 +31,7 @@ export class LeadRespository {
     }).lean();
   }
 
-  async update(lead: any) {
+  async update(lead: any): Promise<Lead | null> {
     const { id, customFields, ...rest } = lead;
 
     // Build update object
@@ -49,14 +49,6 @@ export class LeadRespository {
     return await LeadModel.findByIdAndUpdate(id, updateData, {
       new: true,
     }).lean();
-    // return await LeadModel.findOneAndUpdate({ _id: lead.id }, lead, {
-    //   new: true,
-    // });
-    // return await LeadModel.findByIdAndUpdate(
-    //   id,
-    //   { $set: updateData },
-    //   { new: true }
-    // );
   }
 }
 
@@ -82,7 +74,7 @@ export const tempLeadSeedRouter = Router();
 
 tempLeadSeedRouter.post(
   "/seed-test-leads",
-  async (req: Request, res: Response) => {
+  async (_req: Request, res: Response) => {
     try {
       const accountId = "6911c9f8f03d2dca6c2b1f71";
       const userId = "6911c9bff03d2dca6c2b1f65";
