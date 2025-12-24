@@ -1,9 +1,9 @@
-import { TeamRepository } from './../repositories/team.repository';
-import { EmailService } from './email.service';
-import { TCreateAccount } from "./../types/account.type";
-import { AccountDto, CreateAccountDto } from "../dtos/account.dto";
-import { AccountRepository } from "../repositories/account.repository";
-import { USERROLE } from '../enums/user.enum';
+import { TeamRepository } from './../repositories/team.repository.js';
+import { EmailService } from './email.service.js';
+import { TCreateAccount } from "./../types/account.type.js";
+import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
+import { AccountRepository } from "../repositories/account.repository.js";
+import { USERROLE } from '../enums/user.enum.js';
 import { ObjectId } from "mongodb";
 export class AccountService {
   private accountRepository: AccountRepository;

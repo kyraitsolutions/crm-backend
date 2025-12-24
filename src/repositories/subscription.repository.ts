@@ -1,4 +1,4 @@
-import { Plan, UserSubscription } from "../models/subscription.model";
+import { Plan, UserSubscription } from "../models/subscription.model.js";
 
 export class SubscriptionRepository {
     async findAll(): Promise<any> {
@@ -12,7 +12,6 @@ export class SubscriptionRepository {
             throw new Error("Plan not found");
         }
 
-        console.log(plan)
 
         const startedAt = new Date();
         const expiresAt = new Date(startedAt);

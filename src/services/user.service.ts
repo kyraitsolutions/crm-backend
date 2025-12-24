@@ -1,11 +1,11 @@
-import { SubscriptionRepository } from './../repositories/subscription.repository';
-import { EmailService } from './email.service';
-import { UserRepository } from "../repositories";
-import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
-import { JwtUtil, PasswordUtil } from "../utils";
-import { TCreateUser, TUpdateUser } from "../types";
-import { TeamMember } from '../models/team.model';
-import { SubscriptionPlan } from '../enums/subscription.enum';
+import { SubscriptionRepository } from './../repositories/subscription.repository.js';
+import { EmailService } from './email.service.js';
+import { UserRepository } from "../repositories/user.repository.js";
+import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos/index.js";
+import { JwtUtil, PasswordUtil } from "../utils/index.js";
+import { TCreateUser, TUpdateUser } from "../types/index.js";
+import { TeamMember } from '../models/team.model.js';
+import { SubscriptionPlan } from '../enums/subscription.enum.js';
 
 export class UserService {
   private userRepository: UserRepository;
@@ -102,7 +102,6 @@ export class UserService {
     };
 
     const newUser = await this.userRepository.create(userData);
-    console.log("New user", newUser)
     await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
     // const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
     this.emailService.queueWelcomeEmail(email, "https://crm.kyraitsolutions.com/login");
@@ -112,7 +111,6 @@ export class UserService {
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
-    console.log("gfhjklk", user)
     const userDto = user ? new UserDto(user as any) : null;
     return userDto;
   }

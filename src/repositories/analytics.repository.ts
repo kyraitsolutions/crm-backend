@@ -1,9 +1,9 @@
 // analytics.repo.ts
 import { ObjectId } from "mongodb";
 import { SourceCount, StatusCount, LeadsOverTimeItem, HourlyEngagementItem, WeeklyEngagementItem, MonthlyEngagementItem, RecentLead, ChannelPerformanceItem } from "../types/analytics.type";
-import { LeadModel } from "../models/lead.model";
-import { ChatbotModel } from "../models/chatbot.model";
-import { FormModel } from "../models/form.model";
+import { LeadModel } from "../models/lead.model.js";
+import { ChatbotModel } from "../models/chatbot.model.js";
+import { FormModel } from "../models/form.model.js";
 import { PipelineStage } from "mongoose";
 
 /**
@@ -169,7 +169,6 @@ export default class AnalyticsRepository {
       dates.push(`${yyyy}-${mm}-${dd}`);
     }
 
-    console.log(dates)
     const mapped = dates.map((date) => {
       const entry = raw.find((r: any) => r.date === date);
       const obj: any = {
@@ -202,7 +201,6 @@ export default class AnalyticsRepository {
       return obj;
     });
 
-    console.log(mapped)
     return mapped;
   }
 

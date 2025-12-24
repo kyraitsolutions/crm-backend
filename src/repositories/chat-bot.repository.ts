@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { ChatbotModel, ChatbotFlowModel } from "../models/chatbot.model";
-import { TCreateChatBot, TCreateChatBotFlow } from "../types";
+import { ChatbotModel, ChatbotFlowModel } from "../models/chatbot.model.js";
+import { TCreateChatBot, TCreateChatBotFlow } from "../types/chat-bot.type.js";
 
 export class ChatbotRepository {
   async createChatbot(data: TCreateChatBot) {

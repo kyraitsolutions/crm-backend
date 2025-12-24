@@ -1,8 +1,8 @@
-import httpResponse from "../utils/http.response";
+import httpResponse from "../utils/http.response.js";
 import { NextFunction } from "express";
 import { Request, Response } from "express";
-import { TeamService } from "../services/team.service";
-import logger from "../utils/logger";
+import { TeamService } from "../services/team.service.js";
+import logger from "../utils/logger.js";
 
 
 export class TeamController {
@@ -80,7 +80,6 @@ export class TeamController {
         try {
             const { id } = req.params;
 
-            console.log("id on Controller", id)
             const teamMember = await this.teamService.deleteTeamMember(id);
             httpResponse(req, res, 200, "Team member deleted successfully", {
                 docs: teamMember,

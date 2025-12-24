@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import logger from "../utils/logger";
-import httpResponse from "../utils/http.response";
+import logger from "../utils/logger.js";
+import httpResponse from "../utils/http.response.js";
 
 // TBD
 

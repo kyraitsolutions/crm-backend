@@ -1,5 +1,5 @@
-import AnalyticsRepository from "../repositories/analytics.repository";
-import { AnalyticsData } from "../types/analytics.type";
+import AnalyticsRepository from "../repositories/analytics.repository.js";
+import { AnalyticsData } from "../types/analytics.type.js";
 
 export default class AnalyticsService {
   private analyticsRepository: AnalyticsRepository;

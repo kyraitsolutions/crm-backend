@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { AccountService } from "../services/account.service";
-import { CreateAccountDto } from "../dtos/account.dto";
+import httpResponse from "../utils/http.response.js";
+import { AccountService } from "../services/account.service.js";
+import { CreateAccountDto } from "../dtos/account.dto.js";
 
 export class AccountController {
   private accountService: AccountService;

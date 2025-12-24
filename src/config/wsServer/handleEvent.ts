@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
-import { AuthenticatedWebSocket } from "../../types";
-import { chatbotEvents } from "./events/chatbotEvents";
+import { AuthenticatedWebSocket } from "../../types/websocket.type.js";
+import { chatbotEvents } from "./events/chatbotEvents.js";
 
 export type EventHandler = (
   ws: AuthenticatedWebSocket,

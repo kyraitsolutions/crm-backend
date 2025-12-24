@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-import { ENV } from "../constants";
+import { ENV } from "../constants/index.js";
 
 export async function initDB() {
   try {

@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { AccountController } from "../controllers/account.controller";
-import { AuthMiddleware } from "../middleware";
-import { ChatBotController } from "../controllers";
-import { FormController } from "../controllers/form.controller";
-import { LeadController } from "../controllers/lead.controller";
-import AnalyticsController from "../controllers/analytics.controller";
-import { checkSubscriptionStatus } from "../middleware/subscription.middleware";
+import { AccountController } from "../controllers/account.controller.js";
+import { AuthMiddleware } from "../middleware/index.js";
+import { ChatBotController } from "../controllers/chat-bot.controller.js";
+import { FormController } from "../controllers/form.controller.js";
+import { LeadController } from "../controllers/lead.controller.js";
+import AnalyticsController from "../controllers/analytics.controller.js";
+import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
 
 export class AccountRouter {
   public router: Router;

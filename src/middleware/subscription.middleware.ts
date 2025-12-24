@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { Plan, UserSubscription } from "../models/subscription.model";
-import { SubscriptionStatus } from "../types/core";
+import { Plan, UserSubscription } from "../models/subscription.model.js";
+import { SubscriptionStatus } from "../types/core.js";
 import { ObjectId } from "mongodb";
-import { AccountModel } from "../models/accounts.model";
-import httpResponse from "../utils/http.response";
+import { AccountModel } from "../models/accounts.model.js";
+import httpResponse from "../utils/http.response.js";
 
 export const checkSubscriptionStatus = async (
     req: Request,

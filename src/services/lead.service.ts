@@ -1,5 +1,5 @@
-import { LeadRespository } from "../repositories/lead.respository";
-import { Lead } from "../models/lead.model";
+import { LeadRespository } from "../repositories/lead.respository.js";
+import { Lead } from "../models/lead.model.js";
 
 
 export class LeadService {
@@ -38,13 +38,11 @@ export class LeadService {
       ...(queryFilters || {}),
     };
 
-    console.log("query filter", queryFilters)
     const leads = await this.leadRepository.find(criteria, paginationOptions);
     const count = await this.leadRepository.countDocuments({
       accountId,
     });
 
-    // console.log("Leads",leads)
 
     return {
       leads,

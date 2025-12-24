@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { SubscriptionController } from "../controllers/subscription.controller";
+import { SubscriptionController } from "../controllers/subscription.controller.js";
 
 export class SubscriptionRouter {
   public router: Router;

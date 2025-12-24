@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { LeadService } from "../services/lead.service";
+import httpResponse from "../utils/http.response.js";
+import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
-import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants";
+import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import mongoose from "mongoose";
-import { AuthenticatedWebSocket } from "../types";
+import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 
 export class LeadController {
   private leadService: LeadService;
@@ -66,7 +66,6 @@ export class LeadController {
         leadId,
         leadData
       );
-      console.log(lead);
       httpResponse(req, res, 200, "Lead updated successfully", lead);
     } catch (error) {
       next(error);
@@ -91,10 +90,8 @@ export class LeadController {
         status: "Active",
       };
 
-      console.log("Prepare lead Payload", leadData);
       const lead = await this.leadService.createLeadWs(data);
 
-      console.log(data);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN && ws.accountId === data?.accountId) {
@@ -129,9 +126,7 @@ export class LeadController {
 
   updateLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
-      // console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
-      console.log(lead);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { ChatBotService } from "../services";
-import { CreateChatBotDto, ResponseChatBotDto } from "../dtos";
-import httpResponse from "../utils/http.response";
+import { ChatBotService } from "../services/chat-bot.service.js";
+import { CreateChatBotDto, ResponseChatBotDto } from "../dtos/index.js";
+import httpResponse from "../utils/http.response.js";
 import { WebSocketServer, WebSocket } from "ws";
 
 export class ChatBotController {
@@ -56,7 +56,6 @@ export class ChatBotController {
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
-      // console.log(user)
       const accountId = req.params.accountId;
       const chatBots = await this.chatBotService.getChatBots(user, accountId);
       httpResponse(req, res, 200, "Chatbot fetched successfully", {
@@ -133,7 +132,7 @@ export class ChatBotController {
         edges: req.body.edges,
       };
 
-      console.log(req.body.nodes[4]?.data?.elements);
+      // console.log(req.body.nodes[4]?.data?.elements);
 
       const chatbotFlow = await this.chatBotService.createChatBotFlow(
         user.id,
@@ -165,7 +164,6 @@ export class ChatBotController {
 
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log("here");
       const user = req.user as any;
       const { accountId, chatbotId } = req.params;
       const updateChatBotDto = new CreateChatBotDto(req.body);

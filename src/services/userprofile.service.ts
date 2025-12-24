@@ -1,10 +1,10 @@
-import { UserRepository } from "./../repositories/user.repository";
-import { CreateOnboardingDto, OnboardingDto } from "../dtos/userprofile.dto";
-import { UserProfileRepository } from "../repositories/userprofile.repository";
-import { TCreateUserProfile } from "../types/userprofile.type";
-import { TUpdateUser } from '../types';
-import { TCreateAccount } from '../types/account.type';
-import { AccountRepository } from '../repositories/account.repository';
+import { UserRepository } from "./../repositories/user.repository.js";
+import { CreateOnboardingDto, OnboardingDto } from "../dtos/userprofile.dto.js";
+import { UserProfileRepository } from "../repositories/userprofile.repository.js";
+import { TCreateUserProfile } from "../types/userprofile.type.js";
+import { TUpdateUser } from '../types/user.type.js';
+import { TCreateAccount } from '../types/account.type.js';
+import { AccountRepository } from '../repositories/account.repository.js';
 
 export class UserProfileService{
     private userprofileRepository:UserProfileRepository;

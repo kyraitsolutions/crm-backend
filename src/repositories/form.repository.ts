@@ -1,5 +1,5 @@
-import { FormModel } from "../models/form.model";
-import { TCreateForm } from "../types/form.type";
+import { FormModel } from "../models/form.model.js";
+import { TCreateForm } from "../types/form.type.js";
 
 export class FormRepository {
     async create(data: TCreateForm): Promise<TCreateForm> {

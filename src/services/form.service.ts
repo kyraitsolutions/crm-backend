@@ -1,7 +1,7 @@
-import { TCreateForm } from './../types/form.type';
-import { CreateFormDto, FormDto } from "../dtos/form.dto";
-import { FormRepository } from '../repositories/form.repository';
-import { AccountRepository } from '../repositories/account.repository';
+import { TCreateForm } from './../types/form.type.js';
+import { CreateFormDto, FormDto } from "../dtos/form.dto.js";
+import { FormRepository } from '../repositories/form.repository.js';
+import { AccountRepository } from '../repositories/account.repository.js';
 
 
 export class FormService {

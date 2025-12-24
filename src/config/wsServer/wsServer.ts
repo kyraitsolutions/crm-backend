@@ -2,8 +2,8 @@
 import http from "http";
 import url from "url";
 import { WebSocketServer } from "ws";
-import { handleEvent } from "./handleEvent";
-import { AuthenticatedWebSocket } from "../../types";
+import { handleEvent } from "./handleEvent.js";
+import { AuthenticatedWebSocket } from "../../types/websocket.type.js";
 
 export const createWebSocketServer = (server: http.Server) => {
   // ✅ Attach WS to the same HTTP server (no extra port)

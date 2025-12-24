@@ -4,12 +4,12 @@ import {
   CreateChatBotDto,
   ResponseChatBotDto,
   ResponseChatBotFlowDto,
-} from "../dtos";
-import { USERROLE } from "../enums/user.enum";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { ChatbotRepository } from "../repositories";
-import { AccountRepository } from "../repositories/account.repository";
-import { TCreateChatBotFlow } from "../types";
+} from "../dtos/chat-bot.dto.js";
+import { USERROLE } from "../enums/user.enum.js";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
+import { AccountRepository } from "../repositories/account.repository.js";
+import { TCreateChatBotFlow } from "../types/chat-bot.type.js";
 import { ObjectId } from "mongodb";
 
 export class ChatBotService {

@@ -1,5 +1,5 @@
-import { UserProfileModel } from "../models/userProfile.model";
-import { TCreateUserProfile, TUserProfile } from "../types/userprofile.type";
+import { UserProfileModel } from "../models/userProfile.model.js";
+import { TCreateUserProfile, TUserProfile } from "../types/userprofile.type.js";
 
 export class UserProfileRepository {
 

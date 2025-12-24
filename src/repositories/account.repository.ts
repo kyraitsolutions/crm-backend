@@ -1,5 +1,5 @@
-import { AccountModel } from "../models/accounts.model";
-import { TAccount, TCreateAccount } from "../types/account.type";
+import { AccountModel } from "../models/accounts.model.js";
+import { TAccount, TCreateAccount } from "../types/account.type.js";
 
 export class AccountRepository {
   async findAll(id: string): Promise<TAccount[] | null> {

@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
-import logger from '../utils/logger';
-import { emailQueue } from '../config/queue';
+import logger from '../utils/logger.js';
+import { emailQueue } from '../config/queue.js';
 
 export class EmailService {
     private transporter: nodemailer.Transporter;

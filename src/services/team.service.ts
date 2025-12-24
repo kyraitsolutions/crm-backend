@@ -1,10 +1,10 @@
-import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto";
-import { RoleModel } from "../models/user.model";
-import { UserRepository } from "../repositories";
-import { TeamRepository } from "../repositories/team.repository";
-import { UserProfileRepository } from "../repositories/userprofile.repository";
-import { TCreateUserProfile } from "../types/userprofile.type";
-import { EmailService } from "./email.service";
+import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto.js";
+import { RoleModel } from "../models/user.model.js";
+import { UserRepository } from "../repositories/user.repository.js";
+import { TeamRepository } from "../repositories/team.repository.js";
+import { UserProfileRepository } from "../repositories/userprofile.repository.js";
+import { TCreateUserProfile } from "../types/userprofile.type.js";
+import { EmailService } from "./email.service.js";
 
 export class TeamService {
     private teamRepository: TeamRepository;
@@ -65,7 +65,6 @@ export class TeamService {
         return updatedTeamMember ? new TeamMemberDto(updatedTeamMember) : null;
     }
     async deleteTeamMember(id: string): Promise<any> {
-        console.log("id in service", id)
         const deletedTeamMember = await this.teamRepository.deleteTeamMember(id);
         return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
     }

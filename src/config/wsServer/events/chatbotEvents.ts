@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
-import { LeadController } from "../../../controllers/lead.controller";
-import { WEBSOCKET_EVENTS } from "../../../constants/wsEvent.constants";
-import { AuthenticatedWebSocket } from "../../../types";
+import { LeadController } from "../../../controllers/lead.controller.js";
+import { WEBSOCKET_EVENTS } from "../../../constants/wsEvent.constants.js";
+import { AuthenticatedWebSocket } from "../../../types/websocket.type.js";
 
 const leadController = new LeadController();
 

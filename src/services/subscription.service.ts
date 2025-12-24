@@ -1,8 +1,8 @@
-import { SubscriptionRepository } from './../repositories/subscription.repository';
+import { SubscriptionRepository } from './../repositories/subscription.repository.js';
 import { ObjectId } from "mongodb";
-import { Plan, UserSubscription } from "../models/subscription.model";
-import { AccountModel } from "../models/accounts.model";
-import { PlanName, SubscriptionStatus, IUserSubscription } from "../types/core";
+import { Plan, UserSubscription } from "../models/subscription.model.js";
+import { AccountModel } from "../models/accounts.model.js";
+import { PlanName, SubscriptionStatus, IUserSubscription } from "../types/core.js";
 
 export class SubscriptionService {
   private subscriptionRepository: SubscriptionRepository;

@@ -2,10 +2,10 @@
 import { NextFunction, Response } from "express";
 import passport from "passport";
 import { ObjectId } from "mongodb";
-import { USERROLE } from "../enums/user.enum";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { AuthUser, RequestWithUser } from "../types/core";
-import httpResponse from "../utils/http.response";
+import { USERROLE } from "../enums/user.enum.js";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { AuthUser, RequestWithUser } from "../types/core.js";
+import httpResponse from "../utils/http.response.js";
 
 const isRoleMatch = (userRoleId?: string | ObjectId | null, targetRoleId?: string): boolean => {
   if (!userRoleId || !targetRoleId) {
