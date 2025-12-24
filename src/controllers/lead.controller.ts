@@ -3,7 +3,6 @@ import httpResponse from "../utils/http.response.js";
 import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
 import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
-import mongoose from "mongoose";
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 
 export class LeadController {
