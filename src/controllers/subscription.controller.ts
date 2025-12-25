@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { SubscriptionService } from "../services/subscription.service";
-import httpResponse from "../utils/http.response";
+import { SubscriptionService } from "../services/subscription.service.js";
+import httpResponse from "../utils/http.response.js";
 
 export class SubscriptionController {
   private subscriptionService: SubscriptionService;

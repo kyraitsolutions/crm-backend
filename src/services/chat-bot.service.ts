@@ -4,12 +4,12 @@ import {
   CreateChatBotDto,
   ResponseChatBotDto,
   ResponseChatBotFlowDto,
-} from "../dtos";
-import { USERROLE } from "../enums/user.enum";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { ChatbotRepository } from "../repositories";
-import { AccountRepository } from "../repositories/account.repository";
-import { TCreateChatBotFlow } from "../types";
+} from "../dtos/chat-bot.dto.js";
+import { USERROLE } from "../enums/user.enum.js";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
+import { AccountRepository } from "../repositories/account.repository.js";
+import { TCreateChatBotFlow } from "../types/chat-bot.type.js";
 import { ObjectId } from "mongodb";
 
 export class ChatBotService {
@@ -37,20 +37,24 @@ export class ChatBotService {
     } else {
       const isAccessed = await TeamMember.findOne({ userId: user.id });
 
+      if (!isAccessed) {
+        throw new Error("Team member not found");
+      }
+
       const isAccountAccess = await TeamMemberAccountLeads.findOne({
         teamMemberId: isAccessed._id,
         accountId: accountId,
       });
 
-      console.log(isAccountAccess);
       if (isAccountAccess) {
+        const orgId = isAccessed?.orgId as unknown as string;
         chatbots = await this.repo.findAllByAccountId(
-          isAccessed.orgId,
+          orgId,
           accountId
         );
       }
     }
-    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
+    return chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
   }
 
   async getChatBotWithFlow(

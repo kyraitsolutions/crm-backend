@@ -1,7 +1,7 @@
 // analytics.controller.ts
 import { Request, Response, NextFunction } from "express";
-import AnalyticsService from "../services/analytics.service";
-import httpResponse from "../utils/http.response";
+import AnalyticsService from "../services/analytics.service.js";
+import httpResponse from "../utils/http.response.js";
 
 export default class AnalyticsController {
     private analyticsService: AnalyticsService;

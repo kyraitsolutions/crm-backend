@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import Redis from "ioredis";
-import logger from "../utils/logger";
+import Redis, { RedisOptions } from "ioredis";
+import logger from "../utils/logger.js";
 
 dotenv.config();
 
@@ -9,15 +9,19 @@ class RedisClient {
   private isConnected: boolean = false;
 
   constructor() {
+    const redisHost = process.env.REDIS_HOST || "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
+
+    const redisOptions: RedisOptions = {
+      enableReadyCheck: false,
+      maxRetriesPerRequest: null,
+      lazyConnect: true,
+      retryStrategy(times) {
+        return Math.min(times * 100, 2000);
+      },
+    }
     this.client = new Redis(
-      process.env.REDIS_HOST ||
-        "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
-      {
-        retryDelayOnFailover: 100,
-        enableReadyCheck: false,
-        maxRetriesPerRequest: null,
-        lazyConnect: true,
-      }
+      redisHost,
+      redisOptions
     );
 
     this.setupEventHandlers();

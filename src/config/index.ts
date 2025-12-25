@@ -1,4 +1,4 @@
-import { ENV } from "../constants";
+import { ENV } from "../constants/index.js";
 
 export const config = {
   port: ENV.PORT || 3000,

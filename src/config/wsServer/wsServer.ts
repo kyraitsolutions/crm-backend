@@ -1,14 +1,15 @@
 // src/config/wsServer.ts
 import http from "http";
 import url from "url";
-import { WebSocket, WebSocketServer } from "ws";
-import { handleEvent } from "./handleEvent";
+import { WebSocketServer } from "ws";
+import { handleEvent } from "./handleEvent.js";
+import { AuthenticatedWebSocket } from "../../types/websocket.type.js";
 
 export const createWebSocketServer = (server: http.Server) => {
   // ✅ Attach WS to the same HTTP server (no extra port)
   const wss = new WebSocketServer({ server });
 
-  wss.on("connection", (ws: WebSocket, req) => {
+  wss.on("connection", (ws: AuthenticatedWebSocket, req) => {
     const query = new url.URL(req.url || "", "http://localhost");
     const accountId = query.searchParams.get("accountId");
 

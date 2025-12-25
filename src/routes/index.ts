@@ -1,11 +1,11 @@
-import { AccountRouter } from "./account.routes";
-import { ChatBotRouter } from "./chat-bot.routes";
-import { UserRouter } from "./user.routes";
+import { AccountRouter } from "./account.routes.js";
+import { ChatBotRouter } from "./chat-bot.routes.js";
+import { UserRouter } from "./user.routes.js";
 import { Router } from "express";
-import { UserProfileRouter } from "./userprofile.routes";
-import { EmailRouter } from "./email.routes";
-import { TeamRouter } from "./team.routes";
-import { SubscriptionRouter } from "./subscription.routes";
+import { UserProfileRouter } from "./userprofile.routes.js";
+import { EmailRouter } from "./email.routes.js";
+import { TeamRouter } from "./team.routes.js";
+import { SubscriptionRouter } from "./subscription.routes.js";
 
 export class AppRoutes {
   private chatBotRouter: ChatBotRouter;

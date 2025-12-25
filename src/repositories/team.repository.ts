@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { RoleModel, UserModel } from "../models/user.model";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { RoleModel, UserModel } from "../models/user.model.js";
 import { ObjectId } from "mongodb";
 
 export class TeamRepository {
@@ -109,7 +109,6 @@ export class TeamRepository {
 
 
         const teamMemberId = new ObjectId(id);
-        console.log("Id in repo",teamMemberId)
         const session = await mongoose.startSession();
         session.startTransaction();
         try {

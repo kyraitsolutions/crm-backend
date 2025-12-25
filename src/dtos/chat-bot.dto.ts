@@ -24,8 +24,8 @@ export class CreateChatBotDto {
     language: "english" | "hindi";
     enableRantingAndFeedback: boolean;
     ratingAndFeedback: {
-      rating?: number;
-      feedback?: string;
+      rating: number;
+      feedback: string;
     };
     chat_transcript: boolean;
     enableVoiceNote: boolean;
@@ -44,20 +44,20 @@ export class CreateChatBotDto {
     fontWeight: string;
     avatarStyle: string;
     avatarUrl?: string;
-    showAvatar?: boolean;
-    roundedCorners?: boolean;
-    borderWidth?: number;
-    borderColor?: string;
-    widgetPosition?: string;
-    showLauncher?: boolean;
-    launcherLabel?: string;
-    launcherSize?: number;
-    messageAlignment?: string;
-    showTimestamps?: boolean;
-    animationStyle?: string;
-    shadowIntensity?: number;
-    opacity?: number;
-    customCSS?: string;
+    showAvatar: boolean;
+    roundedCorners: boolean;
+    borderWidth: number;
+    borderColor: string;
+    widgetPosition: string;
+    showLauncher: boolean;
+    launcherLabel: string;
+    launcherSize: number;
+    messageAlignment: string;
+    showTimestamps: boolean;
+    animationStyle: string;
+    shadowIntensity: number;
+    opacity: number;
+    customCSS: string;
   };
   conversation: {
     welcomeMessage: string;

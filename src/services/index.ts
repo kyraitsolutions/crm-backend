@@ -1,2 +1,2 @@
-export * from "./user.service";
-export * from "./chat-bot.service";
+export * from "./user.service.js";
+export * from "./chat-bot.service.js";

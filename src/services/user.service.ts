@@ -1,22 +1,22 @@
-import { SubscriptionRepository } from './../repositories/subscription.repository';
-import { EmailService } from './email.service';
-import { UserRepository } from "../repositories";
-import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos";
-import { JwtUtil, PasswordUtil } from "../utils";
-import { TCreateUser, TUpdateUser } from "../types";
-import { TeamMember } from '../models/team.model';
-import { SubscriptionPlan } from '../enums/subscription.enum';
+import { SubscriptionRepository } from './../repositories/subscription.repository.js';
+import { EmailService } from './email.service.js';
+import { UserRepository } from "../repositories/user.repository.js";
+import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos/index.js";
+import { JwtUtil, PasswordUtil } from "../utils/index.js";
+import { TCreateUser, TUpdateUser } from "../types/index.js";
+import { TeamMember } from '../models/team.model.js';
+import { SubscriptionPlan } from '../enums/subscription.enum.js';
 
 export class UserService {
   private userRepository: UserRepository;
-  private emailService:EmailService;
-  private subscriptionRepository:SubscriptionRepository
+  private emailService: EmailService;
+  private subscriptionRepository: SubscriptionRepository
 
 
   constructor() {
     this.userRepository = new UserRepository();
-    this.emailService=new EmailService();
-    this.subscriptionRepository= new SubscriptionRepository();
+    this.emailService = new EmailService();
+    this.subscriptionRepository = new SubscriptionRepository();
   }
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
@@ -34,7 +34,7 @@ export class UserService {
 
     const user = await this.userRepository.create(userData);
 
-    const userDto = new UserDto(user);
+    const userDto = new UserDto(user as any);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -54,7 +54,7 @@ export class UserService {
       throw new Error("Invalid credentials");
     }
 
-    const userDto = new UserDto(user);
+    const userDto = new UserDto(user as any);
     const token = JwtUtil.sign({ userId: user.id, email: user.email });
 
     return new AuthResponseDto({ user: userDto, token });
@@ -74,7 +74,7 @@ export class UserService {
     let user = await this.userRepository.findByGoogleId(googleId);
     if (user) {
       // User already connected with Google → do NOT update email/googleId
-      return new UserDto(user);
+      return new UserDto(user as any);
     }
 
 
@@ -88,10 +88,10 @@ export class UserService {
       });
 
       const teamMember = await TeamMember.findOne({ userId: user?.id });
-      if(teamMember){
+      if (teamMember) {
         await TeamMember.updateOne({ userId: user?.id }, { inviteStatus: "ACCEPTED" });
       }
-      return new UserDto(user);
+      return new UserDto(user as any);
     }
 
     // 3. New Google user → create user
@@ -102,17 +102,16 @@ export class UserService {
     };
 
     const newUser = await this.userRepository.create(userData);
-    console.log("New user",newUser)
-    const susbcription=await this.subscriptionRepository.create(newUser.id,SubscriptionPlan.FREE)
-    this.emailService.queueWelcomeEmail(email,"https://crm.kyraitsolutions.com/login");
+    await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    // const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    this.emailService.queueWelcomeEmail(email, "https://crm.kyraitsolutions.com/login");
 
-    return new UserDto(newUser);
+    return new UserDto(newUser as any);
   }
 
   async getUserById(id: string): Promise<UserDto | null> {
     const user = await this.userRepository.findById(id);
-    console.log("gfhjklk",user)
-    const userDto = user ? new UserDto(user) : null;
+    const userDto = user ? new UserDto(user as any) : null;
     return userDto;
   }
 
@@ -121,7 +120,7 @@ export class UserService {
     if (!user) {
       throw new Error("User not found");
     }
-    return new UserDto(user);
+    return new UserDto(user   as any);
   }
 
   async deleteUser(id: string): Promise<boolean> {

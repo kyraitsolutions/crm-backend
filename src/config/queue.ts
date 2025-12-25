@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import Queue from "bull";
-import logger from "../utils/logger";
+import logger from "../utils/logger.js";
 
 dotenv.config();
 // Create queues

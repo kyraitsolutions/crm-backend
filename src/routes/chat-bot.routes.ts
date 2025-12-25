@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { ChatBotController } from "../controllers";
-import { AuthMiddleware } from "../middleware";
+import { ChatBotController } from "../controllers/chat-bot.controller.js";
+import { AuthMiddleware } from "../middleware/index.js";
 
 export class ChatBotRouter {
   public router: Router;

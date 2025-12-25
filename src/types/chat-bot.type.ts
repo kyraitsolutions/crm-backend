@@ -56,7 +56,7 @@ export const ZChatBotSchema = z.object({
     fontSize: z.number().default(14),
     fontWeight: z.string().default("normal"),
     avatarStyle: z.string().default("bubble"),
-    avatarUrl: z.string().optional().default(""),
+    avatarUrl: z.string().optional(),
     showAvatar: z.boolean().default(true),
     roundedCorners: z.boolean().default(true),
     borderWidth: z.number().default(1),

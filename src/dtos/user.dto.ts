@@ -1,37 +1,37 @@
 export class UserDto {
-  id: number;
+  id: string;
   email: string;
   profilePicture?: string | null;
   onboarding: boolean;
-  roleId:string;
+  roleId: string;
   createdAt: Date;
   updatedAt: Date;
-  userprofile:{
-    accountType:string;
-    firstName:string | null;
-    lastName:string | null;
-    organizationName:string | null;
+  userprofile?: {
+    accountType: string;
+    firstName: string | null;
+    lastName: string | null;
+    organizationName: string | null;
   };
-  usersubscription:{
-    planId:string
+  usersubscription?: {
+    planId: string
   };
 
   constructor(data: {
-    _id: number;
+    _id: string;
     email: string;
     profilePicture?: string | null;
     onboarding: boolean;
-    roleId:string;
+    roleId: string;
     createdAt: Date;
     updatedAt: Date;
-    userprofile:{
-      accountType:string;
-      firstName:string | null;
-      lastName:string | null;
-      organizationName:string | null;
+    userprofile?: {
+      accountType: string;
+      firstName: string | null;
+      lastName: string | null;
+      organizationName: string | null;
     };
-    usersubscription:{
-      planId:string
+    usersubscription?: {
+      planId: string
     };
 
   }) {
@@ -39,11 +39,11 @@ export class UserDto {
     this.email = data.email;
     this.profilePicture = data.profilePicture;
     this.onboarding = data.onboarding;
-    this.roleId=data.roleId
+    this.roleId = data.roleId
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
-    this.userprofile=data.userprofile;
-    this.usersubscription=data.usersubscription
+    this.userprofile = data.userprofile;
+    this.usersubscription = data.usersubscription
 
   }
 }
@@ -53,36 +53,36 @@ export class CreateUserDto {
   password?: string;
   googleId?: string;
   profilePicture?: string;
-  onboarding:boolean;
-  roleId:string;
+  onboarding: boolean;
+  roleId: string;
 
   constructor(data: {
     email: string;
     password?: string;
     googleId?: string;
     profilePicture?: string;
-    onboarding:boolean;
-    roleId:string;
+    onboarding: boolean;
+    roleId: string;
   }) {
     this.email = data.email;
     this.password = data.password;
     this.googleId = data.googleId;
     this.profilePicture = data.profilePicture;
-    this.onboarding=data.onboarding;
-    this.roleId=data.roleId
+    this.onboarding = data.onboarding;
+    this.roleId = data.roleId
   }
 }
 
 export class UpdateUserDto {
   profilePicture?: string;
-  onboarding:boolean;
+  onboarding: boolean;
 
   constructor(data: {
     profilePicture?: string;
-    onboarding:boolean;
+    onboarding: boolean;
   }) {
     this.profilePicture = data.profilePicture;
-    this.onboarding=data.onboarding;
+    this.onboarding = data.onboarding;
   }
 }
 

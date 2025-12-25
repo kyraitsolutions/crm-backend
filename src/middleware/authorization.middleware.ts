@@ -2,10 +2,10 @@
 import { NextFunction, Response } from "express";
 import passport from "passport";
 import { ObjectId } from "mongodb";
-import { USERROLE } from "../enums/user.enum";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model";
-import { AuthUser, RequestWithUser } from "../types/core";
-import { httpErrorResponse } from "../utils/http.response";
+import { USERROLE } from "../enums/user.enum.js";
+import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { AuthUser, RequestWithUser } from "../types/core.js";
+import httpResponse from "../utils/http.response.js";
 
 const isRoleMatch = (userRoleId?: string | ObjectId | null, targetRoleId?: string): boolean => {
   if (!userRoleId || !targetRoleId) {
@@ -36,13 +36,13 @@ export const requireAuth = (
       return next(err);
     }
     if (!user) {
-      return httpErrorResponse(req, res, 401, "Unauthorized");
+      return httpResponse(req, res, 401, "Unauthorized");
     }
 
     // Harden user id extraction
     // Assuming passport strategy returns User document or AuthUser object
     if (!user.id && !(user as any)._id) {
-      return httpErrorResponse(req, res, 401, "Unauthorized - User ID missing");
+      return httpResponse(req, res, 401, "Unauthorized - User ID missing");
     }
 
     // Normalize req.user
@@ -61,20 +61,29 @@ export const requireAuth = (
 };
 
 export const authorizeRole = (roles: USERROLE[]) => {
-  return (req: RequestWithUser, res: Response, next: NextFunction): void => {
+  return (
+    req: RequestWithUser,
+    res: Response,
+    next: NextFunction
+  ): void => {
     if (!req.user) {
-      return httpErrorResponse(req, res, 401, "Unauthorized");
+      httpResponse(req, res, 401, "Unauthorized");
+      return;
     }
 
-    const hasRole = roles.some((role) => isRoleMatch(req.user?.roleId, role));
+    const hasRole = roles.some((role) =>
+      isRoleMatch(req.user?.roleId, role)
+    );
 
     if (!hasRole) {
-      return httpErrorResponse(req, res, 403, "Forbidden");
+      httpResponse(req, res, 403, "Forbidden");
+      return;
     }
 
     next();
   };
 };
+
 
 export const accountAccess = async (
   req: RequestWithUser,
@@ -82,7 +91,7 @@ export const accountAccess = async (
   next: NextFunction
 ): Promise<void> => {
   if (!req.user || !req.user.id) {
-    httpErrorResponse(req, res, 401, "Unauthorized");
+    httpResponse(req, res, 401, "Unauthorized");
     return;
   }
 
@@ -92,13 +101,13 @@ export const accountAccess = async (
     (req.body?.accountId as string | undefined);
 
   if (!accountId) {
-    httpErrorResponse(req, res, 400, "Account identifier is required");
+    httpResponse(req, res, 400, "Account identifier is required");
     return;
   }
 
   const parsedAccountId = normalizeObjectId(accountId);
   if (!parsedAccountId) {
-    httpErrorResponse(req, res, 400, "Invalid account identifier");
+    httpResponse(req, res, 400, "Invalid account identifier");
     return;
   }
 
@@ -125,7 +134,7 @@ export const accountAccess = async (
   // Assuming strict role usage:
 
   if (!hasAllowedRole) {
-    httpErrorResponse(req, res, 403, "Forbidden - Role not allowed");
+    httpResponse(req, res, 403, "Forbidden - Role not allowed");
     return;
   }
 
@@ -146,7 +155,7 @@ export const accountAccess = async (
       // Given constraint: "AccountManager / TeamMember... can do CRUD only inside assigned account(s)".
       // Admin can do everything.
 
-      httpErrorResponse(req, res, 403, "No team membership found");
+      httpResponse(req, res, 403, "No team membership found");
       return;
     }
 
@@ -156,7 +165,7 @@ export const accountAccess = async (
     });
 
     if (!assignment) {
-      httpErrorResponse(req, res, 403, "Access to this account is not assigned");
+      httpResponse(req, res, 403, "Access to this account is not assigned");
       return;
     }
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { ENV } from "../constants";
+import { ENV } from "../constants/index.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
@@ -46,7 +46,6 @@ export class ErrorMiddleware {
     res: Response,
     _next: NextFunction
   ): void {
-    console.error("Error:", err);
 
     const statusCode = err.statusCode || 500;
     const message = err.message || "Internal server error";

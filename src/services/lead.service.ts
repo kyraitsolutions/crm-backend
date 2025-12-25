@@ -1,5 +1,5 @@
-import { LeadRespository } from "../repositories/lead.respository";
-import { Lead } from "../models/lead.model";
+import { LeadRespository } from "../repositories/lead.respository.js";
+import { Lead } from "../models/lead.model.js";
 
 
 export class LeadService {
@@ -19,17 +19,17 @@ export class LeadService {
    * @returns Promise<Lead[]>
    */
   async getLeads(
-    userId: string,
+    _userId: string,
     accountId: string,
     queryFilters?: any, // Define/expand as needed
     paginationOptions?: { limit?: number; skip?: number }
   ): Promise<{
     leads: Lead[];
     totalDocs: number;
-  }|null> {
+  } | null> {
     // Only fetch leads that belong to the user and account
     // Add additional filters if provided
-    if(!accountId){
+    if (!accountId) {
       return null;
     }
     const criteria = {
@@ -38,13 +38,11 @@ export class LeadService {
       ...(queryFilters || {}),
     };
 
-    console.log("query filter",queryFilters)
     const leads = await this.leadRepository.find(criteria, paginationOptions);
     const count = await this.leadRepository.countDocuments({
       accountId,
     });
 
-    // console.log("Leads",leads)
 
     return {
       leads,
@@ -57,14 +55,14 @@ export class LeadService {
   }
 
   async updateLead(
-    accountId: string,
+    _accountId: string,
     leadId: string,
     lead: Lead
-  ): Promise<Lead> {
+  ): Promise<Lead | null> {
     return await this.leadRepository.updateLeadById(leadId, lead);
   }
 
-  async updateLeadWs(lead: Lead): Promise<Lead> {
+  async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
   }
 }

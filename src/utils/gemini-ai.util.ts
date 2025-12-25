@@ -1,5 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
-import { ENV } from "../constants";
+import { ENV } from "../constants/index.js";
 
 export class GeminiAIUtil {
   private ai: GoogleGenAI;

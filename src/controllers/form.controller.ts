@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { CreateFormDto } from "../dtos/form.dto";
-import { FormService } from "../services/form.service";
+import httpResponse from "../utils/http.response.js";
+import { CreateFormDto } from "../dtos/form.dto.js";
+import { FormService } from "../services/form.service.js";
 
 export class FormController {
   private formService: FormService;
@@ -58,7 +58,6 @@ export class FormController {
       const user=req.user as any;
       const {accountId,formId} = req.params;
       const form=await this.formService.deleteFormById(user.id,accountId,formId)
-      console.log(form)
       httpResponse(req, res, 200, "Forms Deleted successfully", {
         docs: form
       });

@@ -4,14 +4,13 @@ import { TUser } from "../types";
 export class UserMapper {
   static toDto(user: TUser): UserDto {
     return new UserDto({
-      id: user.id,
+      _id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
       profilePicture: user.profilePicture,
-      roleId: user.roleId,
+      roleId: user.roleId!,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      onboarding: user.onboarding,
     });
   }
 

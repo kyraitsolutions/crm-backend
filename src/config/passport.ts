@@ -2,8 +2,8 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { UserService } from "../services/user.service";
-import { config } from "./index";
+import { UserService } from "../services/user.service.js";
+import { config } from "../config/index.js";
 
 const userService = new UserService();
 
@@ -17,7 +17,7 @@ passport.use(
     async (email, password, done) => {
       try {
         const result = await userService.login({ email, password });
-        return done(null, result);
+        return done(null, result as unknown as Express.User);
       } catch (error) {
         return done(error, false);
       }
@@ -36,8 +36,7 @@ passport.use(
     async (_accessToken, _refreshToken, profile, done) => {
       try {
         const user = await userService.findOrCreateGoogleUser(profile);
-        console.log("user", user);
-        return done(null, user);
+        return done(null, user as unknown as Express.User);
       } catch (error) {
         return done(error as Error, undefined);
       }

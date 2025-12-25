@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { LeadService } from "../services/lead.service";
+import httpResponse from "../utils/http.response.js";
+import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
-import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants";
-import mongoose from "mongoose";
+import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
+import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 
 export class LeadController {
   private leadService: LeadService;
@@ -33,20 +33,21 @@ export class LeadController {
       delete rawFilters.pageIndex;
 
       // Use filters only for querying (status, stage, etc.), not for pagination
-      const { leads, totalDocs } = await this.leadService.getLeads(
+      const response = await this.leadService.getLeads(
         user.id,
         accountId,
         rawFilters,
         { limit, skip }
       );
 
+
       httpResponse(req, res, 200, "Leads fetched successfully", {
-        docs: leads,
+        docs: response?.leads,
         pagination: {
           limit,
           skip,
-          total: leads.length,
-          totalDocs: totalDocs,
+          total: response?.leads.length,
+          totalDocs: response?.totalDocs,
         },
       });
     } catch (error) {
@@ -64,35 +65,32 @@ export class LeadController {
         leadId,
         leadData
       );
-      console.log(lead);
       httpResponse(req, res, 200, "Lead updated successfully", lead);
     } catch (error) {
       next(error);
     }
   };
 
-  createLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
+  createLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
-      const leadData = {
-        accountId: new mongoose.Types.ObjectId(data.accountId),
-        name: data.name,
-        email: data?.email || "",
-        phone: data?.phone || "",
-        customFields: data?.customFields || {},
-        source: {
-          name: data.source.name,
-          url: data.source.url,
-          chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId),
-        },
+      // const leadData = {
+      //   accountId: new mongoose.Types.ObjectId(data.accountId),
+      //   name: data.name,
+      //   email: data?.email || "",
+      //   phone: data?.phone || "",
+      //   customFields: data?.customFields || {},
+      //   source: {
+      //     name: data.source.name,
+      //     url: data.source.url,
+      //     chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId),
+      //   },
 
-        stage: "Intake",
-        status: "Active",
-      };
+      //   stage: "Intake",
+      //   status: "Active",
+      // };
 
-      console.log("Prepare lead Payload", leadData);
       const lead = await this.leadService.createLeadWs(data);
 
-      console.log(data);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN && ws.accountId === data?.accountId) {
@@ -125,11 +123,9 @@ export class LeadController {
     return null;
   };
 
-  updateLeadWs = async (ws: WebSocket, wss: WebSocketServer, data: any) => {
+  updateLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
-      // console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
-      console.log(lead);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {

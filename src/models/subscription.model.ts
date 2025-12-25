@@ -1,11 +1,46 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 
+export type PlanName = "free" | "gold" | "platinum" | "payg";
+
+export interface PlanDocument extends Document {
+  name: PlanName;
+
+  price: number;
+  durationDays: number;
+
+  maxAccounts: number;
+  maxChatbots: number;
+  maxWebforms: number;
+
+  features: string[];
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
+export type SubscriptionStatus = "active" | "expired";
+
+export interface UserSubscriptionDocument extends Document {
+  userId: Schema.Types.ObjectId;
+  planId: Schema.Types.ObjectId;
+
+  status: SubscriptionStatus;
+
+  startedAt: Date;
+  expiresAt: Date;
+
+  credits: number;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
 const planSchema = new Schema(
   {
     name: {
-      type: String, 
+      type: String,
       enum: ["free", "gold", "platinum", "payg"],
-      default:"free",
+      default: "free",
       required: true,
       unique: true
     },
@@ -34,16 +69,16 @@ const planSchema = new Schema(
 
 const userSubscriptionSchema = new Schema(
   {
-    userId: { 
-      type: Schema.Types.ObjectId, 
-      ref: "User", 
-      required: true 
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true
     },
 
-    planId: { 
-      type: Schema.Types.ObjectId, 
-      ref: "Plan", 
-      required: true 
+    planId: {
+      type: Schema.Types.ObjectId,
+      ref: "Plan",
+      required: true
     },
 
     status: {
@@ -63,8 +98,8 @@ const userSubscriptionSchema = new Schema(
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform(_, ret) {
-        delete (ret as any).__v;
+      transform(_: any, ret: any) {
+        delete ret.__v;
         return ret;
       },
     },
@@ -75,7 +110,7 @@ userSubscriptionSchema.index({ userId: 1 });
 userSubscriptionSchema.index({ planId: 1 });
 
 
-export const Plan = model("Plan", planSchema);
-export const UserSubscription = model("UserSubscription", userSubscriptionSchema);
+export const Plan = model<PlanDocument>("Plan", planSchema);
+export const UserSubscription = model<UserSubscriptionDocument>("UserSubscription", userSubscriptionSchema);
 
 
