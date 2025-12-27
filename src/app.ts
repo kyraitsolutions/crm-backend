@@ -28,7 +28,7 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(
       cors({
-        origin: ["http://localhost:5173", "http://localhost:3001"],
+        origin: ["*"],
         credentials: true,
       })
     );
