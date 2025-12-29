@@ -39,9 +39,10 @@ export class TeamService {
             accountType:"individual",
         };
 
-        await this.userprofileRepository.create(onboardingData);
+        const newOnboarding=await this.userprofileRepository.create(onboardingData);
 
         const role = await RoleModel.findOne({ name: "TEAM_MEMBER" });
+        if (!role) throw new Error("Role not found");
         // team member create
         const teamMemberData={
             orgId:orgId,
@@ -51,14 +52,29 @@ export class TeamService {
             inviteStatus:"PENDING",
         };
 
-        await this.teamRepository.createTeamMember(teamMemberData);
+        const createdTeamMember = await this.teamRepository.createTeamMember(teamMemberData);
 
         // call email service to send invitation email
         const url=`${process.env.FRONTEND_URL}/login`;
         this.emailService.queueWelcomeEmail(teamMember.email,url);
 
-        return newTeamMember ? new TeamMemberDto(newTeamMember) : null;
+        // return createdTeamMember ? new TeamMemberDto(createdTeamMember) : null;
         // return null;
+        return new TeamMemberDto({
+            _id: createdTeamMember._id.toString(),
+            teamMemberId: createdTeamMember._id.toString(),
+            userId: newTeamMember._id.toString(),
+            roleId: role._id.toString(),
+            firstName: newOnboarding.firstName,
+            lastName: newOnboarding.lastName,
+            email: newTeamMember.email,
+            inviteStatus: createdTeamMember.inviteStatus,
+            roleName: role.name!,
+            status: createdTeamMember.status ? "ACTIVE" : "INACTIVE",
+            accountIds: [],
+            createdAt: createdTeamMember.createdAt,
+            updatedAt: createdTeamMember.updatedAt,
+        });
     }
     async updateTeamMember(id: string, teamMember: any): Promise<any> {
         const updatedTeamMember = await this.teamRepository.updateTeamMember(id, teamMember);
