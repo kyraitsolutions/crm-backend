@@ -28,15 +28,6 @@ export class TeamController {
     getTeamMemberById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             // const user = req.user as any;
-
-            // here i need to work tomorrow
-            // i need to get the team member by id
-            // i need to check if the team member is belongs to the user
-            // if the team member is belongs to the user then return the team member
-            // if the team member is not belongs to the user then return 403 error
-            // if the team member is not found then return 404 error
-            // if the team member is found then return the team member
-            // if the team member is found then return the team member
             const teamMember = await this.teamService.getTeamMemberById(req.params.id);
             httpResponse(req, res, 200, "Team member fetched successfully", {
                 docs: teamMember,
@@ -53,6 +44,7 @@ export class TeamController {
             logger.info(`Creating team member: ${req.body}`);
             const user = req.user as any;
             const teamMember = await this.teamService.createTeamMember(user.id, req.body);
+
             httpResponse(req, res, 200, "Team member created successfully", {
                 docs: teamMember,
                 limit: 10,
