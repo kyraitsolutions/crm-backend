@@ -147,3 +147,7 @@
 >>>>>>> fa983998adc28fb2c5b5a4331a72626a4c23b5d3
 {"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-29 22:02:41"}
 {"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-29 22:03:31"}
+{"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-31 20:06:38"}
+{"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:09:50"}
+{"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:10:06"}
+{"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-31 20:11:49"}
