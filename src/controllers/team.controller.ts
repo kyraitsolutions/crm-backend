@@ -16,7 +16,11 @@ export class TeamController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-      const teamMembers = await this.teamService.getTeamMembers(user.id);
+
+      const teamMembers = await this.teamService.getTeamMembers(
+        user.id,
+        user?.roleId
+      );
       httpResponse(req, res, 200, "Team members fetched successfully", {
         docs: teamMembers,
         limit: 10,

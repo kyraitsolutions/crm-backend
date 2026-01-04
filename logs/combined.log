@@ -151,3 +151,7 @@
 {"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:09:50"}
 {"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:10:06"}
 {"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-31 20:11:49"}
+{"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:40"}
+{"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:40"}
+{"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:53"}
+{"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:53"}

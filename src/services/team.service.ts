@@ -5,6 +5,8 @@ import { TeamRepository } from "../repositories/team.repository.js";
 import { UserProfileRepository } from "../repositories/userprofile.repository.js";
 import { TCreateUserProfile } from "../types/userprofile.type.js";
 import { EmailService } from "./email.service.js";
+import { USERROLE } from "../enums/user.enum.js";
+import { ObjectId } from "mongodb";
 
 export class TeamService {
   private teamRepository: TeamRepository;
@@ -17,15 +19,22 @@ export class TeamService {
     this.teamRepository = new TeamRepository();
     this.userprofileRepository = new UserProfileRepository();
   }
-  async getTeamMembers(orgId: string): Promise<any[]> {
-    const teamMembers = await this.teamRepository.getTeamMembers(orgId);
+  async getTeamMembers(orgId: string, roleId: string): Promise<any[]> {
+    const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(roleId);
+    const teamMember = await this.getTeamMemberById(orgId);
+
+    let organizationId = isTeamMember ? teamMember.orgId : orgId;
+    const teamMembers = await this.teamRepository.getTeamMembers(
+      organizationId
+    );
     return (
       teamMembers?.map((teamMember: any) => new TeamMemberDto(teamMember)) ?? []
     );
   }
   async getTeamMemberById(id: string): Promise<any> {
     const teamMember = await this.teamRepository.getTeamMemberById(id);
-    return teamMember ? new TeamMemberDto(teamMember) : null;
+    // return teamMember ? new TeamMemberDto(teamMember) : null;
+    return teamMember ? teamMember : null;
   }
   async createTeamMember(
     orgId: string,

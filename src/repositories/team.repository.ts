@@ -93,7 +93,9 @@ export class TeamRepository {
   }
 
   async getTeamMemberById(id: string): Promise<any> {
-    return await TeamMember.findById(id);
+    return await TeamMember.findOne({
+      userId: new mongoose.Types.ObjectId(id),
+    });
   }
   async createTeamMember(teamMember: any): Promise<any> {
     return await TeamMember.create(teamMember);
