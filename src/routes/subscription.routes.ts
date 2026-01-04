@@ -17,9 +17,19 @@ export class SubscriptionRouter {
       this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
     );
     this.router.post(
-      "/susbcribe",
-      this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
-    );
+    "/subscribe",
+    this.subscriptionController.createSubscription.bind(this.subscriptionController)
+  );
+
+  this.router.post(
+    "/webhook/razorpay",
+    this.subscriptionController.razorpayWebhook.bind(this.subscriptionController)
+  );
+
+  this.router.post(
+    "/webhook/stripe",
+    this.subscriptionController.stripeWebhook.bind(this.subscriptionController)
+  );
   }
 
   public getRouter(): Router {

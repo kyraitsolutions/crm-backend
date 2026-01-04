@@ -17,15 +17,39 @@ export class SubscriptionController {
       next(error);
     }
   }
-  // async createSubscription(req: Request, res: Response, next: NextFunction) {
-  //   try {
-  //     const chatBot = await this.chatBotService.createSubscription(
-  //       req.body
-  //     );
+  async createSubscription(req: Request, res: Response, next: NextFunction) {
+    try {
 
-  //     return res.status(201).json(chatBot);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+      const user = req.user as any;
+
+      const data = await this.subscriptionService.createSubscription({
+        userId: user.id,
+        planId: req.body.planId,
+        provider: req.body.provider, // razorpay | stripe
+      });
+
+      httpResponse(req, res, 201, "Subscription created", data);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async razorpayWebhook(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.subscriptionService.handleRazorpayWebhook(req.body);
+      res.json({ received: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async stripeWebhook(req: Request, res: Response, next: NextFunction) {
+    try {
+      await this.subscriptionService.handleStripeWebhook(req.body);
+      res.json({ received: true });
+    } catch (error) {
+      next(error);
+    }
+  }
+
 }
