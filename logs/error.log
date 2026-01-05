@@ -151,7 +151,15 @@
 {"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:09:50"}
 {"level":"error","message":"Error assigning task to member: ReferenceError: member is not defined","timestamp":"2025-12-31 20:10:06"}
 {"level":"error","message":"Error assigning task to member: Error: Team member not found","timestamp":"2025-12-31 20:11:49"}
+<<<<<<< HEAD
 {"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:40"}
 {"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:40"}
 {"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:53"}
 {"level":"error","message":"Error fetching team members: CastError: Cast to ObjectId failed for value \"{ userId: new ObjectId('695a7b04ddb231173c008f28') }\" (type Object) at path \"_id\" for model \"TeamMember\"","timestamp":"2026-01-04 21:22:53"}
+=======
+{"level":"error","message":"Error creating team member: MongoServerError: E11000 duplicate key error collection: KyraCRM.users index: email_1 dup key: { email: \"abhijeet@gmail.com\" }","timestamp":"2026-01-01 13:32:03"}
+{"address":"172.253.144.108","code":"ESOCKET","command":"CONN","errno":-4039,"level":"error","message":"Email service connection failed: connect ETIMEDOUT 172.253.144.108:465","port":465,"stack":"Error: connect ETIMEDOUT 172.253.144.108:465\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)","syscall":"connect","timestamp":"2026-01-01 17:14:12"}
+{"address":"74.125.130.109","code":"ESOCKET","command":"CONN","errno":-4039,"level":"error","message":"Email service connection failed: connect ETIMEDOUT 74.125.130.109:465","port":465,"stack":"Error: connect ETIMEDOUT 74.125.130.109:465\n    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)","syscall":"connect","timestamp":"2026-01-01 20:05:57"}
+{"level":"error","message":"Error creating team member: ValidationError: email: Path `email` is required.","timestamp":"2026-01-02 03:48:17"}
+{"level":"error","message":"Error creating team member: ValidationError: email: Path `email` is required.","timestamp":"2026-01-02 03:49:19"}
+>>>>>>> ad98341a8fef12af96f30c02d3268008bec177de

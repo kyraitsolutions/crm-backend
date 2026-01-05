@@ -73,6 +73,9 @@ export class ChatBotController {
     try {
       const { accountId, chatbotId } = req.params;
 
+      console.log("aaya");
+      console.log(accountId, chatbotId);
+
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
         chatbotId

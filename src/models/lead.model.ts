@@ -1,8 +1,10 @@
 import { Document, model, Schema } from "mongoose";
 
 export interface LeadNote {
+  activitySource: string;
+  attachment?: string;
   message: string;
-  createdBy?: string; // Optional: User ID or name
+  // createdBy?: string; // Optional: User ID or name
   createdAt: Date;
 }
 export interface Lead extends Document {
@@ -19,8 +21,17 @@ export interface Lead extends Document {
 
   source: {
     name: {
-      type:String,
-      enum:["chatbot", "website", "google_ads", "whatsapp", "facebook", "instagram", "webform", "manual"]
+      type: String;
+      enum: [
+        "chatbot",
+        "website",
+        "google_ads",
+        "whatsapp",
+        "facebook",
+        "instagram",
+        "webform",
+        "manual"
+      ];
     };
     url?: string;
     formId?: string;
@@ -74,7 +85,7 @@ const leadSchema = new Schema<Lead>(
     },
 
     source: {
-      name: { 
+      name: {
         type: String,
         enum: [
           "chatbot",
@@ -84,10 +95,11 @@ const leadSchema = new Schema<Lead>(
           "facebook",
           "instagram",
           "webform",
-          "manual"
+          "manual",
         ],
         set: (v: string) => v?.toLowerCase(),
-        required: true },
+        required: true,
+      },
       url: { type: String },
       formId: { type: Schema.Types.ObjectId, ref: "WebForm" },
       chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot" },
@@ -99,12 +111,16 @@ const leadSchema = new Schema<Lead>(
 
     notes: [
       {
+        activitySource: {
+          type: String,
+          enum: ["phone_call", "message", "note", "email", "whatsapp"],
+          default: "note",
+        },
+        attachment: { type: String },
         message: { type: String, required: true },
-        createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+        // createdBy: { type: Schema.Types.ObjectId, ref: "User" },
         createdAt: { type: Date, default: Date.now },
       },
-
-      
     ],
 
     // timeline:[
