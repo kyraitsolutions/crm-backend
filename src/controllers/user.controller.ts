@@ -48,7 +48,11 @@ export class UserController {
       const user = req.user as any;
       const token = this.userService.generateToken(user.id, user.email);
 
-      res.redirect(`${ENV.FRONT_END_CALLBACK_URL}?token=${token}`);
+      const redirectUrl =
+        req.headers["user-agent"]?.includes("Expo")
+          ? "kyra://auth/callback"
+          : ENV.FRONT_END_CALLBACK_URL;
+      res.redirect(`${redirectUrl}?token=${token}`);
     } catch (error) {
       next(error);
     }
