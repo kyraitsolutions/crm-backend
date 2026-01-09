@@ -21,10 +21,21 @@ export class AuthMiddleware {
   }
 
   static googleAuth() {
-    return passport.authenticate("google", {
-      scope: ["profile", "email"],
-      session: false,
-    });
+    return (req: Request, res: Response, next: NextFunction) => {
+      const platform =
+        req.query.platform === "mobile" ? "mobile" : "web";
+
+      passport.authenticate("google", {
+        scope: ["profile", "email"],
+        session: false,
+        state: platform, // 👈 preserved through OAuth
+      })(req, res, next);
+    };
+    // return passport.authenticate("google", {
+    //   scope: ["profile", "email"],
+    //   session: false,
+    //   state: "mobile",
+    // });
   }
 
   static googleCallback() {
