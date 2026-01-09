@@ -50,7 +50,7 @@ export class UserController {
 
       console.log(req);
 
-      const platform = req.query.platform;
+      const platform = req.query.state;
 
       console.log(platform);
 

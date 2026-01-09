@@ -25,6 +25,8 @@ export class AuthMiddleware {
       const platform =
         req.query.platform === "mobile" ? "mobile" : "web";
 
+        console.log("Platfrom in middleware",platform);
+
       passport.authenticate("google", {
         scope: ["profile", "email"],
         session: false,
