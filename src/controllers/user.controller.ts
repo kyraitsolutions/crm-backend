@@ -52,6 +52,8 @@ export class UserController {
 
       const platform = req.query.platform;
 
+      console.log(platform);
+
       const redirectUrl =
          platform === "mobile"
           ? "kyra://auth/callback"
