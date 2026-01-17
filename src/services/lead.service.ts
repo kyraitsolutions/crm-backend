@@ -7,11 +7,11 @@ import { safeJsonParse } from "../ai/ai.parsers.js";
 
 export class LeadService {
   private leadRepository: LeadRespository;
-  private ai:GeminiAIUtil;
+  private ai: GeminiAIUtil;
 
   constructor() {
     this.leadRepository = new LeadRespository();
-    this.ai=new GeminiAIUtil()
+    this.ai = new GeminiAIUtil()
   }
 
   /**
@@ -72,8 +72,8 @@ export class LeadService {
   }
 
 
-  async getLeadSummary(accountId:string,leadId:string):Promise<any>{
-    const lead=await this.leadRepository.getLeadById(accountId,leadId);
+  async getLeadSummary(accountId: string, leadId: string): Promise<any> {
+    const lead = await this.leadRepository.getLeadById(accountId, leadId);
 
 
     // For Gemini
@@ -81,12 +81,14 @@ export class LeadService {
     // const rawResponse = await this.ai.runGoogleAI({ prompt });
 
     // For Open AI
-    const prompt=JSON.stringify(lead);
+    const prompt = JSON.stringify(lead);
     const rawResponse = await this.ai.runOpenAI(prompt);
-    console.log(rawResponse);
+    // console.log(rawResponse);
 
-
-    const result=safeJsonParse(rawResponse)
+    if (!rawResponse) {
+      return null
+    }
+    const result = safeJsonParse(rawResponse)
     return result;
   }
 }

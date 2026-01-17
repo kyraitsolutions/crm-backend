@@ -48,14 +48,14 @@ export class UserController {
       const user = req.user as any;
       const token = this.userService.generateToken(user.id, user.email);
 
-      console.log(req);
+      // console.log(req);
 
       const platform = req.query.state;
 
-      console.log(platform);
+      // console.log(platform);
 
       const redirectUrl =
-         platform === "mobile"
+        platform === "mobile"
           ? "kyra://auth/callback"
           : ENV.FRONT_END_CALLBACK_URL;
       res.redirect(`${redirectUrl}?token=${token}`);
@@ -71,9 +71,9 @@ export class UserController {
   ): Promise<void> => {
     try {
       const user = req.user;
-      httpResponse(req,res,200,"Account information fetched successfully",{
-          docs:user,
-        });
+      httpResponse(req, res, 200, "Account information fetched successfully", {
+        docs: user,
+      });
     } catch (error) {
       next(error);
     }
