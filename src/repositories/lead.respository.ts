@@ -49,6 +49,10 @@ export class LeadRespository {
       new: true,
     }).lean();
   }
+
+  async getLeadById(accountId:string,id:string){
+    return await LeadModel.find({_id:id,accountId:accountId});
+  }
 }
 
 // Example Postman queries for different criteria (with pagination)

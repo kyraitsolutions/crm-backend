@@ -148,6 +148,12 @@ export class AccountRouter {
       this.leadController.updateLead.bind(this.leadController)
     );
 
+    this.router.get(
+      "/:accountId/lead/:leadId/ai-summary",
+      AuthMiddleware.authenticate,
+      this.leadController.getLeadSummary.bind(this.leadController)
+    )
+
 
     // =============================================================================================
     

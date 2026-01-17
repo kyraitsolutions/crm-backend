@@ -1,12 +1,17 @@
 import { LeadRespository } from "../repositories/lead.respository.js";
 import { Lead } from "../models/lead.model.js";
+// import { leadSummaryPrompt } from "../ai/ai.prompts.js";
+import { GeminiAIUtil } from "../ai/ai.service.js";
+import { safeJsonParse } from "../ai/ai.parsers.js";
 
 
 export class LeadService {
   private leadRepository: LeadRespository;
+  private ai:GeminiAIUtil;
 
   constructor() {
     this.leadRepository = new LeadRespository();
+    this.ai=new GeminiAIUtil()
   }
 
   /**
@@ -64,5 +69,24 @@ export class LeadService {
 
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
+  }
+
+
+  async getLeadSummary(accountId:string,leadId:string):Promise<any>{
+    const lead=await this.leadRepository.getLeadById(accountId,leadId);
+
+
+    // For Gemini
+    // const prompt=leadSummaryPrompt(lead);
+    // const rawResponse = await this.ai.runGoogleAI({ prompt });
+
+    // For Open AI
+    const prompt=JSON.stringify(lead);
+    const rawResponse = await this.ai.runOpenAI(prompt);
+    console.log(rawResponse);
+
+
+    const result=safeJsonParse(rawResponse)
+    return result;
   }
 }
