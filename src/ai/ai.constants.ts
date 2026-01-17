@@ -1,4 +1,4 @@
-import { ENV } from "../constants";
+import { ENV } from "../constants/env.constants.js";
 
 export const AI_MODELS = {
   FAST: ENV.GOOGLE_GENAI_MODEL || "gemini-3-flash-preview",
