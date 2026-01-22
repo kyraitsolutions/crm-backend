@@ -12,11 +12,11 @@ export const createWebSocketServer = (server: http.Server) => {
   wss.on("connection", (ws: AuthenticatedWebSocket, req) => {
     const query = new url.URL(req.url || "", "http://localhost");
     const accountId = query.searchParams.get("accountId");
-
     ws.accountId = accountId;
     ws.on("message", (raw) => {
       try {
         const { event, data } = JSON.parse(raw.toString());
+        console.log(data);
         // ✅ Dispatch event to handlers
         if (data) {
           handleEvent(event, ws, wss, data);

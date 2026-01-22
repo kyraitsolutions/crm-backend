@@ -39,6 +39,11 @@ export class ChatbotRepository {
         $match: { userId: new mongoose.Types.ObjectId(userId) },
       },
       {
+        $sort: {
+          createdAt: -1, // ✅ latest first
+        },
+      },
+      {
         $lookup: {
           from: "chatbotconversationsettings",
           localField: "_id",
@@ -46,6 +51,7 @@ export class ChatbotRepository {
           as: "conversationSettings",
         },
       },
+
       {
         $project: {
           _id: 1,

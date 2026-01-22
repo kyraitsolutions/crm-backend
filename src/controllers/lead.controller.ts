@@ -15,7 +15,7 @@ export class LeadController {
   getLeads = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
@@ -37,9 +37,8 @@ export class LeadController {
         user.id,
         accountId,
         rawFilters,
-        { limit, skip }
+        { limit, skip },
       );
-
 
       httpResponse(req, res, 200, "Leads fetched successfully", {
         docs: response?.leads,
@@ -63,7 +62,7 @@ export class LeadController {
       const lead = await this.leadService.updateLead(
         accountId,
         leadId,
-        leadData
+        leadData,
       );
       httpResponse(req, res, 200, "Lead updated successfully", lead);
     } catch (error) {
@@ -71,26 +70,13 @@ export class LeadController {
     }
   };
 
-  createLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
+  createLeadWs = async (
+    ws: AuthenticatedWebSocket,
+    wss: WebSocketServer,
+    data: any,
+  ) => {
     try {
-      // const leadData = {
-      //   accountId: new mongoose.Types.ObjectId(data.accountId),
-      //   name: data.name,
-      //   email: data?.email || "",
-      //   phone: data?.phone || "",
-      //   customFields: data?.customFields || {},
-      //   source: {
-      //     name: data.source.name,
-      //     url: data.source.url,
-      //     chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId),
-      //   },
-
-      //   stage: "Intake",
-      //   status: "Active",
-      // };
-
       const lead = await this.leadService.createLeadWs(data);
-
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN && ws.accountId === data?.accountId) {
@@ -102,7 +88,7 @@ export class LeadController {
                   ...lead.toObject(),
                 },
               },
-            })
+            }),
           );
         }
       });
@@ -114,7 +100,7 @@ export class LeadController {
               JSON.stringify({
                 event: "error",
                 data: error,
-              })
+              }),
             );
           }
         });
@@ -123,8 +109,13 @@ export class LeadController {
     return null;
   };
 
-  updateLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
+  updateLeadWs = async (
+    ws: AuthenticatedWebSocket,
+    wss: WebSocketServer,
+    data: any,
+  ) => {
     try {
+      console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
 
       wss.clients.forEach((client) => {
@@ -137,7 +128,7 @@ export class LeadController {
                   ...lead,
                 },
               },
-            })
+            }),
           );
         }
       });
@@ -149,7 +140,7 @@ export class LeadController {
               JSON.stringify({
                 event: "error",
                 data: error,
-              })
+              }),
             );
           }
         });

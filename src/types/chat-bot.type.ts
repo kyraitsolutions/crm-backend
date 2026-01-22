@@ -9,40 +9,26 @@ export const ZChatBotSchema = z.object({
 
   // --- Config Section ---
   config: z.object({
-    enableTypingIndicator: z.boolean().default(true),
+    showTypingIndicator: z.boolean().default(true),
     enableWidgetMessage: z.boolean().default(true),
-
-    widgetMessageOnline: z
-      .object({
-        content: z.string().default("Hey there!"),
-        subHeading: z.string().default("How can we help you?"),
-      })
-      .default({ content: "Hey there!", subHeading: "How can we help you?" }),
-
-    widgetMessageOffline: z
-      .object({
-        content: z.string().default("We're offline"),
-        subHeading: z.string().default("Leave a message"),
-      })
-      .default({ content: "We're offline", subHeading: "Leave a message" }),
-
     language: z.enum(["english", "hindi"]).default("english"),
     enableRantingAndFeedback: z.boolean().default(true),
-
     ratingAndFeedback: z
       .object({
-        rating: z.number().min(1).max(5).default(5),
-        feedback: z.string().optional().default(""),
+        rating: z.number().int().min(1).max(5).default(5),
+        feedback: z.string().default(""),
       })
       .default({ rating: 5, feedback: "" }),
-
     chat_transcript: z.boolean().default(true),
     enableVoiceNote: z.boolean().default(false),
     responseInterval: z
-      .union([z.literal(0), z.literal(1), z.literal(2), z.number().int()])
+      .union([z.literal(0), z.literal(1), z.literal(2)])
       .default(0),
-    initiateChatbot: z.enum(["immediate", "action", ""]).default("immediate"),
+    initiateChatbot: z.enum(["immediate", "action"]).default("immediate"),
     showBranding: z.boolean().default(true),
+    autoOpenAfterSeconds: z.number().nullable().default(null),
+    brandLabelText: z.string().default(""),
+    enableBrandLabel: z.boolean().default(true),
   }),
 
   // --- Theme Section ---

@@ -13,7 +13,7 @@ export class AccountRouter {
   private chatBotController: ChatBotController;
   private formController: FormController;
   private leadController: LeadController;
-  private analyticsController:AnalyticsController;
+  private analyticsController: AnalyticsController;
 
   // constructor
   constructor() {
@@ -31,27 +31,28 @@ export class AccountRouter {
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
-      this.accountController.getAccounts.bind(this.accountController)
+      this.accountController.getAccounts.bind(this.accountController),
     ); //done
     this.router.get(
       "/:id",
       AuthMiddleware.authenticate,
-      this.accountController.getAccountById.bind(this.accountController)
+      this.accountController.getAccountById.bind(this.accountController),
     ); //not required for now
     this.router.post(
       "/",
-      AuthMiddleware.authenticate,checkSubscriptionStatus,
-      this.accountController.createAccount.bind(this.accountController)
+      AuthMiddleware.authenticate,
+      checkSubscriptionStatus,
+      this.accountController.createAccount.bind(this.accountController),
     ); //done
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
-      this.accountController.updateAccount.bind(this.accountController)
+      this.accountController.updateAccount.bind(this.accountController),
     ); //yet to be done
     this.router.delete(
       "/:id",
       AuthMiddleware.authenticate,
-      this.accountController.deleteAccount.bind(this.accountController)
+      this.accountController.deleteAccount.bind(this.accountController),
     ); //done
 
     // =============================================================================================
@@ -60,53 +61,53 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/chatbots",
       AuthMiddleware.authenticate,
-      this.chatBotController.getChatBots.bind(this.chatBotController)
+      this.chatBotController.getChatBots.bind(this.chatBotController),
     );
 
     // get individual chatbot with chatbot flow of this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/get",
-      this.chatBotController.getChatBotWithFlow.bind(this.chatBotController)
+      this.chatBotController.getChatBotWithFlow.bind(this.chatBotController),
     );
     // get particular chatbot data
     this.router.get(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.getChatBotById.bind(this.chatBotController)
+      this.chatBotController.getChatBotById.bind(this.chatBotController),
     );
 
     //get chatbotflow for this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/flow",
       AuthMiddleware.authenticate,
-      this.chatBotController.getChatbotFlowById.bind(this.chatBotController)
+      this.chatBotController.getChatbotFlowById.bind(this.chatBotController),
     );
 
     // create chatbotflow for this account
     this.router.post(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.createChatbotFlow.bind(this.chatBotController)
+      this.chatBotController.createChatbotFlow.bind(this.chatBotController),
     );
 
     this.router.post(
       "/:accountId/chatbot",
       AuthMiddleware.authenticate,
-      this.chatBotController.createChatBot.bind(this.chatBotController)
+      this.chatBotController.createChatBot.bind(this.chatBotController),
     );
 
     // update chatbot by chatbot id for this account
     this.router.put(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.updateChatBot.bind(this.chatBotController)
+      this.chatBotController.updateChatBot.bind(this.chatBotController),
     );
 
     // delete chatbot by chatbot id for this account
     this.router.delete(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      this.chatBotController.deleteChatBot.bind(this.chatBotController)
+      this.chatBotController.deleteChatBot.bind(this.chatBotController),
     );
 
     // =============================================================================================
@@ -115,24 +116,29 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/forms",
       AuthMiddleware.authenticate,
-      this.formController.getForms.bind(this.formController)
+      this.formController.getForms.bind(this.formController),
+    );
+
+    this.router.get(
+      "/:accountId/form/:formId",
+      AuthMiddleware.authenticate,
+      this.formController.getFormById.bind(this.formController),
     );
     this.router.post(
       "/:accountId/form",
       AuthMiddleware.authenticate,
-      this.formController.createForm.bind(this.formController)
+      this.formController.createForm.bind(this.formController),
     );
     this.router.put(
       "/:accountId/form/:formId",
-      AuthMiddleware.authenticate
-      // this.formController.updateForm.bind(this.formController)
+      AuthMiddleware.authenticate,
+      this.formController.updateFormById.bind(this.formController),
     );
     this.router.delete(
       "/:accountId/form/:formId",
       AuthMiddleware.authenticate,
-      this.formController.deleteForm.bind(this.formController)
+      this.formController.deleteFormId.bind(this.formController),
     );
-
 
     // =============================================================================================
 
@@ -140,21 +146,22 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
-      this.leadController.getLeads.bind(this.leadController)
+      this.leadController.getLeads.bind(this.leadController),
     );
     this.router.put(
       "/:accountId/lead/:leadId/update",
       AuthMiddleware.authenticate,
-      this.leadController.updateLead.bind(this.leadController)
+      this.leadController.updateLead.bind(this.leadController),
     );
 
-
     // =============================================================================================
-    
-    // Analytics Overview
-    this.router.get("/:accountId/overview",AuthMiddleware.authenticate,this.analyticsController.getOverview.bind(this.analyticsController))
 
-    
+    // Analytics Overview
+    this.router.get(
+      "/:accountId/overview",
+      AuthMiddleware.authenticate,
+      this.analyticsController.getOverview.bind(this.analyticsController),
+    );
   }
   public getRouter(): Router {
     return this.router;

@@ -11,16 +11,7 @@ export class CreateChatBotDto {
   description: string;
   status: boolean;
   config: {
-    enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
-    widgetMessageOnline: {
-      content: string;
-      subHeading: string;
-    };
-    widgetMessageOffline: {
-      content: string;
-      subHeading: string;
-    };
     language: "english" | "hindi";
     enableRantingAndFeedback: boolean;
     ratingAndFeedback: {
@@ -30,8 +21,12 @@ export class CreateChatBotDto {
     chat_transcript: boolean;
     enableVoiceNote: boolean;
     responseInterval: 0 | 1 | 2;
-    initiateChatbot: "immediate" | "action" | "";
+    initiateChatbot: "immediate" | "action";
     showBranding: boolean;
+    autoOpenAfterSeconds: number | null;
+    brandLabelText: string;
+    enableBrandLabel: boolean;
+    showTypingIndicator: boolean;
   };
   theme: {
     brandColor: string;
@@ -72,30 +67,22 @@ export class CreateChatBotDto {
     this.description = data.description;
     this.status = data.status;
     this.config = {
-      enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
+      showTypingIndicator: data.config?.showTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
-      widgetMessageOnline: {
-        content: data.config?.widgetMessageOnline?.content ?? "Hey there!",
-        subHeading:
-          data.config?.widgetMessageOnline?.subHeading ??
-          "How can we help you?",
-      },
-      widgetMessageOffline: {
-        content: data.config?.widgetMessageOffline?.content ?? "We're offline",
-        subHeading:
-          data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
-      },
       language: data.config?.language ?? "english",
       enableRantingAndFeedback: data.config?.enableRantingAndFeedback ?? true,
       ratingAndFeedback: {
-        rating: data.config?.ratingAndFeedback?.rating ?? 5,
+        rating: data.config?.ratingAndFeedback?.rating ?? 0,
         feedback: data.config?.ratingAndFeedback?.feedback ?? "",
       },
       chat_transcript: data.config?.chat_transcript ?? true,
       enableVoiceNote: data.config?.enableVoiceNote ?? false,
       responseInterval: (data.config?.responseInterval as any) ?? 0,
-      initiateChatbot: data.config?.initiateChatbot ?? "immediate",
+      initiateChatbot: data.config?.initiateChatbot || "immediate",
       showBranding: data.config?.showBranding ?? true,
+      autoOpenAfterSeconds: data.config?.autoOpenAfterSeconds ?? null,
+      brandLabelText: data.config?.brandLabelText ?? "",
+      enableBrandLabel: data.config?.enableBrandLabel ?? true,
     };
     this.theme = {
       brandColor: data.theme?.brandColor ?? "#3b5d50",
@@ -194,28 +181,24 @@ export class ResponseChatBotDto {
   description: string;
   status: boolean;
   config: {
-    enableTypingIndicator: boolean;
     enableWidgetMessage: boolean;
-    widgetMessageOnline: {
-      content: string;
-      subHeading: string;
-    };
-    widgetMessageOffline: {
-      content: string;
-      subHeading: string;
-    };
     language: "english" | "hindi";
     enableRantingAndFeedback: boolean;
     ratingAndFeedback: {
       rating: number;
-      feedback?: string;
+      feedback: string;
     };
     chat_transcript: boolean;
     enableVoiceNote: boolean;
     responseInterval: 0 | 1 | 2;
-    initiateChatbot: "immediate" | "action" | "";
+    initiateChatbot: "immediate" | "action";
     showBranding: boolean;
+    autoOpenAfterSeconds: number | null;
+    brandLabelText: string;
+    enableBrandLabel: boolean;
+    showTypingIndicator: boolean;
   };
+
   theme: {
     brandColor: string;
     contrastColor: string;
@@ -256,30 +239,22 @@ export class ResponseChatBotDto {
     this.description = data.description;
     this.status = data.status;
     this.config = {
-      enableTypingIndicator: data.config?.enableTypingIndicator ?? true,
+      showTypingIndicator: data.config?.showTypingIndicator ?? true,
       enableWidgetMessage: data.config?.enableWidgetMessage ?? true,
-      widgetMessageOnline: {
-        content: data.config?.widgetMessageOnline?.content ?? "Hey there!",
-        subHeading:
-          data.config?.widgetMessageOnline?.subHeading ??
-          "How can we help you?",
-      },
-      widgetMessageOffline: {
-        content: data.config?.widgetMessageOffline?.content ?? "We're offline",
-        subHeading:
-          data.config?.widgetMessageOffline?.subHeading ?? "Leave a message",
-      },
       language: data.config?.language ?? "english",
       enableRantingAndFeedback: data.config?.enableRantingAndFeedback ?? true,
       ratingAndFeedback: {
-        rating: data.config?.ratingAndFeedback?.rating ?? 5,
+        rating: data.config?.ratingAndFeedback?.rating ?? 0,
         feedback: data.config?.ratingAndFeedback?.feedback ?? "",
       },
       chat_transcript: data.config?.chat_transcript ?? true,
       enableVoiceNote: data.config?.enableVoiceNote ?? false,
-      responseInterval: data.config?.responseInterval ?? 0,
-      initiateChatbot: data.config?.initiateChatbot ?? "immediate",
+      responseInterval: (data.config?.responseInterval as any) ?? 0,
+      initiateChatbot: data.config?.initiateChatbot || "immediate",
       showBranding: data.config?.showBranding ?? true,
+      autoOpenAfterSeconds: data.config?.autoOpenAfterSeconds ?? null,
+      brandLabelText: data.config?.brandLabelText ?? "",
+      enableBrandLabel: data.config?.enableBrandLabel ?? true,
     };
     this.theme = {
       brandColor: data.theme?.brandColor ?? "#3b5d50",
