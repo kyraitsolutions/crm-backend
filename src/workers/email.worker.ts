@@ -19,3 +19,21 @@ emailQueue.process("send-account-creation-email", async (job) => {
   logger.info(`Processing welcome email for ${accountEmail}`);
   await emailService.sendAccountCreationEmail(accountEmail, accountName);
 });
+
+
+emailQueue.process("send-campaign-email", async (job) => {
+  const { to, name, subject, html, fromEmail } = job.data;
+
+  const personalizedHtml = html.replace(
+    "{{name}}",
+    name || "there"
+  );
+
+  await emailService.sendEmail(
+    to,
+    subject,
+    personalizedHtml,
+    undefined,
+    fromEmail
+  );
+});

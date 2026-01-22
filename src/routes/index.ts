@@ -14,7 +14,7 @@ export class AppRoutes {
   private userProfileRouter: UserProfileRouter;
   private emailRouter: EmailRouter;
   private teamRouter: TeamRouter;
-  private subscriptionRouter:SubscriptionRouter;
+  private subscriptionRouter: SubscriptionRouter;
   private router: Router;
 
   constructor() {
@@ -24,7 +24,7 @@ export class AppRoutes {
     this.userProfileRouter = new UserProfileRouter();
     this.emailRouter = new EmailRouter();
     this.teamRouter = new TeamRouter();
-    this.subscriptionRouter= new SubscriptionRouter();
+    this.subscriptionRouter = new SubscriptionRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -35,7 +35,7 @@ export class AppRoutes {
     this.router.use("/account", this.accountRouter.getRouter());
     this.router.use("/user/profile", this.userProfileRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());
-    this.router.use("/mail", this.emailRouter.getRouter());
+    this.router.use("/email", this.emailRouter.getRouter());
 
   }
 

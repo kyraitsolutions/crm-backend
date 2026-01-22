@@ -1,3 +1,4 @@
+import { ContactModel } from "../models/contact.model.js";
 import { Lead, LeadModel } from "../models/lead.model.js";
 import { Router, Request, Response } from "express";
 
@@ -21,7 +22,48 @@ export class LeadRespository {
   }
 
   async create(lead: any) {
+    // console.log(lead);
+    // // 1️⃣ Always create lead
+    // const savedLead = await LeadModel.create(lead);
+
+    // // 2️⃣ Stop if no email
+    // if (!lead.email || lead.email.trim() === "") {
+    //   return savedLead;
+    // }
+
+    // // 3️⃣ Stop if no consent
+    // if (!lead.consent?.emailMarketing) {
+    //   return savedLead;
+    // }
+
+    // // 4️⃣ Safe contact upsert
+    // const contact = await ContactModel.findOneAndUpdate(
+    //   {
+    //     accountId: lead.accountId,
+    //     email: lead.email.toLowerCase(),
+    //   },
+    //   {
+    //     $set: {
+    //       email: lead.email.toLowerCase(),
+    //       name: lead.name,
+    //       phone: lead.phone,
+    //       lifecycleStage: "subscriber",
+    //       "source.lastTouch": lead.source?.name || "chatbot",
+    //       "consent.emailMarketing": true,
+    //       "consent.consentAt": new Date(),
+    //       "consent.consentSource": lead.source?.name || "chatbot",
+    //     },
+    //     $setOnInsert: {
+    //       "source.firstTouch": lead.source?.name || "chatbot",
+    //     },
+    //   },
+    //   { upsert: true, new: true }
+    // );
+
+    // console.log("Contact upserted:", contact);
+    // console.log(contact);
     return await LeadModel.create(lead);
+    // return savedLead;
   }
 
   async updateLeadById(id: string, lead: any) {
@@ -50,8 +92,8 @@ export class LeadRespository {
     }).lean();
   }
 
-  async getLeadById(accountId:string,id:string){
-    return await LeadModel.find({_id:id,accountId:accountId});
+  async getLeadById(accountId: string, id: string) {
+    return await LeadModel.find({ _id: id, accountId: accountId });
   }
 }
 

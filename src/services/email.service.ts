@@ -29,10 +29,10 @@ export class EmailService {
         }
     }
 
-    async sendEmail(to: string, subject: string, html: string, text?: string): Promise<boolean> {
+    async sendEmail(to: string, subject: string, html: string, text?: string, from?: string): Promise<boolean> {
         try {
             const mailOptions = {
-                from: process.env.FROM_EMAIL,
+                from: from || process.env.FROM_EMAIL,
                 to,
                 subject,
                 html,
@@ -48,8 +48,52 @@ export class EmailService {
         }
     }
 
+
+    async startCampaign({ accountId, leadIds, subject, html, fromEmail, }: {
+        accountId: string;
+        leadIds: { email: string; name?: string; id?: string }[];
+        subject: string;
+        html: string;
+        fromEmail: string;
+    }): Promise<void> {
+        if (!leadIds.length) {
+            throw new Error("No leads provided for campaign");
+        }
+
+        for (let i = 0; i < leadIds.length; i++) {
+            const lead = leadIds[i];
+
+            await emailQueue.add(
+                "send-campaign-email",
+                {
+                    to: lead.email,
+                    name: lead.name || "",
+                    subject,
+                    html,
+                    fromEmail,
+                    accountId,
+                    leadId: lead.id,
+                },
+                {
+                    delay: i * 300, // ⏳ rate limit safety (VERY IMPORTANT)
+                    attempts: 3,
+                }
+            );
+        }
+
+        logger.info(
+            `📨 Email campaign queued | account=${accountId} | emails=${leadIds.length}`
+        );
+    }
+
+
+
+
+
+
+
     // SignUp welcome mail
-    async sendWelcomeEmail(email: string,url:string): Promise<boolean> {
+    async sendWelcomeEmail(email: string, url: string): Promise<boolean> {
         const subject = 'Welcome to Kyra CRM';
         const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -73,13 +117,13 @@ export class EmailService {
         return await this.sendEmail(email, subject, html);
     }
 
-    async queueWelcomeEmail(email: string,url:string): Promise<void> {
+    async queueWelcomeEmail(email: string, url: string): Promise<void> {
         await emailQueue.add('send-welcome-email', {
-            email,url
+            email, url
         });
         logger.info(`Welcome email queued for ${email}`);
     }
-    
+
     // Account Creation Mail
     async sendAccountCreationEmail(accountEmail: string, accountName: string): Promise<boolean> {
         const subject = `🎉Welcome Aboard — Your Account is Ready!`;
@@ -130,7 +174,7 @@ export class EmailService {
         return await this.sendEmail(accountEmail, subject, html);
     }
 
-    async queueAccountCreationEmail(accountEmail:string,accountName:string): Promise<void> {
+    async queueAccountCreationEmail(accountEmail: string, accountName: string): Promise<void> {
         logger.info(`Account created email ${accountEmail}`,);
         await emailQueue.add('send-account-creation-email', {
             accountEmail,
@@ -142,13 +186,14 @@ export class EmailService {
 
 
 
+
     // async sendLeadNotificationEmail(profileEmail: string, leadData: any, chatbotName: string): Promise<boolean> {
     //     const subject = `New Lead Generated - ${chatbotName}`;
     //     const html = `
     //         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
     //             <h2 style="color: #333;">New Lead Generated!</h2>
     //             <p>A new lead has been generated from your chatbot: <strong>${chatbotName}</strong></p>
-                
+
     //             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
     //                 <h3 style="color: #333; margin-top: 0;">Lead Information:</h3>
     //                 <p><strong>Name:</strong> ${leadData.contactInfo?.firstName || 'N/A'} ${leadData.contactInfo?.lastName || ''}</p>
@@ -157,7 +202,7 @@ export class EmailService {
     //                 <p><strong>Company:</strong> ${leadData.contactInfo?.company || 'N/A'}</p>
     //                 <p><strong>Generated At:</strong> ${new Date().toLocaleString()}</p>
     //             </div>
-                
+
     //             <p>You can view and manage this lead in your dashboard.</p>
     //             <p>Best regards,<br>The CRM Chatbot Team</p>
     //         </div>

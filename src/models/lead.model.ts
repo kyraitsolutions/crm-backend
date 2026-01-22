@@ -122,19 +122,6 @@ const leadSchema = new Schema<Lead>(
         createdAt: { type: Date, default: Date.now },
       },
     ],
-
-    // timeline:[
-    //     {
-    //       type:{
-    //         type:String,
-    //         enum: ["phone", "whatsapp", "instagram","note"],
-    //         default:'note'
-    //       },
-    //       message: { type: String, required: true },
-    //       createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-    //       createdAt: { type: Date, default: Date.now },
-    //     }
-    //   ],
     meta: {
       ip: String,
       userAgent: String,

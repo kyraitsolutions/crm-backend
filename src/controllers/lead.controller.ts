@@ -73,22 +73,6 @@ export class LeadController {
 
   createLeadWs = async (ws: AuthenticatedWebSocket, wss: WebSocketServer, data: any) => {
     try {
-      // const leadData = {
-      //   accountId: new mongoose.Types.ObjectId(data.accountId),
-      //   name: data.name,
-      //   email: data?.email || "",
-      //   phone: data?.phone || "",
-      //   customFields: data?.customFields || {},
-      //   source: {
-      //     name: data.source.name,
-      //     url: data.source.url,
-      //     chatbotId: new mongoose.Types.ObjectId(data.source.chatbotId),
-      //   },
-
-      //   stage: "Intake",
-      //   status: "Active",
-      // };
-
       const lead = await this.leadService.createLeadWs(data);
 
 

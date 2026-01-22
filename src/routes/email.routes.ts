@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { EmailController } from "../controllers/email.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class EmailRouter {
   public router: Router;
@@ -12,7 +13,16 @@ export class EmailRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get("/verify", this.emailController.verifyEmail);
+    this.router.post("/verify",
+      AuthMiddleware.authenticate,
+      this.emailController.verifyEmail.bind(this.emailController)
+    );
+    // 🚀 Start Email Campaign
+    this.router.post(
+      "/:accountId/campaigns/start",
+      AuthMiddleware.authenticate,
+      this.emailController.startEmailCampaign.bind(this.emailController)
+    );
   }
 
   public getRouter(): Router {
