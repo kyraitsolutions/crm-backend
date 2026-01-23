@@ -13,7 +13,7 @@ export class FormController {
   createForm = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
@@ -22,7 +22,7 @@ export class FormController {
       const result = await this.formService.createForm(
         user.id,
         accountId,
-        createFormDto
+        createFormDto,
       );
       httpResponse(req, res, 201, "Form created successfully", {
         docs: result,
@@ -35,7 +35,7 @@ export class FormController {
   getForms = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
@@ -52,17 +52,63 @@ export class FormController {
     }
   };
 
-
-  deleteForm=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+  getFormById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
-      const user=req.user as any;
-      const {accountId,formId} = req.params;
-      const form=await this.formService.deleteFormById(user.id,accountId,formId)
-      httpResponse(req, res, 200, "Forms Deleted successfully", {
-        docs: form
+      const user = req.user as any;
+      const { accountId, formId } = req.params;
+      const form = await this.formService.getFormById(
+        user.id,
+        accountId,
+        formId,
+      );
+      httpResponse(req, res, 200, "Form details fetched successfully", {
+        docs: form,
       });
     } catch (error) {
-      next(error)
+      next(error);
     }
-  }
+  };
+
+  deleteFormId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const user = req.user as any;
+      const { accountId, formId } = req.params;
+      const form = await this.formService.deleteFormById(
+        user.id,
+        accountId,
+        formId,
+      );
+      httpResponse(req, res, 200, "Forms Deleted successfully", {
+        docs: form,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updateFormById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const user = req.user as any;
+      const { accountId, formId } = req.params;
+      const form = await this.formService.updateFormById(
+        user.id,
+        accountId,
+        formId,
+        req.body,
+      );
+      httpResponse(req, res, 200, "Form Updated successfully", {
+        docs: form,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

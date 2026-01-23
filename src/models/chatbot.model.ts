@@ -8,70 +8,77 @@ const chatbotSchema = new Schema(
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
     status: { type: Boolean, default: true },
     config: {
-      enableTypingIndicator: {
-        type: Boolean,
-        default: true,
-      },
       enableWidgetMessage: {
         type: Boolean,
         default: true,
       },
-      widgetMessageOnline: {
-        content: {
-          type: String,
-          default: "Hey there!",
-        },
-        subHeading: {
-          type: String,
-          default: "How can we help you?",
-        },
-      },
-      widgetMessageOffline: {
-        content: {
-          type: String,
-          default: "We're offline",
-        },
-        subHeading: {
-          type: String,
-          default: "Leave a message",
-        },
-      },
+
       language: {
         type: String,
         enum: ["english", "hindi"],
+        default: "english",
       },
+
       enableRantingAndFeedback: {
         type: Boolean,
         default: true,
       },
+
       ratingAndFeedback: {
         rating: {
           type: Number,
-          emum: [1, 2, 3, 4, 5],
+          enum: [1, 2, 3, 4, 5],
           default: 5,
         },
         feedback: {
           type: String,
+          default: "",
         },
       },
+
       chat_transcript: {
         type: Boolean,
         default: true,
       },
+
       enableVoiceNote: {
         type: Boolean,
         default: false,
       },
+
       responseInterval: {
         type: Number,
         enum: [0, 1, 2],
         default: 0,
       },
+
       initiateChatbot: {
         type: String,
-        enum: ["immediate", "action", ""],
+        enum: ["immediate", "action"],
+        default: "immediate",
       },
+
       showBranding: {
+        type: Boolean,
+        default: true,
+      },
+
+      autoOpenAfterSeconds: {
+        type: Number,
+        default: null,
+      },
+
+      brandLabelText: {
+        type: String,
+        default: "",
+      },
+
+      enableBrandLabel: {
+        type: Boolean,
+        default: true,
+      },
+
+      showTypingIndicator: {
         type: Boolean,
         default: true,
       },

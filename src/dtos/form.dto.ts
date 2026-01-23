@@ -7,6 +7,7 @@ export class FormDto {
   formDescription?: string;
   headerImage?: string;
   formName: string;
+  status: boolean;
   formFields: {
     name?: boolean;
     phoneNumber?: boolean;
@@ -30,6 +31,7 @@ export class FormDto {
     formDescription?: string;
     headerImage?: string;
     formName: string;
+    status:boolean;
     formFields: {
       name?: boolean;
       phoneNumber?: boolean;
@@ -51,6 +53,7 @@ export class FormDto {
     this.formTitle = data.formTitle;
     this.formDescription = data.formDescription;
     this.headerImage = data.headerImage;
+    this.status=data.status;
     this.formName = data.formName;
     this.formFields = data.formFields;
     this.successMessage = data.successMessage;
@@ -67,6 +70,7 @@ export class CreateFormDto {
   formDescription?: string;
   headerImage?: string;
   formName: string;
+  status: boolean;
   formFields: {
     name: boolean;
     phoneNumber: boolean;
@@ -87,6 +91,7 @@ export class CreateFormDto {
     formDescription?: string;
     headerImage?: string;
     formName: string;
+    status: boolean;
     formFields: {
       name: boolean;
       phoneNumber: boolean;
@@ -104,6 +109,7 @@ export class CreateFormDto {
   }) {
     this.formTitle = data.formTitle;
     this.formDescription = data.formDescription;
+    this.status = data.status;
     this.headerImage = data.headerImage;
     this.formName = data.formName;
     this.formFields = data.formFields;
