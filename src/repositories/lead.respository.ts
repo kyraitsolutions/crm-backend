@@ -22,48 +22,48 @@ export class LeadRespository {
   }
 
   async create(lead: any) {
-    // console.log(lead);
-    // // 1️⃣ Always create lead
-    // const savedLead = await LeadModel.create(lead);
+    console.log(lead);
+    // 1️⃣ Always create lead
+    const savedLead = await LeadModel.create(lead);
 
-    // // 2️⃣ Stop if no email
-    // if (!lead.email || lead.email.trim() === "") {
-    //   return savedLead;
-    // }
+    // 2️⃣ Stop if no email
+    if (!lead.email || lead.email.trim() === "") {
+      return savedLead;
+    }
 
-    // // 3️⃣ Stop if no consent
-    // if (!lead.consent?.emailMarketing) {
-    //   return savedLead;
-    // }
+    // 3️⃣ Stop if no consent
+    if (!lead.consent?.emailMarketing) {
+      return savedLead;
+    }
 
-    // // 4️⃣ Safe contact upsert
-    // const contact = await ContactModel.findOneAndUpdate(
-    //   {
-    //     accountId: lead.accountId,
-    //     email: lead.email.toLowerCase(),
-    //   },
-    //   {
-    //     $set: {
-    //       email: lead.email.toLowerCase(),
-    //       name: lead.name,
-    //       phone: lead.phone,
-    //       lifecycleStage: "subscriber",
-    //       "source.lastTouch": lead.source?.name || "chatbot",
-    //       "consent.emailMarketing": true,
-    //       "consent.consentAt": new Date(),
-    //       "consent.consentSource": lead.source?.name || "chatbot",
-    //     },
-    //     $setOnInsert: {
-    //       "source.firstTouch": lead.source?.name || "chatbot",
-    //     },
-    //   },
-    //   { upsert: true, new: true }
-    // );
+    // 4️⃣ Safe contact upsert
+    const contact = await ContactModel.findOneAndUpdate(
+      {
+        accountId: lead.accountId,
+        email: lead.email.toLowerCase(),
+      },
+      {
+        $set: {
+          email: lead.email.toLowerCase(),
+          name: lead.name,
+          phone: lead.phone,
+          lifecycleStage: "subscriber",
+          "source.lastTouch": lead.source?.name || "chatbot",
+          "consent.emailMarketing": true,
+          "consent.consentAt": new Date(),
+          "consent.consentSource": lead.source?.name || "chatbot",
+        },
+        $setOnInsert: {
+          "source.firstTouch": lead.source?.name || "chatbot",
+        },
+      },
+      { upsert: true, new: true }
+    );
 
-    // console.log("Contact upserted:", contact);
-    // console.log(contact);
-    return await LeadModel.create(lead);
-    // return savedLead;
+    console.log("Contact upserted:", contact);
+    console.log(contact);
+    // return await LeadModel.create(lead);
+    return savedLead;
   }
 
   async updateLeadById(id: string, lead: any) {
@@ -87,33 +87,44 @@ export class LeadRespository {
       });
     }
 
-    return await LeadModel.findByIdAndUpdate(id, updateData, {
+    const savedLead = await LeadModel.findByIdAndUpdate(id, updateData, {
       new: true,
     }).lean();
+
+    // 4️⃣ Safe contact upsert
+    const contact = await ContactModel.findOneAndUpdate(
+      {
+        accountId: lead.accountId,
+        email: lead.email.toLowerCase(),
+      },
+      {
+        $set: {
+          email: lead.email.toLowerCase(),
+          name: lead.name,
+          phone: lead.phone,
+          lifecycleStage: "subscriber",
+          "source.lastTouch": lead.source?.name || "chatbot",
+          "consent.emailMarketing": true,
+          "consent.consentAt": new Date(),
+          "consent.consentSource": lead.source?.name || "chatbot",
+        },
+        $setOnInsert: {
+          "source.firstTouch": lead.source?.name || "chatbot",
+        },
+      },
+      { upsert: true, new: true }
+    );
+
+    console.log("Contact upserted:", contact);
+    console.log(contact);
+
+    return savedLead;
   }
 
   async getLeadById(accountId: string, id: string) {
     return await LeadModel.find({ _id: id, accountId: accountId });
   }
 }
-
-// Example Postman queries for different criteria (with pagination)
-// Replace <your_token> with your actual Bearer token for authentication
-
-// 1. Get first 5 leads (default, no filter)
-// http://localhost:3000/api/account/6911c9f8f03d2dca6c2b1f71/leads?limit=5&skip=0-> Working
-
-// 2. Get leads by status "Active", skip first 2, get next 3
-// http://localhost:3000/api/account/6911c9f8f03d2dca6c2b1f71/leads?status=Active&limit=3&skip=2
-
-// 3. Get leads with stage "Qualified" and limit 4 per page
-// http://localhost:3000/api/account/6911c9f8f03d2dca6c2b1f71/leads?stage=Qualified&limit=4&skip=0
-
-// 4. Get leads filtered by source "Webform" with pagination
-// http://localhost:3000/api/account/6911c9f8f03d2dca6c2b1f71/leads?source.name=Webform&limit=2&skip=0
-
-// === TEMPORARY ROUTE FOR BULK LEAD INSERTION FOR TESTING ===
-// Remove this after testing!
 
 export const tempLeadSeedRouter = Router();
 
