@@ -118,6 +118,8 @@ export class LeadController {
       console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
 
+      console.log("Return updated data",lead);
+
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {
           client.send(

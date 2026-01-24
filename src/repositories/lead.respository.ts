@@ -22,48 +22,7 @@ export class LeadRespository {
   }
 
   async create(lead: any) {
-    console.log(lead);
-    // 1️⃣ Always create lead
-    const savedLead = await LeadModel.create(lead);
-
-    // 2️⃣ Stop if no email
-    if (!lead.email || lead.email.trim() === "") {
-      return savedLead;
-    }
-
-    // 3️⃣ Stop if no consent
-    if (!lead.consent?.emailMarketing) {
-      return savedLead;
-    }
-
-    // 4️⃣ Safe contact upsert
-    const contact = await ContactModel.findOneAndUpdate(
-      {
-        accountId: lead.accountId,
-        email: lead.email.toLowerCase(),
-      },
-      {
-        $set: {
-          email: lead.email.toLowerCase(),
-          name: lead.name,
-          phone: lead.phone,
-          lifecycleStage: "subscriber",
-          "source.lastTouch": lead.source?.name || "chatbot",
-          "consent.emailMarketing": true,
-          "consent.consentAt": new Date(),
-          "consent.consentSource": lead.source?.name || "chatbot",
-        },
-        $setOnInsert: {
-          "source.firstTouch": lead.source?.name || "chatbot",
-        },
-      },
-      { upsert: true, new: true }
-    );
-
-    console.log("Contact upserted:", contact);
-    console.log(contact);
-    // return await LeadModel.create(lead);
-    return savedLead;
+    return await LeadModel.create(lead);
   }
 
   async updateLeadById(id: string, lead: any) {
@@ -91,6 +50,15 @@ export class LeadRespository {
       new: true,
     }).lean();
 
+    // 2️⃣ Stop if no email
+    if (!lead.email || lead.email.trim() === "") {
+      return savedLead;
+    }
+
+    // // 3️⃣ Stop if no consent
+    // if (!lead.consent?.marketing) {
+    //   return savedLead;
+    // }
     // 4️⃣ Safe contact upsert
     const contact = await ContactModel.findOneAndUpdate(
       {
@@ -102,15 +70,16 @@ export class LeadRespository {
           email: lead.email.toLowerCase(),
           name: lead.name,
           phone: lead.phone,
-          lifecycleStage: "subscriber",
-          "source.lastTouch": lead.source?.name || "chatbot",
-          "consent.emailMarketing": true,
-          "consent.consentAt": new Date(),
-          "consent.consentSource": lead.source?.name || "chatbot",
+          status: lead.consentStatus || "unsubscribed",
+          source: lead.source?.name || "chatbot",
+          "consent.marketing": true,
+          "consent.timestamp": new Date(),
+          "consent.source": lead.source?.name || "chatbot",
+          tags: lead.tags || "warm",
         },
-        $setOnInsert: {
-          "source.firstTouch": lead.source?.name || "chatbot",
-        },
+        // $setOnInsert: {
+        //   source: lead.source?.name || "chatbot",
+        // },
       },
       { upsert: true, new: true }
     );

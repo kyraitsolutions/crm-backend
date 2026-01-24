@@ -58,7 +58,7 @@ export class TeamService {
       onboardingData
     );
 
-    const role = await RoleModel.findOne({ name: "TEAM_MEMBER" });
+    const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
     if (!role) throw new Error("Role not found");
     // team member create
     const teamMemberData = {

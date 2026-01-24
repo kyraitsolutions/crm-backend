@@ -1,9 +1,11 @@
 import nodemailer from 'nodemailer';
 import logger from '../utils/logger.js';
 import { emailQueue } from '../config/queue.js';
+import { EmailRepository } from '../repositories/email.repository.js';
 
 export class EmailService {
     private transporter: nodemailer.Transporter;
+    private emailRepository:EmailRepository;
 
     constructor() {
         this.transporter = nodemailer.createTransport({
@@ -15,7 +17,7 @@ export class EmailService {
                 pass: process.env.SMTP_PASS,
             },
         });
-
+        this.emailRepository=new EmailRepository();
         // Verify connection configuration
         this.verifyConnection();
     }
@@ -29,25 +31,7 @@ export class EmailService {
         }
     }
 
-    async sendEmail(to: string, subject: string, html: string, text?: string, from?: string): Promise<boolean> {
-        try {
-            const mailOptions = {
-                from: from || process.env.FROM_EMAIL,
-                to,
-                subject,
-                html,
-                text: text || html.replace(/<[^>]*>/g, ''), // Strip HTML tags for text version
-            };
-
-            const result = await this.transporter.sendMail(mailOptions);
-            logger.info(`Email sent successfully to ${to}:`, result.messageId);
-            return true;
-        } catch (error) {
-            logger.error(`Failed to send email to ${to}:`, error);
-            return false;
-        }
-    }
-
+    
 
     async startCampaign({ accountId, leadIds, subject, html, fromEmail, }: {
         accountId: string;
@@ -86,10 +70,34 @@ export class EmailService {
         );
     }
 
+    async getSubscribers(accountId:string):Promise<any[]>{
+        const subscribers=await this.emailRepository.getSubscribers(accountId);
+        return subscribers;
+    }
 
 
 
 
+
+
+    async sendEmail(to: string, subject: string, html: string, text?: string, from?: string): Promise<boolean> {
+        try {
+            const mailOptions = {
+                from: from || process.env.FROM_EMAIL,
+                to,
+                subject,
+                html,
+                text: text || html.replace(/<[^>]*>/g, ''), // Strip HTML tags for text version
+            };
+
+            const result = await this.transporter.sendMail(mailOptions);
+            logger.info(`Email sent successfully to ${to}:`, result.messageId);
+            return true;
+        } catch (error) {
+            logger.error(`Failed to send email to ${to}:`, error);
+            return false;
+        }
+    }
 
 
     // SignUp welcome mail

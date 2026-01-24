@@ -6,6 +6,7 @@ import { FormController } from "../controllers/form.controller.js";
 import { LeadController } from "../controllers/lead.controller.js";
 import AnalyticsController from "../controllers/analytics.controller.js";
 import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
+import { EmailController } from "../controllers/email.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -14,6 +15,7 @@ export class AccountRouter {
   private formController: FormController;
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
+  private emailController:EmailController;
 
   // constructor
   constructor() {
@@ -23,11 +25,12 @@ export class AccountRouter {
     this.formController = new FormController();
     this.leadController = new LeadController();
     this.analyticsController = new AnalyticsController();
+    this.emailController=new EmailController();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    // Accounts
+    //TODO: Accounts
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
@@ -55,9 +58,10 @@ export class AccountRouter {
       this.accountController.deleteAccount.bind(this.accountController),
     ); //done
 
-    // =============================================================================================
+    // TODO: =============================================================================================
 
-    // get all chatbot of this account
+
+    // TODO:Chatbot
     this.router.get(
       "/:accountId/chatbots",
       AuthMiddleware.authenticate,
@@ -110,9 +114,10 @@ export class AccountRouter {
       this.chatBotController.deleteChatBot.bind(this.chatBotController),
     );
 
-    // =============================================================================================
+     // TODO: =============================================================================================
 
-    // Form routes can be added here
+
+    // TODO: Forms
     this.router.get(
       "/:accountId/forms",
       AuthMiddleware.authenticate,
@@ -140,9 +145,10 @@ export class AccountRouter {
       this.formController.deleteFormId.bind(this.formController),
     );
 
-    // =============================================================================================
+     // TODO: =============================================================================================
 
-    // leads route
+
+    // TODO: Leads
     this.router.get(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
@@ -161,14 +167,26 @@ export class AccountRouter {
     )
 
 
-    // =============================================================================================
+    // TODO: =============================================================================================
 
-    // Analytics Overview
+    // TODO: Analytics Overview
     this.router.get(
       "/:accountId/overview",
       AuthMiddleware.authenticate,
       this.analyticsController.getOverview.bind(this.analyticsController),
     );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: Email Campaign
+    this.router.get(
+      "/:accountId/subscribers",
+      AuthMiddleware.authenticate,
+      this.emailController.getSubscribers.bind(this.emailController),
+    );
+
+
   }
   public getRouter(): Router {
     return this.router;

@@ -7,33 +7,27 @@ export interface Contact {
     email: string;
     name?: string;
     phone?: string;
-    company?: string;
 
     // Lifecycle
-    lifecycleStage: "lead" | "subscriber" | "customer" | "inactive";
+    status: "subscribed" | "unsubscribed" | "bounced";
 
     // Consent & compliance
     consent: {
         marketing: boolean;
-        source?: "chatbot" | "webform" | "manual" | "import";
+        source?: "chatbot" | "webform" | "manual" | "google_ads" | "import";
         timestamp?: Date;
     };
 
     // Metadata
-    source: {
-        firstTouch?: "chatbot" | "website" | "google_ads" | "manual" | "import";
-        lastTouch?: string;
-    };
+    source: "chatbot" | "website" | "google_ads" | "manual" | "import";
 
     // Segmentation
     tags: string[];
 
-    // Ownership
-    assignedTo?: Types.ObjectId;
-
     // System
     createdAt: Date;
     updatedAt: Date;
+    lastActivity: Date;
 }
 
 const contactSchema = new Schema<Contact>(
@@ -54,37 +48,29 @@ const contactSchema = new Schema<Contact>(
 
         name: { type: String, trim: true },
         phone: { type: String, trim: true },
-        company: { type: String, trim: true },
 
-        lifecycleStage: {
+        status: {
             type: String,
-            enum: ["lead", "subscriber", "customer", "inactive"],
-            default: "lead",
+            enum: ["subscribed", "unsubscribed","bounced"],
+            default: "unsubscribed",
         },
 
         consent: {
             marketing: { type: Boolean, default: false },
             source: {
                 type: String,
-                enum: ["chatbot", "webform", "manual", "import"],
+                enum: ["chatbot", "webform","google_ads","manual", "import"],
             },
             timestamp: Date,
         },
 
         source: {
-            firstTouch: {
-                type: String,
-                enum: ["chatbot", "website", "google_ads", "manual", "import"],
-            },
-            lastTouch: { type: String },
+            type: String,
+            enum: ["chatbot", "website", "google_ads", "manual", "import"],
         },
 
         tags: [{ type: String }],
-
-        assignedTo: {
-            type: Schema.Types.ObjectId,
-            ref: "User",
-        },
+        lastActivity: { type: Date, default: Date.now },
     },
     {
         timestamps: true,

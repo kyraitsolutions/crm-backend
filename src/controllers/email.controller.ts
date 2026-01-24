@@ -55,4 +55,20 @@ export class EmailController {
             next(error)
         }
     }
+
+
+    getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            const {accountId}=req.params;  
+            
+            const subscribers=await this.emailService.getSubscribers(accountId);
+            
+            httpResponse(req, res, 200, "Campaign setup successfully", {
+                data:subscribers
+            });
+
+        } catch (error) {
+            next(error)
+        }
+    }
 }

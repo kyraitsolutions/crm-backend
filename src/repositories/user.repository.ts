@@ -75,7 +75,7 @@ export class UserRepository {
   }
 
   async createTeamUser(email:any): Promise<any> {
-    const role = await RoleModel.findOne({ name: "TEAM_MEMBER" });
+    const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
     return await UserModel.create({email:email, roleId: role?._id, onboarding:true });
     // return null;
   }
