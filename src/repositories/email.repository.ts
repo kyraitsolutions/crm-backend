@@ -1,5 +1,5 @@
 import { ContactModel } from "../models/contact.model.js";
-import { EmailTemplateModel } from "../models/emailTemplate";
+import { EmailTemplateModel } from "../models/emailTemplate.js";
 
 export class EmailRepository {
     async getSubscribers(accountId:string):Promise<any[]>{
