@@ -7,12 +7,17 @@ export interface PlanDocument extends Document {
 
   price: number;
   durationDays: number;
+  desmoncription: string;
+  button: string;
 
   maxAccounts: number;
   maxChatbots: number;
   maxWebforms: number;
 
   features: string[];
+  addons: string[];
+
+
 
   createdAt: Date;
   updatedAt: Date;
@@ -44,15 +49,22 @@ const planSchema = new Schema(
       required: true,
       unique: true
     },
-
-    price: { type: Number, default: 0 }, // ₹ or $
-    durationDays: { type: Number, default: 30 }, // plan validity
-
     maxAccounts: { type: Number, default: 1 },
     maxChatbots: { type: Number, default: 1 },
     maxWebforms: { type: Number, default: 1 },
 
+
+    description: { type: String, default: "" },
+    featured: { type: Boolean, default: false },
+    price: { 
+      monthly: { type: Number, default: 0 },
+      annually: { type: Number, default: 0 }
+     }, // ₹ or $
+    period: { type: String, default: "month" }, // or "year"
+    durationDays: { type: Number, default: 30 }, // plan validity
+    button: { type: String},
     features: [{ type: String }],
+    addons: [{ type: String }],
   },
   {
     timestamps: true,

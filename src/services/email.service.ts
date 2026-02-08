@@ -31,8 +31,6 @@ export class EmailService {
         }
     }
 
-    
-
     async startCampaign({ accountId, leadIds, subject, html, fromEmail, }: {
         accountId: string;
         leadIds: { email: string; name?: string; id?: string }[];
@@ -74,6 +72,32 @@ export class EmailService {
         const subscribers=await this.emailRepository.getSubscribers(accountId);
         return subscribers;
     }
+    // async deleteSubscriber(accountId:string,contactId:string):Promise<any|null>{
+    //     const result=await this.emailRepository.deleteSubscriber(accountId,contactId);
+    //     return result;
+    // }
+
+    // async getTemplates(accountId:string):Promise<any[]>{
+    //     const templates=await this.emailRepository.getTemplates(accountId);
+    //     return templates;
+    // }
+    // async getTemplateById(accountId:string,templateId:string):Promise<any|null>{
+    //     const template=await this.emailRepository.getTemplateById(accountId,templateId);
+    //     return template;
+    // }
+    async createTemplate(accountId:string,templateData:any):Promise<any>{
+        const template=await this.emailRepository.createTemplate(accountId,templateData);
+        return template;
+    }
+    // async updateTemplate(accountId:string,templateId:string,updateData:any):Promise<any|null>{
+    //     const template=await this.emailRepository.updateTemplate(accountId,templateId,updateData);
+    //     return template;
+    // }
+    // async deleteTemplate(accountId:string,templateId:string):Promise<any|null>{
+    //     const result=await this.emailRepository.deleteTemplate(accountId,templateId);
+    //     return result;
+    // }
+
 
 
 

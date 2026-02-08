@@ -23,6 +23,19 @@ export class EmailRouter {
       AuthMiddleware.authenticate,
       this.emailController.startEmailCampaign.bind(this.emailController)
     );
+
+
+    // Template Routes
+    this.router.post(
+      "/:accountId/template",
+      AuthMiddleware.authenticate,
+      this.emailController.createTemplate.bind(this.emailController)
+    );
+    // this.router.post(
+    //   "/:accountId/templates",
+    //   AuthMiddleware.authenticate,
+    //   this.emailController.createTemplate.bind(this.emailController)
+    // );
   }
 
   public getRouter(): Router {

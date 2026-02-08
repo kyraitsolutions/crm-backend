@@ -10,6 +10,8 @@ export class SubscriptionController {
   async getAllSubscription(req: Request, res: Response, next: NextFunction) {
     try {
       const subscriptions = await this.subscriptionService.getAllSubscriptionPlan();
+
+      console.log(subscriptions);
       httpResponse(req, res, 200, "Subscription fetched successfully", {
         docs: subscriptions,
       });

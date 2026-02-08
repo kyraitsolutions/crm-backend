@@ -33,6 +33,7 @@ export class EmailController {
         }
     }
 
+    
     startEmailCampaign = async (req: Request, res: Response, next: NextFunction) => {
         try {
             // const user = req.user as any;
@@ -54,7 +55,8 @@ export class EmailController {
         } catch (error) {
             next(error)
         }
-    }
+    };
+
 
 
     getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
@@ -70,5 +72,20 @@ export class EmailController {
         } catch (error) {
             next(error)
         }
-    }
-}
+    };
+
+
+    createTemplate=async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            const {accountId}=req.params;  
+            const templateData=req.body;
+            const template=await this.emailService.createTemplate(accountId,templateData);
+            
+            httpResponse(req, res, 200, "Template created successfully", {
+                data:template
+            });
+        } catch (error) {
+            next(error)
+        }   
+    };
+};

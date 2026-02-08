@@ -181,9 +181,14 @@ export class AccountRouter {
 
     // TODO: Email Campaign
     this.router.get(
-      "/:accountId/subscribers",
+      "/:accountId/email/subscribers",
       AuthMiddleware.authenticate,
       this.emailController.getSubscribers.bind(this.emailController),
+    );
+    this.router.post(
+      "/:accountId/email/template",
+      AuthMiddleware.authenticate,
+      this.emailController.createTemplate.bind(this.emailController)
     );
 
 
