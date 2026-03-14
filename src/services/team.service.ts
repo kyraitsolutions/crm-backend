@@ -20,7 +20,7 @@ export class TeamService {
     this.userprofileRepository = new UserProfileRepository();
   }
   async getTeamMembers(orgId: string, roleId: string): Promise<any[]> {
-    const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(roleId);
+    const isTeamMember = new ObjectId(USERROLE.ACCOUNT_MANAGER).equals(roleId);
     const teamMember = await this.getTeamMemberById(orgId);
 
     let organizationId = isTeamMember ? teamMember.orgId : orgId;
@@ -112,6 +112,8 @@ export class TeamService {
     accountIds: any,
     leadId: string
   ): Promise<any> {
+
+    console.log("aya yaha par");
     const assignment = await this.teamRepository.assignAccountToMember(
       memberId,
       accountIds,

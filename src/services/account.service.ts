@@ -27,7 +27,7 @@ export class AccountService {
   async getAllAccounts(user: any): Promise<AccountDto[] | null> {
 
     const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
-    const isTeamMember = new ObjectId(USERROLE.TEAM_MEMBER).equals(user.roleId);
+    const isTeamMember = new ObjectId(USERROLE.ACCOUNT_MANAGER).equals(user.roleId);
 
     let accounts: any = []
 
