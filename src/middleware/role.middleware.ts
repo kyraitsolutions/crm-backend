@@ -1,6 +1,3 @@
-
 export class RoleMiddleware {
-    static roleMiddleware() {
-
-    }
+  static roleMiddleware() {}
 }

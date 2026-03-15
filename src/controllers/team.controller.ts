@@ -12,14 +12,14 @@ export class TeamController {
   getTeamMembers = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
 
       const teamMembers = await this.teamService.getTeamMembers(
         user.id,
-        user?.roleId
+        user?.roleId,
       );
       httpResponse(req, res, 200, "Team members fetched successfully", {
         docs: teamMembers,
@@ -35,12 +35,12 @@ export class TeamController {
   getTeamMemberById = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       // const user = req.user as any;
       const teamMember = await this.teamService.getTeamMemberById(
-        req.params.id
+        req.params.id,
       );
       httpResponse(req, res, 200, "Team member fetched successfully", {
         docs: teamMember,
@@ -56,14 +56,15 @@ export class TeamController {
   createTeamMember = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       logger.info(`Creating team member: ${req.body}`);
       const user = req.user as any;
+      console.log(user);
       const teamMember = await this.teamService.createTeamMember(
         user.id,
-        req.body
+        req.body,
       );
 
       httpResponse(req, res, 200, "Team member created successfully", {
@@ -80,12 +81,12 @@ export class TeamController {
   updateTeamMember = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const teamMember = await this.teamService.updateTeamMember(
         req.params.id,
-        req.body
+        req.body,
       );
       httpResponse(req, res, 200, "Team member updated successfully", {
         docs: teamMember,
@@ -101,7 +102,7 @@ export class TeamController {
   deleteTeamMember = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -121,7 +122,7 @@ export class TeamController {
   assignAccountToTeamMember = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const { id } = req.params;
@@ -129,7 +130,7 @@ export class TeamController {
       const assignment = await this.teamService.assignAccountToMember(
         id,
         accountIds,
-        leadId
+        leadId,
       );
       httpResponse(req, res, 200, "Task assigned to member successfully", {
         docs: assignment,

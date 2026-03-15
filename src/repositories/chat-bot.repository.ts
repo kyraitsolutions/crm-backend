@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 import { ChatbotModel, ChatbotFlowModel } from "../models/chatbot.model.js";
 import { TCreateChatBot, TCreateChatBotFlow } from "../types/chat-bot.type.js";
+import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
+import { hasPermission } from "../rbac/hasPermission.js";
+import { USERROLE } from "../enums/user.enum.js";
 
 export class ChatbotRepository {
   async createChatbot(data: TCreateChatBot) {
@@ -21,7 +24,7 @@ export class ChatbotRepository {
   async updateChatbotFlow(
     accountId: string,
     chatBotId: string,
-    data: TCreateChatBotFlow
+    data: TCreateChatBotFlow,
   ) {
     return await ChatbotFlowModel.findOneAndUpdate(
       {
@@ -29,7 +32,7 @@ export class ChatbotRepository {
         chatbotId: new mongoose.Types.ObjectId(chatBotId),
       },
       data,
-      { new: true }
+      { new: true },
     );
   }
 
@@ -66,12 +69,12 @@ export class ChatbotRepository {
 
   async findAllByAccountId(
     userId: string,
-    accountId: string
+    accountId: string,
   ): Promise<any[] | null> {
     return await ChatbotModel.aggregate([
       {
         $match: {
-          userId: new mongoose.Types.ObjectId(userId),
+          // userId: new mongoose.Types.ObjectId(userId),
           accountId: new mongoose.Types.ObjectId(accountId),
         },
       },
@@ -131,9 +134,9 @@ export class ChatbotRepository {
   async findChatbotById(
     userId: string,
     accountId: string,
-    chatbotId: string
+    chatbotId: string,
   ): Promise<any | null> {
-    return await ChatbotModel.findOne({ userId, accountId, _id: chatbotId });
+    return await ChatbotModel.findOne({ accountId, _id: chatbotId });
   }
   // async addKnowledgeSource(data: any) {
   //   return await ChatbotKnowledgeSourceModel.create(data);
@@ -161,12 +164,12 @@ export class ChatbotRepository {
     userId: string,
     accountId: string,
     chatbotId: string,
-    data: any
+    data: any,
   ) {
     return await ChatbotModel.findOneAndUpdate(
-      { userId, accountId, _id: chatbotId },
+      { accountId, _id: chatbotId },
       data,
-      { new: true }
+      { new: true },
     );
   }
 
@@ -197,10 +200,18 @@ export class ChatbotRepository {
   async deleteChatbotById(
     userId: string,
     accountId: string,
-    chatbotId: string
+    chatbotId: string,
+    roleId: string,
   ): Promise<{} | null> {
+    const role = roleId.toString() as USERROLE;
+    const permissions = ROLE_PERMISSIONS[role];
+
+    const isPermissionAllow = hasPermission(permissions, "chatbot:delete");
+
+    if (!isPermissionAllow)
+      throw new Error("You don't have permission to delete");
+
     return await ChatbotModel.findOneAndDelete({
-      userId,
       accountId,
       _id: chatbotId,
     });

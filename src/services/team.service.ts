@@ -24,9 +24,8 @@ export class TeamService {
     const teamMember = await this.getTeamMemberById(orgId);
 
     let organizationId = isTeamMember ? teamMember.orgId : orgId;
-    const teamMembers = await this.teamRepository.getTeamMembers(
-      organizationId
-    );
+    const teamMembers =
+      await this.teamRepository.getTeamMembers(organizationId);
     return (
       teamMembers?.map((teamMember: any) => new TeamMemberDto(teamMember)) ?? []
     );
@@ -38,11 +37,10 @@ export class TeamService {
   }
   async createTeamMember(
     orgId: string,
-    teamMember: CreateTeamMemberDto
+    teamMember: CreateTeamMemberDto,
   ): Promise<any> {
-    // user create
     const newTeamMember = await this.userRepository.createTeamUser(
-      teamMember.email
+      teamMember.email,
     );
 
     // user profile
@@ -54,11 +52,11 @@ export class TeamService {
       accountType: "individual",
     };
 
-    const newOnboarding = await this.userprofileRepository.create(
-      onboardingData
-    );
+    const newOnboarding =
+      await this.userprofileRepository.create(onboardingData);
 
     const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
+
     if (!role) throw new Error("Role not found");
     // team member create
     const teamMemberData = {
@@ -69,9 +67,8 @@ export class TeamService {
       inviteStatus: "PENDING",
     };
 
-    const createdTeamMember = await this.teamRepository.createTeamMember(
-      teamMemberData
-    );
+    const createdTeamMember =
+      await this.teamRepository.createTeamMember(teamMemberData);
 
     // call email service to send invitation email
     const url = `${process.env.FRONTEND_URL}/login`;
@@ -98,7 +95,7 @@ export class TeamService {
   async updateTeamMember(id: string, teamMember: any): Promise<any> {
     const updatedTeamMember = await this.teamRepository.updateTeamMember(
       id,
-      teamMember
+      teamMember,
     );
     return updatedTeamMember ? new TeamMemberDto(updatedTeamMember) : null;
   }
@@ -110,14 +107,13 @@ export class TeamService {
   async assignAccountToMember(
     memberId: string,
     accountIds: any,
-    leadId: string
+    leadId: string,
   ): Promise<any> {
-
     console.log("aya yaha par");
     const assignment = await this.teamRepository.assignAccountToMember(
       memberId,
       accountIds,
-      leadId
+      leadId,
     );
     return assignment;
   }

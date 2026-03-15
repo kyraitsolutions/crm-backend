@@ -111,14 +111,14 @@ export class TeamRepository {
       // 1. Delete user from User table
       const user = await UserModel.findByIdAndDelete(
         { _id: teamMemberId },
-        { session }
+        { session },
       );
       // 2. Delete user from Team member table
       await TeamMember.findOneAndDelete({ userId: teamMemberId }, { session });
       // 3. Delete all assigned accounts to this user
       await TeamMemberAccountLeads.deleteMany(
         { teamMemberId: teamMemberId },
-        { session }
+        { session },
       );
       // commit
       await session.commitTransaction();
@@ -134,7 +134,7 @@ export class TeamRepository {
   async assignAccountToMember(
     userId: string,
     accountIds: string[],
-    leadId: string
+    leadId: string,
   ): Promise<any> {
     const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
 
