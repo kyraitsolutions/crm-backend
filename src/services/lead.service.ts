@@ -3,14 +3,17 @@ import { Lead } from "../models/lead.model.js";
 // import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
+import { EmailService } from "./email.service.js";
 
 
 export class LeadService {
   private leadRepository: LeadRespository;
+  private emailService:EmailService;
   private ai: GeminiAIUtil;
 
   constructor() {
     this.leadRepository = new LeadRespository();
+    this.emailService=new EmailService();
     this.ai = new GeminiAIUtil()
   }
 
@@ -57,6 +60,12 @@ export class LeadService {
 
   async createLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.create(lead);
+  }
+  async createLead(lead: Lead): Promise<Lead> {
+    const result=await this.leadRepository.create(lead);
+
+    this.emailService.queueWelcomeEmail("abhijeetsingh5631@gmail.com","https://www.google.com")
+    return result;
   }
 
   async updateLead(

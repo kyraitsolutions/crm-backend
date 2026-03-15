@@ -158,8 +158,13 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/lead/:leadId/ai-summary",
       AuthMiddleware.authenticate,
-      this.leadController.getLeadSummary.bind(this.leadController),
-    );
+      this.leadController.getLeadSummary.bind(this.leadController)
+    )
+
+    // TODO: Lead Webhook
+    this.router.post(
+      "/:accountId/lead/:formId/create", AuthMiddleware.authenticate,this.leadController.createLead.bind(this.leadController)
+    )
 
     // TODO: =============================================================================================
 

@@ -31,7 +31,7 @@ export class UserProfileService{
             userId:id,
             firstName:dto.firstName,
             lastName:dto.lastName,
-            organizationName:dto.organizationName,
+            organizationName:"organization",
             accountType:dto.accountType
         };
 
