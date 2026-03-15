@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import { TemplateCategory } from "../enums/email.enum";
 
 export interface EmailTemplate {
     accountId: Types.ObjectId;
@@ -11,8 +12,10 @@ export interface EmailTemplate {
     text?: string;
     design?: any; // editor JSON (MJML / Unlayer / custom builder)
 
+    variables?:string[]
+    thumbnail?: string;
     // Metadata
-    category?: string; // marketing, transactional, follow-up
+    category?:TemplateCategory; // marketing, transactional, follow-up
     tags?: string[];
 
     // AI support
@@ -24,7 +27,7 @@ export interface EmailTemplate {
     version: number;
 
     createdBy?: Types.ObjectId;
-
+    lastUsedAt?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -63,13 +66,23 @@ const EmailTemplateSchema = new Schema<EmailTemplate>(
             type: String,
         },
 
+        variables: [
+            {
+                type: String,
+                trim: true
+            }
+        ],
+        thumbnail: {
+            type: String,
+            trim: true
+        },
         design: {
             type: Schema.Types.Mixed, // Email builder JSON
         },
 
         category: {
             type: String,
-            enum: ["marketing", "transactional", "follow-up", "newsletter"],
+            enum: Object.values(TemplateCategory),
             default: "marketing",
         },
 
@@ -97,12 +110,15 @@ const EmailTemplateSchema = new Schema<EmailTemplate>(
             default: 1,
         },
 
+        lastUsedAt: {
+            type: Date
+        },
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: "User",
         },
     },
-    { 
+    {
         timestamps: true,
         versionKey: false,
         toJSON: {

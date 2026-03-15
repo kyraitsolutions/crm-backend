@@ -1,27 +1,26 @@
 import dotenv from "dotenv";
 
-import { emailQueue } from "../config/queue";
-import { EmailService } from "../services/email.service";
+import { emailQueue } from "../queue/queue";
 import logger from "../utils/logger";
+import { EmailUtils } from "../utils/email.utils";
 
 dotenv.config();
 
-const emailService = new EmailService();
+const emailUtils = new EmailUtils();
 
-emailQueue.process("send-welcome-email", async (job) => {
+emailQueue.process("welcome-email", async (job) => {
   const { email,url } = job.data;
   logger.info(`Processing welcome email for ${email}`);
-  await emailService.sendWelcomeEmail(email,url);
+  await emailUtils.sendWelcomeEmail(email,url);
 });
 
-emailQueue.process("send-account-creation-email", async (job) => {
+emailQueue.process("account-creation-email", async (job) => {
   const { accountEmail, accountName } = job.data;
   logger.info(`Processing welcome email for ${accountEmail}`);
-  await emailService.sendAccountCreationEmail(accountEmail, accountName);
+  await emailUtils.sendAccountCreationEmail(accountEmail, accountName);
 });
 
-
-emailQueue.process("send-campaign-email", async (job) => {
+emailQueue.process("campaign-email", async (job) => {
   const { to, name, subject, html, fromEmail } = job.data;
 
   const personalizedHtml = html.replace(
@@ -29,7 +28,7 @@ emailQueue.process("send-campaign-email", async (job) => {
     name || "there"
   );
 
-  await emailService.sendEmail(
+  await emailUtils.sendEmail(
     to,
     subject,
     personalizedHtml,

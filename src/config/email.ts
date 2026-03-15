@@ -1,30 +1,37 @@
 // config/email.js
 import nodemailer from "nodemailer"
 import dotenv from "dotenv";
+import logger from "../utils/logger";
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: parseInt("465"),
-    secure: true, // true for 465, false for other ports
-    auth: {
-        user: "abhijeetsingh5631@gmail.com",
-        pass: "oqqgeuxgmrretjbr",
-    },
-    // Add these for better debugging
-    debug: true,
-    logger: true
-});
+export class Transporter {
+    private transporter: nodemailer.Transporter;
 
-// Test the connection
-transporter.verify((error:any, success:any) => {
-    if (error) {
-        console.log('SMTP Connection Error:', error);
-    } else {
-        console.log('SMTP Server ready to take messages:',success);
+    constructor() {
+        this.transporter = nodemailer.createTransport({
+            host: process.env.SMTP_HOST,
+            port: parseInt(process.env.SMTP_PORT || '587'),
+            secure: true, // true for 465, false for other ports
+            auth: {
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
+            },
+            debug: false,
+            logger: false
+        });
+        this.verifyConnection();
     }
-});
+    private async verifyConnection(): Promise<void> {
+        try {
+            await this.transporter.verify();
+            logger.info('Email service connection verified successfully');
+        } catch (error) {
+            logger.error('Email service connection failed:', error);
+        }
+    }
+    async sendMail(mailOptions: any) {
+        return this.transporter.sendMail(mailOptions);
+    }
 
-
-export default transporter;
+}
