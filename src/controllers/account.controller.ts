@@ -13,10 +13,11 @@ export class AccountController {
   getAccounts = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
+
       const accounts = await this.accountService.getAllAccounts(user);
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
@@ -28,38 +29,45 @@ export class AccountController {
     }
   };
 
-  getAccountById= async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
-      try {
-          const user=req.user as any;
-          const accountId=req.params.accountId;
-          const result=await this.accountService.getAccountById(user.id,accountId)
-          res.status(200).json(result);
-      } catch (error) {
-          next(error);
-      }
-  }
+  getAccountById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const user = req.user as any;
+      const accountId = req.params.accountId;
+      const result = await this.accountService.getAccountById(
+        user.id,
+        accountId,
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 
   createAccount = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
       const createAccountDto = new CreateAccountDto(req.body);
       const result = await this.accountService.createAccount(
         user.id,
-        createAccountDto
+        createAccountDto,
       );
-      if(result.isExist){
+      if (result.isExist) {
         httpResponse(req, res, 409, result?.message, {
           docs: result,
         });
-      }else{
+      } else {
         httpResponse(req, res, 201, "Account created successfully", {
           docs: result,
         });
-      }      
+      }
     } catch (error) {
       next(error);
     }
@@ -68,11 +76,17 @@ export class AccountController {
   deleteAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
-      const result = await this.accountService.deleteAccount(id);
+      const result = await this.accountService.deleteAccount(id, req.user);
       if (!result) {
-        httpResponse(req,res,404,"Account with the user id does not exist!",{
+        httpResponse(
+          req,
+          res,
+          404,
+          "Account with the user id does not exist!",
+          {
             data: null,
-        });
+          },
+        );
       }
       httpResponse(req, res, 200, "Account deleted successfully", {
         data: {},

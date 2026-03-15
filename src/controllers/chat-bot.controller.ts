@@ -13,12 +13,12 @@ export class ChatBotController {
   async getChatBot(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> {
     try {
       const user = req.user as any;
       const chatbots = await this.chatBotService.getAllChatBotsByUserId(
-        user.id
+        user.id,
       );
       httpResponse(req, res, 200, "Chatbot fetched successfully", {
         docs: chatbots,
@@ -34,7 +34,7 @@ export class ChatBotController {
   async getChatBotById(
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> {
     try {
       const user = req.user as any;
@@ -42,7 +42,7 @@ export class ChatBotController {
       const chatbot = await this.chatBotService.getChatBotById(
         user.id,
         accountId,
-        chatbotId
+        chatbotId,
       );
 
       httpResponse(req, res, 200, "Chatbot details fetched successfully", {
@@ -78,7 +78,7 @@ export class ChatBotController {
 
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
-        chatbotId
+        chatbotId,
       );
 
       // console.log(first)
@@ -98,7 +98,7 @@ export class ChatBotController {
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
         accountId,
-        req.body
+        req.body,
       );
       httpResponse(req, res, 201, "Chatbot Created successfully", {
         docs: chatBot,
@@ -116,7 +116,7 @@ export class ChatBotController {
       const chatbotFlow = await this.chatBotService.getChatBotFlowById(
         user.id,
         accountId,
-        chatbotId
+        chatbotId,
       );
 
       httpResponse(req, res, 200, "Chatbot flow fetched successfully", {
@@ -144,7 +144,7 @@ export class ChatBotController {
         user.id,
         accountId,
         chatbotId,
-        dtoPayload
+        dtoPayload,
       );
 
       if (chatbotFlow?.update) {
@@ -155,7 +155,7 @@ export class ChatBotController {
           "Chatbot Flow Updated successfully",
           {
             docs: chatbotFlow?.docs,
-          }
+          },
         );
       }
 
@@ -177,7 +177,7 @@ export class ChatBotController {
         user.id,
         accountId,
         chatbotId,
-        updateChatBotDto
+        updateChatBotDto,
       );
       httpResponse(req, res, 200, "Chatbot Updated successfully", {
         docs: new ResponseChatBotDto(chatBot),
@@ -201,7 +201,8 @@ export class ChatBotController {
       const result = await this.chatBotService.deleteChatBot(
         user.id,
         accountId,
-        chatbotId
+        chatbotId,
+        user?.roleId,
       );
       httpResponse(req, res, 200, "Chatbot Deleted successfully", {
         status: result,
@@ -215,7 +216,7 @@ export class ChatBotController {
   static async getAllChatBotMessages(
     data: any,
     ws: WebSocket,
-    wss: WebSocketServer
+    wss: WebSocketServer,
   ) {
     const messageArr = [];
     messageArr.push(data);

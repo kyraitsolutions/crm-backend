@@ -6,7 +6,6 @@ import { Router, Request, Response } from "express";
 
 export class LeadRespository {
   async find(criteria: any, pagination?: { limit?: number; skip?: number }) {
-
     const query = LeadModel.find(criteria).sort({ createdAt: -1 }).lean();
     if (pagination?.limit !== undefined) {
       query.limit(pagination.limit);
@@ -81,7 +80,7 @@ export class LeadRespository {
         //   source: lead.source?.name || "chatbot",
         // },
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
 
     console.log("Contact upserted:", contact);
@@ -462,5 +461,5 @@ tempLeadSeedRouter.post(
     } catch (error) {
       res.status(500).json({ error: error?.toString() || "Unknown error" });
     }
-  }
+  },
 );

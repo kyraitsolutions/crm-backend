@@ -10,7 +10,7 @@ export class FormRepository {
     userId: string,
     accountId: string,
   ): Promise<any | null> {
-    return await FormModel.find({ userId: userId, accountId: accountId });
+    return await FormModel.find({ accountId: accountId });
   }
 
   async findByFormId(
@@ -19,7 +19,6 @@ export class FormRepository {
     formId: string,
   ): Promise<any | null> {
     return await FormModel.findOne({
-      userId: userId,
       accountId: accountId,
       _id: formId,
     });
@@ -32,7 +31,7 @@ export class FormRepository {
     form: any,
   ): Promise<{} | null> {
     return await FormModel.findOneAndUpdate(
-      { userId: userId, accountId: accountId, _id: formId },
+      { accountId: accountId, _id: formId },
       form,
       { new: true },
     );
@@ -44,7 +43,6 @@ export class FormRepository {
     formId: string,
   ): Promise<{} | null> {
     return await FormModel.findOneAndDelete({
-      userId: userId,
       accountId: accountId,
       _id: formId,
     });

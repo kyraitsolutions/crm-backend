@@ -15,7 +15,7 @@ export class AccountRouter {
   private formController: FormController;
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
-  private emailController:EmailController;
+  private emailController: EmailController;
 
   // constructor
   constructor() {
@@ -25,7 +25,7 @@ export class AccountRouter {
     this.formController = new FormController();
     this.leadController = new LeadController();
     this.analyticsController = new AnalyticsController();
-    this.emailController=new EmailController();
+    this.emailController = new EmailController();
     this.initializeRoutes();
   }
 
@@ -57,9 +57,6 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.accountController.deleteAccount.bind(this.accountController),
     ); //done
-
-    // TODO: =============================================================================================
-
 
     // TODO:Chatbot
     this.router.get(
@@ -114,8 +111,7 @@ export class AccountRouter {
       this.chatBotController.deleteChatBot.bind(this.chatBotController),
     );
 
-     // TODO: =============================================================================================
-
+    // TODO: =============================================================================================
 
     // TODO: Forms
     this.router.get(
@@ -145,8 +141,7 @@ export class AccountRouter {
       this.formController.deleteFormId.bind(this.formController),
     );
 
-     // TODO: =============================================================================================
-
+    // TODO: =============================================================================================
 
     // TODO: Leads
     this.router.get(
@@ -180,7 +175,6 @@ export class AccountRouter {
       this.analyticsController.getOverview.bind(this.analyticsController),
     );
 
-
     // TODO: =============================================================================================
 
     // TODO: Email Campaign
@@ -192,10 +186,8 @@ export class AccountRouter {
     this.router.post(
       "/:accountId/email/template",
       AuthMiddleware.authenticate,
-      this.emailController.createTemplate.bind(this.emailController)
+      this.emailController.createTemplate.bind(this.emailController),
     );
-
-
   }
   public getRouter(): Router {
     return this.router;
