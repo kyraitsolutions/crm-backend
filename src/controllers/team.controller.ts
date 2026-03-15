@@ -59,9 +59,8 @@ export class TeamController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      logger.info(`Creating team member: ${req.body}`);
       const user = req.user as any;
-      console.log(user);
+
       const teamMember = await this.teamService.createTeamMember(
         user.id,
         req.body,

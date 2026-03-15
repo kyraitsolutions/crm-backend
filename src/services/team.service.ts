@@ -48,7 +48,6 @@ export class TeamService {
       userId: newTeamMember._id,
       firstName: teamMember.firstName,
       lastName: teamMember.lastName,
-      organizationName: "",
       accountType: "individual",
     };
 

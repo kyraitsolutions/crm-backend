@@ -150,8 +150,8 @@ export class TeamRepository {
 
     await TeamMemberAccountLeads.deleteMany({
       teamMemberId: member._id,
-      // accountId: { $in: accountIds },
-      leadId: null,
+      accountId: { $in: accountIds },
+      // leadId: null,
     });
     const results = [];
 

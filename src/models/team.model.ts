@@ -61,11 +61,11 @@ const teamMemberAccountLeadsSchema = new mongoose.Schema(
       ref: "Account",
       required: true,
     },
-    leadId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Lead",
-      required: false,
-    },
+    // leadId: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Lead",
+    //   required: false,
+    // },
     roleId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
@@ -91,7 +91,7 @@ teamMemberAccountLeadsSchema.index({ roleId: 1 });
 
 const TeamMember = mongoose.model("TeamMember", teamTeamMembersSchema);
 const TeamMemberAccountLeads = mongoose.model(
-  "TeamMemberAccountLeads",
+  "TeamMemberAccount",
   teamMemberAccountLeadsSchema,
 );
 
