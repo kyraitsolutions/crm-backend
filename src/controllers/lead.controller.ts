@@ -167,18 +167,4 @@ export class LeadController {
     }
     return null;
   };
-
-  getLeadSummary = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { accountId, leadId } = req.params;
-      const leadSummary = await this.leadService.getLeadSummary(
-        accountId,
-        leadId
-      );
-
-      httpResponse(req, res, 200, "Lead summary fetched successfully", { data: leadSummary });
-    } catch (error) {
-      next(error)
-    }
-  }
 }

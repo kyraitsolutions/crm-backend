@@ -6,6 +6,7 @@ import { UserProfileRouter } from "./userprofile.routes.js";
 import { EmailRouter } from "./email.routes.js";
 import { TeamRouter } from "./team.routes.js";
 import { SubscriptionRouter } from "./subscription.routes.js";
+import { PaymentRouter } from "./payment.route.js";
 
 export class AppRoutes {
   private chatBotRouter: ChatBotRouter;
@@ -15,6 +16,7 @@ export class AppRoutes {
   private emailRouter: EmailRouter;
   private teamRouter: TeamRouter;
   private subscriptionRouter: SubscriptionRouter;
+  private paymentRouter:PaymentRouter;
   private router: Router;
 
   constructor() {
@@ -25,6 +27,7 @@ export class AppRoutes {
     this.emailRouter = new EmailRouter();
     this.teamRouter = new TeamRouter();
     this.subscriptionRouter = new SubscriptionRouter();
+    this.paymentRouter=new PaymentRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -36,6 +39,7 @@ export class AppRoutes {
     this.router.use("/user/profile", this.userProfileRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());
     this.router.use("/email", this.emailRouter.getRouter());
+    this.router.use("/payment", this.paymentRouter.getRouter());
 
   }
 

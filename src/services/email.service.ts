@@ -58,18 +58,18 @@ export class EmailService {
     //     return result;
     // }
 
-    // async getTemplates(accountId:string):Promise<any[]>{
-    //     const templates=await this.emailRepository.getTemplates(accountId);
-    //     return templates;
-    // }
+    async getTemplates(accountId:string):Promise<any[]>{
+        const templates=await this.emailRepository.getTemplates(accountId);
+        return templates;
+    }
     // async getTemplateById(accountId:string,templateId:string):Promise<any|null>{
     //     const template=await this.emailRepository.getTemplateById(accountId,templateId);
     //     return template;
     // }
     async createTemplate(accountId:string,templateData:TEmailTemplate):Promise<any>{
         console.log("Template data:", templateData);
-        // const template=await this.emailRepository.createTemplate(accountId,templateData);
-        // return template;
+        const template=await this.emailRepository.createTemplate(accountId,templateData);
+        return template;
         return
     }
     // async updateTemplate(accountId:string,templateId:string,updateData:any):Promise<any|null>{

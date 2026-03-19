@@ -88,4 +88,16 @@ export class EmailController {
             next(error)
         }   
     };
+    getTemplates=async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            const {accountId}=req.params;  
+            const templates=await this.emailService.getTemplates(accountId);
+            
+            httpResponse(req, res, 200, "Template created successfully", {
+                data:templates
+            });
+        } catch (error) {
+            next(error)
+        }   
+    };
 };

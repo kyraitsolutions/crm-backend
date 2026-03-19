@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { ENV } from "../constants/index.js";
 import { AI_MODELS } from "./ai.constants.js";
 import OpenAi from "openai";
-import { SYSTEM_PROMPT_FOR_OPENAI } from "./ai.prompts.js";
+import { SYSTEM_PROMPT_FOR_EMAIL_TEMPLATE, SYSTEM_PROMPT_FOR_LEAD_SUMMARY } from "./ai.prompts.js";
 
 export class GeminiAIUtil {
     private googleAi: GoogleGenAI;
@@ -36,12 +36,16 @@ export class GeminiAIUtil {
         }
     }
 
-    public async runOpenAI(lead: string) {
+
+
+
+
+    public async runOpenAI(prompt: string, systemPropmt:string) {
         const res = await this.openAi.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
-                { role: "system", content: SYSTEM_PROMPT_FOR_OPENAI },
-                { role: "user", content: lead }
+                { role: "system", content: systemPropmt },
+                { role: "user", content: prompt }
             ],
             temperature: 0.3,
             max_tokens: 300,
@@ -50,6 +54,24 @@ export class GeminiAIUtil {
 
         console.log("bhhj", res.choices[0].message.content);
         return res.choices[0].message.content;
+    }
+
+    public async aiOperation(prompt:string, responseFor:string){
+        console.log("kjhvb")
+        switch(responseFor){
+            case "generateLeadSummary":
+                console.log("Operation", responseFor);
+                return await this.runOpenAI(prompt,SYSTEM_PROMPT_FOR_LEAD_SUMMARY)
+                // break;
+            case "createEmailTemplate":
+                return await this.runOpenAI(prompt,SYSTEM_PROMPT_FOR_EMAIL_TEMPLATE)
+                // console.log("Operation", responseFor);
+                // break;
+
+            default:
+                console.log("Operation not available")
+        }
+        return;
     }
 
 

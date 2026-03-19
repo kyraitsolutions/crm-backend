@@ -7,6 +7,7 @@ import { LeadController } from "../controllers/lead.controller.js";
 import AnalyticsController from "../controllers/analytics.controller.js";
 import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
 import { EmailController } from "../controllers/email.controller.js";
+import { AIController } from "../controllers/ai.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -16,6 +17,7 @@ export class AccountRouter {
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
   private emailController: EmailController;
+  private aiController:AIController
 
   // constructor
   constructor() {
@@ -26,6 +28,7 @@ export class AccountRouter {
     this.leadController = new LeadController();
     this.analyticsController = new AnalyticsController();
     this.emailController = new EmailController();
+    this.aiController = new AIController();
     this.initializeRoutes();
   }
 
@@ -155,11 +158,7 @@ export class AccountRouter {
       this.leadController.updateLead.bind(this.leadController),
     );
 
-    this.router.get(
-      "/:accountId/lead/:leadId/ai-summary",
-      AuthMiddleware.authenticate,
-      this.leadController.getLeadSummary.bind(this.leadController)
-    )
+    
 
     // TODO: Lead Webhook
     this.router.post(
@@ -183,11 +182,38 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.emailController.getSubscribers.bind(this.emailController),
     );
+
+    // TODO: =============================================================================================
+
+    // TODO: Templates
     this.router.post(
-      "/:accountId/email/template",
+      "/:accountId/template",
       AuthMiddleware.authenticate,
       this.emailController.createTemplate.bind(this.emailController),
     );
+    this.router.get(
+      "/:accountId/templates",
+      AuthMiddleware.authenticate,
+      this.emailController.getTemplates.bind(this.emailController),
+    );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: AI Operations
+
+    this.router.get(
+      "/:accountId/lead/:leadId/ai-summary",
+      AuthMiddleware.authenticate,
+      this.aiController.getLeadSummary.bind(this.aiController)
+    )
+
+    this.router.post(
+      "/:accountId/ai-template",
+      AuthMiddleware.authenticate,
+      this.aiController.createTemplateContent.bind(this.aiController)
+    )
+
   }
   public getRouter(): Router {
     return this.router;
