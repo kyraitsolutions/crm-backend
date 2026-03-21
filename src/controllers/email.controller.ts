@@ -33,31 +33,6 @@ export class EmailController {
         }
     }
 
-    
-    startEmailCampaign = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            // const user = req.user as any;
-            const { accountId } = req.params;
-            const { leadIds, subject, html } = req.body;
-
-            await this.emailService.startCampaign({
-                accountId,
-                leadIds,
-                subject,
-                html,
-                fromEmail:"kyraitsolutions"
-            });
-
-            httpResponse(req, res, 200, "Campaign setup successfully", {
-                status: true,
-                totalLeads: leadIds.length,
-            });
-        } catch (error) {
-            next(error)
-        }
-    };
-
-
 
     getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
         try {
@@ -100,4 +75,6 @@ export class EmailController {
             next(error)
         }   
     };
+
+
 };

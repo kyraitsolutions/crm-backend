@@ -8,6 +8,7 @@ import AnalyticsController from "../controllers/analytics.controller.js";
 import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
 import { EmailController } from "../controllers/email.controller.js";
 import { AIController } from "../controllers/ai.controller.js";
+import { BroadcastController } from "../controllers/broadcasting.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -17,7 +18,8 @@ export class AccountRouter {
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
   private emailController: EmailController;
-  private aiController:AIController
+  private aiController:AIController;
+  private broadcastController:BroadcastController;
 
   // constructor
   constructor() {
@@ -29,6 +31,7 @@ export class AccountRouter {
     this.analyticsController = new AnalyticsController();
     this.emailController = new EmailController();
     this.aiController = new AIController();
+    this.broadcastController=new BroadcastController();
     this.initializeRoutes();
   }
 
@@ -206,16 +209,38 @@ export class AccountRouter {
       "/:accountId/lead/:leadId/ai-summary",
       AuthMiddleware.authenticate,
       this.aiController.getLeadSummary.bind(this.aiController)
-    )
+    );
 
     this.router.post(
       "/:accountId/ai-template",
       AuthMiddleware.authenticate,
       this.aiController.createTemplateContent.bind(this.aiController)
-    )
+    );
+    this.router.post(
+      "/webhook",
+      // AuthMiddleware.authenticate,
+      this.aiController.createTemplateContent.bind(this.aiController)
+    );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: Campaign and Broadcasting
+        // 🚀 Start Email Campaign
+    this.router.post(
+      "/:accountId/campaigns/start",
+      AuthMiddleware.authenticate,
+      this.broadcastController.startEmailCampaign.bind(this.broadcastController)
+    );
+
+
 
   }
   public getRouter(): Router {
     return this.router;
   }
 }
+
+//beploy id AKfycbyZ7oQqM9UMLWhsNLbu7XtdzjWIuM8Qy4_BkHsry-ZAKxM8KSUD6BOEUk2bWHrJ0V07
+
+// webapp url https://script.google.com/macros/s/AKfycbyZ7oQqM9UMLWhsNLbu7XtdzjWIuM8Qy4_BkHsry-ZAKxM8KSUD6BOEUk2bWHrJ0V07/exec

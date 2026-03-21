@@ -36,12 +36,11 @@ export class AiService {
   async createTemplateContent(accountId: string,aiPrompt:string): Promise<any> {
 
     console.log("Account Id", accountId, "AI Prompt", aiPrompt);
-    // const lead = await this.leadRepository.getLeadById(accountId);
 
 
-    // // For Gemini
-    // // const prompt=leadSummaryPrompt(lead);
-    // // const rawResponse = await this.ai.runGoogleAI({ prompt });
+    // For Gemini
+    // const prompt=leadSummaryPrompt(lead);
+    // const rawResponse = await this.ai.runGoogleAI({ prompt });
 
     // For Open AI
     const rawResponse = await this.ai.aiOperation(aiPrompt,"createEmailTemplate");

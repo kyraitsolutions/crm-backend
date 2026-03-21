@@ -17,13 +17,6 @@ export class EmailRouter {
       AuthMiddleware.authenticate,
       this.emailController.verifyEmail.bind(this.emailController)
     );
-    // 🚀 Start Email Campaign
-    this.router.post(
-      "/:accountId/campaigns/start",
-      AuthMiddleware.authenticate,
-      this.emailController.startEmailCampaign.bind(this.emailController)
-    );
-
 
     // Template Routes
     this.router.post(

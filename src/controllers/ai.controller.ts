@@ -25,6 +25,7 @@ export class AIController {
 
     createTemplateContent = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log(req.body)
             const { accountId } = req.params;
             const {aiPrompt}=req.body;
             const templateContent = await this.aiService.createTemplateContent(
