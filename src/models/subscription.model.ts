@@ -17,12 +17,9 @@ export interface PlanDocument extends Document {
   features: string[];
   addons: string[];
 
-
-
   createdAt: Date;
   updatedAt: Date;
 }
-
 
 export type SubscriptionStatus = "active" | "expired";
 
@@ -47,22 +44,21 @@ const planSchema = new Schema(
       enum: ["free", "gold", "platinum", "payg"],
       default: "free",
       required: true,
-      unique: true
+      unique: true,
     },
     maxAccounts: { type: Number, default: 1 },
     maxChatbots: { type: Number, default: 1 },
     maxWebforms: { type: Number, default: 1 },
 
-
     description: { type: String, default: "" },
     featured: { type: Boolean, default: false },
-    price: { 
+    price: {
       monthly: { type: Number, default: 0 },
-      annually: { type: Number, default: 0 }
-     }, // ₹ or $
+      annually: { type: Number, default: 0 },
+    }, // ₹ or $
     period: { type: String, default: "month" }, // or "year"
     durationDays: { type: Number, default: 30 }, // plan validity
-    button: { type: String},
+    button: { type: String },
     features: [{ type: String }],
     addons: [{ type: String }],
   },
@@ -75,28 +71,27 @@ const planSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
-
 
 const userSubscriptionSchema = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
 
     planId: {
       type: Schema.Types.ObjectId,
       ref: "Plan",
-      required: true
+      required: true,
     },
 
     status: {
       type: String,
       enum: ["active", "expired"],
-      default: "active"
+      default: "active",
     },
 
     startedAt: { type: Date, default: Date.now },
@@ -115,14 +110,14 @@ const userSubscriptionSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
 
 userSubscriptionSchema.index({ userId: 1 });
 userSubscriptionSchema.index({ planId: 1 });
 
-
 export const Plan = model<PlanDocument>("Plan", planSchema);
-export const UserSubscription = model<UserSubscriptionDocument>("UserSubscription", userSubscriptionSchema);
-
-
+export const UserSubscription = model<UserSubscriptionDocument>(
+  "UserSubscription",
+  userSubscriptionSchema,
+);

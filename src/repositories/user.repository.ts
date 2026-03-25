@@ -3,6 +3,9 @@ import { RoleModel, UserModel } from "../models/user.model.js";
 import mongoose from "mongoose";
 
 export class UserRepository {
+  async findAll(): Promise<TUser[]> {
+    return await UserModel.find();
+  }
   async findById(id: string): Promise<TUser | null> {
     const user = await UserModel.aggregate([
       {
@@ -23,18 +26,18 @@ export class UserRepository {
         },
       },
       {
-        $lookup:{
-          from:"usersubscriptions",
-          localField:"_id",
-          foreignField:"userId",
-          as:"usersubscription"
-        }
+        $lookup: {
+          from: "usersubscriptions",
+          localField: "_id",
+          foreignField: "userId",
+          as: "usersubscription",
+        },
       },
       {
-        $unwind:{
-          path:"$usersubscription",
+        $unwind: {
+          path: "$usersubscription",
           preserveNullAndEmptyArrays: true,
-        }
+        },
       },
       {
         $project: {
@@ -51,7 +54,7 @@ export class UserRepository {
           "userprofile.lastName": 1,
           "userprofile.organizationName": 1,
           "userprofile.accountType": 1,
-          "usersubscription.planId":1,
+          "usersubscription.planId": 1,
         },
       },
     ]);
@@ -74,10 +77,19 @@ export class UserRepository {
     return await UserModel.create({ ...data, roleId: role?._id });
   }
 
-  async createTeamUser(email:any): Promise<any> {
+  async createTeamUser(email: any): Promise<any> {
     const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
-    return await UserModel.create({email:email, roleId: role?._id, onboarding:true });
-    // return null;
+
+    const isUserExist = await UserModel.findOne({ email: email });
+
+    if (!isUserExist) {
+      return await UserModel.create({
+        email: email,
+        roleId: role?._id,
+        onboarding: true,
+      });
+    }
+    throw new Error("User already assigned");
   }
 
   async update(id: string, data: TUpdateUser): Promise<TUser | null> {
@@ -87,9 +99,5 @@ export class UserRepository {
   async delete(id: string): Promise<boolean> {
     const result = await UserModel.findByIdAndDelete(id);
     return !!result;
-  }
-
-  async findAll(): Promise<TUser[]> {
-    return await UserModel.find();
   }
 }

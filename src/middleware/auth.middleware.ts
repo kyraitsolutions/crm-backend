@@ -1,31 +1,37 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { ENV } from "../constants/index.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
     passport.authenticate(
       "jwt",
       { session: false },
-      (err: any, user: any, _info: any) => {
+      async (err: any, user: any, _info: any) => {
         if (err) {
           return next(err);
         }
         if (!user) {
           return res.status(401).json({ message: "Unauthorized" });
         }
-        req.user = user;
+        const organizationMember = await OrganizationMember.findOne({
+          userId: user.id,
+        });
+        req.user = {
+          ...user,
+          organizationId: organizationMember?.organizationId,
+        };
         next();
-      }
+      },
     )(req, res, next);
   }
 
   static googleAuth() {
     return (req: Request, res: Response, next: NextFunction) => {
-      const platform =
-        req.query.platform === "mobile" ? "mobile" : "web";
+      const platform = req.query.platform === "mobile" ? "mobile" : "web";
 
-        console.log("Platfrom in middleware",platform);
+      console.log("Platfrom in middleware", platform);
 
       passport.authenticate("google", {
         scope: ["profile", "email"],
@@ -57,9 +63,8 @@ export class ErrorMiddleware {
     err: any,
     _req: Request,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): void {
-
     const statusCode = err.statusCode || 500;
     const message = err.message || "Internal server error";
 

@@ -1,17 +1,23 @@
 // authorization.middleware.ts
-import { NextFunction, Response } from "express";
+import { NextFunction, Response, Request } from "express";
 import passport from "passport";
 import { ObjectId } from "mongodb";
 import { USERROLE } from "../enums/user.enum.js";
 import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
 import { AuthUser, RequestWithUser } from "../types/core.js";
 import httpResponse from "../utils/http.response.js";
+import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
+import { hasPermission } from "../rbac/hasPermission.js";
 
-const isRoleMatch = (userRoleId?: string | ObjectId | null, targetRoleId?: string): boolean => {
+const isRoleMatch = (
+  userRoleId?: string | ObjectId | null,
+  targetRoleId?: string,
+): boolean => {
   if (!userRoleId || !targetRoleId) {
     return false;
   }
-  const userRoleString = typeof userRoleId === "string" ? userRoleId : userRoleId.toString();
+  const userRoleString =
+    typeof userRoleId === "string" ? userRoleId : userRoleId.toString();
   return userRoleString === targetRoleId;
 };
 
@@ -29,51 +35,49 @@ const normalizeObjectId = (id?: string): ObjectId | null => {
 export const requireAuth = (
   req: RequestWithUser,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void => {
-  passport.authenticate("jwt", { session: false }, (err: unknown, user: AuthUser | false) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return httpResponse(req, res, 401, "Unauthorized");
-    }
+  passport.authenticate(
+    "jwt",
+    { session: false },
+    (err: unknown, user: AuthUser | false) => {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return httpResponse(req, res, 401, "Unauthorized");
+      }
 
-    // Harden user id extraction
-    // Assuming passport strategy returns User document or AuthUser object
-    if (!user.id && !(user as any)._id) {
-      return httpResponse(req, res, 401, "Unauthorized - User ID missing");
-    }
+      // Harden user id extraction
+      // Assuming passport strategy returns User document or AuthUser object
+      if (!user.id && !(user as any)._id) {
+        return httpResponse(req, res, 401, "Unauthorized - User ID missing");
+      }
 
-    // Normalize req.user
-    const userId = user.id || (user as any)._id.toString();
-    const roleId = user.roleId || (user as any).roleId; // Keep as is, let isRoleMatch handle string/ObjectId
+      // Normalize req.user
+      const userId = user.id || (user as any)._id.toString();
+      const roleId = user.roleId || (user as any).roleId; // Keep as is, let isRoleMatch handle string/ObjectId
 
-    req.user = {
-      id: userId,
-      email: user.email,
-      roleId: roleId,
-      accountIds: user.accountIds,
-    };
+      req.user = {
+        id: userId,
+        email: user.email,
+        roleId: roleId,
+        accountIds: user.accountIds,
+      };
 
-    return next();
-  })(req, res, next);
+      return next();
+    },
+  )(req, res, next);
 };
 
 export const authorizeRole = (roles: USERROLE[]) => {
-  return (
-    req: RequestWithUser,
-    res: Response,
-    next: NextFunction
-  ): void => {
+  return (req: RequestWithUser, res: Response, next: NextFunction): void => {
     if (!req.user) {
       httpResponse(req, res, 401, "Unauthorized");
       return;
     }
 
-    const hasRole = roles.some((role) =>
-      isRoleMatch(req.user?.roleId, role)
-    );
+    const hasRole = roles.some((role) => isRoleMatch(req.user?.roleId, role));
 
     if (!hasRole) {
       httpResponse(req, res, 403, "Forbidden");
@@ -84,11 +88,10 @@ export const authorizeRole = (roles: USERROLE[]) => {
   };
 };
 
-
 export const accountAccess = async (
   req: RequestWithUser,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void> => {
   if (!req.user || !req.user.id) {
     httpResponse(req, res, 401, "Unauthorized");
@@ -117,7 +120,7 @@ export const accountAccess = async (
     return;
   }
 
-  // Check if user is the Owner of the account? 
+  // Check if user is the Owner of the account?
   // Need to check specific logic. Typically account owners have relation to account.
   // Assuming AccountOwner role logic or just checking if they own the account resource?
   // User might not have ACCOUNT_MANAGER role but still valid.
@@ -125,7 +128,7 @@ export const accountAccess = async (
 
   const allowedRoles = [USERROLE.ACCOUNT_MANAGER, USERROLE.TEAM_MEMBER];
   const hasAllowedRole = allowedRoles.some((role) =>
-    isRoleMatch(req.user?.roleId, role)
+    isRoleMatch(req.user?.roleId, role),
   );
 
   // If they are AccountOwner (if that role exists?) or maybe check Account ownership directly?
@@ -150,7 +153,7 @@ export const accountAccess = async (
 
     if (!teamMember) {
       // Fallback: Check if user OWNS the account (if schema has userId)
-      // We need to import AccountModel to check ownership if TeamMember fails? 
+      // We need to import AccountModel to check ownership if TeamMember fails?
       // Or assume strictly Team context.
       // Given constraint: "AccountManager / TeamMember... can do CRUD only inside assigned account(s)".
       // Admin can do everything.
@@ -175,3 +178,22 @@ export const accountAccess = async (
   }
 };
 
+export const requirePermission = (permission: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user || !req.user.id) {
+      httpResponse(req, res, 401, "Unauthorized");
+      return;
+    }
+
+    const role = req?.user?.roleId;
+    const permissions = ROLE_PERMISSIONS[role as USERROLE];
+
+    const hasPermissions = hasPermission(permissions, permission);
+
+    if (!hasPermissions) {
+      throw new Error(`You don't have permission to ${permission}`);
+    }
+
+    next();
+  };
+};

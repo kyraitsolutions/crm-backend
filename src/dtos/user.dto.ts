@@ -1,7 +1,6 @@
 export class UserDto {
   id: string;
   email: string;
-  profilePicture?: string | null;
   onboarding: boolean;
   roleId: string;
   createdAt: Date;
@@ -10,10 +9,11 @@ export class UserDto {
     accountType: string;
     firstName: string | null;
     lastName: string | null;
+    profilePicture?: string | null;
     organizationName: string | null;
   };
   usersubscription?: {
-    planId: string
+    planId: string;
   };
 
   constructor(data: {
@@ -31,20 +31,17 @@ export class UserDto {
       organizationName: string | null;
     };
     usersubscription?: {
-      planId: string
+      planId: string;
     };
-
   }) {
     this.id = data._id;
     this.email = data.email;
-    this.profilePicture = data.profilePicture;
     this.onboarding = data.onboarding;
-    this.roleId = data.roleId
+    this.roleId = data.roleId;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
     this.userprofile = data.userprofile;
-    this.usersubscription = data.usersubscription
-
+    this.usersubscription = data.usersubscription;
   }
 }
 
@@ -52,7 +49,6 @@ export class CreateUserDto {
   email: string;
   password?: string;
   googleId?: string;
-  profilePicture?: string;
   onboarding: boolean;
   roleId: string;
 
@@ -67,21 +63,14 @@ export class CreateUserDto {
     this.email = data.email;
     this.password = data.password;
     this.googleId = data.googleId;
-    this.profilePicture = data.profilePicture;
     this.onboarding = data.onboarding;
-    this.roleId = data.roleId
+    this.roleId = data.roleId;
   }
 }
 
 export class UpdateUserDto {
-  profilePicture?: string;
   onboarding: boolean;
-
-  constructor(data: {
-    profilePicture?: string;
-    onboarding: boolean;
-  }) {
-    this.profilePicture = data.profilePicture;
+  constructor(data: { profilePicture?: string; onboarding: boolean }) {
     this.onboarding = data.onboarding;
   }
 }

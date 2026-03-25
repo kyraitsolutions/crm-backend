@@ -1,13 +1,17 @@
 import { Request } from "express";
 import { Types } from "mongoose";
 
-export type RoleName = "ADMIN" | "ACCOUNT_MANAGER" | "TEAM_MEMBER" | "LEAD_MANAGER";
+export type RoleName =
+  | "ADMIN"
+  | "ACCOUNT_MANAGER"
+  | "TEAM_MEMBER"
+  | "LEAD_MANAGER";
 
 export interface AuthUser {
   id: string;
   email?: string;
   roleId?: string | Types.ObjectId | null;
-  accountIds?: string[];
+  organizationId?: string | Types.ObjectId | null;
 }
 
 export type RequestWithUser = Request & { user: AuthUser };
@@ -42,4 +46,3 @@ export interface AccountDtoShape {
   createdAt: Date;
   updatedAt: Date;
 }
-

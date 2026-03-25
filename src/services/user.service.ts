@@ -1,26 +1,37 @@
-import { SubscriptionRepository } from './../repositories/subscription.repository.js';
-import { EmailService } from './email.service.js';
+import { SubscriptionRepository } from "./../repositories/subscription.repository.js";
+import { EmailService } from "./email.service.js";
 import { UserRepository } from "../repositories/user.repository.js";
-import { UserDto, AuthResponseDto, RegisterDto, LoginDto } from "../dtos/index.js";
+import {
+  UserDto,
+  AuthResponseDto,
+  RegisterDto,
+  LoginDto,
+} from "../dtos/index.js";
 import { JwtUtil, PasswordUtil } from "../utils/index.js";
 import { TCreateUser, TUpdateUser } from "../types/index.js";
-import { TeamMember } from '../models/team.model.js';
-import { SubscriptionPlan } from '../enums/subscription.enum.js';
+import { TeamMember } from "../models/team.model.js";
+import { SubscriptionPlan } from "../enums/subscription.enum.js";
+import { UserProfileRepository } from "../repositories/userprofile.repository.js";
+import { TCreateUserProfile } from "../types/userprofile.type.js";
+import { CreateOnboardingDto, OnboardingDto } from "../dtos/userprofile.dto.js";
 
 export class UserService {
   private userRepository: UserRepository;
   private emailService: EmailService;
-  private subscriptionRepository: SubscriptionRepository
-
+  private subscriptionRepository: SubscriptionRepository;
+  private userProfileRepository: UserProfileRepository;
 
   constructor() {
     this.userRepository = new UserRepository();
+    this.userProfileRepository = new UserProfileRepository();
     this.emailService = new EmailService();
     this.subscriptionRepository = new SubscriptionRepository();
+    this.userProfileRepository = new UserProfileRepository();
   }
 
   async register(dto: RegisterDto): Promise<AuthResponseDto> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
+
     if (existingUser) {
       throw new Error("User with this email already exists");
     }
@@ -48,7 +59,7 @@ export class UserService {
 
     const isPasswordValid = await PasswordUtil.compare(
       dto.password,
-      user.password
+      user.password,
     );
     if (!isPasswordValid) {
       throw new Error("Invalid credentials");
@@ -60,23 +71,53 @@ export class UserService {
     return new AuthResponseDto({ user: userDto, token });
   }
 
+  async createOnboarding(
+    id: string,
+    email: string,
+    dto: CreateOnboardingDto,
+  ): Promise<any> {
+    const onboardingData: TCreateUserProfile = {
+      userId: id,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+      profilePicture: dto.profilePicture,
+      phone: dto.phone,
+      address: dto.address,
+    };
+
+    const isExist = await this.userProfileRepository.findByUserId(id);
+
+    if (isExist) {
+      const id = isExist.userId;
+      const userProfile = this.userProfileRepository?.update(
+        id,
+        onboardingData,
+      );
+
+      const dataToUpdate: TUpdateUser = {
+        onboarding: true,
+      };
+
+      await this.userRepository.update(isExist.userId, dataToUpdate);
+
+      return userProfile;
+    }
+  }
+
   async findOrCreateGoogleUser(profile: any): Promise<UserDto> {
-
-
     const googleId = profile.id;
     const email = profile.emails?.[0]?.value;
     const profilePicture = profile.photos?.[0]?.value;
-
 
     if (!email) throw new Error("Google profile does not contain email");
 
     // 1. Check if user already registered with this googleId
     let user = await this.userRepository.findByGoogleId(googleId);
+
     if (user) {
       // User already connected with Google → do NOT update email/googleId
       return new UserDto(user as any);
     }
-
 
     // 2. If googleId not found, check if user exists by email
     user = await this.userRepository.findByEmail(email);
@@ -84,12 +125,15 @@ export class UserService {
       // Existing user (ex: team member), but missing googleId
       user = await this.userRepository.update(user.id, {
         googleId,
-        profilePicture,
       });
 
       const teamMember = await TeamMember.findOne({ userId: user?.id });
+
       if (teamMember) {
-        await TeamMember.updateOne({ userId: user?.id }, { inviteStatus: "ACCEPTED" });
+        await TeamMember.updateOne(
+          { userId: user?.id },
+          { inviteStatus: "ACCEPTED" },
+        );
       }
       return new UserDto(user as any);
     }
@@ -98,13 +142,21 @@ export class UserService {
     const userData: TCreateUser = {
       email,
       googleId,
-      profilePicture,
     };
 
     const newUser = await this.userRepository.create(userData);
-    await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+
+    await this.userProfileRepository.create({
+      userId: newUser.id,
+      profilePicture,
+    });
+
+    await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE);
     // const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
-    this.emailService.queueWelcomeEmail(email, "https://crm.kyraitsolutions.com/login");
+    this.emailService.queueWelcomeEmail(
+      email,
+      "https://crm.kyraitsolutions.com/login",
+    );
 
     return new UserDto(newUser as any);
   }
@@ -117,10 +169,11 @@ export class UserService {
 
   async updateUser(id: string, data: TUpdateUser): Promise<UserDto> {
     const user = await this.userRepository.update(id, data);
+
     if (!user) {
       throw new Error("User not found");
     }
-    return new UserDto(user   as any);
+    return new UserDto(user as any);
   }
 
   async deleteUser(id: string): Promise<boolean> {
