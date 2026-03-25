@@ -5,13 +5,16 @@ import { AccountService } from "../services/account.service";
 import { OrganizationService } from "../services/organization.service";
 import { generateSlug } from "../utils";
 import httpResponse from "../utils/http.response";
+import { UserProfileService } from "../services/userprofile.service";
 
 export class OrganizationController {
   private userService: UserService;
   private accountService: AccountService;
   private organizationService: OrganizationService;
+  private userProfileService: UserProfileService;
   constructor() {
     this.userService = new UserService();
+    this.userProfileService = new UserProfileService();
     this.accountService = new AccountService();
     this.organizationService = new OrganizationService();
   }
@@ -34,11 +37,15 @@ export class OrganizationController {
         name: companyName,
       };
 
+      const createProfileDataPayload = req.body;
+
       const createOrganizationPayloadDto = new CreateOrganizationDto(
         organizationDataPayload,
       );
 
-      console.log(createOrganizationPayloadDto);
+      const createProfileDataPayloadDto = new createProfileDataPayload(
+        createProfileDataPayload,
+      );
 
       const isOrganzitionExist =
         await this.organizationService.isOrganizationExists(user?.id as string);
@@ -50,10 +57,14 @@ export class OrganizationController {
       }
 
       if (!isOrganzitionExist) {
+        await this.userProfileService.createUserProfile(
+          createProfileDataPayloadDto,
+        );
         const organization = await this.organizationService.createOrganization(
           createOrganizationPayloadDto,
         );
         orgId = organization?._id;
+
         const organizationMemberDataPayload = {
           userId: user?.id as string,
           organizationId: organization?._id as string,

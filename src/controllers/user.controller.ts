@@ -1,23 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { Types } from "mongoose";
 import { ENV } from "../constants/index.js";
-import { LoginDto, RegisterDto, UpdateUserDto } from "../dtos/index.js";
-import { CreateOnboardingDto } from "../dtos/userprofile.dto.js";
+import { LoginDto, RegisterDto } from "../dtos/index.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
-import { OrganizationService } from "../services/organization.service.js";
 import { UserService } from "../services/user.service.js";
 
-import { TOrganization } from "../types/organization.type.js";
 import httpResponse from "../utils/http.response.js";
-import { generateSlug } from "../utils/typography.js";
 
 export class UserController {
   private userService: UserService;
-  private organizationService: OrganizationService;
-
   constructor() {
     this.userService = new UserService();
-    this.organizationService = new OrganizationService();
   }
 
   register = async (
@@ -69,40 +61,17 @@ export class UserController {
     }
   };
 
-  getMe = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getMe = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const user = req.user;
-      const { include } = req.query;
+      const userId = (req.user as any).id;
 
       const includes =
-        (include as string)?.split(",")?.map((i) => i.trim()) || [];
+        (req.query.include as string)?.split(",").map((i) => i.trim()) || [];
 
-      let organization = null;
+      const data = await this.userService.getMe(userId, includes);
 
-      if (includes.includes("organization")) {
-        delete user?.organizationId;
-
-        const organizationDetails =
-          await this.organizationService.getOrganizationMembersByUserId(
-            user?.id as string,
-          );
-
-        console.log(organizationDetails);
-
-        organization = organizationDetails?.organizationId;
-      } else {
-        delete user?.organizationId;
-      }
-
-      httpResponse(req, res, 200, "Account information fetched successfully", {
-        docs: {
-          ...user,
-          ...(organization && { organization }),
-        },
+      httpResponse(req, res, 200, "Account fetched successfully", {
+        docs: data,
       });
     } catch (error) {
       next(error);

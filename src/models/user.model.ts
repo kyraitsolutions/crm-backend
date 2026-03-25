@@ -1,7 +1,9 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { TUser } from "../types";
 
-const userSchema = new Schema<TUser>(
+export type TUserDocument = TUser & Document;
+
+const userSchema = new Schema(
   {
     email: { type: String, required: true, unique: true },
     password: { type: String },
@@ -10,7 +12,7 @@ const userSchema = new Schema<TUser>(
     roleId: { type: Schema.Types.ObjectId, ref: "Role" },
     onboarding: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const UserModel = model<TUser>("User", userSchema);

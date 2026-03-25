@@ -2,6 +2,7 @@ import { Document, model, Schema } from "mongoose";
 import { TOrganization } from "../types/organization.type";
 
 export type TOrganizationDocument = TOrganization & Document;
+
 const organizationSchema = new Schema(
   {
     name: {

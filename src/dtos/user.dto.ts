@@ -1,77 +1,93 @@
 export class UserDto {
-  id: string;
+  id?: string;
   email: string;
   onboarding: boolean;
   roleId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userprofile?: {
-    accountType: string;
-    firstName: string | null;
-    lastName: string | null;
-    profilePicture?: string | null;
-    organizationName: string | null;
-  };
-  usersubscription?: {
-    planId: string;
-  };
 
-  constructor(data: {
-    _id: string;
-    email: string;
-    profilePicture?: string | null;
-    onboarding: boolean;
-    roleId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    userprofile?: {
-      accountType: string;
-      firstName: string | null;
-      lastName: string | null;
-      organizationName: string | null;
-    };
-    usersubscription?: {
-      planId: string;
-    };
-  }) {
-    this.id = data._id;
-    this.email = data.email;
-    this.onboarding = data.onboarding;
-    this.roleId = data.roleId;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
-    this.userprofile = data.userprofile;
-    this.usersubscription = data.usersubscription;
-  }
-}
-
-export class CreateUserDto {
-  email: string;
-  password?: string;
-  googleId?: string;
-  onboarding: boolean;
-  roleId: string;
-
-  constructor(data: {
-    email: string;
-    password?: string;
-    googleId?: string;
+  userProfile?: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
     profilePicture?: string;
+    address?: {
+      city: string;
+      state: string;
+      country: string;
+      pincode: string;
+      addressLine1: string;
+      addressLine2: string;
+    };
+  };
+
+  organization?: {
+    id?: string;
+    name?: string;
+  };
+
+  userSubscription?: {
+    plan: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  constructor(data: {
+    id?: string;
+    email: string;
     onboarding: boolean;
     roleId: string;
+    profilePicture?: string | null;
+    userProfile?: {
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      profilePicture?: string;
+      address?: {
+        city: string;
+        state: string;
+        country: string;
+        pincode: string;
+        addressLine1: string;
+        addressLine2: string;
+      };
+    };
+    organization?: {
+      id?: string;
+      name?: string;
+    };
+    userSubscription?: {
+      plan: string;
+      startDate: Date;
+      endDate: Date;
+    };
   }) {
+    this.id = data.id;
     this.email = data.email;
-    this.password = data.password;
-    this.googleId = data.googleId;
     this.onboarding = data.onboarding;
     this.roleId = data.roleId;
+    this.userProfile = data.userProfile;
+    this.organization = data.organization;
+    this.userSubscription = data.userSubscription;
   }
 }
 
-export class UpdateUserDto {
-  onboarding: boolean;
-  constructor(data: { profilePicture?: string; onboarding: boolean }) {
-    this.onboarding = data.onboarding;
+export class CreateAndUpdateUserDto {
+  email: string;
+  googleId?: string;
+  password?: string;
+  onboarding?: boolean;
+  roleId?: string;
+
+  constructor(data: {
+    email: string;
+    googleId?: string;
+    password?: string;
+    profilePicture?: string;
+    onboarding?: boolean;
+    roleId?: string;
+  }) {
+    this.email = data.email;
+    this.googleId = data.googleId;
+    Object.assign(this, data);
   }
 }
 

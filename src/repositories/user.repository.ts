@@ -1,6 +1,7 @@
-import { TCreateUser, TUpdateUser, TUser } from "../types/user.type.js";
-import { RoleModel, UserModel } from "../models/user.model.js";
 import mongoose from "mongoose";
+import { RoleModel, TUserDocument, UserModel } from "../models/user.model.js";
+import { TUser } from "../types/user.type.js";
+import { CreateAndUpdateUserDto } from "../dtos/user.dto.js";
 
 export class UserRepository {
   async findAll(): Promise<TUser[]> {
@@ -72,7 +73,7 @@ export class UserRepository {
     return await UserModel.findOne({ googleId });
   }
 
-  async create(data: TCreateUser): Promise<TUser> {
+  async create(data: CreateAndUpdateUserDto): Promise<TUser | null> {
     const role = await RoleModel.findOne({ name: "ADMIN" });
     return await UserModel.create({ ...data, roleId: role?._id });
   }
@@ -92,7 +93,10 @@ export class UserRepository {
     throw new Error("User already assigned");
   }
 
-  async update(id: string, data: TUpdateUser): Promise<TUser | null> {
+  async update(
+    id: string,
+    data: CreateAndUpdateUserDto,
+  ): Promise<TUser | null> {
     return await UserModel.findByIdAndUpdate(id, data, { new: true });
   }
 
