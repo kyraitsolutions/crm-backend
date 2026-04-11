@@ -7,57 +7,70 @@ import { TCreateUserProfile } from "../types/userprofile.type.js";
 import { EmailService } from "./email.service.js";
 import { USERROLE } from "../enums/user.enum.js";
 import { ObjectId } from "mongodb";
+import { OrganizationRepository } from "../repositories/organization.repository.js";
+import { TOrganizationMember } from "../types/organization.type.js";
 
 export class TeamService {
   private teamRepository: TeamRepository;
   private userRepository: UserRepository;
   private emailService: EmailService;
   private userprofileRepository: UserProfileRepository;
+  private organizationRepository: OrganizationRepository;
   constructor() {
     this.userRepository = new UserRepository();
     this.emailService = new EmailService();
     this.teamRepository = new TeamRepository();
     this.userprofileRepository = new UserProfileRepository();
+    this.organizationRepository = new OrganizationRepository();
   }
-  async getTeamMembers(orgId: string, roleId: string): Promise<any[]> {
-    const isTeamMember = new ObjectId(USERROLE.ACCOUNT_MANAGER).equals(roleId);
-    const teamMember = await this.getTeamMemberById(orgId);
-
-    let organizationId = isTeamMember ? teamMember.orgId : orgId;
-    const teamMembers =
-      await this.teamRepository.getTeamMembers(organizationId);
+  async getTeamMembers(orgId: string): Promise<any[]> {
+    const teamMembers = await this.teamRepository.getTeamMembers(orgId);
     return (
       teamMembers?.map((teamMember: any) => new TeamMemberDto(teamMember)) ?? []
     );
   }
   async getTeamMemberById(id: string): Promise<any> {
     const teamMember = await this.teamRepository.getTeamMemberById(id);
-    // return teamMember ? new TeamMemberDto(teamMember) : null;
     return teamMember ? teamMember : null;
   }
   async createTeamMember(
+    userId: string,
     orgId: string,
     teamMember: CreateTeamMemberDto,
   ): Promise<any> {
+    // create tema member user
     const newTeamMember = await this.userRepository.createTeamUser(
-      teamMember.email,
+      teamMember?.email,
     );
 
-    // user profile
-    const onboardingData: TCreateUserProfile = {
+    // create user profile
+    const newTeamMemberProfilePayload: TCreateUserProfile = {
       userId: newTeamMember._id,
       firstName: teamMember.firstName,
       lastName: teamMember.lastName,
-      organizationName: "",
-      accountType: "individual",
     };
 
-    const newOnboarding =
-      await this.userprofileRepository.create(onboardingData);
+    const newTeamMemberProfile = await this.userprofileRepository.create(
+      newTeamMemberProfilePayload,
+    );
+
+    // create organization member
+    const newOrganizationMemberPayload: TOrganizationMember = {
+      organizationId: orgId,
+      userId: newTeamMember._id,
+      role: "ACCOUNT_MANAGER",
+      invitedBy: userId,
+      isActive: true,
+    };
+
+    await this.organizationRepository.createOrganizationMember(
+      newOrganizationMemberPayload,
+    );
 
     const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
 
     if (!role) throw new Error("Role not found");
+
     // team member create
     const teamMemberData = {
       orgId: orgId,
@@ -74,15 +87,13 @@ export class TeamService {
     const url = `${process.env.FRONTEND_URL}/login`;
     this.emailService.queueWelcomeEmail(teamMember.email, url);
 
-    // return createdTeamMember ? new TeamMemberDto(createdTeamMember) : null;
-    // return null;
     return new TeamMemberDto({
       _id: createdTeamMember._id.toString(),
       teamMemberId: createdTeamMember._id.toString(),
       userId: newTeamMember._id.toString(),
       roleId: role._id.toString(),
-      firstName: newOnboarding.firstName,
-      lastName: newOnboarding.lastName,
+      firstName: newTeamMemberProfile.firstName,
+      lastName: newTeamMemberProfile.lastName,
       email: newTeamMember.email,
       inviteStatus: createdTeamMember.inviteStatus,
       roleName: role.name!,
@@ -103,17 +114,15 @@ export class TeamService {
     const deletedTeamMember = await this.teamRepository.deleteTeamMember(id);
     return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
   }
-
   async assignAccountToMember(
-    memberId: string,
+    userId: string,
+    orgId: string,
     accountIds: any,
-    leadId: string,
   ): Promise<any> {
-    console.log("aya yaha par");
     const assignment = await this.teamRepository.assignAccountToMember(
-      memberId,
+      userId,
+      orgId,
       accountIds,
-      leadId,
     );
     return assignment;
   }

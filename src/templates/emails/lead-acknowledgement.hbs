@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>We Received Your Enquiry</title>
+</head>
+
+<body style="margin:0;padding:0;background:#f2f4f8;font-family:Arial,Helvetica,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center">
+
+<!-- Email Card -->
+
+<table width="620" cellpadding="0" cellspacing="0"
+style="background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e6e8ec;box-shadow:0 8px 30px rgba(0,0,0,0.05)">
+
+<!-- Header -->
+
+<tr>
+<td style="padding:26px 32px;background:#111827;color:#ffffff;font-size:20px;font-weight:bold;letter-spacing:0.3px">
+{{accountName}}
+</td>
+</tr>
+
+
+<!-- Greeting -->
+
+<tr>
+<td style="padding:32px 32px 10px 32px;font-size:15px;color:#374151;line-height:24px">
+
+<p style="margin-top:0;font-size:16px">
+Hello <strong>{{name}}</strong>,
+</p>
+
+<p>
+Thank you for contacting <strong>{{accountName}}</strong>.  
+We have successfully received your enquiry and our team will review it shortly.
+</p>
+
+</td>
+</tr>
+
+<!-- Lead Details -->
+
+<tr>
+<td style="padding:0 32px 25px 32px">
+
+<table width="100%" cellpadding="0" cellspacing="0"
+style="background:#f9fafb;border-radius:8px;border:1px solid #e5e7eb">
+
+<tr>
+<td colspan="2" style="padding:14px 18px;font-size:14px;font-weight:bold;color:#111827;border-bottom:1px solid #e5e7eb">
+Submitted Details
+</td>
+</tr>
+
+<tr>
+<td style="padding:12px 18px;font-size:13px;color:#6b7280;width:140px">Name</td>
+<td style="padding:12px 18px;font-size:14px;color:#111827">{{name}}</td>
+</tr>
+
+<tr>
+<td style="padding:12px 18px;font-size:13px;color:#6b7280">Email</td>
+<td style="padding:12px 18px;font-size:14px;color:#111827">{{email}}</td>
+</tr>
+
+<tr>
+<td style="padding:12px 18px;font-size:13px;color:#6b7280">Phone</td>
+<td style="padding:12px 18px;font-size:14px;color:#111827">{{phone}}</td>
+</tr>
+
+<tr>
+<td style="padding:12px 18px;font-size:13px;color:#6b7280">Source</td>
+<td style="padding:12px 18px;font-size:14px;color:#111827">{{source}}</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+
+<!-- Message -->
+
+<tr>
+<td style="padding:0 32px 25px 32px;font-size:15px;color:#374151;line-height:24px">
+
+<p>
+Our team will get back to you soon.  
+If you need to add more information, simply reply to this email.
+</p>
+
+</td>
+</tr>
+
+<!-- Support Section -->
+
+<tr>
+<td style="padding:22px 32px;background:#fafafa;border-top:1px solid #e5e7eb">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+
+<td style="font-size:14px;color:#374151">
+Need help?
+</td>
+
+<td align="right">
+<a href="mailto:{{supportEmail}}"
+style="background:#111827;color:#ffffff; margin-left: 12px; padding:10px 16px;border-radius:6px;text-decoration:none;font-size:13px">
+Contact Support
+</a>
+</td>
+
+</tr>
+</table>
+
+<p style="margin-top:10px;font-size:13px;color:#6b7280">
+{{supportEmail}}
+</p>
+
+</td>
+</tr>
+
+<!-- Footer -->
+
+<tr>
+<td style="padding:28px 32px;background:#f9fafb;font-size:13px;color:#6b7280">
+
+<p style="margin:0 0 8px 0">
+Best Regards,<br>
+<strong>{{accountName}} Team</strong>
+</p>
+
+<p style="margin:8px 0 0 0">
+© {{year}} {{accountName}}. All rights reserved.
+</p>
+
+<p style="margin-top:14px;font-size:12px;color:#9ca3af">
+You received this email because you submitted an enquiry through
+<strong>{{source.name}}</strong>.
+</p>
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>

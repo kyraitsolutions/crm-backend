@@ -34,20 +34,18 @@ export class GeminiAIUtilsfd {
   //   }
   // }
 
-
-  public async runAI({prompt,model="gemini-1.5-pro"}:any){
-
-    if(!prompt){
+  public async runAI({ prompt, model = "gemini-1.5-pro" }: any) {
+    if (!prompt) {
       throw new Error("Prompt is required");
     }
     try {
-      const result=await this.ai.models.generateContent({
+      const result = await this.ai.models.generateContent({
         model,
-        contents:prompt,
+        contents: prompt,
       });
-      return result.text??"";
+      return result.text ?? "";
     } catch (error) {
-       console.error("Gemini AI generation failed:", error);
+      console.error("Gemini AI generation failed:", error);
       throw error;
     }
   }

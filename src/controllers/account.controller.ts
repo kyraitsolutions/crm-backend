@@ -16,9 +16,10 @@ export class AccountController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
+      const user = req.user;
 
       const accounts = await this.accountService.getAllAccounts(user);
+
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
         limit: 10,
@@ -35,13 +36,12 @@ export class AccountController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
-      const accountId = req.params.accountId;
-      const result = await this.accountService.getAccountById(
-        user.id,
-        accountId,
-      );
-      res.status(200).json(result);
+      const { accountId } = req.params;
+      const result = await this.accountService.getAccountById(accountId);
+
+      httpResponse(req, res, 200, "Account fetched successfully", {
+        doc: result,
+      });
     } catch (error) {
       next(error);
     }
@@ -53,21 +53,18 @@ export class AccountController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
+      const user = req.user;
       const createAccountDto = new CreateAccountDto(req.body);
+
       const result = await this.accountService.createAccount(
-        user.id,
+        user?.id as string,
+        user?.organizationId as string,
         createAccountDto,
       );
-      if (result.isExist) {
-        httpResponse(req, res, 409, result?.message, {
-          docs: result,
-        });
-      } else {
-        httpResponse(req, res, 201, "Account created successfully", {
-          docs: result,
-        });
-      }
+
+      httpResponse(req, res, 201, "Account created successfully", {
+        docs: result,
+      });
     } catch (error) {
       next(error);
     }

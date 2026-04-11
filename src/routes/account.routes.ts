@@ -9,6 +9,7 @@ import { checkSubscriptionStatus } from "../middleware/subscription.middleware.j
 import { EmailController } from "../controllers/email.controller.js";
 import { AIController } from "../controllers/ai.controller.js";
 import { BroadcastController } from "../controllers/broadcasting.controller.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class AccountRouter {
   public router: Router;
@@ -40,10 +41,11 @@ export class AccountRouter {
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
+      requirePermission("account:view"),
       this.accountController.getAccounts.bind(this.accountController),
     ); //done
     this.router.get(
-      "/:id",
+      "/:accountId",
       AuthMiddleware.authenticate,
       this.accountController.getAccountById.bind(this.accountController),
     ); //not required for now
@@ -61,16 +63,15 @@ export class AccountRouter {
     this.router.delete(
       "/:id",
       AuthMiddleware.authenticate,
+      requirePermission("account:delete"),
       this.accountController.deleteAccount.bind(this.accountController),
     ); //done
-
     // TODO:Chatbot
     this.router.get(
       "/:accountId/chatbots",
       AuthMiddleware.authenticate,
       this.chatBotController.getChatBots.bind(this.chatBotController),
     );
-
     // get individual chatbot with chatbot flow of this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/get",
@@ -161,12 +162,12 @@ export class AccountRouter {
       this.leadController.updateLead.bind(this.leadController),
     );
 
-    
-
     // TODO: Lead Webhook
     this.router.post(
-      "/:accountId/lead/:formId/create", AuthMiddleware.authenticate,this.leadController.createLead.bind(this.leadController)
-    )
+      "/:accountId/lead/:formId/create",
+      AuthMiddleware.authenticate,
+      this.leadController.createLead.bind(this.leadController),
+    );
 
     // TODO: =============================================================================================
 

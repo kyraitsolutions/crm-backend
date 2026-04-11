@@ -102,10 +102,7 @@ export class ChatBotService {
     accountId: string,
     createChatBotDto: CreateChatBotDto,
   ): Promise<ResponseChatBotDto> {
-    const isAccountExist = await this.accountRepository.findOne(
-      userId,
-      accountId,
-    );
+    const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
       throw new Error("Account not found for this account id");

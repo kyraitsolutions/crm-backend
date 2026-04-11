@@ -14,12 +14,12 @@ export const ZUserSchema = z.object({
   onboarding: z.boolean().default(false),
   accountType: z.string().default("organization"),
 });
+
 export const ZCreateUserSchema = z.object({
   email: z.string(),
   password: z.string().nullable().optional(),
   googleId: z.string().nullable().optional(),
   roleId: z.string().nullable().optional(),
-  profilePicture: z.string().nullable().optional(),
 });
 
 export const ZUpdateUserSchema = z.object({
@@ -27,8 +27,6 @@ export const ZUpdateUserSchema = z.object({
   profilePicture: z.string().nullable().optional(),
   onboarding: z.boolean().default(false).optional(),
 });
-
-
 
 export type TUser = z.infer<typeof ZUserSchema>;
 export type TCreateUser = z.infer<typeof ZCreateUserSchema>;

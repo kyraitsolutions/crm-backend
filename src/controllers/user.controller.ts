@@ -1,20 +1,29 @@
-import { Request, Response, NextFunction } from "express";
-import { RegisterDto, LoginDto, UpdateUserDto } from "../dtos/index.js";
+import { NextFunction, Request, Response } from "express";
+import { Types } from "mongoose";
 import { ENV } from "../constants/index.js";
+import { LoginDto, RegisterDto, UpdateUserDto } from "../dtos/index.js";
+import { CreateOnboardingDto } from "../dtos/userprofile.dto.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
+import { OrganizationService } from "../services/organization.service.js";
 import { UserService } from "../services/user.service.js";
+
+import { TOrganization } from "../types/organization.type.js";
 import httpResponse from "../utils/http.response.js";
+import { generateSlug } from "../utils/typography.js";
 
 export class UserController {
   private userService: UserService;
+  private organizationService: OrganizationService;
 
   constructor() {
     this.userService = new UserService();
+    this.organizationService = new OrganizationService();
   }
 
   register = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const registerDto = new RegisterDto(req.body);
@@ -28,7 +37,7 @@ export class UserController {
   login = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const loginDto = new LoginDto(req.body);
@@ -42,17 +51,13 @@ export class UserController {
   googleCallback = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user as any;
       const token = this.userService.generateToken(user.id, user.email);
 
-      // console.log(req);
-
       const platform = req.query.state;
-
-      // console.log(platform);
 
       const redirectUrl =
         platform === "mobile"
@@ -64,15 +69,79 @@ export class UserController {
     }
   };
 
-  getProfile = async (
+  getMe = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const user = req.user;
+      const { include } = req.query;
+
+      const includes =
+        (include as string)?.split(",")?.map((i) => i.trim()) || [];
+
+      let organization = null;
+
+      if (includes.includes("organization")) {
+        delete user?.organizationId;
+
+        const organizationDetails =
+          await this.organizationService.getOrganizationMembersByUserId(
+            user?.id as string,
+          );
+
+        console.log(organizationDetails);
+
+        organization = organizationDetails?.organizationId;
+      } else {
+        delete user?.organizationId;
+      }
+
       httpResponse(req, res, 200, "Account information fetched successfully", {
-        docs: user,
+        docs: {
+          ...user,
+          ...(organization && { organization }),
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getProfile = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const user = req.user;
+      const { include } = req.query;
+
+      const includes =
+        (include as string)?.split(",")?.map((i) => i.trim()) || [];
+
+      let organization = null;
+
+      if (includes.includes("organization")) {
+        const organizationDetails = await OrganizationMember.findOne({
+          userId: user?.id,
+        }).populate("organizationId", "name");
+
+        organization = organizationDetails?.organizationId;
+      }
+
+      // const organizations = memberships.map((m) => ({
+      //   id: m.organizationId._id,
+      //   name: m.,
+      //   role: m.role,
+      // }));
+
+      httpResponse(req, res, 200, "Account information fetched successfully", {
+        docs: {
+          ...user,
+          ...(organization && { organization }),
+        },
       });
     } catch (error) {
       next(error);
@@ -82,7 +151,7 @@ export class UserController {
   updateProfile = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const userId = (req.user as any).id;
@@ -97,7 +166,7 @@ export class UserController {
   deleteProfile = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
       const userId = (req.user as any).id;

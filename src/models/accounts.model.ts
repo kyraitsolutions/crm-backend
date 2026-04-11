@@ -1,16 +1,25 @@
-import mongoose, { model } from "mongoose";
+import mongoose, { Document, model } from "mongoose";
+import { TAccount } from "../types/account.type";
 const accountSchema = new mongoose.Schema(
   {
-    userId: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+    },
+
     accountName: {
       type: String,
       required: true,
       trim: true,
     },
+
     email: {
       type: String,
       required: true,
@@ -18,6 +27,7 @@ const accountSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+
     status: {
       type: String,
       enum: ["active", "inactive", "suspended"],
@@ -30,10 +40,12 @@ const accountSchema = new mongoose.Schema(
     toJSON: {
       transform(_, ret) {
         delete (ret as any).__v;
+        ret.id = ret._id;
+        delete ret._id;
         return ret;
       },
     },
-  }
+  },
 );
 
 // Indexes for better performance

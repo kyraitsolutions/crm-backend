@@ -5,16 +5,15 @@ import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
 import { EmailService } from "./email.service.js";
 
-
 export class LeadService {
   private leadRepository: LeadRespository;
-  private emailService:EmailService;
+  private emailService: EmailService;
   private ai: GeminiAIUtil;
 
   constructor() {
     this.leadRepository = new LeadRespository();
-    this.emailService=new EmailService();
-    this.ai = new GeminiAIUtil()
+    this.emailService = new EmailService();
+    this.ai = new GeminiAIUtil();
   }
 
   /**
@@ -30,7 +29,7 @@ export class LeadService {
     _userId: string,
     accountId: string,
     queryFilters?: any, // Define/expand as needed
-    paginationOptions?: { limit?: number; skip?: number }
+    paginationOptions?: { limit?: number; skip?: number },
   ): Promise<{
     leads: Lead[];
     totalDocs: number;
@@ -51,39 +50,35 @@ export class LeadService {
       accountId,
     });
 
-
     return {
       leads,
       totalDocs: count,
     };
   }
-
   async createLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.create(lead);
   }
   async createLead(lead: Lead): Promise<Lead> {
-    const result=await this.leadRepository.create(lead);
+    const result = await this.leadRepository.create(lead);
 
-    this.emailService.queueWelcomeEmail("abhijeetsingh5631@gmail.com","https://www.google.com")
+    this.emailService.queueWelcomeEmail(
+      "abhijeetsingh5631@gmail.com",
+      "https://www.google.com",
+    );
     return result;
   }
-
   async updateLead(
     _accountId: string,
     leadId: string,
-    lead: Lead
+    lead: Lead,
   ): Promise<Lead | null> {
     return await this.leadRepository.updateLeadById(leadId, lead);
   }
-
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
   }
-
-
   async getLeadSummary(accountId: string, leadId: string): Promise<any> {
     const lead = await this.leadRepository.getLeadById(accountId, leadId);
-
 
     // For Gemini
     // const prompt=leadSummaryPrompt(lead);
@@ -95,9 +90,9 @@ export class LeadService {
     // console.log(rawResponse);
 
     if (!rawResponse) {
-      return null
+      return null;
     }
-    const result = safeJsonParse(rawResponse)
+    const result = safeJsonParse(rawResponse);
     return result;
   }
 }

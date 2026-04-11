@@ -2,9 +2,19 @@ import mongoose from "mongoose";
 import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
 import { RoleModel, UserModel } from "../models/user.model.js";
 import { ObjectId } from "mongodb";
+import { UserAccount } from "../models/user.accounts.model.js";
+import { OrganizationRepository } from "./organization.repository.js";
 
 export class TeamRepository {
+  private organizationRepository = new OrganizationRepository();
+
+  constructor() {
+    this.organizationRepository = new OrganizationRepository();
+  }
+
   async getTeamMembers(orgId: string): Promise<any[]> {
+    console.log("aaya");
+    console.log(orgId);
     const memberData = await TeamMember.aggregate([
       {
         $match: { orgId: new mongoose.Types.ObjectId(orgId) },
@@ -91,7 +101,6 @@ export class TeamRepository {
 
     return memberData;
   }
-
   async getTeamMemberById(id: string): Promise<any> {
     return await TeamMember.findOne({
       userId: new mongoose.Types.ObjectId(id),
@@ -99,6 +108,38 @@ export class TeamRepository {
   }
   async createTeamMember(teamMember: any): Promise<any> {
     return await TeamMember.create(teamMember);
+  }
+  async assignAccountToMember(
+    userId: string,
+    orgId: string,
+    accountIds: string[],
+  ): Promise<any> {
+    const member =
+      await this.organizationRepository.getOrganizationMembersByUserId(userId);
+
+    if (!member) {
+      throw new Error("User not found");
+    }
+
+    if (!Array.isArray(accountIds)) {
+      throw new Error("accountIds must be a non-empty array");
+    }
+
+    await UserAccount.deleteMany({
+      userId,
+      organizationId: orgId,
+    });
+
+    const payload = accountIds.map((accountId) => ({
+      userId,
+      accountId,
+      organizationId: orgId,
+    }));
+
+    // ✅ Step 3: Bulk insert (fast & scalable)
+    const newAssignments = await UserAccount.insertMany(payload);
+
+    return newAssignments;
   }
   async updateTeamMember(id: string, teamMember: any): Promise<any> {
     return await TeamMember.findByIdAndUpdate(id, teamMember);
@@ -130,67 +171,16 @@ export class TeamRepository {
       throw error;
     }
   }
-
-  async assignAccountToMember(
-    userId: string,
-    accountIds: string[],
-    leadId: string,
-  ): Promise<any> {
-    const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
-
-    const member = await TeamMember.findOne({ _id: userId });
-
-    if (!member) {
-      throw new Error("Team member not found");
-    }
-
-    if (!Array.isArray(accountIds)) {
-      throw new Error("accountIds must be a non-empty array");
-    }
-
-    await TeamMemberAccountLeads.deleteMany({
-      teamMemberId: member._id,
-      // accountId: { $in: accountIds },
-      leadId: null,
-    });
-    const results = [];
-
-    for (const accountId of accountIds) {
-      // Check if record already exists
-      const isExist = await TeamMemberAccountLeads.findOne({
-        teamMemberId: member._id,
-        accountId,
-      });
-
-      if (isExist) {
-        // Skip existing record
-        continue;
-      }
-
-      // Create new assignment
-      const newAssignment = new TeamMemberAccountLeads({
-        teamMemberId: member._id,
-        accountId,
-        leadId: leadId && leadId.trim() !== "" ? leadId : null,
-        roleId: role?._id,
-      });
-
-      const saved = await newAssignment.save();
-      results.push(saved);
-    }
-
-    return results;
-  }
-
   async getAccountsByTeamMember(userId: string): Promise<any[]> {
-    const member = await TeamMember.findOne({
-      userId: new mongoose.Types.ObjectId(userId),
-    });
-    if (!member) {
-      throw new Error("Team member not found");
-    }
-    const assignments = await TeamMemberAccountLeads.find({
-      teamMemberId: member?._id,
+    console.log(userId);
+    // const member = await TeamMember.findOne({
+    //   userId: new mongoose.Types.ObjectId(userId),
+    // });
+    // if (!member) {
+    //   throw new Error("Team member not found");
+    // }
+    const assignments = await UserAccount.find({
+      userId: userId,
     });
     return assignments;
   }

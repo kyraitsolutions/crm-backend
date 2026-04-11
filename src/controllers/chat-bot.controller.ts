@@ -138,8 +138,6 @@ export class ChatBotController {
         edges: req.body.edges,
       };
 
-      // console.log(req.body.nodes[4]?.data?.elements);
-
       const chatbotFlow = await this.chatBotService.createChatBotFlow(
         user.id,
         accountId,

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export class PasswordUtil {
   private static readonly SALT_ROUNDS = 10;

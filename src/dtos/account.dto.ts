@@ -1,25 +1,26 @@
-
 export class AccountDto {
   id: string;
-  userId: string;
+  createdBy: string;
+  organizationId: string;
   accountName: string;
   email: string;
   status: string;
   createdAt: string;
   updatedAt: string;
 
-
   constructor(data: {
-    _id: string;
-    userId: string;
+    id: string;
+    createdBy: string;
     accountName: string;
+    organizationId: string;
     email: string;
     status: string;
     createdAt: string;
     updatedAt: string;
   }) {
-    this.id = data._id;
-    this.userId = data.userId;
+    this.id = data.id;
+    this.createdBy = data.createdBy;
+    this.organizationId = data.organizationId;
     this.accountName = data.accountName;
     this.email = data.email;
     this.status = data.status;
@@ -28,14 +29,10 @@ export class AccountDto {
   }
 }
 
-
 export class CreateAccountDto {
   accountName: string;
   email: string;
-  constructor(data: {
-    accountName: string;
-    email: string;
-  }) {
+  constructor(data: { accountName: string; email: string }) {
     this.accountName = data.accountName;
     this.email = data.email;
   }

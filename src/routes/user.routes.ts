@@ -15,38 +15,44 @@ export class UserRouter {
   private initializeRoutes(): void {
     this.router.post(
       "/register",
-      this.userController.register.bind(this.userController)
+      this.userController.register.bind(this.userController),
     );
+
     this.router.post(
       "/login",
-      this.userController.login.bind(this.userController)
+      this.userController.login.bind(this.userController),
     );
+
     this.router.get("/google", AuthMiddleware.googleAuth());
+
     this.router.get(
       "/google/callback",
       AuthMiddleware.googleCallback(),
-      this.userController.googleCallback.bind(this.userController)
+      this.userController.googleCallback.bind(this.userController),
     );
 
     this.router.get(
-      "/profile",
+      "/me",
       AuthMiddleware.authenticate,
-      this.userController.getProfile.bind(this.userController)
+      this.userController.getMe.bind(this.userController),
     );
+
     this.router.put(
       "/profile",
       AuthMiddleware.authenticate,
-      this.userController.updateProfile.bind(this.userController)
+      this.userController.updateProfile.bind(this.userController),
     );
+
     this.router.post(
       "/profile",
       AuthMiddleware.authenticate,
-      this.userController.updateProfile.bind(this.userController)
+      this.userController.updateProfile.bind(this.userController),
     );
+
     this.router.delete(
       "/profile",
       AuthMiddleware.authenticate,
-      this.userController.deleteProfile.bind(this.userController)
+      this.userController.deleteProfile.bind(this.userController),
     );
   }
 

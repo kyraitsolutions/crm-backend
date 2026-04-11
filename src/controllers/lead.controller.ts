@@ -4,12 +4,16 @@ import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
 import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
+import { EmailService } from "../services/email.service.js";
+import { AccountModel } from "../models/accounts.model.js";
 
 export class LeadController {
   private leadService: LeadService;
+  private emailService: EmailService;
 
   constructor() {
     this.leadService = new LeadService();
+    this.emailService = new EmailService();
   }
 
   getLeads = async (
@@ -69,18 +73,21 @@ export class LeadController {
       next(error);
     }
   };
+
   createLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId,formId } = req.params;
+      const { accountId, formId } = req.params;
       const leadData = req.body;
 
-      const lead = await this.leadService.createLead(
-        {...leadData,accountId:accountId,source:{
-          name:"webform",
-          url:"https://www.google.com",
-          formId:formId,
-        }}
-      );
+      const lead = await this.leadService.createLead({
+        ...leadData,
+        accountId: accountId,
+        source: {
+          name: "webform",
+          url: "https://www.google.com",
+          formId: formId,
+        },
+      });
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
       next(error);
@@ -132,10 +139,26 @@ export class LeadController {
     data: any,
   ) => {
     try {
-      console.log(data);
       const lead = await this.leadService.updateLeadWs(data);
 
-      console.log("Return updated data",lead);
+      if (lead?.name && lead.phone && lead.email) {
+        const account = await AccountModel.findOne({
+          _id: lead.accountId,
+        });
+
+        const leadPayload = {
+          ...lead,
+          accountName: account?.accountName,
+          supportEmail: account?.email,
+        };
+
+        console.log("leadPayload", leadPayload);
+
+        this.emailService.queueLeadAcknowledgementEmail(
+          leadPayload?.email as string,
+          leadPayload,
+        );
+      }
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {
