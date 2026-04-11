@@ -3,12 +3,53 @@ import { Transporter } from "../config/email";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
+import { EMAIL_TEMPLATES_PATH } from "../constants";
 
 export class EmailUtils {
   private transporter: Transporter;
 
   constructor() {
     this.transporter = new Transporter();
+  }
+
+  async sendOnboardingSuccessEmail({
+    organizationName,
+    firstName,
+    lastName,
+    email,
+    dashboardUrl,
+    supportEmail,
+    createdAt,
+    year,
+  }: any): Promise<boolean> {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        EMAIL_TEMPLATES_PATH.ONBOARDING_SUCCESS,
+      );
+
+      const source = fs.readFileSync(templatePath, "utf8");
+
+      const template = Handlebars.compile(source);
+
+      const html = template({
+        organizationName,
+        firstName,
+        lastName,
+        email,
+        dashboardUrl,
+        supportEmail,
+        createdAt,
+        year,
+      });
+
+      await this.sendEmail(email, "Onboarding Success", html);
+
+      return true;
+    } catch (error) {
+      console.error("Lead acknowledgement email error:", error);
+      return false;
+    }
   }
   async sendEmail(
     to: string,
@@ -19,8 +60,7 @@ export class EmailUtils {
   ): Promise<boolean> {
     try {
       const mailOptions = {
-        // from: "sushilkc261@gmail.com" || process.env.FROM_EMAIL,
-        from: "sushilkc2611@gmail.com",
+        from: from || process.env.FROM_EMAIL,
         to,
         subject,
         html,
@@ -126,7 +166,7 @@ export class EmailUtils {
       } = leadData;
       const templatePath = path.join(
         process.cwd(),
-        "src/templates/emails/lead-acknowledgement.hbs",
+        EMAIL_TEMPLATES_PATH.LEAD_ACKNOWLEDGEMENT,
       );
 
       const source = fs.readFileSync(templatePath, "utf8");
@@ -159,87 +199,7 @@ export class EmailUtils {
       return false;
     }
   }
-  //         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-  //             <h2 style="color: #333;">New Lead Generated!</h2>
-  //             <p>A new lead has been generated from your chatbot: <strong>${chatbotName}</strong></p>
 
-  //             <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-  //                 <h3 style="color: #333; margin-top: 0;">Lead Information:</h3>
-  //                 <p><strong>Name:</strong> ${leadData.contactInfo?.firstName || 'N/A'} ${leadData.contactInfo?.lastName || ''}</p>
-  //                 <p><strong>Email:</strong> ${leadData.contactInfo?.emails?.[0]?.address || 'N/A'}</p>
-  //                 <p><strong>Phone:</strong> ${leadData.contactInfo?.phones?.[0]?.number || 'N/A'}</p>
-  //                 <p><strong>Company:</strong> ${leadData.contactInfo?.company || 'N/A'}</p>
-  //                 <p><strong>Generated At:</strong> ${new Date().toLocaleString()}</p>
-  //             </div>
-
-  //             <p>You can view and manage this lead in your dashboard.</p>
-  //             <p>Best regards,<br>The CRM Chatbot Team</p>
-  //         </div>
-  //     `;
-
-  //     return await this.sendEmail(profileEmail, subject, html);
-  // }
-
-  // async sendPasswordResetEmail(email: string, resetToken: string): Promise<boolean> {
-  //     const subject = 'Password Reset Request';
-  //     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
-
-  //     const html = `
-  //         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-  //             <h2 style="color: #333;">Password Reset Request</h2>
-  //             <p>You requested a password reset for your account.</p>
-  //             <p>Click the button below to reset your password:</p>
-  //             <div style="text-align: center; margin: 30px 0;">
-  //                 <a href="${resetUrl}" style="background-color: #007bff; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px;">Reset Password</a>
-  //             </div>
-  //             <p>If the button doesn't work, copy and paste this link into your browser:</p>
-  //             <p style="word-break: break-all; color: #666;">${resetUrl}</p>
-  //             <p>This link will expire in 1 hour.</p>
-  //             <p>If you didn't request this reset, please ignore this email.</p>
-  //             <p>Best regards,<br>The CRM Chatbot Team</p>
-  //         </div>
-  //     `;
-
-  //     return await this.sendEmail(email, subject, html);
-  // }
-
-  // async sendNotificationEmail(email: string, notification: any): Promise<boolean> {
-  //     const subject = notification.title;
-  //     const html = `
-  //         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-  //             <h2 style="color: #333;">${notification.title}</h2>
-  //             <p>${notification.message}</p>
-  //             ${notification.data ? `
-  //                 <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-  //                     <h3 style="color: #333; margin-top: 0;">Details:</h3>
-  //                     <pre style="white-space: pre-wrap; font-family: Arial, sans-serif;">${JSON.stringify(notification.data, null, 2)}</pre>
-  //                 </div>
-  //             ` : ''}
-  //             <p>Best regards,<br>The CRM Chatbot Team</p>
-  //         </div>
-  //     `;
-
-  //     return await this.sendEmail(email, subject, html);
-  // }
-
-  // Queue-based email sending methods
-
-  // async queueLeadNotificationEmail(profileEmail: string, leadData: any, chatbotName: string): Promise<void> {
-  //     await emailQueue.add('send-lead-notification', {
-  //         profileEmail,
-  //         leadData,
-  //         chatbotName
-  //     });
-  //     logger.info(`Lead notification email queued for ${profileEmail}`);
-  // }
-
-  // async queueNotificationEmail(email: string, notification: any): Promise<void> {
-  //     await emailQueue.add('send-notification-email', {
-  //         email,
-  //         notification
-  //     });
-  //     logger.info(`Notification email queued for ${email}`);
-  // }
   // Template methods
   generateEmailTemplate(templateName: string, data: any): string {
     const templates: { [key: string]: (data: any) => string } = {

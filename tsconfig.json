@@ -20,6 +20,6 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*", "../../chatbot-script/utils/leadFieldMapper.ts"],
+  "include": ["src/**/*", "../../chatbot-script/utils/leadFieldMapper.ts", "../../crm-frontend/src/constants/permissions.ts"],
   "exclude": ["node_modules", "dist"]
 }

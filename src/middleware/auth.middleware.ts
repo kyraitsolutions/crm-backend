@@ -2,25 +2,36 @@ import { Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { ENV } from "../constants/index.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
+import { TUser } from "../types/user.type.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
     passport.authenticate(
       "jwt",
       { session: false },
-      async (err: any, user: any, _info: any) => {
+      async (err: any, user: TUser, _info: any) => {
         if (err) {
           return next(err);
         }
         if (!user) {
           return res.status(401).json({ message: "Unauthorized" });
         }
-        const organizationMember = await OrganizationMember.findOne({
-          userId: user.id,
-        });
+
+        const organizationMember = (
+          await OrganizationMember.findOne({
+            userId: user.id,
+          }).populate("roleId", "name level")
+        )?.toJSON();
+
         req.user = {
           ...user,
+          id: user.id as string,
           organizationId: organizationMember?.organizationId,
+          role: organizationMember?.roleId as {
+            name: string;
+            level: number;
+            id: string;
+          },
         };
         next();
       },

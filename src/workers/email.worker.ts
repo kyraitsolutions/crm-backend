@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { emailQueue } from "../queue/queue";
 import logger from "../utils/logger";
 import { EmailUtils } from "../utils/email.utils";
+import { QUEUE_JOBS } from "../constants/queue-jobs.constant";
 
 dotenv.config();
 
@@ -34,12 +35,32 @@ emailQueue.process("campaign-email", async (job) => {
   );
 });
 
-emailQueue.process("lead-acknowledgement-email", async (job) => {
+emailQueue.process(QUEUE_JOBS.LEAD_ACKNOWLEDGEMENT_EMAIL, async (job) => {
   const { email, lead } = job.data;
-
-  console.log("job data", job.data);
-  console.log(job);
 
   logger.info(`Processing lead acknowledgement email for ${email}`);
   await emailUtils.sendLeadAcknowledgementEmail(email, lead);
+});
+
+emailQueue.process(QUEUE_JOBS.SEND_ONBOARDING_EMAIL, async (job) => {
+  const {
+    organizationName,
+    firstName,
+    lastName,
+    email,
+    dashboardUrl,
+    supportEmail,
+    createdAt,
+    year,
+  } = job.data;
+  await emailUtils.sendOnboardingSuccessEmail({
+    organizationName,
+    firstName,
+    lastName,
+    email,
+    dashboardUrl,
+    supportEmail,
+    createdAt,
+    year,
+  });
 });

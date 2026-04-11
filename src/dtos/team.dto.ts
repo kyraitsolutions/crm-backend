@@ -2,63 +2,65 @@ export class TeamMemberDto {
   id: string;
   userId: string;
   roleId: string;
-  teamMemberId: string;
   firstName: string;
-  lastName: string;
+  lastName?: string;
   email: string;
-  // phone: string;
-  inviteStatus: string;
-  roleName: string;
-  status: string;
-  accountIds?: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  constructor(data: {
-    _id: string;
-    userId: string;
-    teamMemberId: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    // phone: string;
-    roleId: string;
-    inviteStatus: string;
-    accountIds?: string[];
-    roleName: string;
-    status: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }) {
-    this.id = data._id;
+  isActive: boolean;
+  createdAt: string;
+  accountIds: string[];
+
+  constructor(data: any) {
+    this.id = data.userId; // or orgMemberId if you have
     this.userId = data.userId;
-    this.teamMemberId = data.teamMemberId;
-    this.firstName = data.firstName;
-    this.lastName = data.lastName;
+    this.roleId = data.roleId || data.role;
+    this.firstName = data.userprofile?.firstName || "";
+    this.lastName = data.userprofile?.lastName || "";
     this.email = data.email;
-    this.roleId = data.roleId;
-    this.inviteStatus = data.inviteStatus;
-    this.roleName = data.roleName;
-    this.accountIds = data.accountIds;
-    // this.phone = data.phone;
-    this.status = data.status;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
+    this.isActive = data.isActive;
+    this.createdAt =
+      data.createdAt?.toISOString?.() || new Date().toISOString();
+    this.accountIds = data.accountIds || [];
   }
 }
 
 export class CreateTeamMemberDto {
   firstName: string;
-  lastName: string;
+  lastName?: string;
   email: string;
-  phone?: string;
-  constructor(data: any) {
-    if (!data?.firstName || !data?.email) {
-      throw new Error("Missing required fields firstName and email");
+  roleId?: string;
+  accounts?: {
+    accountId: string;
+    roleId: string;
+  }[];
+
+  constructor(data: {
+    firstName: string;
+    email: string;
+    lastName?: string;
+    roleId?: string;
+    accounts?: {
+      accountId: string;
+      roleId: string;
+    }[];
+  }) {
+    if (!data?.email) {
+      throw new Error("Email is required");
+    }
+    if (!data?.firstName) {
+      throw new Error("First name is required");
+    }
+
+    if (
+      !data?.accounts?.length ||
+      data?.accounts?.some((acc) => !acc.accountId && !acc.roleId)
+    ) {
+      throw new Error("Accounts are required wiht accountId and roleId");
     }
 
     this.firstName = data.firstName;
     this.lastName = data.lastName;
     this.email = data.email;
-    this.phone = data.phone;
+    this.roleId = data.roleId;
+    this.accounts = data.accounts;
   }
 }

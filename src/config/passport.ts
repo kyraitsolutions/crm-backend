@@ -2,11 +2,9 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { UserService } from "../services/user.service.js";
 import { config } from "../config/index.js";
 import { TGoogleUser } from "../types/user.type.js";
-
-const userService = new UserService();
+import { userService } from "../container.js";
 
 passport.use(
   "local-login",
@@ -39,6 +37,7 @@ passport.use(
         const user = await userService.findOrCreateGoogleUser(
           profile as TGoogleUser,
         );
+
         return done(null, user as Express.User);
       } catch (error) {
         return done(error as Error, undefined);

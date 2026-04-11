@@ -1,9 +1,16 @@
-import mongoose from "mongoose";
-import { RoleModel, TUserDocument, UserModel } from "../models/user.model.js";
+import mongoose, { ClientSession } from "mongoose";
+import { RoleModel, UserModel } from "../models/user.model.js";
 import { TUser } from "../types/user.type.js";
-import { CreateAndUpdateUserDto } from "../dtos/user.dto.js";
 
 export class UserRepository {
+  async findRole(name: string): Promise<{ name: string; _id: string } | null> {
+    return await RoleModel.findOne({ name });
+  }
+  async findRoleById(
+    id: string,
+  ): Promise<{ name: string; _id: string } | null> {
+    return await RoleModel.findOne({ _id: id });
+  }
   async findAll(): Promise<TUser[]> {
     return await UserModel.find();
   }
@@ -27,79 +34,79 @@ export class UserRepository {
         },
       },
       {
-        $lookup: {
-          from: "usersubscriptions",
-          localField: "_id",
-          foreignField: "userId",
-          as: "usersubscription",
-        },
-      },
-      {
-        $unwind: {
-          path: "$usersubscription",
-          preserveNullAndEmptyArrays: true,
+        $addFields: {
+          id: "$_id",
         },
       },
       {
         $project: {
-          _id: 1,
+          _id: 0,
+          id: 1,
           email: 1,
-          password: 1,
-          googleId: 1,
           onboarding: 1,
-          profilePicture: 1,
           createdAt: 1,
           updatedAt: 1,
           roleId: 1,
-          "userprofile.firstName": 1,
-          "userprofile.lastName": 1,
-          "userprofile.organizationName": 1,
-          "userprofile.accountType": 1,
-          "usersubscription.planId": 1,
+          userprofile: {
+            profilePicture: "$userprofile.profilePicture",
+            firstName: "$userprofile.firstName",
+            lastName: "$userprofile.lastName",
+            phone: "$userprofile.phone",
+            address: "$userprofile.address",
+          },
         },
       },
+      // {
+      //   $lookup: {
+      //     from: "usersubscriptions",
+      //     localField: "_id",
+      //     foreignField: "userId",
+      //     as: "usersubscription",
+      //   },
+      // },
+      // {
+      //   $unwind: {
+      //     path: "$usersubscription",
+      //     preserveNullAndEmptyArrays: true,
+      //   },
+      // },
+      // {
+      // $project: {
+      //   _id: 1,
+      //   email: 1,
+      //   onboarding: 1,
+      //   createdAt: 1,
+      //   updatedAt: 1,
+      //   roleId: 1,
+      //   userprofile: 1,
+      // }
+      // },
     ]);
 
     // Return single object if found
-    return user[0] || null;
+    return user[0] ? user[0] : null;
     // return await UserModel.findOne({ _id: id });
   }
-
   async findByEmail(email: string): Promise<TUser | null> {
-    return await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email: email });
+    return user ? user.toJSON() : null;
   }
-
   async findByGoogleId(googleId: string): Promise<TUser | null> {
-    return await UserModel.findOne({ googleId });
+    const user = await UserModel.findOne({ googleId });
+    return user ? user.toJSON() : null;
   }
-
-  async create(data: CreateAndUpdateUserDto): Promise<TUser | null> {
-    const role = await RoleModel.findOne({ name: "ADMIN" });
-    return await UserModel.create({ ...data, roleId: role?._id });
+  async create(data: Partial<TUser>, session?: ClientSession): Promise<TUser> {
+    // const role = await RoleModel.findOne({ name: "ADMIN" });
+    const user = await UserModel.create([{ ...data }], { session });
+    return user[0].toJSON();
   }
-
-  async createTeamUser(email: any): Promise<any> {
-    const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
-
-    const isUserExist = await UserModel.findOne({ email: email });
-
-    if (!isUserExist) {
-      return await UserModel.create({
-        email: email,
-        roleId: role?._id,
-        onboarding: true,
-      });
-    }
-    throw new Error("User already assigned");
-  }
-
   async update(
     id: string,
-    data: CreateAndUpdateUserDto,
+    data: Partial<TUser>,
+    session?: ClientSession,
   ): Promise<TUser | null> {
-    return await UserModel.findByIdAndUpdate(id, data, { new: true });
+    return await UserModel.findByIdAndUpdate(id, data, { new: true, session });
   }
-
   async delete(id: string): Promise<boolean> {
     const result = await UserModel.findByIdAndDelete(id);
     return !!result;

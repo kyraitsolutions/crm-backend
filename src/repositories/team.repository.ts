@@ -1,26 +1,47 @@
-import mongoose from "mongoose";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
-import { RoleModel, UserModel } from "../models/user.model.js";
-import { ObjectId } from "mongodb";
+import mongoose, { ClientSession } from "mongoose";
+import { ROLES } from "../config/permissions.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
 import { UserAccount } from "../models/user.accounts.model.js";
-import { OrganizationRepository } from "./organization.repository.js";
+import { UserModel } from "../models/user.model.js";
+import { UserProfileModel } from "../models/userProfile.model.js";
+import { TOrganizationMember } from "../types/organization.type.js";
 
 export class TeamRepository {
-  private organizationRepository = new OrganizationRepository();
+  // ORGANIZATION MEMBERS (USERS)
+  async createOrganizationMember(
+    data: Partial<TOrganizationMember>,
+    session?: ClientSession,
+  ): Promise<TOrganizationMember> {
+    const isOrganizationMemberExists = await OrganizationMember.findOne({
+      organizationId: data?.organizationId,
+      userId: data?.userId,
+    });
 
-  constructor() {
-    this.organizationRepository = new OrganizationRepository();
+    if (!isOrganizationMemberExists) {
+      return (await OrganizationMember.create([data], { session }))[0].toJSON();
+    }
+
+    throw new Error("User is already assinged to this organization");
   }
-
+  async getOrganizationMembersByUserId(id: string): Promise<any> {
+    return (
+      await OrganizationMember.findOne({ userId: id })
+        .populate("organizationId", "name")
+        .populate("roleId", "id name level")
+    )?.toJSON();
+  }
+  async getOrganizationMembersByUserIdAndOrgId(id: string): Promise<any> {
+    return await OrganizationMember.find({ userId: id })
+      .populate("organizationId", "name")
+      .select("organizationId");
+  }
   async getTeamMembers(orgId: string): Promise<any[]> {
-    console.log("aaya");
-    console.log(orgId);
-    const memberData = await TeamMember.aggregate([
+    const memberData = await OrganizationMember.aggregate([
       {
-        $match: { orgId: new mongoose.Types.ObjectId(orgId) },
+        $match: {
+          organizationId: new mongoose.Types.ObjectId(orgId),
+        },
       },
-
-      // USER PROFILE
       {
         $lookup: {
           from: "userprofiles",
@@ -30,8 +51,6 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
-
-      // USER TABLE (email, googleId, etc.)
       {
         $lookup: {
           from: "users",
@@ -41,8 +60,6 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
-
-      // ROLE TABLE
       {
         $lookup: {
           from: "roles",
@@ -52,47 +69,51 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
-
-      // Team member assignments to accounts and leads
       {
-        $lookup: {
-          from: "teammemberaccountleads",
-          localField: "_id",
-          foreignField: "teamMemberId",
-          as: "assignments",
+        $match: {
+          "role.name": { $ne: ROLES.OWNER }, // or whatever your owner role name is
         },
       },
-      // { $unwind: { path: "$assignments", preserveNullAndEmptyArrays: true } },
-
-      // FINAL OUTPUT
+      {
+        $lookup: {
+          from: "useraccounts",
+          localField: "userId",
+          foreignField: "userId",
+          as: "accounts",
+        },
+      },
+      {
+        $addFields: {
+          id: "$_id",
+        },
+      },
       {
         $project: {
-          _id: 1,
-          userId: 1,
-          roleId: 1,
-          status: 1,
-          inviteStatus: 1,
-          createdAt: 1,
-
-          // USER TABLE
+          _id: 0,
+          id: 1,
+          userId: "$user._id",
           email: "$user.email",
           googleId: "$user.googleId",
-
-          // USER PROFILE
-          firstName: "$profile.firstName",
-          lastName: "$profile.lastName",
-          organizationName: "$profile.organizationName",
-
-          // ROLE
-          roleName: "$role.name",
-          permissions: "$role.permissions",
-
-          // ⭐ GET ALL ACCOUNT IDS ASSIGNED TO THIS TEAM MEMBER
-          accountIds: {
+          createdAt: 1,
+          updatedAt: 1,
+          userProfile: {
+            firstName: "$profile.firstName",
+            lastName: "$profile.lastName",
+            phone: "$profile.phone",
+            profilePicture: "$profile.profilePicture",
+          },
+          role: {
+            id: "$role._id",
+            name: "$role.name",
+          },
+          accounts: {
             $map: {
-              input: "$assignments",
-              as: "a",
-              in: "$$a.accountId",
+              input: "$accounts",
+              as: "acc",
+              in: {
+                accountId: "$$acc.accountId",
+                roleId: "$$acc.roleId",
+              },
             },
           },
         },
@@ -101,87 +122,57 @@ export class TeamRepository {
 
     return memberData;
   }
-  async getTeamMemberById(id: string): Promise<any> {
-    return await TeamMember.findOne({
-      userId: new mongoose.Types.ObjectId(id),
-    });
+  async updateTeamMember(
+    id: string,
+    data: Partial<TOrganizationMember>,
+    session?: ClientSession,
+  ): Promise<TOrganizationMember | null> {
+    const member = await OrganizationMember.findOneAndUpdate(
+      { userId: id },
+      data,
+      {
+        new: true, // return updated doc
+        session,
+      },
+    );
+
+    return member?.toJSON() || null;
   }
-  async createTeamMember(teamMember: any): Promise<any> {
-    return await TeamMember.create(teamMember);
-  }
-  async assignAccountToMember(
-    userId: string,
-    orgId: string,
-    accountIds: string[],
-  ): Promise<any> {
-    const member =
-      await this.organizationRepository.getOrganizationMembersByUserId(userId);
-
-    if (!member) {
-      throw new Error("User not found");
-    }
-
-    if (!Array.isArray(accountIds)) {
-      throw new Error("accountIds must be a non-empty array");
-    }
-
-    await UserAccount.deleteMany({
-      userId,
-      organizationId: orgId,
-    });
-
-    const payload = accountIds.map((accountId) => ({
-      userId,
-      accountId,
-      organizationId: orgId,
-    }));
-
-    // ✅ Step 3: Bulk insert (fast & scalable)
-    const newAssignments = await UserAccount.insertMany(payload);
-
-    return newAssignments;
-  }
-  async updateTeamMember(id: string, teamMember: any): Promise<any> {
-    return await TeamMember.findByIdAndUpdate(id, teamMember);
-  }
-  async deleteTeamMember(id: string): Promise<any> {
-    const teamMemberId = new ObjectId(id);
+  async deleteTeamMembers(ids: string[]): Promise<boolean> {
     const session = await mongoose.startSession();
-    session.startTransaction();
+
     try {
-      // 1. Delete user from User table
-      const user = await UserModel.findByIdAndDelete(
-        { _id: teamMemberId },
-        { session },
+      session.startTransaction();
+
+      const objectIds = Array.isArray(ids)
+        ? ids.map((id) => new mongoose.Types.ObjectId(id))
+        : ids;
+
+      // 1. delete team member relations
+      await OrganizationMember.deleteMany({
+        userId: { $in: objectIds },
+      }).session(session);
+
+      // 2. delete account mappings
+      await UserAccount.deleteMany({
+        userId: { $in: objectIds },
+      }).session(session);
+
+      // 3. delete users
+      await UserModel.deleteMany({ _id: { $in: objectIds } }).session(session);
+
+      // 4. delete users profile
+      await UserProfileModel.deleteMany({ userId: { $in: objectIds } }).session(
+        session,
       );
-      // 2. Delete user from Team member table
-      await TeamMember.findOneAndDelete({ userId: teamMemberId }, { session });
-      // 3. Delete all assigned accounts to this user
-      await TeamMemberAccountLeads.deleteMany(
-        { teamMemberId: teamMemberId },
-        { session },
-      );
-      // commit
+
       await session.commitTransaction();
-      session.endSession();
-      return user;
+      return true;
     } catch (error) {
       await session.abortTransaction();
-      session.endSession();
       throw error;
+    } finally {
+      session.endSession();
     }
-  }
-  async getAccountsByTeamMember(userId: string): Promise<any[]> {
-    console.log(userId);
-    // const member = await TeamMember.findOne({
-    //   userId: new mongoose.Types.ObjectId(userId),
-    // });
-    // if (!member) {
-    //   throw new Error("Team member not found");
-    // }
-    const assignments = await UserAccount.find({
-      userId: userId,
-    });
-    return assignments;
   }
 }

@@ -1,62 +1,56 @@
+import { ClientSession } from "mongoose";
 import {
-  AuthResponseDto,
-  CreateAndUpdateUserDto,
-  LoginDto,
+  CreateUserDto,
   RegisterDto,
   UserDto,
+  UserResponseDto,
 } from "../dtos/index.js";
 import { CreateUserProfileDto } from "../dtos/userprofile.dto.js";
 import { SubscriptionPlan } from "../enums/subscription.enum.js";
 import { UserRepository } from "../repositories/user.repository.js";
 import { UserProfileRepository } from "../repositories/userprofile.repository.js";
-import { TGoogleUser } from "../types/index.js";
+import { TGoogleUser, TUser, TUserLogin } from "../types/index.js";
 import { JwtUtil, PasswordUtil } from "../utils/index.js";
 import { SubscriptionRepository } from "./../repositories/subscription.repository.js";
 import { EmailService } from "./email.service.js";
-import { OrganizationService } from "./organization.service.js";
 
 export class UserService {
-  private userRepository: UserRepository;
-  private emailService: EmailService;
-  private subscriptionRepository: SubscriptionRepository;
-  private userProfileRepository: UserProfileRepository;
-  private organizationService: OrganizationService;
+  constructor(
+    private userRepository: UserRepository,
+    private userProfileRepository: UserProfileRepository,
+    private subscriptionRepository: SubscriptionRepository,
+    private emailService: EmailService,
+  ) {}
 
-  constructor() {
-    this.userRepository = new UserRepository();
-    this.userProfileRepository = new UserProfileRepository();
-    this.emailService = new EmailService();
-    this.subscriptionRepository = new SubscriptionRepository();
-    this.userProfileRepository = new UserProfileRepository();
-    this.organizationService = new OrganizationService();
-  }
-
-  async register(dto: RegisterDto): Promise<AuthResponseDto> {
+  async register(dto: RegisterDto): Promise<TUser> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
 
     if (existingUser) {
       throw new Error("User with this email already exists");
     }
 
-    const hashedPassword = await PasswordUtil.hash(dto.password);
+    const hashedPassword = await PasswordUtil.hash(dto?.password as string);
 
-    const userData = new CreateAndUpdateUserDto({
+    const userData = {
       email: dto.email,
       password: hashedPassword,
-    });
+    };
 
     const user = await this.userRepository.create(userData);
 
-    const userDto = new UserDto(user as any);
+    const userDto = user;
+
     const token = JwtUtil.sign({
       userId: user?.id as string,
       email: user?.email as string,
     });
 
-    return new AuthResponseDto({ user: userDto, token });
+    return {
+      ...userDto,
+      token,
+    };
   }
-
-  async login(dto: LoginDto): Promise<AuthResponseDto> {
+  async login(dto: TUserLogin): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user || !user.password) {
       throw new Error("Invalid credentials");
@@ -71,32 +65,16 @@ export class UserService {
     }
 
     const userDto = new UserDto(user as any);
-    const token = JwtUtil.sign({ userId: user.id, email: user.email });
+    const token = JwtUtil.sign({
+      userId: user.id as string,
+      email: user.email,
+    });
 
-    return new AuthResponseDto({ user: userDto, token });
+    return { ...userDto, token };
   }
-
-  async getMe(userId: string, includes: string[]) {
-    const user = await this.userRepository.findById(userId);
-
-    if (!user) throw new Error("User not found");
-
-    let organization = null;
-
-    if (includes.includes("organization")) {
-      const orgDetails =
-        await this.organizationService.getOrganizationMembersByUserId(userId);
-
-      organization = orgDetails?.organizationId;
-    }
-
-    return {
-      ...new UserDto(user as any),
-      ...(organization && { organization }),
-    };
-  }
-
-  async findOrCreateGoogleUser(authUser: TGoogleUser): Promise<UserDto | null> {
+  async findOrCreateGoogleUser(
+    authUser: TGoogleUser,
+  ): Promise<UserResponseDto> {
     const googleId = authUser.id;
     const email = authUser.emails?.[0]?.value;
     const profilePicture = authUser.photos?.[0]?.value;
@@ -108,7 +86,7 @@ export class UserService {
 
     if (user) {
       // User already connected with Google → do NOT update email/googleId
-      return new UserDto(user);
+      return new UserResponseDto(user);
     }
 
     // 2. If googleId not found, check if user exists by email
@@ -122,17 +100,21 @@ export class UserService {
       });
 
       if (!user) throw new Error("User not found");
-      return new UserDto(user);
+      return new UserResponseDto(user);
     }
+
+    // find role of Admin
+    const role = await this.userRepository.findRole("ADMIN");
 
     // 3. New Google user → create user
     const userData = {
       email,
       googleId,
+      role: role?._id,
     };
 
     // 4. Create user
-    const userDataPayloadDto = new CreateAndUpdateUserDto(userData);
+    const userDataPayloadDto = new CreateUserDto(userData);
     const newUser = await this.userRepository.create(userDataPayloadDto);
 
     // 5. Create user profile
@@ -140,11 +122,11 @@ export class UserService {
       userId: newUser?.id as string,
       profilePicture,
     });
+
     await this.userProfileRepository.create(userProfileDto);
 
-    // await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE);
     await this.subscriptionRepository.create(
-      newUser?.id as string,
+      newUser.id as string,
       SubscriptionPlan.FREE,
     );
 
@@ -155,29 +137,28 @@ export class UserService {
 
     if (!newUser) throw new Error("User not found");
 
-    return new UserDto(newUser);
+    return new UserResponseDto(newUser);
   }
-
-  async getUserById(id: string): Promise<UserDto | null> {
+  async getUserById(id: string): Promise<TUser | null> {
     const user = await this.userRepository.findById(id);
-    const userDto = user ? new UserDto(user as any) : null;
-    return userDto;
+    return user;
   }
-
-  async updateUser(id: string, data: CreateAndUpdateUserDto): Promise<UserDto> {
-    const user = await this.userRepository.update(id, data);
+  async updateUser(
+    id: string,
+    data: Partial<TUser>,
+    session?: ClientSession,
+  ): Promise<UserDto> {
+    const user = await this.userRepository.update(id, data, session);
 
     if (!user) {
       throw new Error("User not found");
     }
     return new UserDto(user as any);
   }
-
   async deleteUser(id: string): Promise<boolean> {
     return this.userRepository.delete(id);
   }
-
-  generateToken(userId: string, email: string): string {
+  async generateToken(userId: string, email: string): Promise<string> {
     return JwtUtil.sign({ userId, email });
   }
 }

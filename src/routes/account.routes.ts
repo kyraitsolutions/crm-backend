@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { AccountController } from "../controllers/account.controller.js";
 import { AuthMiddleware } from "../middleware/index.js";
 import { ChatBotController } from "../controllers/chat-bot.controller.js";
 import { FormController } from "../controllers/form.controller.js";
@@ -8,6 +7,7 @@ import AnalyticsController from "../controllers/analytics.controller.js";
 import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
 import { EmailController } from "../controllers/email.controller.js";
 import { requirePermission } from "../middleware/authorization.middleware.js";
+import { AccountController } from "../controllers/account.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -31,50 +31,55 @@ export class AccountRouter {
   }
 
   private initializeRoutes(): void {
-    //TODO: Accounts
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
-      requirePermission("account:view"),
+      requirePermission("accounts.view"),
       this.accountController.getAccounts.bind(this.accountController),
-    ); //done
+    );
     this.router.get(
       "/:accountId",
       AuthMiddleware.authenticate,
+      requirePermission("accounts.view"),
       this.accountController.getAccountById.bind(this.accountController),
-    ); //not required for now
+    );
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
       checkSubscriptionStatus,
+      requirePermission("accounts.create"),
       this.accountController.createAccount.bind(this.accountController),
-    ); //done
+    );
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
+      requirePermission("accounts.update"),
       this.accountController.updateAccount.bind(this.accountController),
-    ); //yet to be done
+    );
     this.router.delete(
       "/:id",
       AuthMiddleware.authenticate,
-      requirePermission("account:delete"),
+      requirePermission("accounts.delete"),
       this.accountController.deleteAccount.bind(this.accountController),
-    ); //done
+    );
     // TODO:Chatbot
     this.router.get(
       "/:accountId/chatbots",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.view"),
       this.chatBotController.getChatBots.bind(this.chatBotController),
     );
     // get individual chatbot with chatbot flow of this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/get",
+
       this.chatBotController.getChatBotWithFlow.bind(this.chatBotController),
     );
     // get particular chatbot data
     this.router.get(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.view"),
       this.chatBotController.getChatBotById.bind(this.chatBotController),
     );
 
@@ -82,6 +87,7 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/chatbot/:chatbotId/flow",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.view"),
       this.chatBotController.getChatbotFlowById.bind(this.chatBotController),
     );
 
@@ -89,12 +95,14 @@ export class AccountRouter {
     this.router.post(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.create"),
       this.chatBotController.createChatbotFlow.bind(this.chatBotController),
     );
 
     this.router.post(
       "/:accountId/chatbot",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.create"),
       this.chatBotController.createChatBot.bind(this.chatBotController),
     );
 
@@ -102,6 +110,7 @@ export class AccountRouter {
     this.router.put(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.update"),
       this.chatBotController.updateChatBot.bind(this.chatBotController),
     );
 
@@ -109,6 +118,7 @@ export class AccountRouter {
     this.router.delete(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.delete"),
       this.chatBotController.deleteChatBot.bind(this.chatBotController),
     );
 

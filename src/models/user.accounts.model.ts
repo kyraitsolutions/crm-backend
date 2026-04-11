@@ -18,6 +18,10 @@ const userAccountSchema = new Schema(
       type: Types.ObjectId,
       ref: "Organization",
     },
+    roleId: {
+      type: Types.ObjectId,
+      ref: "Role",
+    },
   },
   { timestamps: true },
 );

@@ -13,6 +13,7 @@ import { TCreateChatBotFlow } from "../types/chat-bot.type.js";
 import { ObjectId } from "mongodb";
 import { hasPermission } from "../rbac/hasPermission.js";
 import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
+import { ROLES } from "../config/permissions.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
@@ -33,10 +34,10 @@ export class ChatBotService {
     accountId: string,
   ): Promise<ChatBotListDto[] | []> {
     let chatbots: any = [];
-    // const isAdmin = new ObjectId(USERROLE.ADMIN).equals(user.roleId);
+    // const isOwner = user?.role?.name === ROLES.OWNER;
+    // console.log(isOwner);
 
-    // console.log(isAdmin);
-    // if (isAdmin) {
+    // if (isOwner) {
     //   chatbots = await this.repo.findAllByAccountId(user.id, accountId);
     // } else {
     //   const isAccessed = await TeamMember.findOne({ userId: user.id });
@@ -56,14 +57,14 @@ export class ChatBotService {
     //   }
     // }
 
-    const role = user.roleId.toString() as USERROLE;
-    const permissions = ROLE_PERMISSIONS[role];
+    // const role = user.roleId.toString() as USERROLE;
+    // const permissions = ROLE_PERMISSIONS[role];
 
-    const hasPermissions = hasPermission(permissions, "chatbot:view");
+    // const hasPermissions = hasPermission(permissions, "chatbot:view");
 
-    if (!hasPermissions) {
-      throw new Error("You don't have permission to view chatbots");
-    }
+    // if (!hasPermissions) {
+    //   throw new Error("You don't have permission to view chatbots");
+    // }
 
     chatbots = await this.repo.findAllByAccountId(user.id, accountId);
 
@@ -122,10 +123,7 @@ export class ChatBotService {
     accountId: string,
     chatbotId: string,
   ): Promise<ResponseChatBotFlowDto | null> {
-    const isAccountExist = await this.accountRepository.findOne(
-      userId,
-      accountId,
-    );
+    const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
       throw new Error("Account not found for this account id");
@@ -148,10 +146,7 @@ export class ChatBotService {
     chatBotId: string,
     createChatBotFlowDto: TCreateChatBotFlow,
   ) {
-    const isAccountExist = await this.accountRepository.findOne(
-      userId,
-      accountId,
-    );
+    const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
       throw new Error("Account not found for this account id");
@@ -159,7 +154,6 @@ export class ChatBotService {
 
     const chatbotFlowPayload = {
       ...createChatBotFlowDto,
-      userId,
       accountId,
       chatBotId,
     };
@@ -168,6 +162,8 @@ export class ChatBotService {
       accountId,
       chatBotId,
     );
+
+    console.log(isChatbotFlowExist);
 
     if (isChatbotFlowExist) {
       this.repo.updateChatbotFlow(accountId, chatBotId, chatbotFlowPayload);
@@ -276,13 +272,11 @@ export class ChatBotService {
     userId: string,
     accountId: string,
     chatbotId: string,
-    roleId: string,
   ): Promise<boolean> {
     const result = await this.repo.deleteChatbotById(
       userId,
       accountId,
       chatbotId,
-      roleId,
     );
     if (!result) {
       throw new Error("Chatbot not Found for this Chatbot Id");

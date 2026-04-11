@@ -1,9 +1,6 @@
 import mongoose from "mongoose";
-import { ChatbotModel, ChatbotFlowModel } from "../models/chatbot.model.js";
+import { ChatbotFlowModel, ChatbotModel } from "../models/chatbot.model.js";
 import { TCreateChatBot, TCreateChatBotFlow } from "../types/chat-bot.type.js";
-import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
-import { hasPermission } from "../rbac/hasPermission.js";
-import { USERROLE } from "../enums/user.enum.js";
 
 export class ChatbotRepository {
   async createChatbot(data: TCreateChatBot) {
@@ -201,16 +198,7 @@ export class ChatbotRepository {
     userId: string,
     accountId: string,
     chatbotId: string,
-    roleId: string,
   ): Promise<{} | null> {
-    const role = roleId.toString() as USERROLE;
-    const permissions = ROLE_PERMISSIONS[role];
-
-    const isPermissionAllow = hasPermission(permissions, "chatbot:delete");
-
-    if (!isPermissionAllow)
-      throw new Error("You don't have permission to delete");
-
     return await ChatbotModel.findOneAndDelete({
       accountId,
       _id: chatbotId,

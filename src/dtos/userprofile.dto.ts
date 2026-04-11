@@ -2,7 +2,6 @@ export class CreateUserProfileDto {
   userId: string;
   firstName?: string;
   lastName?: string;
-  phone?: string;
   profilePicture?: string;
   address?: {
     city: string;
@@ -12,29 +11,20 @@ export class CreateUserProfileDto {
     addressLine1: string;
     addressLine2: string;
   };
+  phone?: string;
 
   constructor(data: {
     userId: string;
+    profilePicture?: string;
     firstName?: string;
     lastName?: string;
-    phone?: string;
-    profilePicture?: string;
-    address?: {
-      city: string;
-      state: string;
-      country: string;
-      pincode: string;
-      addressLine1: string;
-      addressLine2: string;
-    };
   }) {
     if (!data.userId) throw new Error("Missing required fields userId");
-
     this.userId = data.userId;
+    this.profilePicture = data.profilePicture;
     this.firstName = data.firstName;
     this.lastName = data.lastName;
-    this.phone = data.phone;
-    this.profilePicture = data.profilePicture;
-    this.address = data.address;
   }
 }
+
+export class UpdateUserProfileDto extends CreateUserProfileDto {}

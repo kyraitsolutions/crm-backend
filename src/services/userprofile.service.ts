@@ -1,16 +1,23 @@
+import { ClientSession } from "mongoose";
+import {
+  CreateUserProfileDto,
+  UpdateUserProfileDto,
+} from "../dtos/userprofile.dto.js";
 import { UserProfileRepository } from "../repositories/userprofile.repository.js";
-import { TCreateUserProfile } from "../types/userprofile.type.js";
 
 export class UserProfileService {
-  private userprofileRepository: UserProfileRepository;
+  constructor(private userprofileRepository: UserProfileRepository) {}
 
-  constructor() {
-    this.userprofileRepository = new UserProfileRepository();
+  async create(userprofile: CreateUserProfileDto) {
+    const userProfile = new CreateUserProfileDto(userprofile);
+    return this.userprofileRepository.create(userProfile);
   }
 
-  async createUserProfile(
-    dto: TCreateUserProfile,
-  ): Promise<TCreateUserProfile> {
-    return this.userprofileRepository.create(dto);
+  async update(
+    id: string,
+    userProfile: UpdateUserProfileDto,
+    session?: ClientSession,
+  ) {
+    return this.userprofileRepository.update(id, userProfile, session);
   }
 }

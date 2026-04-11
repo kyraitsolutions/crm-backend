@@ -141,7 +141,7 @@ const chatbotSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
 
 const chatbotNodesSchema = new Schema({
@@ -161,7 +161,7 @@ const chatbotNodesSchema = new Schema({
         id: String,
         type: {
           type: String,
-          enum: ["text", "image", "video", "audio", "option"],
+          enum: ["email", "text", "image", "video", "audio", "option"],
         },
         content: String,
         date: String,
@@ -199,7 +199,7 @@ const chatbotFlowSchema = new Schema(
         return ret;
       },
     },
-  }
+  },
 );
 
 // index on this table

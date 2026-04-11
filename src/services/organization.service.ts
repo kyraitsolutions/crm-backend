@@ -1,33 +1,47 @@
-import { TOrganizationDocument } from "../models/organization.model";
+import { ClientSession } from "mongoose";
+import { CreateOrganizationDto } from "../dtos/organization.dto";
 import { OrganizationRepository } from "../repositories/organization.repository";
-import { TOrganization, TOrganizationMember } from "../types/organization.type";
+import { TOrganizationMember } from "../types/organization.type";
+import { TeamRepository } from "../repositories/team.repository";
 
 export class OrganizationService {
-  private organizationRepository: OrganizationRepository;
-  constructor() {
-    this.organizationRepository = new OrganizationRepository();
-  }
+  constructor(
+    private organizationRepository: OrganizationRepository,
+    private teamRepository: TeamRepository,
+  ) {}
 
-  async createOrganization(
-    data: TOrganization,
-  ): Promise<TOrganizationDocument | null> {
-    return await this.organizationRepository.create(data);
-  }
+  //============ ORGANIZATION SERVICE =============
 
+  // ORGANIZATION CREATE SERVICE
+  async create(
+    data: CreateOrganizationDto,
+    session: ClientSession,
+  ): Promise<any> {
+    return this.organizationRepository.create(data, session);
+  }
+  // ORGANIZATION DETAILS GET BY ORGANIZATION ID SERVICE
   async getOrganizationDetailsByOrganizationId(id: string) {
     return await this.organizationRepository.findById(id);
   }
 
-  async createOrganizationMember(data: TOrganizationMember) {
-    return await this.organizationRepository.createOrganizationMember(data);
-  }
-
-  async getOrganizationMembersByUserId(id: string) {
-    return await this.organizationRepository.getOrganizationMembersByUserId(id);
-  }
+  // CHECK IF ORGANIZATION EXISTS
   async isOrganizationExists(id: string): Promise<boolean> {
     const organization =
       await this.organizationRepository.findByCreatedById(id);
     return organization;
+  }
+
+  //============ ORGANIZATION MEMBERS SERVICE =============
+  //CREATE ORGANIZATION MEMBERS (USERS)
+  async createOrganizationMember(
+    data: Partial<TOrganizationMember>,
+    session: ClientSession,
+  ) {
+    return await this.teamRepository.createOrganizationMember(data, session);
+  }
+
+  // GET ORGANIZATION MEMBERS BY USER ID
+  async getOrganizationMembersByUserId(id: string) {
+    return await this.teamRepository.getOrganizationMembersByUserId(id);
   }
 }

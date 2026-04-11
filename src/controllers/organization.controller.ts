@@ -1,24 +1,13 @@
 import { NextFunction, Request, Response } from "express";
+import {
+  organizationOnboardingService,
+  organizationService,
+} from "../container";
 import { CreateOrganizationDto } from "../dtos/organization.dto";
-import { UserService } from "../services";
-import { AccountService } from "../services/account.service";
-import { OrganizationService } from "../services/organization.service";
 import { generateSlug } from "../utils";
 import httpResponse from "../utils/http.response";
-import { UserProfileService } from "../services/userprofile.service";
 
 export class OrganizationController {
-  private userService: UserService;
-  private accountService: AccountService;
-  private organizationService: OrganizationService;
-  private userProfileService: UserProfileService;
-  constructor() {
-    this.userService = new UserService();
-    this.userProfileService = new UserProfileService();
-    this.accountService = new AccountService();
-    this.organizationService = new OrganizationService();
-  }
-
   createOrganizationOnboarding = async (
     req: Request,
     res: Response,
@@ -26,71 +15,23 @@ export class OrganizationController {
   ): Promise<void> => {
     try {
       const user = req.user;
-
-      const { email, companyName } = req.body;
-
       const organizationDataPayload = {
         ...req.body,
-        slug: generateSlug(companyName),
+        slug: generateSlug(req.body.name as string),
         createdBy: user?.id,
-        email: email || user?.email,
-        name: companyName,
       };
-
-      const createProfileDataPayload = req.body;
 
       const createOrganizationPayloadDto = new CreateOrganizationDto(
         organizationDataPayload,
       );
 
-      const createProfileDataPayloadDto = new createProfileDataPayload(
-        createProfileDataPayload,
-      );
-
-      const isOrganzitionExist =
-        await this.organizationService.isOrganizationExists(user?.id as string);
-
-      let orgId = null;
-
-      if (isOrganzitionExist) {
-        throw new Error("Organization already exists");
-      }
-
-      if (!isOrganzitionExist) {
-        await this.userProfileService.createUserProfile(
-          createProfileDataPayloadDto,
-        );
-        const organization = await this.organizationService.createOrganization(
+      const organization =
+        await organizationOnboardingService.createOrganization(
           createOrganizationPayloadDto,
         );
-        orgId = organization?._id;
-
-        const organizationMemberDataPayload = {
-          userId: user?.id as string,
-          organizationId: organization?._id as string,
-          role: "ADMIN",
-        };
-        await this.organizationService.createOrganizationMember(
-          organizationMemberDataPayload,
-        );
-        await this.userService.updateUser(user?.id as string, {
-          onboarding: true,
-        });
-        await this.accountService.createAccount(
-          user?.id as string,
-          orgId as string,
-          {
-            accountName: companyName,
-            email: email || user?.email,
-          },
-        );
-      }
 
       httpResponse(req, res, 201, "Client onbaorded successfully", {
-        docs: {
-          orgId,
-          onborading: "success",
-        },
+        docs: organization,
       });
     } catch (error) {
       next(error);
@@ -110,9 +51,7 @@ export class OrganizationController {
         (organizationId as string) || (user?.organizationId as string);
 
       const organization =
-        await this.organizationService.getOrganizationDetailsByOrganizationId(
-          orgId,
-        );
+        await organizationService.getOrganizationDetailsByOrganizationId(orgId);
       httpResponse(req, res, 200, "Organization details fetched successfully", {
         docs: organization,
       });

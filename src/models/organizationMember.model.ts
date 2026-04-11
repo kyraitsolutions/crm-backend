@@ -19,10 +19,9 @@ const organizationMembershipSchema = new Schema(
       ref: "Account",
     },
 
-    role: {
-      type: String,
-      enum: ["ADMIN", "ACCOUNT_MANAGER", "MEMBER"],
-      default: "MEMBER",
+    roleId: {
+      type: Schema.Types.ObjectId,
+      ref: "Role",
     },
 
     invitedBy: {
@@ -32,8 +31,14 @@ const organizationMembershipSchema = new Schema(
 
     isActive: {
       type: Boolean,
-      default: true,
+      default: false,
     },
+
+    // inviteStatus: {
+    //   type: String,
+    //   enum: ["PENDING", "ACCEPTED", "DECLINED"],
+    //   default: "PENDING",
+    // },
   },
   {
     timestamps: true,

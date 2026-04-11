@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { AccountModel } from "../models/accounts.model.js";
 import { TAccount, TCreateAccount } from "../types/account.type.js";
 
@@ -15,8 +16,13 @@ export class AccountRepository {
   async findOne(accountId: string): Promise<TAccount | null> {
     return await AccountModel.findOne({ _id: accountId }).select("-userId");
   }
-  async create(data: TCreateAccount): Promise<TAccount> {
-    return (await AccountModel.create(data)).toJSON() as unknown as TAccount;
+  async create(
+    data: TCreateAccount,
+    session?: ClientSession,
+  ): Promise<TAccount> {
+    return (
+      await AccountModel.create([data], { session })
+    )[0].toJSON() as unknown as TAccount;
   }
 
   async delete(id: string): Promise<boolean | null> {

@@ -10,7 +10,8 @@ export type RoleName =
 export interface AuthUser {
   id: string;
   email?: string;
-  roleId?: string | Types.ObjectId | null;
+  role?: { id: string; name: string; level: number };
+
   organizationId?: string | Types.ObjectId | null;
 }
 

@@ -1,129 +1,262 @@
-import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto.js";
-import { RoleModel } from "../models/user.model.js";
-import { UserRepository } from "../repositories/user.repository.js";
-import { TeamRepository } from "../repositories/team.repository.js";
-import { UserProfileRepository } from "../repositories/userprofile.repository.js";
-import { TCreateUserProfile } from "../types/userprofile.type.js";
-import { EmailService } from "./email.service.js";
-import { USERROLE } from "../enums/user.enum.js";
-import { ObjectId } from "mongodb";
+import mongoose, { ClientSession } from "mongoose";
+import { ROLES } from "../config/permissions.js";
+import { rbacService } from "../container.js";
+import {
+  CreateOrganizationMemberDto,
+  OrganizationMemberResponseDto,
+} from "../dtos/organization.dto.js";
+import { TeamMemberDto } from "../dtos/team.dto.js";
 import { OrganizationRepository } from "../repositories/organization.repository.js";
+import { TeamRepository } from "../repositories/team.repository.js";
+import { UserAccountRepository } from "../repositories/user-account.repository.js";
+import { UserRepository } from "../repositories/user.repository.js";
+import { UserProfileRepository } from "../repositories/userprofile.repository.js";
 import { TOrganizationMember } from "../types/organization.type.js";
+import { TUser } from "../types/user.type.js";
+import { EmailService } from "./email.service.js";
 
 export class TeamService {
   private teamRepository: TeamRepository;
   private userRepository: UserRepository;
   private emailService: EmailService;
   private userprofileRepository: UserProfileRepository;
-  private organizationRepository: OrganizationRepository;
+  // private organizationRepository: OrganizationRepository;
+  private userAccountRepository: UserAccountRepository;
   constructor() {
     this.userRepository = new UserRepository();
     this.emailService = new EmailService();
     this.teamRepository = new TeamRepository();
     this.userprofileRepository = new UserProfileRepository();
-    this.organizationRepository = new OrganizationRepository();
+    // this.organizationRepository = new OrganizationRepository();
+    this.userAccountRepository = new UserAccountRepository();
   }
   async getTeamMembers(orgId: string): Promise<any[]> {
     const teamMembers = await this.teamRepository.getTeamMembers(orgId);
     return (
-      teamMembers?.map((teamMember: any) => new TeamMemberDto(teamMember)) ?? []
+      teamMembers?.map((teamMember: TOrganizationMember) => teamMember) ?? []
     );
   }
   async getTeamMemberById(id: string): Promise<any> {
-    const teamMember = await this.teamRepository.getTeamMemberById(id);
+    const teamMember =
+      await this.teamRepository.getOrganizationMembersByUserId(id);
     return teamMember ? teamMember : null;
+  }
+
+  async createTemaUser(email: string, session?: ClientSession): Promise<TUser> {
+    const isUserExist = await this.userRepository.findByEmail(email);
+
+    if (isUserExist) {
+      throw new Error("User already assigned");
+    }
+
+    const newUser = await this.userRepository.create(
+      {
+        email: email,
+        onboarding: true,
+      },
+      session,
+    );
+
+    return newUser;
   }
   async createTeamMember(
     userId: string,
     orgId: string,
-    teamMember: CreateTeamMemberDto,
+    teamMember: {
+      email: string;
+      firstName: string;
+      lastName?: string;
+      roleId?: string;
+      accounts?: {
+        accountId: string;
+        roleId: string;
+      }[];
+    },
+  ): Promise<OrganizationMemberResponseDto> {
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      const accountMangerRole = await rbacService.getRoleByOrgIdAndName(
+        orgId,
+        ROLES.ACCOUNT_MANAGER,
+      );
+
+      const roleId = teamMember?.roleId || accountMangerRole?.id;
+
+      // create tema member user
+      const newTeamMember = await this.createTemaUser(
+        teamMember?.email,
+        session,
+      );
+
+      // create user profile
+      const newTeamMemberProfilePayload = {
+        userId: newTeamMember.id as string,
+        firstName: teamMember.firstName,
+        lastName: teamMember.lastName,
+      };
+      await this.userprofileRepository.create(
+        newTeamMemberProfilePayload,
+        session,
+      );
+      // create organization member
+      const newOrganizationMemberPayload = new CreateOrganizationMemberDto({
+        userId: newTeamMember.id as string,
+        organizationId: orgId as string,
+        invitedBy: userId as string,
+        roleId: roleId as string,
+        isActive: true,
+      });
+
+      const organizationMember =
+        await this.teamRepository.createOrganizationMember(
+          newOrganizationMemberPayload,
+          session,
+        );
+
+      // assign account to member
+      await this.assignAccountToMember(
+        newTeamMember.id as string,
+        orgId,
+        teamMember?.accounts || [],
+        session,
+      );
+
+      // call email service to send invitation email
+      const url = `${process.env.FRONTEND_URL}/login`;
+      this.emailService.queueWelcomeEmail(teamMember.email, url);
+
+      await session.commitTransaction();
+
+      return {
+        id: organizationMember.id as string,
+        userId: newTeamMember.id as string,
+        accounts: teamMember?.accounts || [],
+        email: teamMember.email,
+        userProfile: {
+          firstName: teamMember.firstName,
+          lastName: teamMember.lastName,
+        },
+        role: {
+          id: roleId as string,
+          name: accountMangerRole?.name as string,
+        },
+        status: organizationMember.isActive as boolean,
+        createdAt: organizationMember.createdAt as Date,
+        updatedAt: organizationMember.updatedAt as Date,
+      };
+    } catch (error) {
+      session.abortTransaction();
+      throw error;
+    }
+  }
+  async updateTeamMember(
+    id: string,
+    teamMember: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+      phone?: string;
+      roleId?: string;
+      accounts?: {
+        accountId: string;
+        roleId: string;
+      }[];
+    },
   ): Promise<any> {
-    // create tema member user
-    const newTeamMember = await this.userRepository.createTeamUser(
-      teamMember?.email,
-    );
+    const session = await mongoose.startSession();
 
-    // create user profile
-    const newTeamMemberProfilePayload: TCreateUserProfile = {
-      userId: newTeamMember._id,
-      firstName: teamMember.firstName,
-      lastName: teamMember.lastName,
-    };
+    try {
+      session.startTransaction();
 
-    const newTeamMemberProfile = await this.userprofileRepository.create(
-      newTeamMemberProfilePayload,
-    );
+      // 1️⃣ Get existing organization member
+      const existingMember =
+        await this.teamRepository.getOrganizationMembersByUserId(id);
 
-    // create organization member
-    const newOrganizationMemberPayload: TOrganizationMember = {
-      organizationId: orgId,
-      userId: newTeamMember._id,
-      role: "ACCOUNT_MANAGER",
-      invitedBy: userId,
-      isActive: true,
-    };
+      if (!existingMember) {
+        throw new Error("Team member not found");
+      }
 
-    await this.organizationRepository.createOrganizationMember(
-      newOrganizationMemberPayload,
-    );
+      const userId = existingMember.userId;
+      const orgId = existingMember.organizationId?.id;
 
-    const role = await RoleModel.findOne({ name: "ACCOUNT_MANAGER" });
+      // 2️⃣ Update USER (email)
+      if (teamMember.email) {
+        await this.userRepository.update(
+          userId,
+          { email: teamMember.email },
+          session,
+        );
+      }
 
-    if (!role) throw new Error("Role not found");
+      // 3️⃣ Update USER PROFILE (name, phone)
+      if (teamMember.firstName || teamMember.lastName || teamMember.phone) {
+        await this.userprofileRepository.update(
+          userId,
+          {
+            ...(teamMember.firstName && { firstName: teamMember.firstName }),
+            ...(teamMember.lastName && { lastName: teamMember.lastName }),
+            ...(teamMember.phone && { phone: teamMember.phone }),
+          },
+          session,
+        );
+      }
 
-    // team member create
-    const teamMemberData = {
-      orgId: orgId,
-      userId: newTeamMember._id,
-      roleId: role?._id,
-      status: true,
-      inviteStatus: "PENDING",
-    };
+      // 4️⃣ Update ORGANIZATION MEMBER (role)
+      if (teamMember.roleId) {
+        await this.teamRepository.updateTeamMember(
+          id,
+          { roleId: teamMember.roleId },
+          session,
+        );
+      }
 
-    const createdTeamMember =
-      await this.teamRepository.createTeamMember(teamMemberData);
+      // 5️⃣ Update USER ACCOUNTS
+      if (teamMember.accounts) {
+        await this.assignAccountToMember(userId, orgId, teamMember.accounts);
+      }
 
-    // call email service to send invitation email
-    const url = `${process.env.FRONTEND_URL}/login`;
-    this.emailService.queueWelcomeEmail(teamMember.email, url);
+      await session.commitTransaction();
+      session.endSession();
 
-    return new TeamMemberDto({
-      _id: createdTeamMember._id.toString(),
-      teamMemberId: createdTeamMember._id.toString(),
-      userId: newTeamMember._id.toString(),
-      roleId: role._id.toString(),
-      firstName: newTeamMemberProfile.firstName,
-      lastName: newTeamMemberProfile.lastName,
-      email: newTeamMember.email,
-      inviteStatus: createdTeamMember.inviteStatus,
-      roleName: role.name!,
-      status: createdTeamMember.status ? "ACTIVE" : "INACTIVE",
-      accountIds: [],
-      createdAt: createdTeamMember.createdAt,
-      updatedAt: createdTeamMember.updatedAt,
-    });
+      return { message: "Team member updated successfully" };
+    } catch (error) {
+      await session.abortTransaction();
+      session.endSession();
+      throw error;
+    }
   }
-  async updateTeamMember(id: string, teamMember: any): Promise<any> {
-    const updatedTeamMember = await this.teamRepository.updateTeamMember(
-      id,
-      teamMember,
-    );
-    return updatedTeamMember ? new TeamMemberDto(updatedTeamMember) : null;
-  }
-  async deleteTeamMember(id: string): Promise<any> {
-    const deletedTeamMember = await this.teamRepository.deleteTeamMember(id);
+  async deleteTeamMember(ids: string[]): Promise<any> {
+    if (!ids || !ids.length) throw new Error("Ids are required");
+    const deletedTeamMember = await this.teamRepository.deleteTeamMembers(ids);
     return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
   }
   async assignAccountToMember(
     userId: string,
     orgId: string,
-    accountIds: any,
+    accounts: {
+      accountId: string;
+      roleId: string;
+    }[],
+    session?: ClientSession,
   ): Promise<any> {
-    const assignment = await this.teamRepository.assignAccountToMember(
+    if (!Array.isArray(accounts)) {
+      throw new Error("accountIds must be a non-empty array");
+    }
+
+    await this.userAccountRepository.deleteByUserAndOrg(userId, orgId);
+    const payload = accounts.map((account) => ({
       userId,
-      orgId,
-      accountIds,
+      accountId: account.accountId,
+      roleId: account.roleId,
+      organizationId: orgId,
+    }));
+
+    // ✅ Step 3: Bulk insert (fast & scalable)
+    const newAssignments = await this.userAccountRepository.bulkInsert(
+      payload,
+      session,
     );
-    return assignment;
+    return newAssignments;
   }
 }

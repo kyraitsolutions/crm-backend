@@ -1,5 +1,4 @@
-import mongoose, { Document, model } from "mongoose";
-import { TAccount } from "../types/account.type";
+import mongoose, { model } from "mongoose";
 const accountSchema = new mongoose.Schema(
   {
     createdBy: {
