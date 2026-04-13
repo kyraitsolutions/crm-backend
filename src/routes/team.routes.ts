@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { TeamController } from "../controllers/team.controller.js";
 import { AuthMiddleware } from "../middleware/index.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class TeamRouter {
   public router: Router;
@@ -24,28 +25,27 @@ export class TeamRouter {
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
+      requirePermission("teams.create", true),
       this.teamController.createTeamMember.bind(this.teamController),
     );
-
     // assign account to team member
     this.router.post(
       "/:userId/assign-account",
       AuthMiddleware.authenticate,
       this.teamController.assignAccountToTeamMember.bind(this.teamController),
     );
-
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
+      requirePermission("teams.update", true),
       this.teamController.updateTeamMember.bind(this.teamController),
     );
     this.router.delete(
-      "/:id",
+      "/",
       AuthMiddleware.authenticate,
+      requirePermission("teams.delete"),
       this.teamController.deleteTeamMember.bind(this.teamController),
     );
-
-    // this.router.post('/:id/assign-account/:accountId/lead/:leadId',AuthMiddleware.authenticate, this.teamController.assignLeadToTeamMember.bind(this.teamController));
   }
   public getRouter(): Router {
     return this.router;

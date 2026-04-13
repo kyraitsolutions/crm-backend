@@ -36,24 +36,6 @@ export class UserRouter {
       AuthMiddleware.authenticate,
       this.userController.getMe.bind(this.userController),
     );
-
-    this.router.put(
-      "/profile",
-      AuthMiddleware.authenticate,
-      this.userController.updateProfile.bind(this.userController),
-    );
-
-    this.router.post(
-      "/profile",
-      AuthMiddleware.authenticate,
-      this.userController.updateProfile.bind(this.userController),
-    );
-
-    this.router.delete(
-      "/profile",
-      AuthMiddleware.authenticate,
-      this.userController.deleteProfile.bind(this.userController),
-    );
   }
 
   public getRouter(): Router {

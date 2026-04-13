@@ -6,6 +6,7 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
+import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { seedPlans } from "./scripts/seedPlan";
 
 export class App {
@@ -30,7 +31,7 @@ export class App {
       cors({
         origin: "*",
         credentials: true,
-      })
+      }),
     );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
@@ -46,10 +47,10 @@ export class App {
     this.app.use(ErrorMiddleware.handle);
   }
 
-  public listen(port: number): void {
+  public async listen(port: number): Promise<void> {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-    // seedPlans();
+    await seedPermissions();
     server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

@@ -1,57 +1,56 @@
+import { ClientSession } from "mongoose";
+import {
+  CreateUserDto,
+  RegisterDto,
+  UserDto,
+  UserResponseDto,
+} from "../dtos/index.js";
+import { CreateUserProfileDto } from "../dtos/userprofile.dto.js";
+import { SubscriptionPlan } from "../enums/subscription.enum.js";
+import { UserRepository } from "../repositories/user.repository.js";
+import { UserProfileRepository } from "../repositories/userprofile.repository.js";
+import { TGoogleUser, TUser, TUserLogin } from "../types/index.js";
+import { JwtUtil, PasswordUtil } from "../utils/index.js";
 import { SubscriptionRepository } from "./../repositories/subscription.repository.js";
 import { EmailService } from "./email.service.js";
-import { UserRepository } from "../repositories/user.repository.js";
-import {
-  UserDto,
-  AuthResponseDto,
-  RegisterDto,
-  LoginDto,
-} from "../dtos/index.js";
-import { JwtUtil, PasswordUtil } from "../utils/index.js";
-import { TCreateUser, TUpdateUser } from "../types/index.js";
-import { TeamMember } from "../models/team.model.js";
-import { SubscriptionPlan } from "../enums/subscription.enum.js";
-import { UserProfileRepository } from "../repositories/userprofile.repository.js";
-import { TCreateUserProfile } from "../types/userprofile.type.js";
-import { CreateOnboardingDto, OnboardingDto } from "../dtos/userprofile.dto.js";
 
 export class UserService {
-  private userRepository: UserRepository;
-  private emailService: EmailService;
-  private subscriptionRepository: SubscriptionRepository;
-  private userProfileRepository: UserProfileRepository;
+  constructor(
+    private userRepository: UserRepository,
+    private userProfileRepository: UserProfileRepository,
+    private subscriptionRepository: SubscriptionRepository,
+    private emailService: EmailService,
+  ) {}
 
-  constructor() {
-    this.userRepository = new UserRepository();
-    this.userProfileRepository = new UserProfileRepository();
-    this.emailService = new EmailService();
-    this.subscriptionRepository = new SubscriptionRepository();
-    this.userProfileRepository = new UserProfileRepository();
-  }
-
-  async register(dto: RegisterDto): Promise<AuthResponseDto> {
+  async register(dto: RegisterDto): Promise<TUser> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
 
     if (existingUser) {
       throw new Error("User with this email already exists");
     }
 
-    const hashedPassword = await PasswordUtil.hash(dto.password);
+    const hashedPassword = await PasswordUtil.hash(dto?.password as string);
 
-    const userData: TCreateUser = {
+    const userData = {
       email: dto.email,
       password: hashedPassword,
     };
 
     const user = await this.userRepository.create(userData);
 
-    const userDto = new UserDto(user as any);
-    const token = JwtUtil.sign({ userId: user.id, email: user.email });
+    const userDto = user;
 
-    return new AuthResponseDto({ user: userDto, token });
+    const token = JwtUtil.sign({
+      userId: user?.id as string,
+      email: user?.email as string,
+    });
+
+    return {
+      ...userDto,
+      token,
+    };
   }
-
-  async login(dto: LoginDto): Promise<AuthResponseDto> {
+  async login(dto: TUserLogin): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user || !user.password) {
       throw new Error("Invalid credentials");
@@ -66,48 +65,19 @@ export class UserService {
     }
 
     const userDto = new UserDto(user as any);
-    const token = JwtUtil.sign({ userId: user.id, email: user.email });
+    const token = JwtUtil.sign({
+      userId: user.id as string,
+      email: user.email,
+    });
 
-    return new AuthResponseDto({ user: userDto, token });
+    return { ...userDto, token };
   }
-
-  async createOnboarding(
-    id: string,
-    email: string,
-    dto: CreateOnboardingDto,
-  ): Promise<any> {
-    const onboardingData: TCreateUserProfile = {
-      userId: id,
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      profilePicture: dto.profilePicture,
-      phone: dto.phone,
-      address: dto.address,
-    };
-
-    const isExist = await this.userProfileRepository.findByUserId(id);
-
-    if (isExist) {
-      const id = isExist.userId;
-      const userProfile = this.userProfileRepository?.update(
-        id,
-        onboardingData,
-      );
-
-      const dataToUpdate: TUpdateUser = {
-        onboarding: true,
-      };
-
-      await this.userRepository.update(isExist.userId, dataToUpdate);
-
-      return userProfile;
-    }
-  }
-
-  async findOrCreateGoogleUser(profile: any): Promise<UserDto> {
-    const googleId = profile.id;
-    const email = profile.emails?.[0]?.value;
-    const profilePicture = profile.photos?.[0]?.value;
+  async findOrCreateGoogleUser(
+    authUser: TGoogleUser,
+  ): Promise<UserResponseDto> {
+    const googleId = authUser.id;
+    const email = authUser.emails?.[0]?.value;
+    const profilePicture = authUser.photos?.[0]?.value;
 
     if (!email) throw new Error("Google profile does not contain email");
 
@@ -116,71 +86,79 @@ export class UserService {
 
     if (user) {
       // User already connected with Google → do NOT update email/googleId
-      return new UserDto(user as any);
+      return new UserResponseDto(user);
     }
 
     // 2. If googleId not found, check if user exists by email
     user = await this.userRepository.findByEmail(email);
+
     if (user) {
       // Existing user (ex: team member), but missing googleId
-      user = await this.userRepository.update(user.id, {
+      user = await this.userRepository.update(user?.id as string, {
+        email,
         googleId,
       });
 
-      const teamMember = await TeamMember.findOne({ userId: user?.id });
-
-      if (teamMember) {
-        await TeamMember.updateOne(
-          { userId: user?.id },
-          { inviteStatus: "ACCEPTED" },
-        );
-      }
-      return new UserDto(user as any);
+      if (!user) throw new Error("User not found");
+      return new UserResponseDto(user);
     }
 
+    // find role of Admin
+    const role = await this.userRepository.findRole("ADMIN");
+
     // 3. New Google user → create user
-    const userData: TCreateUser = {
+    const userData = {
       email,
       googleId,
+      role: role?._id,
     };
 
-    const newUser = await this.userRepository.create(userData);
+    // 4. Create user
+    const userDataPayloadDto = new CreateUserDto(userData);
+    const newUser = await this.userRepository.create(userDataPayloadDto);
 
-    await this.userProfileRepository.create({
-      userId: newUser.id,
+    // 5. Create user profile
+    const userProfileDto = new CreateUserProfileDto({
+      userId: newUser?.id as string,
       profilePicture,
     });
 
-    await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE);
-    // const susbcription = await this.subscriptionRepository.create(newUser.id, SubscriptionPlan.FREE)
+    await this.userProfileRepository.create(userProfileDto);
+
+    await this.subscriptionRepository.create(
+      newUser.id as string,
+      SubscriptionPlan.FREE,
+    );
+
     this.emailService.queueWelcomeEmail(
       email,
       "https://crm.kyraitsolutions.com/login",
     );
 
-    return new UserDto(newUser as any);
-  }
+    if (!newUser) throw new Error("User not found");
 
-  async getUserById(id: string): Promise<UserDto | null> {
+    return new UserResponseDto(newUser);
+  }
+  async getUserById(id: string): Promise<TUser | null> {
     const user = await this.userRepository.findById(id);
-    const userDto = user ? new UserDto(user as any) : null;
-    return userDto;
+    return user;
   }
-
-  async updateUser(id: string, data: TUpdateUser): Promise<UserDto> {
-    const user = await this.userRepository.update(id, data);
+  async updateUser(
+    id: string,
+    data: Partial<TUser>,
+    session?: ClientSession,
+  ): Promise<UserDto> {
+    const user = await this.userRepository.update(id, data, session);
 
     if (!user) {
       throw new Error("User not found");
     }
     return new UserDto(user as any);
   }
-
   async deleteUser(id: string): Promise<boolean> {
     return this.userRepository.delete(id);
   }
-
-  generateToken(userId: string, email: string): string {
+  async generateToken(userId: string, email: string): Promise<string> {
     return JwtUtil.sign({ userId, email });
   }
 }

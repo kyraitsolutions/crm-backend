@@ -1,15 +1,10 @@
-import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response.js";
-import { AccountService } from "../services/account.service.js";
+import { NextFunction, Request, Response } from "express";
+import { accountService } from "../container.js";
 import { CreateAccountDto } from "../dtos/account.dto.js";
+import { TUser } from "../types/user.type.js";
+import httpResponse from "../utils/http.response.js";
 
 export class AccountController {
-  private accountService: AccountService;
-
-  constructor() {
-    this.accountService = new AccountService();
-  }
-
   getAccounts = async (
     req: Request,
     res: Response,
@@ -17,8 +12,7 @@ export class AccountController {
   ): Promise<void> => {
     try {
       const user = req.user;
-
-      const accounts = await this.accountService.getAllAccounts(user);
+      const accounts = await accountService.getAllAccounts(user as TUser);
 
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
@@ -37,7 +31,7 @@ export class AccountController {
   ): Promise<void> => {
     try {
       const { accountId } = req.params;
-      const result = await this.accountService.getAccountById(accountId);
+      const result = await accountService.getAccountById(accountId);
 
       httpResponse(req, res, 200, "Account fetched successfully", {
         doc: result,
@@ -56,7 +50,7 @@ export class AccountController {
       const user = req.user;
       const createAccountDto = new CreateAccountDto(req.body);
 
-      const result = await this.accountService.createAccount(
+      const result = await accountService.createAccount(
         user?.id as string,
         user?.organizationId as string,
         createAccountDto,
@@ -73,7 +67,7 @@ export class AccountController {
   deleteAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
-      const result = await this.accountService.deleteAccount(id, req.user);
+      const result = await accountService.deleteAccount(id, req.user);
       if (!result) {
         httpResponse(
           req,

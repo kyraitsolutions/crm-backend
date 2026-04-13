@@ -57,6 +57,8 @@ export class ChatBotController {
     try {
       const user = req.user as any;
       const accountId = req.params.accountId;
+      console.log(accountId);
+
       const chatBots = await this.chatBotService.getChatBots(user, accountId);
       httpResponse(req, res, 200, "Chatbot fetched successfully", {
         docs: chatBots,
@@ -72,9 +74,6 @@ export class ChatBotController {
   async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId, chatbotId } = req.params;
-
-      console.log("aaya");
-      console.log(accountId, chatbotId);
 
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
@@ -131,7 +130,7 @@ export class ChatBotController {
     try {
       const { accountId, chatbotId } = req.params;
       const user = req.user as { id: string };
-      const dtoPayload = {
+      const createChatbotFlowDto = {
         accountId: accountId,
         chatbotId: chatbotId,
         nodes: req.body.nodes,
@@ -142,7 +141,7 @@ export class ChatBotController {
         user.id,
         accountId,
         chatbotId,
-        dtoPayload,
+        createChatbotFlowDto,
       );
 
       if (chatbotFlow?.update) {
@@ -200,7 +199,6 @@ export class ChatBotController {
         user.id,
         accountId,
         chatbotId,
-        user?.roleId,
       );
       httpResponse(req, res, 200, "Chatbot Deleted successfully", {
         status: result,

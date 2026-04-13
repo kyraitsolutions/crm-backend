@@ -1,8 +1,6 @@
-
 import mongoose from "mongoose";
-import { Plan } from "../models/subscription.model";
-import { ENV } from "../constants";
-
+import { Plan } from "../../models/subscription.model";
+import { ENV } from "../../constants";
 
 const commonFeatures = [
   "Analytics",
@@ -64,14 +62,12 @@ const dummyPlans = [
 export const seedPlans = async () => {
   try {
     await mongoose.connect(ENV.DATABASE_URL!);
-    console.log("✅ MongoDB connected");
 
     for (const plan of dummyPlans) {
-      await Plan.findOneAndUpdate(
-        { name: plan.name },
-        plan,
-        { upsert: true, new: true }
-      );
+      await Plan.findOneAndUpdate({ name: plan.name }, plan, {
+        upsert: true,
+        new: true,
+      });
     }
 
     console.log("✅ Plans seeded successfully");
@@ -81,5 +77,3 @@ export const seedPlans = async () => {
     process.exit(1);
   }
 };
-
-

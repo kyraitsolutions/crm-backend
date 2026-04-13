@@ -2,6 +2,7 @@ import logger from "../utils/logger.js";
 import { emailQueue } from "../queue/queue.js";
 import { EmailRepository } from "../repositories/email.repository.js";
 import { TEmailTemplate } from "../types/email.type.js";
+import { QUEUE_JOBS } from "../constants/queue-jobs.constant.js";
 
 export class EmailService {
   private emailRepository: EmailRepository;
@@ -9,7 +10,27 @@ export class EmailService {
   constructor() {
     this.emailRepository = new EmailRepository();
   }
-
+  async onboardingEmail({
+    organizationName,
+    firstName,
+    lastName,
+    email,
+    dashboardUrl,
+    supportEmail,
+    createdAt,
+    year,
+  }: any): Promise<void> {
+    await emailQueue.add(QUEUE_JOBS.SEND_ONBOARDING_EMAIL, {
+      organizationName,
+      firstName,
+      lastName,
+      email,
+      dashboardUrl,
+      supportEmail,
+      createdAt,
+      year,
+    });
+  }
   async startCampaign({
     accountId,
     leadIds,
@@ -51,7 +72,6 @@ export class EmailService {
       `📨 Email campaign queued | account=${accountId} | emails=${leadIds.length}`,
     );
   }
-
   async getSubscribers(accountId: string): Promise<any[]> {
     const subscribers = await this.emailRepository.getSubscribers(accountId);
     return subscribers;
@@ -91,7 +111,6 @@ export class EmailService {
     });
     logger.info(`Welcome email queued for ${email}`);
   }
-
   // Account Creation Mail
   async queueAccountCreationEmail(
     accountEmail: string,
@@ -106,8 +125,6 @@ export class EmailService {
   }
 
   async queueLeadAcknowledgementEmail(email: string, lead: any): Promise<void> {
-    console.log("aaya");
-    console.log(lead);
     await emailQueue.add("lead-acknowledgement-email", {
       email,
       lead,

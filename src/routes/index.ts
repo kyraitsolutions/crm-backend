@@ -8,6 +8,7 @@ import { TeamRouter } from "./team.routes.js";
 import { SubscriptionRouter } from "./subscription.routes.js";
 import { PaymentRouter } from "./payment.route.js";
 import { OrganizationRouter } from "./organization.route.js";
+import { RBACRouter } from "./rbac.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -19,6 +20,7 @@ export class AppRoutes {
   private teamRouter: TeamRouter;
   private subscriptionRouter: SubscriptionRouter;
   private paymentRouter:PaymentRouter;
+  private rbacRouter: RBACRouter;
   private router: Router;
 
   constructor() {
@@ -26,11 +28,13 @@ export class AppRoutes {
     this.accountRouter = new AccountRouter();
     this.chatBotRouter = new ChatBotRouter();
     this.userRouter = new UserRouter();
+
     // this.userProfileRouter = new UserProfileRouter();
     this.emailRouter = new EmailRouter();
     this.teamRouter = new TeamRouter();
     this.subscriptionRouter = new SubscriptionRouter();
     this.paymentRouter=new PaymentRouter();
+    this.rbacRouter = new RBACRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -45,6 +49,7 @@ export class AppRoutes {
     this.router.use("/email", this.emailRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
 
+    this.router.use("/roles", this.rbacRouter.getRouter());
   }
 
   public getRouter(): Router {

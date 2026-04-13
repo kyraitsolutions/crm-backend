@@ -1,47 +1,76 @@
 export class UserDto {
-  id: string;
+  id?: string;
   email: string;
   onboarding: boolean;
   roleId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  userprofile?: {
-    accountType: string;
-    firstName: string | null;
-    lastName: string | null;
-    profilePicture?: string | null;
-    organizationName: string | null;
-  };
-  usersubscription?: {
-    planId: string;
+
+  userProfile?: {
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    profilePicture?: string;
+    address?: {
+      city: string;
+      state: string;
+      country: string;
+      pincode: string;
+      addressLine1: string;
+      addressLine2: string;
+    };
   };
 
+  organization?: {
+    id?: string;
+    name?: string;
+  };
+
+  userSubscription?: {
+    plan: string;
+    startDate: Date;
+    endDate: Date;
+  };
+
+  token?: string;
+
   constructor(data: {
-    _id: string;
+    id?: string;
     email: string;
-    profilePicture?: string | null;
     onboarding: boolean;
     roleId: string;
-    createdAt: Date;
-    updatedAt: Date;
-    userprofile?: {
-      accountType: string;
-      firstName: string | null;
-      lastName: string | null;
-      organizationName: string | null;
+    profilePicture?: string | null;
+    userProfile?: {
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      profilePicture?: string;
+      address?: {
+        city: string;
+        state: string;
+        country: string;
+        pincode: string;
+        addressLine1: string;
+        addressLine2: string;
+      };
     };
-    usersubscription?: {
-      planId: string;
+    organization?: {
+      id?: string;
+      name?: string;
     };
+    userSubscription?: {
+      plan: string;
+      startDate: Date;
+      endDate: Date;
+    };
+    token: string;
   }) {
-    this.id = data._id;
+    this.id = data.id;
     this.email = data.email;
     this.onboarding = data.onboarding;
     this.roleId = data.roleId;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
-    this.userprofile = data.userprofile;
-    this.usersubscription = data.usersubscription;
+    this.userProfile = data.userProfile;
+    this.organization = data.organization;
+    this.userSubscription = data.userSubscription;
+    this.token = data?.token;
   }
 }
 
@@ -49,29 +78,51 @@ export class CreateUserDto {
   email: string;
   password?: string;
   googleId?: string;
-  onboarding: boolean;
-  roleId: string;
+  roleId?: string;
 
-  constructor(data: {
-    email: string;
-    password?: string;
-    googleId?: string;
-    profilePicture?: string;
-    onboarding: boolean;
-    roleId: string;
-  }) {
+  constructor(data: Partial<CreateUserDto>) {
+    if (!data.email) throw new Error("Email is required");
+
     this.email = data.email;
     this.password = data.password;
     this.googleId = data.googleId;
-    this.onboarding = data.onboarding;
     this.roleId = data.roleId;
   }
 }
 
+export class UserResponseDto {
+  id: string;
+  email: string;
+  role?: string;
+
+  constructor(user: any) {
+    this.id = user.id;
+    this.email = user.email;
+    this.role = user.role;
+  }
+}
+
 export class UpdateUserDto {
-  onboarding: boolean;
-  constructor(data: { profilePicture?: string; onboarding: boolean }) {
-    this.onboarding = data.onboarding;
+  email?: string;
+  password?: string;
+  googleId?: string;
+  onboarding?: boolean;
+  roleId?: string;
+
+  constructor(data: Partial<UpdateUserDto>) {
+    Object.assign(this, data);
+  }
+}
+
+export class RegisterDto {
+  email: string;
+  password: string;
+
+  constructor(data: { email: string; password: string }) {
+    if (!data.email) throw new Error("Email is required");
+    if (!data.password) throw new Error("Password is required");
+    this.email = data.email;
+    this.password = data.password;
   }
 }
 
@@ -82,25 +133,5 @@ export class LoginDto {
   constructor(data: { email: string; password: string }) {
     this.email = data.email;
     this.password = data.password;
-  }
-}
-
-export class RegisterDto {
-  email: string;
-  password: string;
-
-  constructor(data: { email: string; password: string }) {
-    this.email = data.email;
-    this.password = data.password;
-  }
-}
-
-export class AuthResponseDto {
-  user: UserDto;
-  token: string;
-
-  constructor(data: { user: UserDto; token: string }) {
-    this.user = data.user;
-    this.token = data.token;
   }
 }

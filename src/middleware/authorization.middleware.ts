@@ -8,6 +8,11 @@ import { AuthUser, RequestWithUser } from "../types/core.js";
 import httpResponse from "../utils/http.response.js";
 import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
 import { hasPermission } from "../rbac/hasPermission.js";
+import { UserAccount } from "../models/user.accounts.model.js";
+import { RolePermissionModel } from "../models/role-permissions.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
+import { TRole } from "../types/roles-permissions.type.js";
+import { ROLES } from "../config/permissions.js";
 
 const isRoleMatch = (
   userRoleId?: string | ObjectId | null,
@@ -178,22 +183,96 @@ export const accountAccess = async (
   }
 };
 
-export const requirePermission = (permission: string) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user.id) {
-      httpResponse(req, res, 401, "Unauthorized");
-      return;
+export const requirePermission = (
+  permissionKey: string,
+  checkRoleAssign = false,
+) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.user || !req.user.id) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
+      const orgId = req.user.organizationId;
+      const accountId = req.params.accountId; // optional
+
+      // 1️⃣ Check organization membership
+      const orgMember = await OrganizationMember.findOne({
+        userId,
+        organizationId: orgId,
+      }).populate("roleId", "name level");
+
+      if (!orgMember) {
+        return res
+          .status(403)
+          .json({ message: "User is not part of this organization" });
+      }
+
+      let accountMember = null;
+      let activeRole: any = null;
+
+      activeRole =
+        typeof orgMember.roleId === "object" ? orgMember.roleId : null;
+
+      const roleName = activeRole?.name;
+
+      // 2️⃣ OWNER bypass (🔥 most important)
+      if (roleName === ROLES.OWNER) {
+        return next();
+      }
+
+      if (accountId) {
+        accountMember = await UserAccount.findOne({
+          userId,
+          accountId,
+        }).populate("roleId");
+
+        if (!accountMember) {
+          return res.status(403).json({ message: "Not part of this account" });
+        }
+
+        activeRole = accountMember.roleId;
+      }
+
+      // 4️⃣ Permission check
+      const rolePermissions = await RolePermissionModel.find({
+        roleId: activeRole._id,
+      }).populate("permissionId");
+
+      const hasPermission = rolePermissions.some(
+        (rp: any) => rp.permissionId.key === permissionKey,
+      );
+
+      if (!hasPermission) {
+        return res.status(403).json({ responseMessage: "Permission denied" });
+      }
+
+      // 5️⃣ Role level check (for assigning roles)
+      // if (checkRoleAssign && req.body.roleId) {
+      //   const targetRole = await RolePermissionModel.findById(req.body.roleId);
+
+      //   console.log("targetRole", targetRole);
+
+      //   if (!targetRole) {
+      //     return res.status(404).json({ message: "Target role not found" });
+      //   }
+
+      //   if (activeRole.level <= targetRole?.level) {
+      //     return res.status(403).json({
+      //       message: "Cannot assign role equal or higher than your level",
+      //     });
+      //   }
+      // }
+
+      // // optional (good practice)
+      // req.activeRole = activeRole;
+      // req.accountMember = accountMember;
+
+      next();
+    } catch (error) {
+      console.error("RBAC Error:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
     }
-
-    const role = req?.user?.roleId;
-    const permissions = ROLE_PERMISSIONS[role as USERROLE];
-
-    const hasPermissions = hasPermission(permissions, permission);
-
-    if (!hasPermissions) {
-      throw new Error(`You don't have permission to ${permission}`);
-    }
-
-    next();
   };
 };

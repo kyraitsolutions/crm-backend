@@ -2,10 +2,9 @@ import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
-import { UserService } from "../services/user.service.js";
 import { config } from "../config/index.js";
-
-const userService = new UserService();
+import { TGoogleUser } from "../types/user.type.js";
+import { userService } from "../container.js";
 
 passport.use(
   "local-login",
@@ -21,8 +20,8 @@ passport.use(
       } catch (error) {
         return done(error, false);
       }
-    }
-  )
+    },
+  ),
 );
 
 passport.use(
@@ -35,13 +34,16 @@ passport.use(
     },
     async (_accessToken, _refreshToken, profile, done) => {
       try {
-        const user = await userService.findOrCreateGoogleUser(profile);
-        return done(null, user as unknown as Express.User);
+        const user = await userService.findOrCreateGoogleUser(
+          profile as TGoogleUser,
+        );
+
+        return done(null, user as Express.User);
       } catch (error) {
         return done(error as Error, undefined);
       }
-    }
-  )
+    },
+  ),
 );
 
 passport.use(
@@ -60,8 +62,8 @@ passport.use(
       } catch (error) {
         return done(error, false);
       }
-    }
-  )
+    },
+  ),
 );
 
 export default passport;

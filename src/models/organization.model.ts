@@ -1,7 +1,5 @@
-import { Document, model, Schema } from "mongoose";
-import { TOrganization } from "../types/organization.type";
+import { model, Schema } from "mongoose";
 
-export type TOrganizationDocument = TOrganization & Document;
 const organizationSchema = new Schema(
   {
     name: {
