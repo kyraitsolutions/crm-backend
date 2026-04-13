@@ -125,6 +125,8 @@ export class ChatbotRepository {
         },
       },
     ]);
+
+    console.log("chatbotWithFlow", chatbotWithFlow);
     return chatbotWithFlow[0];
   }
 

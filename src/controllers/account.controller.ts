@@ -41,6 +41,30 @@ export class AccountController {
     }
   };
 
+  getAccountAccess = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req?.user?.id;
+      const role = req?.user?.role;
+      const { accountId } = req.params;
+
+      const data = await accountService.getAccountAccess(
+        userId as string,
+        accountId,
+        role?.name as string,
+      );
+
+      httpResponse(req, res, 200, "Account access fetched successfully", {
+        doc: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   createAccount = async (
     req: Request,
     res: Response,
