@@ -42,6 +42,8 @@ export class TeamRepository {
           organizationId: new mongoose.Types.ObjectId(orgId),
         },
       },
+
+      // 👤 Profile
       {
         $lookup: {
           from: "userprofiles",
@@ -51,6 +53,8 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
+
+      // 👤 User
       {
         $lookup: {
           from: "users",
@@ -60,6 +64,8 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+
+      // 🎭 Role
       {
         $lookup: {
           from: "roles",
@@ -69,24 +75,81 @@ export class TeamRepository {
         },
       },
       { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
-      {
-        $match: {
-          "role.name": { $ne: ROLES.OWNER }, // or whatever your owner role name is
-        },
-      },
+
+      // ✅ Accounts for NORMAL USERS (useraccounts)
       {
         $lookup: {
           from: "useraccounts",
-          localField: "userId",
-          foreignField: "userId",
-          as: "accounts",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$userId", "$$userId"] },
+              },
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "accountId",
+                foreignField: "_id",
+                as: "account",
+              },
+            },
+            { $unwind: "$account" },
+            {
+              $project: {
+                accountId: 1,
+                roleId: 1,
+                name: "$account.accountName",
+              },
+            },
+          ],
+          as: "memberAccounts",
         },
       },
+
+      // ✅ Accounts for OWNER (direct from accounts collection)
+      {
+        $lookup: {
+          from: "accounts",
+          let: { userId: "$userId" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$createdBy", "$$userId"] }, // 🔥 important
+                  ],
+                },
+              },
+            },
+            {
+              $project: {
+                accountId: "$_id",
+                roleId: null,
+                name: "$accountName",
+              },
+            },
+          ],
+          as: "ownerAccounts",
+        },
+      },
+
+      // 🔥 Merge both based on role
       {
         $addFields: {
+          accounts: {
+            $cond: [
+              { $eq: ["$role.name", "OWNER"] },
+              "$ownerAccounts",
+              "$memberAccounts",
+            ],
+          },
           id: "$_id",
         },
       },
+
+      // 🧹 Final Shape
       {
         $project: {
           _id: 0,
@@ -106,22 +169,119 @@ export class TeamRepository {
             id: "$role._id",
             name: "$role.name",
           },
-          accounts: {
-            $map: {
-              input: "$accounts",
-              as: "acc",
-              in: {
-                accountId: "$$acc.accountId",
-                roleId: "$$acc.roleId",
-              },
-            },
-          },
+          accounts: 1,
         },
       },
     ]).sort({ createdAt: -1 });
 
     return memberData;
   }
+  // async getTeamMembers(orgId: string): Promise<any[]> {
+  //   const memberData = await OrganizationMember.aggregate([
+  //     {
+  //       $match: {
+  //         organizationId: new mongoose.Types.ObjectId(orgId),
+  //       },
+  //     },
+  //     {
+  //       $lookup: {
+  //         from: "userprofiles",
+  //         localField: "userId",
+  //         foreignField: "userId",
+  //         as: "profile",
+  //       },
+  //     },
+  //     { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
+  //     {
+  //       $lookup: {
+  //         from: "users",
+  //         localField: "userId",
+  //         foreignField: "_id",
+  //         as: "user",
+  //       },
+  //     },
+  //     { $unwind: { path: "$user", preserveNullAndEmptyArrays: true } },
+  //     {
+  //       $lookup: {
+  //         from: "roles",
+  //         localField: "roleId",
+  //         foreignField: "_id",
+  //         as: "role",
+  //       },
+  //     },
+  //     { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
+  //     {
+  //       $lookup: {
+  //         from: "useraccounts",
+  //         let: { userId: "$userId" },
+  //         pipeline: [
+  //           {
+  //             $match: {
+  //               $expr: { $eq: ["$userId", "$$userId"] },
+  //             },
+  //           },
+  //           {
+  //             $lookup: {
+  //               from: "accounts",
+  //               localField: "accountId",
+  //               foreignField: "_id",
+  //               as: "account",
+  //             },
+  //           },
+  //           { $unwind: "$account" },
+  //           {
+  //             $project: {
+  //               accountId: 1,
+  //               roleId: 1,
+  //               name: "$account.accountName",
+  //             },
+  //           },
+  //         ],
+  //         as: "accounts",
+  //       },
+  //     },
+  //     {
+  //       $addFields: {
+  //         id: "$_id",
+  //       },
+  //     },
+  //     {
+  //       $project: {
+  //         _id: 0,
+  //         id: 1,
+  //         userId: "$user._id",
+  //         email: "$user.email",
+  //         googleId: "$user.googleId",
+  //         createdAt: 1,
+  //         updatedAt: 1,
+  //         userProfile: {
+  //           firstName: "$profile.firstName",
+  //           lastName: "$profile.lastName",
+  //           phone: "$profile.phone",
+  //           profilePicture: "$profile.profilePicture",
+  //         },
+  //         role: {
+  //           id: "$role._id",
+  //           name: "$role.name",
+  //         },
+  //         accounts: "$accounts",
+  //         // accounts: {
+  //         //   $map: {
+  //         //     input: "$accounts",
+  //         //     as: "acc",
+  //         //     in: {
+  //         //       accountId: "$$acc.accountId",
+  //         //       roleId: "$$acc.roleId",
+  //         //       accountName: "$$acc.accountName",
+  //         //     },
+  //         //   },
+  //         // },
+  //       },
+  //     },
+  //   ]).sort({ createdAt: -1 });
+
+  //   return memberData;
+  // }
   async updateTeamMember(
     id: string,
     data: Partial<TOrganizationMember>,

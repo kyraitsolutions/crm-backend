@@ -9,14 +9,17 @@ import { TAccount, TCreateAccount } from "./../types/account.type.js";
 import { EmailService } from "./email.service.js";
 import { RbacService } from "./rbac.service.js";
 import { ROLES } from "../config/permissions.js";
+import { TeamRepository } from "../repositories/team.repository.js";
+import { console } from "inspector";
 
 export class AccountService {
   constructor(
     private rbacService: RbacService,
     private accountRepository: AccountRepository,
     private userAccountRepository: UserAccountRepository,
-    private userRepository: UserRepository,
-    private emailService: EmailService,
+    private teamRepository: TeamRepository,
+    // private userRepository: UserRepository,
+    // private emailService: EmailService,
   ) {}
 
   async getAccountById(accountId: string): Promise<{} | null> {
@@ -44,6 +47,45 @@ export class AccountService {
     }
 
     return accounts?.length ? accounts?.map((account) => account) : [];
+  }
+
+  async getAccountAccess(userId: string, accountId: string, role?: string) {
+    if (role === ROLES.OWNER) {
+      return {
+        accountId,
+        permissions: ["*"],
+      };
+    }
+
+    // 1. Get account member
+    const member = await this.userAccountRepository.getUserAccountByAccountId(
+      userId,
+      accountId,
+    );
+
+    if (!member) {
+      throw new Error("Access denied to this account");
+    }
+
+    // 2. Get role
+    const accountRole = await this.rbacService.getRoleById(
+      member?.roleId as string,
+    );
+
+    let permissions: string[] = [];
+
+    permissions = await this.rbacService.getPermissionsByRole(
+      accountRole?.id as string,
+    );
+
+    return {
+      accountId,
+      // role: {
+      //   id: role?.id,
+      //   name: role.name,
+      // },
+      permissions,
+    };
   }
 
   async createAccount(

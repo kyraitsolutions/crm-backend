@@ -17,6 +17,10 @@ export class UserAccountRepository {
     return UserAccount.find({ userId });
   }
 
+  async getUserAccountByAccountId(userId: string, accountId: string) {
+    return UserAccount.findOne({ userId, accountId });
+  }
+
   async getUserAccontsByUserId(userId: string): Promise<any[]> {
     const assignments = await UserAccount.find({
       userId: userId,

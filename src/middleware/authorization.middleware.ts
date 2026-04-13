@@ -1,18 +1,15 @@
 // authorization.middleware.ts
-import { NextFunction, Response, Request } from "express";
-import passport from "passport";
+import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
+import passport from "passport";
+import { ROLES } from "../config/permissions.js";
 import { USERROLE } from "../enums/user.enum.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
+import { RolePermissionModel } from "../models/role-permissions.js";
 import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
+import { UserAccount } from "../models/user.accounts.model.js";
 import { AuthUser, RequestWithUser } from "../types/core.js";
 import httpResponse from "../utils/http.response.js";
-import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
-import { hasPermission } from "../rbac/hasPermission.js";
-import { UserAccount } from "../models/user.accounts.model.js";
-import { RolePermissionModel } from "../models/role-permissions.js";
-import { OrganizationMember } from "../models/organizationMember.model.js";
-import { TRole } from "../types/roles-permissions.type.js";
-import { ROLES } from "../config/permissions.js";
 
 const isRoleMatch = (
   userRoleId?: string | ObjectId | null,
@@ -239,6 +236,8 @@ export const requirePermission = (
       const rolePermissions = await RolePermissionModel.find({
         roleId: activeRole._id,
       }).populate("permissionId");
+
+      console.log("rolePermissions", rolePermissions);
 
       const hasPermission = rolePermissions.some(
         (rp: any) => rp.permissionId.key === permissionKey,

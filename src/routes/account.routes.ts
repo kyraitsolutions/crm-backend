@@ -49,6 +49,11 @@ export class AccountRouter {
       requirePermission("accounts.view"),
       this.accountController.getAccountById.bind(this.accountController),
     );
+    this.router.get(
+      "/:accountId/access",
+      AuthMiddleware.authenticate,
+      this.accountController.getAccountAccess.bind(this.accountController),
+    );
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
@@ -59,7 +64,7 @@ export class AccountRouter {
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
-      requirePermission("accounts.update"),
+      requirePermission("accounts.edit"),
       this.accountController.updateAccount.bind(this.accountController),
     );
     this.router.delete(
@@ -78,7 +83,6 @@ export class AccountRouter {
     // get individual chatbot with chatbot flow of this account
     this.router.get(
       "/:accountId/chatbot/:chatbotId/get",
-
       this.chatBotController.getChatBotWithFlow.bind(this.chatBotController),
     );
     // get particular chatbot data
@@ -116,7 +120,7 @@ export class AccountRouter {
     this.router.put(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
-      requirePermission("chatbots.update"),
+      requirePermission("chatbots.edit"),
       this.chatBotController.updateChatBot.bind(this.chatBotController),
     );
 
@@ -134,27 +138,32 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/forms",
       AuthMiddleware.authenticate,
+      requirePermission("leadForms.view"),
       this.formController.getForms.bind(this.formController),
     );
 
     this.router.get(
       "/:accountId/form/:formId",
       AuthMiddleware.authenticate,
+      requirePermission("leadForms.view"),
       this.formController.getFormById.bind(this.formController),
     );
     this.router.post(
       "/:accountId/form",
       AuthMiddleware.authenticate,
+      requirePermission("leadForms.create"),
       this.formController.createForm.bind(this.formController),
     );
     this.router.put(
       "/:accountId/form/:formId",
       AuthMiddleware.authenticate,
+      requirePermission("leadForms.edit"),
       this.formController.updateFormById.bind(this.formController),
     );
     this.router.delete(
       "/:accountId/form/:formId",
       AuthMiddleware.authenticate,
+      requirePermission("leadForms.delete"),
       this.formController.deleteFormId.bind(this.formController),
     );
 
@@ -164,11 +173,13 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
+      requirePermission("leads.view"),
       this.leadController.getLeads.bind(this.leadController),
     );
     this.router.put(
       "/:accountId/lead/:leadId/update",
       AuthMiddleware.authenticate,
+      requirePermission("leads.edit"),
       this.leadController.updateLead.bind(this.leadController),
     );
 
@@ -176,6 +187,7 @@ export class AccountRouter {
     this.router.post(
       "/:accountId/lead/:formId/create",
       AuthMiddleware.authenticate,
+      requirePermission("leads.create"),
       this.leadController.createLead.bind(this.leadController),
     );
 
