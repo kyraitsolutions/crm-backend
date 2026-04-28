@@ -10,6 +10,7 @@ import { AIController } from "../controllers/ai.controller.js";
 import { BroadcastController } from "../controllers/broadcasting.controller.js";
 import { requirePermission } from "../middleware/authorization.middleware.js";
 import { AccountController } from "../controllers/account.controller.js";
+import { RecyclebinController } from "../controllers/recyclebin.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -21,6 +22,7 @@ export class AccountRouter {
   private emailController: EmailController;
   private aiController:AIController;
   private broadcastController:BroadcastController;
+  private recyclebinController:RecyclebinController;
 
   // constructor
   constructor() {
@@ -33,6 +35,7 @@ export class AccountRouter {
     this.emailController = new EmailController();
     this.aiController = new AIController();
     this.broadcastController=new BroadcastController();
+    this.recyclebinController=new RecyclebinController();
     this.initializeRoutes();
   }
 
@@ -185,10 +188,10 @@ export class AccountRouter {
 
     // TODO: Lead Webhook
     this.router.post(
-      "/:accountId/lead/:formId/create",
-      AuthMiddleware.authenticate,
-      requirePermission("leads.create"),
-      this.leadController.createLead.bind(this.leadController),
+      "/:accountId/lead/webhook/create",
+      // AuthMiddleware.authenticate,
+      // requirePermission("leads.create"),
+      this.leadController.createWebhookLead.bind(this.leadController),
     );
 
     // TODO: =============================================================================================
@@ -257,6 +260,14 @@ export class AccountRouter {
     );
 
 
+    // TODO: =============================================================================================
+
+    // TODO: Recyclebin 
+    this.router.post( 
+    "/:accountId/recyclebin",
+      AuthMiddleware.authenticate,
+      this.recyclebinController.list.bind(this.recyclebinController)
+    );
 
   }
   public getRouter(): Router {

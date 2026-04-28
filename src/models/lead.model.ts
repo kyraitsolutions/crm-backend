@@ -30,7 +30,9 @@ export interface Lead extends Document {
         "facebook",
         "instagram",
         "webform",
-        "manual"
+        "manual",
+        "webhook"
+
       ];
     };
     url?: string;
@@ -96,6 +98,7 @@ const leadSchema = new Schema<Lead>(
           "instagram",
           "webform",
           "manual",
+          "webhook"
         ],
         set: (v: string) => v?.toLowerCase(),
         required: true,

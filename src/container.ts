@@ -14,6 +14,7 @@ import { EmailService } from "./services/email.service";
 import { OrganizationOnboardingService } from "./services/organization-onboarding.service";
 import { OrganizationService } from "./services/organization.service";
 import { RbacService } from "./services/rbac.service";
+import { RecyclebinService } from "./services/recycleBin.service";
 import { UserAggregateService } from "./services/user-aggregate.service";
 import { UserProfileService } from "./services/userprofile.service";
 
@@ -65,3 +66,9 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
   rbacService,
   emailService,
 );
+
+
+export const recyclebinService= new RecyclebinService(
+  accountRepository,
+  userAccountRepository
+)
