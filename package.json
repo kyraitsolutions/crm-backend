@@ -51,6 +51,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "razorpay": "^2.9.6",
     "tsx": "^4.20.6",
     "winston": "^3.18.3",
     "ws": "^8.18.3",

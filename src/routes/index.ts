@@ -6,9 +6,10 @@ import { Router } from "express";
 import { EmailRouter } from "./email.routes.js";
 import { TeamRouter } from "./team.routes.js";
 import { SubscriptionRouter } from "./subscription.routes.js";
+import { MediaRouter } from "./media.routes.js";
+import { PaymentRouter } from "./payment.route.js";
 import { OrganizationRouter } from "./organization.route.js";
 import { RBACRouter } from "./rbac.routes.js";
-import { MediaRouter } from "./media.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -21,6 +22,7 @@ export class AppRoutes {
   private subscriptionRouter: SubscriptionRouter;
   private rbacRouter: RBACRouter;
   private mediaRouter: MediaRouter;
+  private paymentRouter:PaymentRouter;
   private router: Router;
 
   constructor() {
@@ -35,6 +37,7 @@ export class AppRoutes {
     this.subscriptionRouter = new SubscriptionRouter();
     this.rbacRouter = new RBACRouter();
     this.mediaRouter = new MediaRouter();
+    this.paymentRouter=new PaymentRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -49,6 +52,7 @@ export class AppRoutes {
     this.router.use("/email", this.emailRouter.getRouter());
     this.router.use("/roles", this.rbacRouter.getRouter());
     this.router.use("/media", this.mediaRouter.getRouter());
+    this.router.use("/payment", this.paymentRouter.getRouter());
   }
 
   public getRouter(): Router {

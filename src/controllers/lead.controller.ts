@@ -93,6 +93,24 @@ export class LeadController {
       next(error);
     }
   };
+  createWebhookLead = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { accountId } = req.params;
+      const leadData = req.body;
+
+      const lead = await this.leadService.createLead({
+        ...leadData,
+        accountId: accountId,
+        source: {
+          name: "webhook",
+          url: "https://www.google.com",
+        },
+      });
+      httpResponse(req, res, 200, "Lead create successfully", lead);
+    } catch (error) {
+      next(error);
+    }
+  };
 
   createLeadWs = async (
     ws: AuthenticatedWebSocket,

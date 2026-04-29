@@ -19,6 +19,9 @@ import { UserAggregateService } from "./services/user-aggregate.service";
 import { UserProfileService } from "./services/userprofile.service";
 
 // REPOSITORIES
+import { RecyclebinService } from "./services/recycleBin.service";
+
+// repositories
 export const userRepository = new UserRepository();
 export const userProfileRepository = new UserProfileRepository();
 export const organizationRepository = new OrganizationRepository();
@@ -69,3 +72,8 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
 );
 
 export const mediaService = new MediaService(s3Client);
+
+export const recyclebinService= new RecyclebinService(
+  accountRepository,
+  userAccountRepository
+)

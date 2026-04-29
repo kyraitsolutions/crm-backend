@@ -172,7 +172,7 @@ export class TeamRepository {
           accounts: 1,
         },
       },
-    ]).sort({ createdAt: -1 });
+    ]).sort({ createdAt: -1 }).sort({ createdAt: 1 });
 
     return memberData;
   }

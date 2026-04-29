@@ -6,8 +6,11 @@ import { LeadController } from "../controllers/lead.controller.js";
 import AnalyticsController from "../controllers/analytics.controller.js";
 import { checkSubscriptionStatus } from "../middleware/subscription.middleware.js";
 import { EmailController } from "../controllers/email.controller.js";
+import { AIController } from "../controllers/ai.controller.js";
+import { BroadcastController } from "../controllers/broadcasting.controller.js";
 import { requirePermission } from "../middleware/authorization.middleware.js";
 import { AccountController } from "../controllers/account.controller.js";
+import { RecyclebinController } from "../controllers/recyclebin.controller.js";
 
 export class AccountRouter {
   public router: Router;
@@ -17,6 +20,9 @@ export class AccountRouter {
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
   private emailController: EmailController;
+  private aiController:AIController;
+  private broadcastController:BroadcastController;
+  private recyclebinController:RecyclebinController;
 
   // constructor
   constructor() {
@@ -27,6 +33,9 @@ export class AccountRouter {
     this.leadController = new LeadController();
     this.analyticsController = new AnalyticsController();
     this.emailController = new EmailController();
+    this.aiController = new AIController();
+    this.broadcastController=new BroadcastController();
+    this.recyclebinController=new RecyclebinController();
     this.initializeRoutes();
   }
 
@@ -190,6 +199,13 @@ export class AccountRouter {
       requirePermission("leads.create"),
       this.leadController.createLead.bind(this.leadController),
     );
+    // TODO: Lead Webhook
+    this.router.post(
+      "/:accountId/lead/webhook/create",
+      // AuthMiddleware.authenticate,
+      // requirePermission("leads.create"),
+      this.leadController.createWebhookLead.bind(this.leadController),
+    );
 
     // TODO: =============================================================================================
 
@@ -208,13 +224,70 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.emailController.getSubscribers.bind(this.emailController),
     );
+
+    // TODO: =============================================================================================
+
+    // TODO: Templates
     this.router.post(
-      "/:accountId/email/template",
+      "/:accountId/template",
       AuthMiddleware.authenticate,
       this.emailController.createTemplate.bind(this.emailController),
     );
+    this.router.get(
+      "/:accountId/templates",
+      AuthMiddleware.authenticate,
+      this.emailController.getTemplates.bind(this.emailController),
+    );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: AI Operations
+
+    this.router.get(
+      "/:accountId/lead/:leadId/ai-summary",
+      AuthMiddleware.authenticate,
+      this.aiController.getLeadSummary.bind(this.aiController)
+    );
+
+    this.router.post(
+      "/:accountId/ai-template",
+      AuthMiddleware.authenticate,
+      this.aiController.createTemplateContent.bind(this.aiController)
+    );
+    this.router.post(
+      "/webhook",
+      // AuthMiddleware.authenticate,
+      this.aiController.createTemplateContent.bind(this.aiController)
+    );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: Campaign and Broadcasting
+        // 🚀 Start Email Campaign
+    this.router.post(
+      "/:accountId/campaigns/start",
+      AuthMiddleware.authenticate,
+      this.broadcastController.startEmailCampaign.bind(this.broadcastController)
+    );
+
+
+    // TODO: =============================================================================================
+
+    // TODO: Recyclebin 
+    this.router.post( 
+    "/:accountId/recyclebin",
+      AuthMiddleware.authenticate,
+      this.recyclebinController.list.bind(this.recyclebinController)
+    );
+
   }
   public getRouter(): Router {
     return this.router;
   }
 }
+
+//beploy id AKfycbyZ7oQqM9UMLWhsNLbu7XtdzjWIuM8Qy4_BkHsry-ZAKxM8KSUD6BOEUk2bWHrJ0V07
+
+// webapp url https://script.google.com/macros/s/AKfycbyZ7oQqM9UMLWhsNLbu7XtdzjWIuM8Qy4_BkHsry-ZAKxM8KSUD6BOEUk2bWHrJ0V07/exec
