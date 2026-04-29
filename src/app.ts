@@ -30,7 +30,7 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(
       cors({
-        origin: config.cross_domains?.origin,
+        origin: config.cross_domains?.origin || "*",
         credentials: true,
       }),
     );
