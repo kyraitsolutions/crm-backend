@@ -31,6 +31,7 @@ export class App {
     this.app.use(
       cors({
         origin: config.cross_domains?.origin || "*",
+        // origin: "*",
         credentials: true,
       }),
     );

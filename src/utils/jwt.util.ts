@@ -10,7 +10,7 @@ export interface JwtPayload {
 }
 
 export class JwtUtil {
-  private static readonly SECRET = ENV.JWT_SECRET || "default-secret";
+  private static readonly SECRET = ENV.AUTH.JWT_SECRET || "default-secret";
   private static readonly EXPIRES_IN = "7d";
 
   static sign(payload: JwtPayload): string {
