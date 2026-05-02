@@ -181,6 +181,7 @@ export default class AnalyticsRepository {
         instagram: 0,
         webform: 0,
         manual: 0,
+        webhook:0,
         total: entry ? entry.total : 0,
       };
       if (entry) {
@@ -194,6 +195,7 @@ export default class AnalyticsRepository {
           else if (/facebook/i.test(s.k)) obj.facebook = s.v;
           else if (/instagram/i.test(s.k)) obj.instagram = s.v;
           else if (/webform/i.test(s.k)) obj.webform = s.v;
+          else if (/webform/i.test(s.k)) obj.webhook = s.v;
           else if (/manual/i.test(s.k)) obj.manual = s.v;
           else obj[s.k] = s.v;
         });
@@ -316,7 +318,7 @@ export default class AnalyticsRepository {
 
   async channelPerformance(accountId: string): Promise<ChannelPerformanceItem[]> {
     // For each major channel compute leads, conversions and conversion rate
-    const channels = ["chatbot", "website", "google_ads", "whatsapp", "facebook", "instagram", "webform", "manual"]
+    const channels = ["chatbot", "website", "google_ads", "whatsapp", "facebook", "instagram", "webform", "manual","webhook"]
     const pipeline = [
       { $match: { accountId: new ObjectId(accountId) } },
       {

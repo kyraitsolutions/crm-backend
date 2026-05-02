@@ -95,7 +95,11 @@ export class LeadController {
   };
   createWebhookLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
+
+      console.log(req)
       const { accountId } = req.params;
+
+      console.log("accountId", accountId);
       const leadData = req.body;
 
       const lead = await this.leadService.createLead({

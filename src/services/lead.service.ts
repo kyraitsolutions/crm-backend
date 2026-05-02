@@ -86,7 +86,7 @@ export class LeadService {
 
     // For Open AI
     const prompt = JSON.stringify(lead);
-    const rawResponse = await this.ai.runOpenAI(prompt);
+    const rawResponse = await this.ai.runOpenAI(prompt,"one parameter expected here");
     // console.log(rawResponse);
 
     if (!rawResponse) {

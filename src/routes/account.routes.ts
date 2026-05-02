@@ -192,19 +192,19 @@ export class AccountRouter {
       this.leadController.getLeadSummary.bind(this.leadController),
     );
 
-    // TODO: Lead Webhook
-    this.router.post(
-      "/:accountId/lead/:formId/create",
-      AuthMiddleware.authenticate,
-      requirePermission("leads.create"),
-      this.leadController.createLead.bind(this.leadController),
-    );
+   
     // TODO: Lead Webhook
     this.router.post(
       "/:accountId/lead/webhook/create",
       // AuthMiddleware.authenticate,
       // requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
+    );
+     this.router.post(
+      "/:accountId/lead/:formId/create",
+      AuthMiddleware.authenticate,
+      requirePermission("leads.create"),
+      this.leadController.createLead.bind(this.leadController),
     );
 
     // TODO: =============================================================================================
