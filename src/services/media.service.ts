@@ -32,14 +32,20 @@ export class MediaService {
   }
 
   private validate(dto: CreateMediaUploadUrlDto) {
-    const allowed = MEDIA.IMAGE.ACCEPTED_TYPES;
+    const config = this.getMediaConfig(dto.mimeType);
 
-    if (!allowed.includes(dto.mimeType)) {
-      throw new Error("Invalid file type");
+    if (!config) {
+      throw new Error("Unsupported media type");
     }
 
-    if (dto.fileSize > MEDIA.IMAGE.MAX_SIZE) {
+    if (dto.fileSize > config.maxSize) {
       throw new Error("File too large");
     }
+  }
+
+  private getMediaConfig(mimeType: string) {
+    return Object.values(MEDIA).find((media) =>
+      media.mimeTypes.includes(mimeType),
+    );
   }
 }
