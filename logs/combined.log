@@ -207,11 +207,4 @@
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-04-27 22:30:04"}
 {"level":"info","message":"All queues closed","timestamp":"2026-04-27 22:30:04"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-04-29 09:03:27"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:56:34"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:57:00"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:57:04"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:57:08"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:57:11"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-01 09:58:02"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-02 15:27:47"}
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-02 19:55:11"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-04-30 21:22:26"}
