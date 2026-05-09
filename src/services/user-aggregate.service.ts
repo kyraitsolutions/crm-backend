@@ -30,9 +30,7 @@ export class UserAggregateService {
       if (role?.name === ROLES.OWNER) {
         perms = ["*"];
       } else {
-        console.log("ider aaye");
         perms = await rbacService.getPermissionsByRole(role?.id);
-        console.log(perms);
       }
     }
 

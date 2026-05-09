@@ -10,17 +10,14 @@ export class AuthMiddleware {
       "jwt",
       { session: false },
       async (err: any, user: TUser, _info: any) => {
-        console.log("user to hai", user);
         console.log(err);
         if (err) {
           return next(err);
         }
         if (!user) {
-          console.log("req",req)
+          console.log("req", req);
           return res.status(401).json({ message: "Unauthorized" });
         }
-
-        console.log("user to hai", user);
 
         const organizationMember = (
           await OrganizationMember.findOne({
@@ -46,8 +43,6 @@ export class AuthMiddleware {
   static googleAuth() {
     return (req: Request, res: Response, next: NextFunction) => {
       const platform = req.query.platform === "mobile" ? "mobile" : "web";
-
-      console.log("Platfrom in middleware", platform);
 
       passport.authenticate("google", {
         scope: ["profile", "email"],

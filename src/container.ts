@@ -17,11 +17,13 @@ import { OrganizationService } from "./services/organization.service";
 import { RbacService } from "./services/rbac.service";
 import { UserAggregateService } from "./services/user-aggregate.service";
 import { UserProfileService } from "./services/userprofile.service";
+import { RecyclebinService } from "./services/recycleBin.service";
+import { VisitorRepository } from "./repositories/visitor.repository";
+import { ConversationRepository } from "./repositories/conversations.repository";
+import { MessageRepository } from "./repositories/messages.repository";
+import { VisitorService } from "./services/visitor.service";
 
 // REPOSITORIES
-import { RecyclebinService } from "./services/recycleBin.service";
-
-// repositories
 export const userRepository = new UserRepository();
 export const userProfileRepository = new UserProfileRepository();
 export const organizationRepository = new OrganizationRepository();
@@ -30,6 +32,9 @@ export const userAccountRepository = new UserAccountRepository();
 export const teamRepository = new TeamRepository();
 export const rbacRepository = new RbacRepository();
 export const subscriptionRepository = new SubscriptionRepository();
+export const visitorRepository = new VisitorRepository();
+export const conversationRepository = new ConversationRepository();
+export const messageRepository = new MessageRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
@@ -71,9 +76,13 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
   emailService,
 );
 
+export const visitorService = new VisitorService(visitorRepository);
+
+// media service
 export const mediaService = new MediaService(s3Client);
 
-export const recyclebinService= new RecyclebinService(
+// recyclebin service
+export const recyclebinService = new RecyclebinService(
   accountRepository,
-  userAccountRepository
-)
+  userAccountRepository,
+);
