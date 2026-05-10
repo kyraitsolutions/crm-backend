@@ -48,6 +48,23 @@ export const MESSAGE_TYPES: TMessageType[] = [
   "question",
 ];
 
+type TQuestionInputTypes =
+  | "text"
+  | "number"
+  | "email"
+  | "date"
+  | "daterange"
+  | "time";
+
+export const QUESTION_INPUT_TYPE: TQuestionInputTypes[] = [
+  "text",
+  "number",
+  "email",
+  "date",
+  "daterange",
+  "time",
+];
+
 const MessageSchema = new Schema(
   {
     conversationId: {
@@ -63,11 +80,22 @@ const MessageSchema = new Schema(
       index: true,
     },
 
+    accountId: {
+      type: Types.ObjectId,
+      ref: "Account",
+    },
+
     messageId: {
       type: String,
       required: true,
       unique: true,
       index: true,
+    },
+
+    from: {
+      type: String,
+      required: true,
+      enum: ["user", "bot", "agent", "system"],
     },
 
     body: {
@@ -115,6 +143,14 @@ const MessageSchema = new Schema(
         enum: ["marketing", "utility", "authentication"],
       },
       components: [Schema.Types.Mixed],
+    },
+
+    question: {
+      inputType: {
+        type: String,
+        enum: QUESTION_INPUT_TYPE,
+      },
+      text: String,
     },
 
     platform: {

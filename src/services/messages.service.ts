@@ -4,23 +4,47 @@ import { MessageRepository } from "../repositories/messages.repository";
 import { emitToAccount } from "../config/wsServer/wsEmitter";
 
 export class MessageService {
-  private repository: MessageRepository;
+  private messageRepository: MessageRepository;
   private conversationRepository = new ConversationRepository();
 
   constructor() {
-    this.repository = new MessageRepository();
+    this.messageRepository = new MessageRepository();
   }
 
+  public async getMessagesByConversationId(conversationId: string) {
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      const messages =
+        await this.messageRepository.getMessagesByConversationId(
+          conversationId,
+        );
+      await this.conversationRepository.updateConversation(
+        conversationId,
+        { unreadCount: 0 },
+        {
+          session,
+          resetUnread: true,
+          incrementUnread: false,
+          updateLastMessage: false,
+        },
+      );
+      await session.commitTransaction();
+      return messages;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    }
+  }
   public async saveMessage(payload: any) {
     const session = await mongoose.startSession();
     session.startTransaction();
-
     try {
       const messagePayload = {
         ...payload,
       };
 
-      const message = await this.repository.createMessage(
+      const message = await this.messageRepository.createMessage(
         messagePayload,
         session,
       );
@@ -28,7 +52,9 @@ export class MessageService {
       const conversation = await this.conversationRepository.updateConversation(
         messagePayload.conversationId,
         messagePayload,
-        session,
+        {
+          session,
+        },
       );
 
       emitToAccount(payload.accountId, "NEW_MESSAGE", {
