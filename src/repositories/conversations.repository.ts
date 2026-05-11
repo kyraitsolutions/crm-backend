@@ -63,61 +63,157 @@ export class ConversationRepository {
   async updateConversation(
     conversationId: string,
     payload: any,
-    session: ClientSession,
+    options?: {
+      session?: ClientSession;
+      resetUnread?: boolean;
+      incrementUnread?: boolean;
+      updateLastMessage?: boolean;
+    },
   ) {
-    let lastMessageText = "";
-    switch (payload?.type) {
-      case "text":
-        lastMessageText = payload?.body?.text || "";
-        break;
+    const {
+      session,
+      resetUnread = false,
+      incrementUnread = true,
+      updateLastMessage = true,
+    } = options || {};
 
-      case "interactive":
-        lastMessageText =
-          payload?.interactive?.body?.text || "Interactive Message";
-        break;
+    const updateQuery: any = {};
+    const incQuery: any = {};
 
-      case "image":
-        lastMessageText = "📷 Image";
-        break;
+    if (updateLastMessage) {
+      let lastMessageText = "";
 
-      case "video":
-        lastMessageText = "🎥 Video";
-        break;
+      switch (payload?.type) {
+        case "text":
+          lastMessageText = payload?.body?.text || "";
+          break;
 
-      case "document":
-        lastMessageText = "📄 Document";
-        break;
+        case "interactive":
+          lastMessageText =
+            payload?.interactive?.body?.text || "Interactive Message";
+          break;
 
-      case "question":
-        lastMessageText = payload?.question?.text || "Question";
-        break;
+        case "image":
+          lastMessageText = "📷 Image";
+          break;
 
-      default:
-        lastMessageText = payload?.type || "Message";
+        case "video":
+          lastMessageText = "🎥 Video";
+          break;
+
+        case "document":
+          lastMessageText = "📄 Document";
+          break;
+
+        case "question":
+          lastMessageText = payload?.question?.text || "Question";
+          break;
+
+        default:
+          lastMessageText = payload?.type || "Message";
+      }
+
+      updateQuery.$set = {
+        ...updateQuery.$set,
+        "lastMessage.messageId": payload.messageId,
+        "lastMessage.text": lastMessageText,
+        "lastMessage.type": payload.type || "",
+        "lastMessage.from": payload.from || "",
+        "lastMessage.updatedAt": new Date(),
+      };
+
+      incQuery.totalMessages = 1;
+
+      if (incrementUnread && payload.direction === "inbound") {
+        incQuery.unreadCount = 1;
+      }
     }
 
-    const unreadIncrement = payload.direction === "inbound" ? 1 : 0;
+    if (resetUnread) {
+      updateQuery.$set = {
+        ...updateQuery.$set,
+        unreadCount: 0,
+      };
+    }
+
+    updateQuery.$set = {
+      ...updateQuery.$set,
+      ...payload,
+    };
+
+    if (Object.keys(incQuery).length > 0) {
+      updateQuery.$inc = incQuery;
+    }
 
     return await ConversationModel.findByIdAndUpdate(
       conversationId,
-      {
-        $set: {
-          "lastMessage.messageId": payload.messageId,
-          "lastMessage.text": lastMessageText,
-          "lastMessage.type": payload.type || "",
-          "lastMessage.from": payload.from || "",
-          "lastMessage.updatedAt": new Date(),
-        },
-
-        $inc: {
-          totalMessages: 1,
-          unreadCount: unreadIncrement,
-        },
-      },
+      updateQuery,
       {
         new: true,
         session,
       },
     );
   }
+
+  // async updateConversation(
+  //   conversationId: string,
+  //   payload: any,
+  //   session?: ClientSession,
+  // ) {
+  //   let lastMessageText = "";
+  //   switch (payload?.type) {
+  //     case "text":
+  //       lastMessageText = payload?.body?.text || "";
+  //       break;
+
+  //     case "interactive":
+  //       lastMessageText =
+  //         payload?.interactive?.body?.text || "Interactive Message";
+  //       break;
+
+  //     case "image":
+  //       lastMessageText = "📷 Image";
+  //       break;
+
+  //     case "video":
+  //       lastMessageText = "🎥 Video";
+  //       break;
+
+  //     case "document":
+  //       lastMessageText = "📄 Document";
+  //       break;
+
+  //     case "question":
+  //       lastMessageText = payload?.question?.text || "Question";
+  //       break;
+
+  //     default:
+  //       lastMessageText = payload?.type || "Message";
+  //   }
+
+  //   const unreadIncrement = payload.direction === "inbound" ? 1 : 0;
+
+  //   return await ConversationModel.findByIdAndUpdate(
+  //     conversationId,
+  //     {
+  //       $set: {
+  //         "lastMessage.messageId": payload.messageId,
+  //         "lastMessage.text": lastMessageText,
+  //         "lastMessage.type": payload.type || "",
+  //         "lastMessage.from": payload.from || "",
+  //         "lastMessage.updatedAt": new Date(),
+  //         ...payload,
+  //       },
+
+  //       $inc: {
+  //         totalMessages: 1,
+  //         unreadCount: unreadIncrement,
+  //       },
+  //     },
+  //     {
+  //       new: true,
+  //       session,
+  //     },
+  //   );
+  // }
 }

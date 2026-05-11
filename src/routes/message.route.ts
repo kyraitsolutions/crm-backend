@@ -12,7 +12,13 @@ export class MessageRouter {
   }
 
   private initializeRoutes() {
-    // SEND MESSAGE
+    // GET MESSAGES BY CONVERSATION ID
+    this.router.get(
+      "/:conversationId",
+      this.controller.getMessagesByConversationId.bind(this.controller),
+    );
+
+    // SAVE MESSAGE
     this.router.post(
       "/save",
       this.controller.saveMessage.bind(this.controller),
