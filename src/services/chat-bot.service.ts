@@ -5,15 +5,9 @@ import {
   ResponseChatBotDto,
   ResponseChatBotFlowDto,
 } from "../dtos/chat-bot.dto.js";
-import { USERROLE } from "../enums/user.enum.js";
-import { TeamMember, TeamMemberAccountLeads } from "../models/team.model.js";
-import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
 import { AccountRepository } from "../repositories/account.repository.js";
+import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
 import { TCreateChatBotFlow } from "../types/chat-bot.type.js";
-import { ObjectId } from "mongodb";
-import { hasPermission } from "../rbac/hasPermission.js";
-import { ROLE_PERMISSIONS } from "../rbac/role-permissions.js";
-import { ROLES } from "../config/permissions.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;

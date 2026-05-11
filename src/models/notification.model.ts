@@ -5,6 +5,7 @@ export interface Notification extends Document{
     accountId:Schema.Types.ObjectId;
     title:string;
     description:string;
+    typeId:string;
     type: 
     | "new_lead"
     | "message"
@@ -43,6 +44,10 @@ const notificationSchema=new Schema({
     title: String,
     description: String,
 
+    typeId:{
+        type:String,
+        required:true,
+    },
     type: {
         type: String,
         enum: ["new_lead", "message", "chatbot", "system_alert", "communication"],

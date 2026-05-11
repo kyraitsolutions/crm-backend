@@ -36,6 +36,7 @@ export class AccountRouter {
     this.aiController = new AIController();
     this.broadcastController=new BroadcastController();
     this.recyclebinController=new RecyclebinController();
+    this
     this.initializeRoutes();
   }
 
@@ -281,6 +282,17 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.recyclebinController.list.bind(this.recyclebinController)
     );
+
+
+
+    // TODO: =============================================================================================
+
+    // TODO: Notifications 
+    // this.router.post( 
+    // "/:accountId/notifications",
+    //   AuthMiddleware.authenticate,
+    //   this.notificationController.list.bind(this.recyclebinController)
+    // );
 
   }
   public getRouter(): Router {

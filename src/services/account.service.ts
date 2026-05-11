@@ -1,16 +1,13 @@
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { ClientSession } from "mongoose";
+import { ROLES } from "../config/permissions.js";
 import { AccountDto } from "../dtos/account.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
+import { TeamRepository } from "../repositories/team.repository.js";
 import { UserAccountRepository } from "../repositories/user-account.repository.js";
-import { UserRepository } from "../repositories/user.repository.js";
 import { TUser } from "../types/user.type.js";
 import { TAccount, TCreateAccount } from "./../types/account.type.js";
-import { EmailService } from "./email.service.js";
 import { RbacService } from "./rbac.service.js";
-import { ROLES } from "../config/permissions.js";
-import { TeamRepository } from "../repositories/team.repository.js";
-import { console } from "inspector";
 
 export class AccountService {
   constructor(

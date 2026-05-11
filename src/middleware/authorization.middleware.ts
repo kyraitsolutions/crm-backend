@@ -237,8 +237,6 @@ export const requirePermission = (
         roleId: activeRole._id,
       }).populate("permissionId");
 
-      console.log("rolePermissions", rolePermissions);
-
       const hasPermission = rolePermissions.some(
         (rp: any) => rp.permissionId.key === permissionKey,
       );

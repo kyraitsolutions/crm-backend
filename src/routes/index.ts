@@ -10,6 +10,9 @@ import { MediaRouter } from "./media.routes.js";
 import { PaymentRouter } from "./payment.route.js";
 import { OrganizationRouter } from "./organization.route.js";
 import { RBACRouter } from "./rbac.routes.js";
+import { VisitorRouter } from "./visitor.route.js";
+import { ConversationRouter } from "./conversations.route.js";
+import { MessageRouter } from "./message.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -17,12 +20,16 @@ export class AppRoutes {
   private chatBotRouter: ChatBotRouter;
   private userRouter: UserRouter;
   // private userProfileRouter: UserProfileRouter;
+
   private emailRouter: EmailRouter;
   private teamRouter: TeamRouter;
   private subscriptionRouter: SubscriptionRouter;
   private rbacRouter: RBACRouter;
   private mediaRouter: MediaRouter;
-  private paymentRouter:PaymentRouter;
+  private visitorRouter: VisitorRouter;
+  private conversationRouter: ConversationRouter;
+  private messageRouter: MessageRouter;
+  private paymentRouter: PaymentRouter;
   private router: Router;
 
   constructor() {
@@ -32,12 +39,15 @@ export class AppRoutes {
     this.userRouter = new UserRouter();
 
     // this.userProfileRouter = new UserProfileRouter();
+    this.visitorRouter = new VisitorRouter();
+    this.conversationRouter = new ConversationRouter();
+    this.messageRouter = new MessageRouter();
     this.emailRouter = new EmailRouter();
     this.teamRouter = new TeamRouter();
     this.subscriptionRouter = new SubscriptionRouter();
     this.rbacRouter = new RBACRouter();
     this.mediaRouter = new MediaRouter();
-    this.paymentRouter=new PaymentRouter();
+    this.paymentRouter = new PaymentRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -46,6 +56,10 @@ export class AppRoutes {
     // this.router.use("/user/profile", this.userProfileRouter.getRouter());
     this.router.use("/organization", this.organizationRouter.getRouter());
     this.router.use("/account", this.accountRouter.getRouter());
+    this.router.use("/visitor", this.visitorRouter.getRouter());
+    this.router.use("/conversation", this.conversationRouter.getRouter());
+    this.router.use("/message", this.messageRouter.getRouter());
+
     this.router.use("/chatbot", this.chatBotRouter.getRouter());
     this.router.use("/subscription", this.subscriptionRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());

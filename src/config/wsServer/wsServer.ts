@@ -2,21 +2,34 @@
 import http from "http";
 import url from "url";
 import { WebSocketServer } from "ws";
-import { handleEvent } from "./handleEvent.js";
+import { handleEvent } from "./handlers/handleEvent.js";
 import { AuthenticatedWebSocket } from "../../types/websocket.type.js";
+import { handleSocketDisconnect } from "./handlers/handleSocketDisconnect.js";
+import { setWssInstance } from "./wsStore.js";
 
 export const createWebSocketServer = (server: http.Server) => {
   // ✅ Attach WS to the same HTTP server (no extra port)
   const wss = new WebSocketServer({ server });
 
+  setWssInstance(wss);
+
   wss.on("connection", (ws: AuthenticatedWebSocket, req) => {
     const query = new url.URL(req.url || "", "http://localhost");
     const accountId = query.searchParams.get("accountId");
+    const visitorId = query.searchParams.get("visitorId");
+
+    console.log("✅Client connected", accountId);
+    console.log(wss.clients.size);
+
     ws.accountId = accountId;
+    ws.visitorId = visitorId;
+    ws.socketType = "visitor";
+
     ws.on("message", (raw) => {
       try {
         const { event, data } = JSON.parse(raw.toString());
-        console.log(data);
+
+        if (!event) return;
         // ✅ Dispatch event to handlers
         if (data) {
           handleEvent(event, ws, wss, data);
@@ -28,7 +41,10 @@ export const createWebSocketServer = (server: http.Server) => {
       }
     });
 
-    ws.on("close", () => console.log("❌ Client disconnected"));
+    ws.on("close", async () => {
+      (console.log("❌Client disconnected", ws.accountId, ws.visitorId),
+        await handleSocketDisconnect(ws));
+    });
   });
 
   return wss;
