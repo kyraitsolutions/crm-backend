@@ -12,8 +12,6 @@ export const emitToAccount = (accountId: string, event: string, data: any) => {
   wss.clients.forEach((client) => {
     const ws = client as AuthenticatedWebSocket;
 
-    console.log("wss", ws.accountId, accountId);
-
     if (ws.readyState === WebSocket.OPEN && ws.accountId === accountId) {
       ws.send(
         JSON.stringify({
@@ -24,7 +22,12 @@ export const emitToAccount = (accountId: string, event: string, data: any) => {
     }
   });
 };
-export const emitToOrganization = (organizationId:string,accountId: string, event: string, data: any) => {
+export const emitToOrganization = ({
+  organizationId,
+  accountId,
+  event,
+  data,
+}: any) => {
   const wss = getWssInstance();
 
   wss.clients.forEach((client) => {
@@ -32,7 +35,10 @@ export const emitToOrganization = (organizationId:string,accountId: string, even
 
     console.log("wss", ws.organizationId, organizationId);
 
-    if (ws.readyState === WebSocket.OPEN && ws.organizationId === organizationId) {
+    if (
+      ws.readyState === WebSocket.OPEN &&
+      String(ws.organizationId) === String(organizationId)
+    ) {
       ws.send(
         JSON.stringify({
           event,

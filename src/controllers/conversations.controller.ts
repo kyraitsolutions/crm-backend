@@ -19,10 +19,8 @@ export class ConversationController {
         conversationPayloadData,
       );
 
-      return res.status(200).json({
-        success: true,
-        message: "Conversation initialized",
-        result,
+      httpResponse(req, res, 200, "Conversation initialized successfully", {
+        doc: result,
       });
     } catch (error) {
       next(error);

@@ -6,7 +6,10 @@ import { InitConversationDto } from "../dtos/conversation.dot";
 import { AccountRepository } from "../repositories/account.repository";
 import { NotificationRepository } from "../repositories/notification.repository";
 import mongoose from "mongoose";
-import { emitToAccount, emitToOrganization } from "../config/wsServer/wsEmitter";
+import {
+  emitToAccount,
+  emitToOrganization,
+} from "../config/wsServer/wsEmitter";
 
 export class ConversationService {
   private repository: ConversationRepository;
@@ -22,6 +25,7 @@ export class ConversationService {
   async initConversation(payload: InitConversationDto) {
     const session = await mongoose.startSession();
     try {
+      session.startTransaction();
       const existingConversation =
         await this.repository.findConversationByVisitor({
           visitorId: payload.visitorId,
@@ -41,12 +45,14 @@ export class ConversationService {
         identifiers: payload.identifiers,
       };
 
-      const conversation = await this.repository.createConversation(createConversationPayload,session);
+      const conversation = await this.repository.createConversation(
+        createConversationPayload,
+        session,
+      );
 
-      console.log("conversation", conversation)
-
-      if (conversation?._id) {
+      if (conversation) {
         const account = await this.accountRepository.findOne(payload.accountId);
+
         if (!account) return null;
 
         const notificationPayload = {
@@ -56,22 +62,36 @@ export class ConversationService {
           accountId: payload.accountId,
           typeId: String(conversation?._id) || "",
           type: "message" as const,
-          channelType: payload.platform as "chatbot" | "instagram" | "facebook" | "whatsapp",
-          meta: payload
+          channelType: payload.platform as
+            | "chatbot"
+            | "instagram"
+            | "facebook"
+            | "whatsapp",
+          meta: payload,
         };
-        const notification = await this.notificationRepository.findByTypeIdAndUpdate(notificationPayload, session)
 
-        emitToOrganization(account.organizationId, payload.accountId, "NEW_NOTIFICATION", {
-                notification,
-              });
+        const notification =
+          await this.notificationRepository.findByTypeIdAndUpdate(
+            notificationPayload,
+            session,
+          );
+
+        emitToOrganization({
+          organizationId: account.organizationId,
+          accountId: payload.accountId,
+          event: "NEW_NOTIFICATION",
+          data: {
+            notification,
+          },
+        });
+
         await session.commitTransaction();
       }
-        return conversation;
+      return conversation;
     } catch (error) {
       await session.abortTransaction();
       throw error;
     }
-
   }
 
   async getConversationsByAccountId(accountId: string, query: any) {
