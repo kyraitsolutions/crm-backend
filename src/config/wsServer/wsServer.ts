@@ -21,15 +21,15 @@ export const createWebSocketServer = (server: http.Server) => {
     const visitorId = query.searchParams.get("visitorId");
 
 
-    const objectAccountId = new Types.ObjectId(accountId||"");
-    const account = await AccountModel.findOne({_id:objectAccountId});
+    // const objectAccountId = new Types.ObjectId(accountId||"");
+    // const account = await AccountModel.findOne({_id:objectAccountId});
 
-    console.log("✅Client connected", accountId,account);
+    console.log("✅Client connected", accountId);
     console.log(wss.clients.size);
 
     ws.accountId = accountId;
     ws.visitorId = visitorId;
-    ws.organizationId=String(account?.organizationId)
+    // ws.organizationId=String(account?.organizationId)
     ws.socketType = "visitor";
 
     ws.on("message", (raw) => {
