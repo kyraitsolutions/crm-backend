@@ -1,18 +1,12 @@
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
-import { UserAccountRepository } from "../repositories/user-account.repository.js";
-import { TUser } from "../types/user.type.js";
-import { RbacService } from "./rbac.service.js";
-import { ROLES } from "../config/permissions.js";
-import { TCreateNotification } from "../types/notification.type.js";
+import { TNotification } from "../types/notification.type.js";
+import { NotificationRepository } from "../repositories/notification.repository.js";
 
 export class NotificationService {
   constructor(
-    private rbacService: RbacService,
     private accountRepository: AccountRepository,
-    private userAccountRepository: UserAccountRepository,
-    // private userRepository: UserRepository,
-    // private emailService: EmailService,
+    private notificationRepository:NotificationRepository
   ) {}
 
   async getNotificationByAccountId(accountId: string): Promise<{} | null> {
@@ -22,14 +16,8 @@ export class NotificationService {
     }
     return account;
   }
-
-  async getAllNotifications(user: TUser): Promise<[]> {
-  
-    return  [];
-  }
-
-  async createNotication(data:TCreateNotification):Promise<{}|null>{
-    return {}
+  async getAllNotifications(organizationId: string): Promise<TNotification[]> {
+    return await this.notificationRepository.findAll(organizationId) || [];
   }
 
 }

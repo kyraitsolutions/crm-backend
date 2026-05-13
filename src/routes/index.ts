@@ -13,6 +13,7 @@ import { RBACRouter } from "./rbac.routes.js";
 import { VisitorRouter } from "./visitor.route.js";
 import { ConversationRouter } from "./conversations.route.js";
 import { MessageRouter } from "./message.route.js";
+import { NotificationRouter } from "./notification.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -30,6 +31,7 @@ export class AppRoutes {
   private conversationRouter: ConversationRouter;
   private messageRouter: MessageRouter;
   private paymentRouter: PaymentRouter;
+  private notificationRouter:NotificationRouter;
   private router: Router;
 
   constructor() {
@@ -48,6 +50,8 @@ export class AppRoutes {
     this.rbacRouter = new RBACRouter();
     this.mediaRouter = new MediaRouter();
     this.paymentRouter = new PaymentRouter();
+
+    this.notificationRouter= new NotificationRouter()
     this.router = Router();
     this.initializeRoutes();
   }
@@ -67,6 +71,8 @@ export class AppRoutes {
     this.router.use("/roles", this.rbacRouter.getRouter());
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
+
+    this.router.use('/notifications', this.notificationRouter.getRouter());
   }
 
   public getRouter(): Router {

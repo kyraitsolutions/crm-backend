@@ -22,8 +22,9 @@ export class ConversationRepository {
     return ConversationModel.countDocuments(filter);
   }
 
-  async createConversation(data: Partial<TConversation>) {
-    return ConversationModel.create(data);
+  async createConversation(data: Partial<TConversation>,session?: ClientSession,) {
+    const conversation= await ConversationModel.create([data],{session})
+    return conversation[0].toJSON();
   }
 
   async findConversationByVisitor({

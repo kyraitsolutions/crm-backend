@@ -24,3 +24,21 @@ export const emitToAccount = (accountId: string, event: string, data: any) => {
     }
   });
 };
+export const emitToOrganization = (organizationId:string,accountId: string, event: string, data: any) => {
+  const wss = getWssInstance();
+
+  wss.clients.forEach((client) => {
+    const ws = client as AuthenticatedWebSocket;
+
+    console.log("wss", ws.organizationId, organizationId);
+
+    if (ws.readyState === WebSocket.OPEN && ws.organizationId === organizationId) {
+      ws.send(
+        JSON.stringify({
+          event,
+          data,
+        }),
+      );
+    }
+  });
+};

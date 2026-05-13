@@ -8,8 +8,7 @@ import { AccountRepository } from "../repositories/account.repository";
 export class MessageService {
   private messageRepository: MessageRepository;
   private conversationRepository = new ConversationRepository();
-   private accountRepository= new AccountRepository();
-  private notificationRepository=new NotificationRepository();
+   
 
   constructor() {
     this.messageRepository = new MessageRepository();
@@ -60,28 +59,6 @@ export class MessageService {
           session,
         },
       );
-
-      console.log("conversation", conversation)
-
-      if(conversation?._id){
-        console.log("Msg payload",messagePayload)
-        const account =await this.accountRepository.findOne(messagePayload.accountId);
-        if(!account) return null;
-        console.log("sjhfsdf", account)
-
-        const notificationPayload = {
-          organizationId: account.organizationId,
-          title:`Customer initiated a new chat on ${payload.platform}`,
-          description:"",
-          accountId:payload.accountId,
-          typeId:String(conversation?._id) ||"",
-          type:"message" as const,
-          channelType:payload.platform as "chatbot" | "instagram" | "facebook" | "whatsapp",
-          meta:payload
-        };
-        const notification= await this.notificationRepository.findByTypeIdAndUpdate(notificationPayload,session)
-      }
-
       
       emitToAccount(payload.accountId, "NEW_MESSAGE", {
         message,

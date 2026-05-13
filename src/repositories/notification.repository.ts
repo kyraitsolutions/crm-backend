@@ -4,7 +4,7 @@ import { TCreateNotification, TNotification } from "../types/notification.type.j
 
 export class NotificationRepository {
   async findAll(id: string): Promise<TNotification[] | null> {
-    return await Notification.find({ createdBy: id });
+    return await Notification.find({ organizationId: id });
   }
 
   async findAccountsByIds(accountIds: string[]): Promise<TNotification[] | null> {

@@ -1,38 +1,77 @@
 // services/conversation.service.ts
 
-import { Types } from "mongoose";
 import { ConversationRepository } from "../repositories/conversations.repository";
 import { buildPagination } from "../utils/paginationBuilder";
 import { InitConversationDto } from "../dtos/conversation.dot";
+import { AccountRepository } from "../repositories/account.repository";
+import { NotificationRepository } from "../repositories/notification.repository";
+import mongoose from "mongoose";
+import { emitToAccount, emitToOrganization } from "../config/wsServer/wsEmitter";
 
 export class ConversationService {
   private repository: ConversationRepository;
+  private accountRepository: AccountRepository;
+  private notificationRepository: NotificationRepository;
 
   constructor() {
     this.repository = new ConversationRepository();
+    this.accountRepository = new AccountRepository();
+    this.notificationRepository = new NotificationRepository();
   }
 
   async initConversation(payload: InitConversationDto) {
-    const existingConversation =
-      await this.repository.findConversationByVisitor({
+    const session = await mongoose.startSession();
+    try {
+      const existingConversation =
+        await this.repository.findConversationByVisitor({
+          visitorId: payload.visitorId,
+          platform: payload.platform,
+        });
+
+      // RETURN EXISTING
+      if (existingConversation) {
+        return existingConversation;
+      }
+
+      // CREATE NEW
+      const createConversationPayload = {
+        accountId: payload.accountId,
         visitorId: payload.visitorId,
         platform: payload.platform,
-      });
+        identifiers: payload.identifiers,
+      };
 
-    // RETURN EXISTING
-    if (existingConversation) {
-      return existingConversation;
+      const conversation = await this.repository.createConversation(createConversationPayload,session);
+
+      console.log("conversation", conversation)
+
+      if (conversation?._id) {
+        const account = await this.accountRepository.findOne(payload.accountId);
+        if (!account) return null;
+
+        const notificationPayload = {
+          organizationId: account.organizationId,
+          title: `Customer initiated a new chat on ${payload.platform}`,
+          description: "",
+          accountId: payload.accountId,
+          typeId: String(conversation?._id) || "",
+          type: "message" as const,
+          channelType: payload.platform as "chatbot" | "instagram" | "facebook" | "whatsapp",
+          meta: payload
+        };
+        const notification = await this.notificationRepository.findByTypeIdAndUpdate(notificationPayload, session)
+
+        emitToOrganization(account.organizationId, payload.accountId, "NEW_NOTIFICATION", {
+                notification,
+              });
+        await session.commitTransaction();
+      }
+        return conversation;
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
     }
 
-    // CREATE NEW
-    const createConversationPayload = {
-      accountId: payload.accountId,
-      visitorId: payload.visitorId,
-      platform: payload.platform,
-      identifiers: payload.identifiers,
-    };
-
-    return this.repository.createConversation(createConversationPayload);
   }
 
   async getConversationsByAccountId(accountId: string, query: any) {

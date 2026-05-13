@@ -22,6 +22,8 @@ import { VisitorRepository } from "./repositories/visitor.repository";
 import { ConversationRepository } from "./repositories/conversations.repository";
 import { MessageRepository } from "./repositories/messages.repository";
 import { VisitorService } from "./services/visitor.service";
+import { NotificationService } from "./services/notifcation.service";
+import { NotificationRepository } from "./repositories/notification.repository";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -35,6 +37,7 @@ export const subscriptionRepository = new SubscriptionRepository();
 export const visitorRepository = new VisitorRepository();
 export const conversationRepository = new ConversationRepository();
 export const messageRepository = new MessageRepository();
+export const notificationRepository=new NotificationRepository()
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
@@ -85,4 +88,9 @@ export const mediaService = new MediaService(s3Client);
 export const recyclebinService = new RecyclebinService(
   accountRepository,
   userAccountRepository,
+);
+// recyclebin service
+export const notificationService = new NotificationService(
+  accountRepository,
+  notificationRepository
 );
