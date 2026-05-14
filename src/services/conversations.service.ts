@@ -60,7 +60,7 @@ export class ConversationService {
           title: `Customer initiated a new chat on ${payload.platform}`,
           description: "",
           accountId: payload.accountId,
-          typeId: String(conversation?._id) || "",
+          typeId: String(conversation?.id) || "",
           type: "message" as const,
           channelType: payload.platform as
             | "chatbot"
