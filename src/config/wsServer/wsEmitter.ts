@@ -33,8 +33,6 @@ export const emitToOrganization = ({
   wss.clients.forEach((client) => {
     const ws = client as AuthenticatedWebSocket;
 
-    console.log("wss", ws.organizationId, organizationId);
-
     if (
       ws.readyState === WebSocket.OPEN &&
       String(ws.organizationId) === String(organizationId)
