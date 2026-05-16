@@ -37,10 +37,8 @@ export class ChatBotController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const user = req.user as any;
       const { accountId, chatbotId } = req.params;
       const chatbot = await this.chatBotService.getChatBotById(
-        user.id,
         accountId,
         chatbotId,
       );
@@ -55,35 +53,14 @@ export class ChatBotController {
 
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as any;
       const accountId = req.params.accountId;
-      console.log(accountId);
 
-      const chatBots = await this.chatBotService.getChatBots(user, accountId);
+      const chatBots = await this.chatBotService.getChatBots(accountId);
       httpResponse(req, res, 200, "Chatbot fetched successfully", {
         docs: chatBots,
         limit: 10,
         skip: 0,
         count: chatBots.length,
-      });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
-    try {
-      const { accountId, chatbotId } = req.params;
-
-      const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
-        accountId,
-        chatbotId,
-      );
-
-      // console.log(first)
-
-      httpResponse(req, res, 200, "Chatbot fetched successfully", {
-        docs: chatBotsWithFlow,
       });
     } catch (error) {
       next(error);
@@ -110,10 +87,8 @@ export class ChatBotController {
   async getChatbotFlowById(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId, chatbotId } = req.params;
-      const user = req.user as { id: string };
 
       const chatbotFlow = await this.chatBotService.getChatBotFlowById(
-        user.id,
         accountId,
         chatbotId,
       );
@@ -126,52 +101,28 @@ export class ChatBotController {
     }
   }
 
-  async createChatbotFlow(req: Request, res: Response, next: NextFunction) {
+  async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId, chatbotId } = req.params;
-      const user = req.user as { id: string };
-      const createChatbotFlowDto = {
-        accountId: accountId,
-        chatbotId: chatbotId,
-        nodes: req.body.nodes,
-        edges: req.body.edges,
-      };
 
-      const chatbotFlow = await this.chatBotService.createChatBotFlow(
-        user.id,
+      const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
         chatbotId,
-        createChatbotFlowDto,
       );
 
-      if (chatbotFlow?.update) {
-        return httpResponse(
-          req,
-          res,
-          201,
-          "Chatbot Flow Updated successfully",
-          {
-            docs: chatbotFlow?.docs,
-          },
-        );
-      }
-
-      return httpResponse(req, res, 201, "Chatbot Flow Created successfully", {
-        docs: chatbotFlow,
+      httpResponse(req, res, 200, "Chatbot fetched successfully", {
+        doc: chatBotsWithFlow,
       });
     } catch (error) {
       next(error);
-      return;
     }
   }
 
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as any;
       const { accountId, chatbotId } = req.params;
       const updateChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.updateChatBot(
-        user.id,
         accountId,
         chatbotId,
         updateChatBotDto,
@@ -183,20 +134,12 @@ export class ChatBotController {
       next(error);
     }
   }
-  // async updateChatBotStatus(req:Request,res:Response,next:NextFunction){
-  //   try {
 
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
   async deleteChatBot(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as any;
       const { accountId, chatbotId } = req.params;
 
       const result = await this.chatBotService.deleteChatBot(
-        user.id,
         accountId,
         chatbotId,
       );

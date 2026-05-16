@@ -1,10 +1,4 @@
-import {
-  TChatbotEdge,
-  TChatbotNode,
-  TCreateChatBot,
-  TCreateChatBotFlow,
-} from "../types";
-
+import { TChatbotEdge, TChatbotNode, TCreateChatBot } from "../types";
 // create chatbot dto
 export class CreateChatBotDto {
   name: string;
@@ -61,6 +55,7 @@ export class CreateChatBotDto {
     thankyouMessage: string;
     waitingMessage: string;
   };
+  flowId!: string;
 
   constructor(data: TCreateChatBot) {
     this.name = data.name;
@@ -124,48 +119,7 @@ export class CreateChatBotDto {
         data.conversation?.waitingMessage ??
         "Please wait while we connect you to our support representative",
     };
-  }
-}
-
-// create chatbot flow dto
-export class CreateChatBotFlowDto {
-  accountId: string;
-  chatbotId: string;
-  nodes: TChatbotNode[];
-  edges: TChatbotEdge[];
-
-  constructor(data: TCreateChatBotFlow) {
-    this.accountId = data.accountId;
-    this.chatbotId = data.chatbotId;
-
-    // Nodes
-    this.nodes = (data.nodes ?? []).map((node) => ({
-      id: node.id,
-      type: node.type ?? "chat",
-      position: {
-        x: node.position?.x ?? 0,
-        y: node.position?.y ?? 0,
-      },
-      width: node.width ?? 250,
-      height: node.height ?? 100,
-      selected: node.selected ?? false,
-      dragging: node.dragging ?? false,
-      data: {
-        label: node.data?.label ?? "",
-        type: node.data?.type,
-        payload: node?.data?.payload,
-      },
-    }));
-
-    // Edges
-    this.edges = (data.edges ?? []).map((edge) => ({
-      id: edge.id,
-      source: edge.source,
-      target: edge.target,
-      animated: edge.animated ?? false,
-      sourceHandle: edge.sourceHandle ?? null,
-      targetHandle: edge.targetHandle ?? null,
-    }));
+    if (data?.flowId) this.flowId = data?.flowId;
   }
 }
 
@@ -287,60 +241,21 @@ export class ResponseChatBotDto {
   }
 }
 
-// response chatbot flow dto
-export class ResponseChatBotFlowDto {
-  id: string;
-  nodes: TChatbotNode[];
-  edges: TChatbotEdge[];
-  update?: boolean;
-  docs?: ResponseChatBotFlowDto;
-
-  constructor(data: any) {
-    this.id = data.id;
-    this.update = data.update;
-    // Nodes
-    this.nodes = (data.nodes ?? []).map((node: TChatbotNode) => ({
-      id: node.id,
-      type: node.type ?? "chat",
-      position: {
-        x: node.position?.x ?? 0,
-        y: node.position?.y ?? 0,
-      },
-      width: node.width ?? 250,
-      height: node.height ?? 100,
-      selected: node.selected ?? false,
-      dragging: node.dragging ?? false,
-      data: {
-        label: node.data?.label ?? "",
-        type: node.data?.type ?? "",
-        payload: node?.data?.payload,
-      },
-    }));
-    // Edges
-    this.edges = (data.edges ?? []).map((edge: TChatbotEdge) => ({
-      id: edge.id,
-      source: edge.source,
-      target: edge.target,
-      animated: edge.animated ?? false,
-      sourceHandle: edge.sourceHandle ?? null,
-      targetHandle: edge.targetHandle ?? null,
-    }));
-  }
-}
-
 export class ChatBotListDto {
   id: string;
   name: string;
   description: string;
   createdAt: string;
   status: boolean;
+  flowId: string;
 
-  constructor(data: any) {
-    this.id = data._id;
+  constructor(data: ChatBotListDto) {
+    this.id = data.id;
     this.name = data.name;
     this.description = data.description;
     this.createdAt = data.createdAt;
     this.status = data.status;
+    this.flowId = data.flowId;
   }
 }
 
@@ -350,7 +265,6 @@ export class ChatbotWithFlowDto extends CreateChatBotDto {
     nodes: TChatbotNode[];
     edges: TChatbotEdge[];
   };
-
   constructor(data: any) {
     super(data);
     const flow = data.flow ?? {};

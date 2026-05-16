@@ -24,6 +24,8 @@ import { MessageRepository } from "./repositories/messages.repository";
 import { VisitorService } from "./services/visitor.service";
 import { NotificationService } from "./services/notifcation.service";
 import { NotificationRepository } from "./repositories/notification.repository";
+import { ChatFlowService } from "./services/chatflow.service";
+import { ChatFlowRepository } from "./repositories/chatflow.repository";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -34,10 +36,11 @@ export const userAccountRepository = new UserAccountRepository();
 export const teamRepository = new TeamRepository();
 export const rbacRepository = new RbacRepository();
 export const subscriptionRepository = new SubscriptionRepository();
+export const chatflowRepo = new ChatFlowRepository();
 export const visitorRepository = new VisitorRepository();
 export const conversationRepository = new ConversationRepository();
 export const messageRepository = new MessageRepository();
-export const notificationRepository=new NotificationRepository()
+export const notificationRepository = new NotificationRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
@@ -53,7 +56,6 @@ export const organizationService = new OrganizationService(
   teamRepository,
 );
 export const rbacService = new RbacService(rbacRepository);
-
 export const accountService = new AccountService(
   rbacService,
   accountRepository,
@@ -79,6 +81,11 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
   emailService,
 );
 
+export const chatflowService = new ChatFlowService(
+  chatflowRepo,
+  accountRepository,
+);
+
 export const visitorService = new VisitorService(visitorRepository);
 
 // media service
@@ -92,5 +99,5 @@ export const recyclebinService = new RecyclebinService(
 // recyclebin service
 export const notificationService = new NotificationService(
   accountRepository,
-  notificationRepository
+  notificationRepository,
 );

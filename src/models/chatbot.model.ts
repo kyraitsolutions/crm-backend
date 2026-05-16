@@ -131,6 +131,11 @@ const chatbotSchema = new Schema(
           "Please wait while we connect you to our support representative",
       },
     },
+    flowId: {
+      type: Schema.Types.ObjectId,
+      ref: "ChatFlow",
+      index: true,
+    },
   },
   {
     timestamps: true,

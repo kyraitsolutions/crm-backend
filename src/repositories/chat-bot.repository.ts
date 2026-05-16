@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
 import { ChatbotFlowModel, ChatbotModel } from "../models/chatbot.model.js";
-import { TCreateChatBot, TCreateChatBotFlow } from "../types/chat-bot.type.js";
+import { TCreateChatBot } from "../types/chat-bot.type.js";
 
 export class ChatbotRepository {
   async createChatbot(data: TCreateChatBot) {
     return await ChatbotModel.create(data);
-  }
-
-  async createChatbotFlow(data: TCreateChatBotFlow) {
-    return await ChatbotFlowModel.create(data);
   }
 
   async findChatbotFlowById(accountId: string, chatBotId: string) {
@@ -16,21 +12,6 @@ export class ChatbotRepository {
       accountId: new mongoose.Types.ObjectId(accountId),
       chatbotId: new mongoose.Types.ObjectId(chatBotId),
     });
-  }
-
-  async updateChatbotFlow(
-    accountId: string,
-    chatBotId: string,
-    data: TCreateChatBotFlow,
-  ) {
-    return await ChatbotFlowModel.findOneAndUpdate(
-      {
-        accountId: new mongoose.Types.ObjectId(accountId),
-        chatbotId: new mongoose.Types.ObjectId(chatBotId),
-      },
-      data,
-      { new: true },
-    );
   }
 
   async findAllByUserId(userId: string): Promise<any[] | null> {
@@ -64,10 +45,7 @@ export class ChatbotRepository {
     ]);
   }
 
-  async findAllByAccountId(
-    userId: string,
-    accountId: string,
-  ): Promise<any[] | null> {
+  async findAllByAccountId(accountId: string): Promise<any[] | null> {
     return await ChatbotModel.aggregate([
       {
         $match: {
@@ -77,19 +55,20 @@ export class ChatbotRepository {
       },
       {
         $project: {
-          _id: 1,
+          id: "$_id",
           name: 1,
           description: 1,
           status: 1,
-          // accountId: 1,
+          flowId: 1,
           createdAt: 1,
-          // updatedAt: 1,
+          updatedAt: 1,
         },
       },
     ]);
   }
 
   async findChatbotWithFlow(accountId: string, chatbotId: string) {
+    console.log("aaya hai bhai ke baat hogaye");
     const chatbotWithFlow = await ChatbotModel.aggregate([
       {
         $match: {
@@ -99,13 +78,36 @@ export class ChatbotRepository {
       },
       {
         $lookup: {
-          from: "chatbotflows",
-          localField: "_id",
-          foreignField: "chatbotId",
+          from: "chatflows",
+          let: {
+            flowId: "$flowId",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$_id", "$$flowId"],
+                },
+                status: "published",
+              },
+            },
+
+            {
+              $project: {
+                nodes: 1,
+                edges: 1,
+              },
+            },
+          ],
           as: "flow",
         },
       },
-      { $unwind: "$flow" },
+      {
+        $unwind: {
+          path: "$flow",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
       {
         $project: {
           name: 1,
@@ -126,44 +128,19 @@ export class ChatbotRepository {
       },
     ]);
 
+    console.log("chatbotWithFlow", chatbotWithFlow);
+
     return chatbotWithFlow[0];
   }
 
   async findChatbotById(
-    userId: string,
     accountId: string,
     chatbotId: string,
   ): Promise<any | null> {
     return await ChatbotModel.findOne({ accountId, _id: chatbotId });
   }
-  // async addKnowledgeSource(data: any) {
-  //   return await ChatbotKnowledgeSourceModel.create(data);
-  // }
 
-  // async addKnowledgeChunks(data: any[]) {
-  //   if (!data.length) return [];
-  //   return await ChatbotKnowledgeChunkModel.insertMany(data);
-  // }
-
-  // async addSuggestedQuestions(data: any[]) {
-  //   if (!data.length) return [];
-  //   return await ChatbotSuggestedQuestionModel.insertMany(data);
-  // }
-
-  // async addConversationSettings(data: any) {
-  //   return await ChatbotConversationSettingModel.create(data);
-  // }
-
-  // async addTheme(data: any) {
-  //   return await ChatbotThemeModel.create(data);
-  // }
-
-  async updateChatbot(
-    userId: string,
-    accountId: string,
-    chatbotId: string,
-    data: any,
-  ) {
+  async updateChatbot(accountId: string, chatbotId: string, data: any) {
     return await ChatbotModel.findOneAndUpdate(
       { accountId, _id: chatbotId },
       data,
@@ -171,32 +148,7 @@ export class ChatbotRepository {
     );
   }
 
-  // async updateKnowledgeSource(chatbotId: string, data: any) {
-  //   return await ChatbotKnowledgeSourceModel.findOneAndUpdate({ chatbotId }, data, {
-  //     new: true,
-  //   });
-  // }
-
-  // async updateConversationSettings(chatbotId: string, data: any) {
-  //   return await ChatbotConversationSettingModel.findOneAndUpdate(
-  //     { chatbotId },
-  //     data,
-  //     { new: true }
-  //   );
-  // }
-
-  //   async updateTheme(chatbotId: string, data: any) {
-  //     return await ChatbotThemeModel.findOneAndUpdate({ chatbotId }, data, {
-  //       new: true,
-  //     });
-  //   }
-
-  //   async deleteKnowledgeChunks(chatbotId: string, sourceId: string) {
-  //     return await ChatbotKnowledgeChunkModel.deleteMany({ chatbotId, sourceId });
-  //   }
-
   async deleteChatbotById(
-    userId: string,
     accountId: string,
     chatbotId: string,
   ): Promise<{} | null> {

@@ -6,6 +6,7 @@ export const ZChatBotSchema = z.object({
   status: z.boolean().default(true),
   userId: z.string(),
   accountId: z.string().nullable().optional(),
+  flowId: z.string().nullable().optional(),
 
   // --- Config Section ---
   config: z.object({
@@ -139,12 +140,14 @@ export const ChatbotEdgeSchema = z.object({
 /* -------------------------
    Main flow schema
    ------------------------- */
-export const CreateChatBotFlowSchema = z.object({
+export const CreateChatFlowSchema = z.object({
   // If you don't want to enforce ObjectId format, change to z.string()
+  name: z.string(),
   accountId: z.string(),
-  chatbotId: z.string(),
   nodes: z.array(ChatbotNodeSchema).default([]),
   edges: z.array(ChatbotEdgeSchema).default([]),
+  createdBy: z.string(),
+  rganizationId: z.string().optional(),
 });
 
 /* -------------------------
@@ -154,7 +157,7 @@ export type ChatbotElement = z.infer<typeof ChatbotElementSchema>;
 export type ChatbotNodeData = z.infer<typeof ChatbotNodeDataSchema>;
 export type TChatbotNode = z.infer<typeof ChatbotNodeSchema>;
 export type TChatbotEdge = z.infer<typeof ChatbotEdgeSchema>;
-export type TCreateChatBotFlow = z.infer<typeof CreateChatBotFlowSchema>;
+export type TCreateChatFlow = z.infer<typeof CreateChatFlowSchema>;
 
 export type TChatBot = z.infer<typeof ZChatBotSchema>;
 export type TCreateChatBot = z.infer<typeof ZChatBotSchema>;

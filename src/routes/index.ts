@@ -14,11 +14,13 @@ import { VisitorRouter } from "./visitor.route.js";
 import { ConversationRouter } from "./conversations.route.js";
 import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
+import { ChatFlowRouter } from "./chatflow.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
   private accountRouter: AccountRouter;
   private chatBotRouter: ChatBotRouter;
+  private chatFlowRouter: ChatFlowRouter;
   private userRouter: UserRouter;
   // private userProfileRouter: UserProfileRouter;
 
@@ -31,13 +33,14 @@ export class AppRoutes {
   private conversationRouter: ConversationRouter;
   private messageRouter: MessageRouter;
   private paymentRouter: PaymentRouter;
-  private notificationRouter:NotificationRouter;
+  private notificationRouter: NotificationRouter;
   private router: Router;
 
   constructor() {
     this.organizationRouter = new OrganizationRouter();
     this.accountRouter = new AccountRouter();
     this.chatBotRouter = new ChatBotRouter();
+    this.chatFlowRouter = new ChatFlowRouter();
     this.userRouter = new UserRouter();
 
     // this.userProfileRouter = new UserProfileRouter();
@@ -51,7 +54,7 @@ export class AppRoutes {
     this.mediaRouter = new MediaRouter();
     this.paymentRouter = new PaymentRouter();
 
-    this.notificationRouter= new NotificationRouter()
+    this.notificationRouter = new NotificationRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -65,6 +68,7 @@ export class AppRoutes {
     this.router.use("/message", this.messageRouter.getRouter());
 
     this.router.use("/chatbot", this.chatBotRouter.getRouter());
+    this.router.use("/chatflow", this.chatFlowRouter.getRouter());
     this.router.use("/subscription", this.subscriptionRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());
     this.router.use("/email", this.emailRouter.getRouter());
@@ -72,7 +76,7 @@ export class AppRoutes {
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
 
-    this.router.use('/notifications', this.notificationRouter.getRouter());
+    this.router.use("/notifications", this.notificationRouter.getRouter());
   }
 
   public getRouter(): Router {

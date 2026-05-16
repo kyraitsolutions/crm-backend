@@ -20,9 +20,9 @@ export class AccountRouter {
   private leadController: LeadController;
   private analyticsController: AnalyticsController;
   private emailController: EmailController;
-  private aiController:AIController;
-  private broadcastController:BroadcastController;
-  private recyclebinController:RecyclebinController;
+  private aiController: AIController;
+  private broadcastController: BroadcastController;
+  private recyclebinController: RecyclebinController;
 
   // constructor
   constructor() {
@@ -34,9 +34,9 @@ export class AccountRouter {
     this.analyticsController = new AnalyticsController();
     this.emailController = new EmailController();
     this.aiController = new AIController();
-    this.broadcastController=new BroadcastController();
-    this.recyclebinController=new RecyclebinController();
-    this
+    this.broadcastController = new BroadcastController();
+    this.recyclebinController = new RecyclebinController();
+    this;
     this.initializeRoutes();
   }
 
@@ -84,33 +84,13 @@ export class AccountRouter {
       requirePermission("chatbots.view"),
       this.chatBotController.getChatBots.bind(this.chatBotController),
     );
-    // get individual chatbot with chatbot flow of this account
-    this.router.get(
-      "/:accountId/chatbot/:chatbotId/get",
-      this.chatBotController.getChatBotWithFlow.bind(this.chatBotController),
-    );
+
     // get particular chatbot data
     this.router.get(
       "/:accountId/chatbot/:chatbotId",
       AuthMiddleware.authenticate,
       requirePermission("chatbots.view"),
       this.chatBotController.getChatBotById.bind(this.chatBotController),
-    );
-
-    //get chatbotflow for this account
-    this.router.get(
-      "/:accountId/chatbot/:chatbotId/flow",
-      AuthMiddleware.authenticate,
-      requirePermission("chatbots.view"),
-      this.chatBotController.getChatbotFlowById.bind(this.chatBotController),
-    );
-
-    // create chatbotflow for this account
-    this.router.post(
-      "/:accountId/chatbot/:chatbotId",
-      AuthMiddleware.authenticate,
-      requirePermission("chatbots.create"),
-      this.chatBotController.createChatbotFlow.bind(this.chatBotController),
     );
 
     this.router.post(
@@ -193,7 +173,6 @@ export class AccountRouter {
       this.leadController.getLeadSummary.bind(this.leadController),
     );
 
-   
     // TODO: Lead Webhook
     this.router.post(
       "/:accountId/lead/webhook/create",
@@ -201,7 +180,7 @@ export class AccountRouter {
       // requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
     );
-     this.router.post(
+    this.router.post(
       "/:accountId/lead/:formId/create",
       AuthMiddleware.authenticate,
       requirePermission("leads.create"),
@@ -240,7 +219,6 @@ export class AccountRouter {
       this.emailController.getTemplates.bind(this.emailController),
     );
 
-
     // TODO: =============================================================================================
 
     // TODO: AI Operations
@@ -248,52 +226,49 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/lead/:leadId/ai-summary",
       AuthMiddleware.authenticate,
-      this.aiController.getLeadSummary.bind(this.aiController)
+      this.aiController.getLeadSummary.bind(this.aiController),
     );
 
     this.router.post(
       "/:accountId/ai-template",
       AuthMiddleware.authenticate,
-      this.aiController.createTemplateContent.bind(this.aiController)
+      this.aiController.createTemplateContent.bind(this.aiController),
     );
     this.router.post(
       "/webhook",
       // AuthMiddleware.authenticate,
-      this.aiController.createTemplateContent.bind(this.aiController)
+      this.aiController.createTemplateContent.bind(this.aiController),
     );
-
 
     // TODO: =============================================================================================
 
     // TODO: Campaign and Broadcasting
-        // 🚀 Start Email Campaign
+    // 🚀 Start Email Campaign
     this.router.post(
       "/:accountId/campaigns/start",
       AuthMiddleware.authenticate,
-      this.broadcastController.startEmailCampaign.bind(this.broadcastController)
+      this.broadcastController.startEmailCampaign.bind(
+        this.broadcastController,
+      ),
     );
-
 
     // TODO: =============================================================================================
 
-    // TODO: Recyclebin 
-    this.router.post( 
-    "/:accountId/recyclebin",
+    // TODO: Recyclebin
+    this.router.post(
+      "/:accountId/recyclebin",
       AuthMiddleware.authenticate,
-      this.recyclebinController.list.bind(this.recyclebinController)
+      this.recyclebinController.list.bind(this.recyclebinController),
     );
-
-
 
     // TODO: =============================================================================================
 
-    // TODO: Notifications 
-    // this.router.post( 
+    // TODO: Notifications
+    // this.router.post(
     // "/:accountId/notifications",
     //   AuthMiddleware.authenticate,
     //   this.notificationController.list.bind(this.recyclebinController)
     // );
-
   }
   public getRouter(): Router {
     return this.router;
