@@ -14,12 +14,12 @@ export interface Contact {
   // Consent & compliance
   consent: {
     marketing: boolean;
-    source?: "chatbot" | "webform" | "manual" | "google_ads" | "import";
+    source?: "chatbot" |"website"| "webform" | "manual" | "google_ads" | "import"|"instagram"|"whatsapp"|"facebook";
     timestamp?: Date;
   };
 
   // Metadata
-  source: "chatbot" | "website" | "google_ads" | "manual" | "import";
+  source: "chatbot" | "website"|"webform" | "google_ads" | "manual" | "import" |"instagram"|"whatsapp"|"facebook";
 
   // Segmentation
   tags: string[];
@@ -41,7 +41,6 @@ const contactSchema = new Schema<Contact>(
 
     email: {
       type: String,
-      required: true,
       lowercase: true,
       trim: true,
     },
@@ -52,21 +51,21 @@ const contactSchema = new Schema<Contact>(
     status: {
       type: String,
       enum: ["subscribed", "unsubscribed", "bounced"],
-      default: "unsubscribed",
+      default: "subscribed",
     },
 
     consent: {
       marketing: { type: Boolean, default: false },
       source: {
         type: String,
-        enum: ["chatbot", "webform", "google_ads", "manual", "import"],
+        enum: ["chatbot", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook"],
       },
       timestamp: Date,
     },
 
     source: {
       type: String,
-      enum: ["chatbot", "website", "google_ads", "manual", "import"],
+      enum: ["chatbot", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook"],
     },
 
     tags: [{ type: String }],

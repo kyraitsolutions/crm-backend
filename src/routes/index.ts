@@ -14,6 +14,7 @@ import { VisitorRouter } from "./visitor.route.js";
 import { ConversationRouter } from "./conversations.route.js";
 import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
+import { ContactRouter } from "./contact.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -32,6 +33,8 @@ export class AppRoutes {
   private messageRouter: MessageRouter;
   private paymentRouter: PaymentRouter;
   private notificationRouter:NotificationRouter;
+  private contactRouter:ContactRouter;
+
   private router: Router;
 
   constructor() {
@@ -52,6 +55,7 @@ export class AppRoutes {
     this.paymentRouter = new PaymentRouter();
 
     this.notificationRouter= new NotificationRouter()
+    this.contactRouter=new ContactRouter()
     this.router = Router();
     this.initializeRoutes();
   }
@@ -73,6 +77,7 @@ export class AppRoutes {
     this.router.use("/payment", this.paymentRouter.getRouter());
 
     this.router.use('/notifications', this.notificationRouter.getRouter());
+    this.router.use('/contacts', this.contactRouter.getRouter());
   }
 
   public getRouter(): Router {
