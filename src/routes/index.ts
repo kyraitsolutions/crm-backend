@@ -15,11 +15,13 @@ import { ConversationRouter } from "./conversations.route.js";
 import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
 import { ContactRouter } from "./contact.routes.js";
+import { ChatFlowRouter } from "./chatflow.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
   private accountRouter: AccountRouter;
   private chatBotRouter: ChatBotRouter;
+  private chatFlowRouter: ChatFlowRouter;
   private userRouter: UserRouter;
   // private userProfileRouter: UserProfileRouter;
 
@@ -41,6 +43,7 @@ export class AppRoutes {
     this.organizationRouter = new OrganizationRouter();
     this.accountRouter = new AccountRouter();
     this.chatBotRouter = new ChatBotRouter();
+    this.chatFlowRouter = new ChatFlowRouter();
     this.userRouter = new UserRouter();
 
     // this.userProfileRouter = new UserProfileRouter();
@@ -69,6 +72,7 @@ export class AppRoutes {
     this.router.use("/message", this.messageRouter.getRouter());
 
     this.router.use("/chatbot", this.chatBotRouter.getRouter());
+    this.router.use("/chatflow", this.chatFlowRouter.getRouter());
     this.router.use("/subscription", this.subscriptionRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());
     this.router.use("/email", this.emailRouter.getRouter());

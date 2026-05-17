@@ -22,4 +22,14 @@ export default class AnalyticsController {
             next(err);
         }
     };
+    getSearch = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { accountId } = req.params;
+            const {query} = req.query; // you may accept range filters here
+            const result = await this.analyticsService.getSearch(accountId, query);
+            httpResponse(req, res, 200, "Global search result fetched", { docs: result });
+        } catch (err) {
+            next(err);
+        }
+    };
 }

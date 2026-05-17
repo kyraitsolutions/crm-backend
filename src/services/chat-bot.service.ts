@@ -3,16 +3,13 @@ import {
   ChatbotWithFlowDto,
   CreateChatBotDto,
   ResponseChatBotDto,
-  ResponseChatBotFlowDto,
 } from "../dtos/chat-bot.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
-import { TCreateChatBotFlow } from "../types/chat-bot.type.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
   private accountRepository: AccountRepository;
-  // private chatbotFlowRepository :;
 
   constructor() {
     this.repo = new ChatbotRepository();
@@ -23,44 +20,10 @@ export class ChatBotService {
     const chatbots = await this.repo.findAllByUserId(userId);
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
-  async getChatBots(
-    user: any,
-    accountId: string,
-  ): Promise<ChatBotListDto[] | []> {
+
+  async getChatBots(accountId: string): Promise<ChatBotListDto[] | []> {
     let chatbots: any = [];
-    // const isOwner = user?.role?.name === ROLES.OWNER;
-    // console.log(isOwner);
-
-    // if (isOwner) {
-    //   chatbots = await this.repo.findAllByAccountId(user.id, accountId);
-    // } else {
-    //   const isAccessed = await TeamMember.findOne({ userId: user.id });
-
-    //   if (!isAccessed) {
-    //     throw new Error("Team member not found");
-    //   }
-
-    //   const isAccountAccess = await TeamMemberAccountLeads.findOne({
-    //     teamMemberId: isAccessed._id,
-    //     accountId: accountId,
-    //   });
-
-    //   if (isAccountAccess) {
-    //     const orgId = isAccessed?.orgId as unknown as string;
-    //     chatbots = await this.repo.findAllByAccountId(orgId, accountId);
-    //   }
-    // }
-
-    // const role = user.roleId.toString() as USERROLE;
-    // const permissions = ROLE_PERMISSIONS[role];
-
-    // const hasPermissions = hasPermission(permissions, "chatbot:view");
-
-    // if (!hasPermissions) {
-    //   throw new Error("You don't have permission to view chatbots");
-    // }
-
-    chatbots = await this.repo.findAllByAccountId(user.id, accountId);
+    chatbots = await this.repo.findAllByAccountId(accountId);
 
     return chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
   }
@@ -77,15 +40,10 @@ export class ChatBotService {
   }
 
   async getChatBotById(
-    userId: string,
     accountId: string,
     chatbotId: string,
   ): Promise<ResponseChatBotDto | null> {
-    const chatbot = await this.repo.findChatbotById(
-      userId,
-      accountId,
-      chatbotId,
-    );
+    const chatbot = await this.repo.findChatbotById(accountId, chatbotId);
     if (!chatbot) {
       throw new Error("Chatbot not Found");
     }
@@ -112,11 +70,7 @@ export class ChatBotService {
     return new ResponseChatBotDto(chatbot);
   }
 
-  async getChatBotFlowById(
-    userId: string,
-    accountId: string,
-    chatbotId: string,
-  ): Promise<ResponseChatBotFlowDto | null> {
+  async getChatBotFlowById(accountId: string, chatbotId: string) {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
@@ -131,125 +85,15 @@ export class ChatBotService {
     if (!chatbotFlow) {
       throw new Error("Chatbot flow not Found");
     }
-    return new ResponseChatBotFlowDto(chatbotFlow);
+    return chatbotFlow;
   }
-
-  async createChatBotFlow(
-    userId: string,
-    accountId: string,
-    chatBotId: string,
-    createChatBotFlowDto: TCreateChatBotFlow,
-  ) {
-    const isAccountExist = await this.accountRepository.findOne(accountId);
-
-    if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
-    }
-
-    const chatbotFlowPayload = {
-      ...createChatBotFlowDto,
-      accountId,
-      chatBotId,
-    };
-
-    const isChatbotFlowExist = await this.repo.findChatbotFlowById(
-      accountId,
-      chatBotId,
-    );
-
-    if (isChatbotFlowExist) {
-      this.repo.updateChatbotFlow(accountId, chatBotId, chatbotFlowPayload);
-      return {
-        update: true,
-        docs: new ResponseChatBotFlowDto(isChatbotFlowExist),
-      };
-    }
-
-    const chatbotFlow = await this.repo.createChatbotFlow(chatbotFlowPayload);
-
-    return new ResponseChatBotFlowDto(chatbotFlow);
-  }
-
-  // async updateChatBot(chatbotId: string, updateDto: CreateChatBotDto) {
-  //   const chatbot = await this.repo.updateChatbot(chatbotId, {
-  //     name: updateDto.name,
-  //     description: updateDto.description,
-  //   });
-
-  //   if (!chatbot) {
-  //     throw new Error("Chatbot not found");
-  //   }
-
-  //   // ✅ Handle Knowledge Base Update
-  //   if (updateDto.knowledgeSources) {
-  //     const { type, source, manual } = updateDto.knowledgeSources;
-
-  //     // Only pass `data` if manual content exists
-  //     const sourceData: any = {
-  //       type: type ?? "text",
-  //       name: updateDto.name,
-  //       source: url ?? "manual",
-  //     };
-
-  //     if (manual && manual.trim() !== "") {
-  //       sourceData.data = manual;
-  //     }
-
-  //     const source = await this.repo.updateKnowledgeSource(chatbotId, sourceData);
-
-  //     // ✅ Only update embeddings if manual data is present
-  //     if (source && manual && manual.trim() !== "") {
-  //       const chunks = ChatBotUtil.chunkText(manual);
-  //       const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
-
-  //       const chunkData = chunks.map((c, idx) => ({
-  //         chatbotId,
-  //         sourceId: source._id,
-  //         text: c,
-  //         embedding: embeddings[idx],
-  //       }));
-
-  //       await this.repo.deleteKnowledgeChunks(chatbotId, source._id);
-  //       await this.repo.addKnowledgeChunks(chunkData);
-  //     }
-  //   }
-
-  //   // ✅ Update Suggested Questions
-  //   if (updateDto.suggestions?.length) {
-  //     await this.repo.deleteSuggestedQuestions(chatbotId);
-
-  //     const questions = updateDto.suggestions.map((q) => ({
-  //       chatbotId,
-  //       question: q,
-  //     }));
-
-  //     await this.repo.addSuggestedQuestions(questions);
-  //   }
-
-  //   // ✅ Update Conversation Settings
-  //   if (updateDto.conversation) {
-  //     await this.repo.updateConversationSettings(chatbotId, {
-  //       temperature: updateDto.conversation.temperature,
-  //       prompt: updateDto.conversation.prompt,
-  //     });
-  //   }
-
-  //   // ✅ Update Theme Settings
-  //   if (updateDto.theme) {
-  //     await this.repo.updateTheme(chatbotId, updateDto.theme);
-  //   }
-
-  //   return chatbot;
-  // }
 
   async updateChatBot(
-    userId: string,
     accountId: string,
     chatbotId: string,
     updateDto: CreateChatBotDto,
   ) {
     const result = await this.repo.updateChatbot(
-      userId,
       accountId,
       chatbotId,
       updateDto,
@@ -260,16 +104,8 @@ export class ChatBotService {
     return result;
   }
 
-  async deleteChatBot(
-    userId: string,
-    accountId: string,
-    chatbotId: string,
-  ): Promise<boolean> {
-    const result = await this.repo.deleteChatbotById(
-      userId,
-      accountId,
-      chatbotId,
-    );
+  async deleteChatBot(accountId: string, chatbotId: string): Promise<boolean> {
+    const result = await this.repo.deleteChatbotById(accountId, chatbotId);
     if (!result) {
       throw new Error("Chatbot not Found for this Chatbot Id");
     }

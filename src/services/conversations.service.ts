@@ -1,15 +1,12 @@
 // services/conversation.service.ts
 
-import { ConversationRepository } from "../repositories/conversations.repository";
-import { buildPagination } from "../utils/paginationBuilder";
+import mongoose from "mongoose";
+import { emitToOrganization } from "../config/wsServer/wsEmitter";
 import { InitConversationDto } from "../dtos/conversation.dot";
 import { AccountRepository } from "../repositories/account.repository";
+import { ConversationRepository } from "../repositories/conversations.repository";
 import { NotificationRepository } from "../repositories/notification.repository";
-import mongoose from "mongoose";
-import {
-  emitToAccount,
-  emitToOrganization,
-} from "../config/wsServer/wsEmitter";
+import { buildPagination } from "../utils/paginationBuilder";
 
 export class ConversationService {
   private repository: ConversationRepository;

@@ -1,8 +1,8 @@
-import { TIdentifiers } from "../types";
+import { TIdentifiers, TPlatform } from "../types";
 
 export class InitConversationDto {
   accountId!: string;
-  platform!: "chatbot" | "whatsapp" | "instagram";
+  platform!: TPlatform;
   visitorId!: string;
   identifiers!: TIdentifiers;
 

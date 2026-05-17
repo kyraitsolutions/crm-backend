@@ -22,8 +22,11 @@ export class ConversationRepository {
     return ConversationModel.countDocuments(filter);
   }
 
-  async createConversation(data: Partial<TConversation>,session?: ClientSession,) {
-    const conversation= await ConversationModel.create([data],{session})
+  async createConversation(
+    data: Partial<TConversation>,
+    session?: ClientSession,
+  ): Promise<TConversation> {
+    const conversation = await ConversationModel.create([data], { session });
     return conversation[0].toJSON();
   }
 
@@ -34,7 +37,7 @@ export class ConversationRepository {
     visitorId: string;
     platform: string;
   }) {
-    return ConversationModel.findOne({
+    return await ConversationModel.findOne({
       visitorId,
       platform,
       isDeleted: false,
