@@ -77,6 +77,10 @@ export class LeadService {
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
   }
+
+  async getLead(accountId: string, leadId: string): Promise<any | null> {
+    return await this.leadRepository.getLeadById(accountId, leadId);
+  }
   async getLeadSummary(accountId: string, leadId: string): Promise<any> {
     const lead = await this.leadRepository.getLeadById(accountId, leadId);
 

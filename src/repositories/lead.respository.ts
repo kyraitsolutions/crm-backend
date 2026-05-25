@@ -87,7 +87,7 @@ export class LeadRespository {
   }
 
   async getLeadById(accountId: string, id: string) {
-    return await LeadModel.find({ _id: id, accountId: accountId });
+    return await LeadModel.findOne({ _id: id, accountId: accountId });
   }
 }
 

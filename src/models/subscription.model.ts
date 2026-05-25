@@ -74,6 +74,7 @@ const planSchema = new Schema(
   },
 );
 
+
 const userSubscriptionSchema = new Schema(
   {
     userId: {

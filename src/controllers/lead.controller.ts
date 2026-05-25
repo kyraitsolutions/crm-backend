@@ -74,6 +74,20 @@ export class LeadController {
     }
   };
 
+  getLead = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { accountId, leadId } = req.params;
+      console.log("AccountId:", accountId, "LeadId:", leadId);
+      const lead = await this.leadService.getLead(accountId, leadId);
+      httpResponse(req, res, 200, "Lead fetched successfully", 
+        {
+          doc:lead
+        });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   createLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId, formId } = req.params;

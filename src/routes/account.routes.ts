@@ -164,6 +164,12 @@ export class AccountRouter {
       requirePermission("leads.view"),
       this.leadController.getLeads.bind(this.leadController),
     );
+    this.router.get(
+      "/:accountId/lead/:leadId/details",
+      AuthMiddleware.authenticate,
+      requirePermission("leads.view"),
+      this.leadController.getLead.bind(this.leadController),
+    );
     this.router.put(
       "/:accountId/lead/:leadId/update",
       AuthMiddleware.authenticate,
