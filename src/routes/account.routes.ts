@@ -193,7 +193,9 @@ export class AccountRouter {
     this.router.get(
       "/:accountId/overview",
       AuthMiddleware.authenticate,
-      this.analyticsController.getOverview.bind(this.analyticsController),
+      this.analyticsController.getOverviewDashboard.bind(
+        this.analyticsController,
+      ),
     );
 
     // TODO: =============================================================================================

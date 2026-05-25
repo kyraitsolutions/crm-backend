@@ -47,7 +47,15 @@ export class ChatFlowController {
   ) {
     try {
       const { accountId } = req.params;
-      const result = await chatflowService.getAllChatFlowByAccountId(accountId);
+      const query = {
+        page: Number(req.query.page) || 1,
+        limit: Number(req.query.limit) || 5,
+        search: req.query.search?.toString(),
+      };
+      const result = await chatflowService.getAllChatFlowByAccountId(
+        accountId,
+        query,
+      );
 
       httpResponse(req, res, 200, "Chat flow fetched successfully", result);
     } catch (error) {

@@ -15,11 +15,22 @@ export class MessageRepository {
     const message = await MessageModel.create([payload], { session });
     return message[0].toJSON();
   }
-
   public async createMany(payload: any[]) {
     if (!payload?.length) {
       return [];
     }
     return MessageModel.insertMany(payload);
+  }
+  public async searchConversationIdsByMessageText(search: string) {
+    const messages = await MessageModel.find({
+      searchText: {
+        $regex: search,
+        $options: "i",
+      },
+    })
+      .select("_id conversationId searchText messageId")
+      .lean();
+
+    return messages;
   }
 }

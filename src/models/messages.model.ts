@@ -102,6 +102,12 @@ const MessageSchema = new Schema(
       text: String,
     },
 
+    searchText: {
+      type: String,
+      default: "",
+      index: true,
+    },
+
     context: {
       messageId: String,
       message: String,
@@ -229,5 +235,9 @@ const MessageSchema = new Schema(
     timestamps: true,
   },
 );
+
+MessageSchema.index({
+  searchText: "text",
+});
 
 export const MessageModel = model("Message", MessageSchema);

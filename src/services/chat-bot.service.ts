@@ -6,6 +6,11 @@ import {
 } from "../dtos/chat-bot.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
+import {
+  TPaginatedResponse,
+  TQueryParams,
+} from "../types/api-response.type.js";
+import { buildPagination } from "../utils/paginationBuilder.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
@@ -21,11 +26,34 @@ export class ChatBotService {
     return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 
-  async getChatBots(accountId: string): Promise<ChatBotListDto[] | []> {
-    let chatbots: any = [];
-    chatbots = await this.repo.findAllByAccountId(accountId);
+  async getChatBots(
+    accountId: string,
+    query: TQueryParams = {},
+  ): Promise<TPaginatedResponse<ChatBotListDto[] | []>> {
+    const { page, limit, search } = query;
 
-    return chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
+    const queryParms = {
+      page,
+      limit,
+      search,
+    };
+
+    let chatbots: any = [];
+    const countDocs = await this.repo.countDocumentByAccountId(accountId);
+    chatbots = await this.repo.findAllByAccountId(accountId, queryParms);
+
+    const chatbotList =
+      chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
+
+    return {
+      docs: chatbotList,
+      pagination: buildPagination({
+        page: 1,
+        limit: 1,
+        totalDocs: countDocs,
+        docsCount: chatbots.length,
+      }),
+    };
   }
 
   async getChatBotWithFlow(

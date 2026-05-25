@@ -4,6 +4,7 @@ import {
 } from "../dtos/chatflow.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { ChatFlowRepository } from "../repositories/chatflow.repository.js";
+import { TQueryParams } from "../types/api-response.type.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
 
 export class ChatFlowService {
@@ -36,23 +37,26 @@ export class ChatFlowService {
     return new ResponseChatFlowDto(chatFlow);
   }
 
-  async getAllChatFlowByAccountId(accountId: string) {
+  async getAllChatFlowByAccountId(accountId: string, query: TQueryParams = {}) {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
       throw new Error("Account not found for this account id");
     }
+
     const countDocument = await this.chatflowRepo.countDocument(accountId);
-    const chatflows =
-      await this.chatflowRepo.findChatFlowByAccountId(accountId);
+    const chatflows = await this.chatflowRepo.findChatFlowByAccountId(
+      accountId,
+      query,
+    );
 
     return {
       docs: chatflows,
       pagination: buildPagination({
         page: 1,
-        limit: countDocument,
+        limit: query.limit,
         totalDocs: countDocument,
-        docsCount: countDocument,
+        docsCount: chatflows.length,
       }),
     };
   }
