@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
+import { ROLES } from "../config/permissions";
+import { DASHBOARD_URL_PATH } from "../constants";
 import {
   CreateOrganizationDto,
   OrganizationResponseDto,
 } from "../dtos/organization.dto";
 import { AccountService } from "./account.service";
+import { ConfigBootstrapService } from "./configBootstrap.service";
+import { EmailService } from "./email.service";
 import { OrganizationService } from "./organization.service";
 import { RbacService } from "./rbac.service";
 import { UserService } from "./user.service";
 import { UserProfileService } from "./userprofile.service";
-import { ROLES } from "../config/permissions";
-import { EmailService } from "./email.service";
-import { DASHBOARD_URL_PATH } from "../constants";
 
 export class OrganizationOnboardingService {
   constructor(
@@ -19,6 +20,7 @@ export class OrganizationOnboardingService {
     private userProfileService: UserProfileService,
     private accountService: AccountService,
     private rbacService: RbacService,
+    private configBootstrapService: ConfigBootstrapService,
     private emailService: EmailService,
   ) {}
 
@@ -74,6 +76,13 @@ export class OrganizationOnboardingService {
         },
         session,
       );
+
+      // create default configs
+      await this.configBootstrapService.seedDefaultConfigs({
+        organizationId: organization.id,
+        userId: data.createdBy,
+        session,
+      });
 
       // send success onboarding email
       await this.emailService.onboardingEmail({
