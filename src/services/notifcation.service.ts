@@ -16,6 +16,7 @@ export class NotificationService {
     }
     return account;
   }
+  
   async getAllNotifications(organizationId: string): Promise<TNotification[]> {
     return await this.notificationRepository.findAll(organizationId) || [];
   }
