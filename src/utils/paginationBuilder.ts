@@ -1,6 +1,6 @@
 type PaginationProps = {
   page: number;
-  limit: number;
+  limit?: number;
   totalDocs: number;
   docsCount: number;
 };
@@ -14,8 +14,8 @@ export const buildPagination = ({
   const totalPages = Math.ceil(totalDocs / limit);
 
   return {
-    page,
-    limit,
+    page: Number(page),
+    limit: Number(limit),
     totalDocs,
     totalPages,
     docsCount,

@@ -28,6 +28,8 @@ import { ContactService } from "./services/contact.service";
 import { ContactRepository } from "./repositories/contact.repository";
 import { ChatFlowService } from "./services/chatflow.service";
 import { ChatFlowRepository } from "./repositories/chatflow.repository";
+import { WhatsappService } from "./services/whatsapp.service";
+import { WhatsappRepository } from "./repositories/whatsapp.respository";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -44,6 +46,7 @@ export const conversationRepository = new ConversationRepository();
 export const messageRepository = new MessageRepository();
 export const notificationRepository=new NotificationRepository();
 export const contactRepository=new ContactRepository();
+export const whatsappRepository=new WhatsappRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
@@ -108,3 +111,9 @@ export const notificationService = new NotificationService(
 export const contactService = new ContactService(
   contactRepository
 );
+
+
+
+export const whatsppService=new WhatsappService(
+  whatsappRepository
+)

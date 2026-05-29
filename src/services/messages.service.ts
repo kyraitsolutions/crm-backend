@@ -1,14 +1,12 @@
 import mongoose from "mongoose";
+import { emitToAccount } from "../config/wsServer/wsEmitter";
 import { ConversationRepository } from "../repositories/conversations.repository";
 import { MessageRepository } from "../repositories/messages.repository";
-import { emitToAccount } from "../config/wsServer/wsEmitter";
-import { NotificationRepository } from "../repositories/notification.repository";
-import { AccountRepository } from "../repositories/account.repository";
+import { buildMessageSearchText } from "../utils/buildMessageSearchTextPayload";
 
 export class MessageService {
   private messageRepository: MessageRepository;
   private conversationRepository = new ConversationRepository();
-   
 
   constructor() {
     this.messageRepository = new MessageRepository();
@@ -43,8 +41,10 @@ export class MessageService {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
+      const searchText = buildMessageSearchText(payload);
       const messagePayload = {
         ...payload,
+        searchText,
       };
 
       const message = await this.messageRepository.createMessage(
@@ -59,7 +59,7 @@ export class MessageService {
           session,
         },
       );
-      
+
       emitToAccount(payload.accountId, "NEW_MESSAGE", {
         message,
         conversation,

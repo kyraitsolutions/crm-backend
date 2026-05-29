@@ -54,14 +54,14 @@ export class ChatBotController {
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
       const accountId = req.params.accountId;
+      const query = {
+        page: Number(req.query.page) || 1,
+        limit: Number(req.query.limit) || 10,
+        search: req.query.search?.toString(),
+      };
 
-      const chatBots = await this.chatBotService.getChatBots(accountId);
-      httpResponse(req, res, 200, "Chatbot fetched successfully", {
-        docs: chatBots,
-        limit: 10,
-        skip: 0,
-        count: chatBots.length,
-      });
+      const result = await this.chatBotService.getChatBots(accountId, query);
+      httpResponse(req, res, 200, "Chatbot fetched successfully", result);
     } catch (error) {
       next(error);
     }
@@ -104,7 +104,6 @@ export class ChatBotController {
   async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId, chatbotId } = req.params;
-
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
         chatbotId,

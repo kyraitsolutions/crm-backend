@@ -4,6 +4,8 @@ import { NextFunction, Request, Response } from "express";
 import { ConversationService } from "../services/conversations.service";
 import httpResponse from "../utils/http.response";
 import { InitConversationDto } from "../dtos/conversation.dot";
+import { TConversationQuery } from "../types/api-response.type";
+import { parseQueryParams } from "../utils/query.utils";
 
 export class ConversationController {
   private service: ConversationService;
@@ -52,7 +54,7 @@ export class ConversationController {
   ) {
     try {
       const { accountId } = req.params;
-      const query = req.query;
+      const query = parseQueryParams(req.query);
 
       const result = await this.service.getConversationsByAccountId(accountId, {
         ...query,
