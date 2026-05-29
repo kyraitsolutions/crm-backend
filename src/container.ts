@@ -30,6 +30,8 @@ import { ChatFlowService } from "./services/chatflow.service";
 import { ChatFlowRepository } from "./repositories/chatflow.repository";
 import { WhatsappService } from "./services/whatsapp.service";
 import { WhatsappRepository } from "./repositories/whatsapp.respository";
+import { ConfigRepository } from "./repositories/config.repository";
+import { ConfigBootstrapService } from "./services/configBootstrap.service";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -39,6 +41,7 @@ export const accountRepository = new AccountRepository();
 export const userAccountRepository = new UserAccountRepository();
 export const teamRepository = new TeamRepository();
 export const rbacRepository = new RbacRepository();
+export const configRepository = new ConfigRepository();
 export const subscriptionRepository = new SubscriptionRepository();
 export const chatflowRepo = new ChatFlowRepository();
 export const visitorRepository = new VisitorRepository();
@@ -50,6 +53,7 @@ export const whatsappRepository=new WhatsappRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
+
 export const userService = new UserService(
   userRepository,
   userProfileRepository,
@@ -77,6 +81,10 @@ export const userAggregateService = new UserAggregateService(
   organizationService,
 );
 
+export const configBootstrapService = new ConfigBootstrapService(
+  configRepository,
+);
+
 // organization onboarding
 export const organizationOnboardingService = new OrganizationOnboardingService(
   organizationService,
@@ -84,6 +92,7 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
   userProfileService,
   accountService,
   rbacService,
+  configBootstrapService,
   emailService,
 );
 

@@ -91,8 +91,8 @@ const conversationSchema = new Schema(
     },
 
     tags: {
-      type: String,
-      default: null,
+      type: [String],
+      default: [],
     },
 
     totalMessages: {
