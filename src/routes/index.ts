@@ -17,6 +17,7 @@ import { NotificationRouter } from "./notification.routes.js";
 import { ContactRouter } from "./contact.routes.js";
 import { ChatFlowRouter } from "./chatflow.route.js";
 import { WhatsappRouter } from "./whatsapp.routes.js";
+import { ConfigurationRouter } from "./configuration.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -38,6 +39,7 @@ export class AppRoutes {
   private notificationRouter:NotificationRouter;
   private contactRouter:ContactRouter;
   private whatsappRouter:WhatsappRouter;
+  private configurationRouter: ConfigurationRouter;
 
   private router: Router;
 
@@ -62,6 +64,9 @@ export class AppRoutes {
     this.notificationRouter= new NotificationRouter()
     this.contactRouter=new ContactRouter()
     this.whatsappRouter=new WhatsappRouter()
+    this.notificationRouter = new NotificationRouter();
+    this.contactRouter = new ContactRouter();
+    this.configurationRouter = new ConfigurationRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -86,6 +91,9 @@ export class AppRoutes {
     this.router.use('/notifications', this.notificationRouter.getRouter());
     this.router.use('/contacts', this.contactRouter.getRouter());
     this.router.use('/whatsapp', this.whatsappRouter.getRouter());
+    this.router.use("/configuration", this.configurationRouter.getRouter());
+    this.router.use("/notification", this.notificationRouter.getRouter());
+    this.router.use("/contact", this.contactRouter.getRouter());
   }
 
   public getRouter(): Router {

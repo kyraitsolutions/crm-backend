@@ -28,32 +28,128 @@ export class LeadService {
   async getLeads(
     _userId: string,
     accountId: string,
-    queryFilters?: any, // Define/expand as needed
-    paginationOptions?: { limit?: number; skip?: number },
-  ): Promise<{
-    leads: Lead[];
-    totalDocs: number;
-  } | null> {
+    payload:Record<string,any>,
+    skip:number
+    // queryFilters?: any, // Define/expand as needed
+    // paginationOptions?: { limit?: number; skip?: number },
+  ): Promise<any | null> {
     // Only fetch leads that belong to the user and account
     // Add additional filters if provided
     if (!accountId) {
       return null;
     }
-    const criteria = {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      filters = {},
+      assignedTo,
+      form,
+      dateRange,
+      read,
+      sort = {},
+    } = payload;
+
+    const criteria:any = {
       // userId,
       accountId,
-      ...(queryFilters || {}),
     };
 
-    const leads = await this.leadRepository.find(criteria, paginationOptions);
-    const count = await this.leadRepository.countDocuments({
-      accountId,
-    });
+    // SEARCH===============================================
+    if (search?.trim()) {
+      criteria.$or = [
+        {
+          name: {
+            $regex:search,
+            $options: "i",
+          },
+        },
+        {
+          email: {
+            $regex:search,
+            $options: "i",
+          },
+        },
+        {
+          phone: {
+            $regex:search,
+            $options: "i",
+          },
+        },
+        {
+          company: {
+            $regex:search,
+            $options: "i",
+          },
+        },
+      ];
+    }
+    // FILTERS===================================
 
-    return {
-      leads,
-      totalDocs: count,
-    };
+    if (filters.stage) {
+      criteria.stage =filters.stage;
+    }
+
+    if (filters.status) {
+      criteria.status =filters.status;
+    }
+
+    if (filters.source) {
+      criteria["source.name"] =filters.source;
+    }
+
+    // assignedTo
+    if (assignedTo) {
+      criteria.assignedTo =assignedTo;
+    }
+
+    // form 
+    if (form) {
+      criteria["source.formId"] = form;
+    }
+
+    // tags
+    if (filters.tags?.length) {
+      criteria.tags = {
+        $in:filters.tags,
+      };
+    }
+
+    // DATE RANGE
+    // -------------------------
+    if (dateRange?.startDate &&dateRange?.endDate) {
+      criteria.createdAt =
+        {
+          $gte: new Date(dateRange.startDate),
+
+          $lte: new Date(dateRange.endDate),
+        };
+    }
+
+    // SORTING
+    // -------------------------
+    const sortQuery: any ={};
+
+    console.log(sort)
+    if (sort?.field) {
+      sortQuery[sort.field] =
+        sort.order ==="asc"? 1: -1;
+    } else {
+      sortQuery.createdAt =-1;
+    }
+
+
+    return await Promise.all([
+      this.leadRepository.find(criteria,limit,skip,sortQuery),
+      this.leadRepository.countDocuments(criteria)
+    ]) 
+    // const leads = await this.leadRepository.find(criteria, paginationOptions);
+    
+
+    // return {
+    //   leads:leads||[],
+    //   totalDocs: count,
+    // };
   }
   async createLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.create(lead);

@@ -25,32 +25,36 @@ export class LeadController {
       const user = req.user as any;
       const { accountId } = req.params;
 
-      // Separate pagination params (limit, skip) from filter criteria
-      const rawFilters = { ...req.query };
-      const limit = rawFilters.rowPerPage
-        ? parseInt(String(rawFilters.rowPerPage), 10)
+      const payload=req.body;
+
+      const limit = req.body.limit
+        ? Number(req.body.limit)
         : 10;
-      const skip = (Math.max(Number(rawFilters.pageIndex), 1) - 1) * limit;
 
-      // Remove pagination params from filter object
-      delete rawFilters.rowPerPage;
-      delete rawFilters.pageIndex;
+      const page =Math.max(Number(payload.page),1);
+      const skip = (Math.max(Number(page), 1) - 1) * limit;
 
-      // Use filters only for querying (status, stage, etc.), not for pagination
-      const response = await this.leadService.getLeads(
-        user.id,
-        accountId,
-        rawFilters,
-        { limit, skip },
-      );
+
+      const [leads,totalDocs] = await this.leadService.getLeads(user.id,accountId,payload,skip);
+
+      const totalPages = Math.ceil(totalDocs /limit) || 1;
+
+
+      // console.log(leads,totalDocs)
 
       httpResponse(req, res, 200, "Leads fetched successfully", {
-        docs: response?.leads,
+        docs: leads,
         pagination: {
+          page,
           limit,
           skip,
-          total: response?.leads.length,
-          totalDocs: response?.totalDocs,
+          totalDocs:totalDocs,
+          totalPages:totalPages,
+          hasNextPage:
+              page <
+              totalPages,
+            hasPrevPage:
+              page > 1,
         },
       });
     } catch (error) {
