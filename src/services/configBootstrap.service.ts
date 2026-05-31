@@ -78,8 +78,38 @@ export class ConfigBootstrapService {
     return this.configRepository.addItem(configId, dto);
   }
 
-  async updateConfigItem(configId: string, itemId: string, dto: any) {
-    return this.configRepository.updateItem(configId, itemId, dto);
+  async updateConfigItem(
+    configId: string,
+    itemId: string,
+    dto: Partial<ConfigurationItemDto>,
+  ) {
+    const config = await this.configRepository.findById(configId);
+
+    if (!config) {
+      throw new Error("Configuration not found");
+    }
+
+    const item = config.values.find(
+      (value) => value._id?.toString() === itemId,
+    );
+
+    if (!item) {
+      throw new Error("Configuration item not found");
+    }
+
+    if (dto?.key && item?.key !== dto?.key) {
+      throw new Error("Cannot update key configuration");
+    }
+
+    const updatedConfig = this.configRepository.updateItem(
+      configId,
+      itemId,
+      dto,
+    );
+
+    return {
+      doc: updatedConfig,
+    };
   }
 
   async deleteConfigItem(configId: string, itemId: string) {

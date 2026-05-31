@@ -31,7 +31,7 @@ export class ConfigurationRouter {
 
     // update configuration by id
     this.router.put(
-      "/:id",
+      "/:configId/:itemId",
       AuthMiddleware.authenticate,
       this.configurationController.updateConfigItem.bind(
         this.configurationController,
