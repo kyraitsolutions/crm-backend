@@ -3,7 +3,6 @@ export const DEFAULT_CONFIGS = [
     module: "lead",
     configType: "status",
     name: "Lead Statuses",
-
     values: [
       {
         key: "new",
@@ -23,7 +22,7 @@ export const DEFAULT_CONFIGS = [
         editable: true,
         deletable: false,
         isDefault: true,
-        order: 1,
+        order: 2,
       },
       {
         key: "proposal",
@@ -33,7 +32,7 @@ export const DEFAULT_CONFIGS = [
         editable: true,
         deletable: false,
         isDefault: true,
-        order: 1,
+        order: 3,
       },
       {
         key: "negotiation",
@@ -43,7 +42,7 @@ export const DEFAULT_CONFIGS = [
         editable: true,
         deletable: false,
         isDefault: true,
-        order: 1,
+        order: 4,
       },
       {
         key: "closed_won",
@@ -53,7 +52,7 @@ export const DEFAULT_CONFIGS = [
         editable: true,
         deletable: false,
         isDefault: true,
-        order: 1,
+        order: 5,
       },
       {
         key: "closed_lost",
@@ -63,7 +62,7 @@ export const DEFAULT_CONFIGS = [
         editable: true,
         deletable: false,
         isDefault: true,
-        order: 1,
+        order: 6,
       },
     ],
   },
@@ -77,9 +76,9 @@ export const DEFAULT_CONFIGS = [
       {
         key: "open",
         label: "Open",
-
         system: true,
         deletable: false,
+        order: 1,
       },
 
       {
@@ -87,14 +86,15 @@ export const DEFAULT_CONFIGS = [
         label: "Pending",
         system: true,
         deletable: false,
+        order: 2,
       },
 
       {
         key: "closed",
         label: "Closed",
-
         system: true,
         deletable: false,
+        order: 3,
       },
     ],
   },

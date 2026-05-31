@@ -102,6 +102,15 @@ const configDefinitionSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        ret.id = ret._id;
+        delete ret._id;
+        return ret;
+      },
+    },
   },
 );
 

@@ -16,6 +16,7 @@ import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
 import { ContactRouter } from "./contact.routes.js";
 import { ChatFlowRouter } from "./chatflow.route.js";
+import { ConfigurationRouter } from "./configuration.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -34,8 +35,9 @@ export class AppRoutes {
   private conversationRouter: ConversationRouter;
   private messageRouter: MessageRouter;
   private paymentRouter: PaymentRouter;
-  private notificationRouter:NotificationRouter;
-  private contactRouter:ContactRouter;
+  private notificationRouter: NotificationRouter;
+  private contactRouter: ContactRouter;
+  private configurationRouter: ConfigurationRouter;
 
   private router: Router;
 
@@ -57,8 +59,9 @@ export class AppRoutes {
     this.mediaRouter = new MediaRouter();
     this.paymentRouter = new PaymentRouter();
 
-    this.notificationRouter= new NotificationRouter()
-    this.contactRouter=new ContactRouter()
+    this.notificationRouter = new NotificationRouter();
+    this.contactRouter = new ContactRouter();
+    this.configurationRouter = new ConfigurationRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -80,8 +83,9 @@ export class AppRoutes {
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
 
-    this.router.use('/notifications', this.notificationRouter.getRouter());
-    this.router.use('/contacts', this.contactRouter.getRouter());
+    this.router.use("/configuration", this.configurationRouter.getRouter());
+    this.router.use("/notification", this.notificationRouter.getRouter());
+    this.router.use("/contact", this.contactRouter.getRouter());
   }
 
   public getRouter(): Router {
