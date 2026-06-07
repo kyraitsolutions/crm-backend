@@ -55,6 +55,19 @@ export const ENV = {
   CROSS_DOMAIN: {
     ORIGIN: process.env.CORS_ORIGINS,
   },
+
+  URL:{
+    BACKEND_URL:process.env.BACKEND_URL!,
+    FRONTEND_URL:process.env.FRONTEND_URL!,
+  },
+  
+  META:{
+    APP_ID:process.env.META_APP_ID!,
+    APP_SECRET:process.env.META_APP_SECRET!,
+    VERIFY_WEBHOOK_TOKEN:process.env.WEBHOOK_VERIFY_TOKEN!,
+    SYSTEM_USER_ACCESS_TOKEN:process.env.SYSTEM_USER_ACCESS_TOKEN!
+  }
+
 };
 
 // import * as dotenv from "dotenv";

@@ -13,9 +13,16 @@ export class WhatsappRouter {
   private initializeRoutes(): void {
 
     this.router.post(
-      "/",
-      AuthMiddleware.authenticate,
-      this.whatsappController.getContacts.bind(
+      "/connect", AuthMiddleware.authenticate,
+      this.whatsappController.connectWhatsapp.bind(
+        this.whatsappController
+      )
+    )
+
+    this.router.get(
+      "/callback",
+      // AuthMiddleware.authenticate,
+      this.whatsappController.callback.bind(
         this.whatsappController,
       ),
     );
@@ -24,3 +31,8 @@ export class WhatsappRouter {
     return this.router;
   }
 }
+
+
+
+// router.post('/meta/connect', connectWhatsAppMeta);
+// router.get('/meta/callback', metaCallback);

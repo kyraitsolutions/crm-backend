@@ -158,7 +158,7 @@ export class AccountRouter {
     // TODO: =============================================================================================
 
     // TODO: Leads
-    this.router.get(
+    this.router.post(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
       requirePermission("leads.view"),

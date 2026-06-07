@@ -31,8 +31,7 @@ export interface Lead extends Document {
         "instagram",
         "webform",
         "manual",
-        "webhook"
-
+        "webhook",
       ];
     };
     url?: string;
@@ -40,7 +39,13 @@ export interface Lead extends Document {
     chatbotId?: string;
   };
 
-  assignedTo?: string;
+  assignment: {
+    assignedTo: string;
+    assignedAt: Date;
+    assignedBy: string;
+    assignmentType: "manual" | "automation" | "system";
+  };
+
   company?: string;
   tags?: string[];
   notes: LeadNote[];
@@ -72,7 +77,6 @@ const leadSchema = new Schema<Lead>(
       of: Schema.Types.Mixed,
       default: {},
     },
-
     stage: {
       type: String,
       enum: ["intake", "qualified", "converted"],
@@ -85,7 +89,6 @@ const leadSchema = new Schema<Lead>(
       default: "active",
       set: (v: string) => v?.toLowerCase(),
     },
-
     source: {
       name: {
         type: String,
@@ -98,7 +101,7 @@ const leadSchema = new Schema<Lead>(
           "instagram",
           "webform",
           "manual",
-          "webhook"
+          "webhook",
         ],
         set: (v: string) => v?.toLowerCase(),
         required: true,
@@ -107,11 +110,18 @@ const leadSchema = new Schema<Lead>(
       formId: { type: Schema.Types.ObjectId, ref: "WebForm" },
       chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot" },
     },
-
-    assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
+    assignment: {
+      assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
+      assignedAt: { type: Date, default: Date.now },
+      assignedBy: { type: Schema.Types.ObjectId, ref: "User" },
+      assignmentType: {
+        type: String,
+        enum: ["manual", "automation", "system"],
+        default: "manual",
+      },
+    },
     company: { type: String },
     tags: [{ type: String }],
-
     notes: [
       {
         activitySource: {
@@ -148,7 +158,7 @@ const leadSchema = new Schema<Lead>(
         return ret;
       },
     },
-  }
+  },
 );
 
 leadSchema.index({ accountId: 1 });

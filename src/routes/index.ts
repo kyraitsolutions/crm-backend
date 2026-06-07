@@ -16,7 +16,9 @@ import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
 import { ContactRouter } from "./contact.routes.js";
 import { ChatFlowRouter } from "./chatflow.route.js";
+import { WhatsappRouter } from "./whatsapp.routes.js";
 import { ConfigurationRouter } from "./configuration.routes.js";
+import { AutomationRouter } from "./automation.routes.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -37,8 +39,9 @@ export class AppRoutes {
   private paymentRouter: PaymentRouter;
   private notificationRouter: NotificationRouter;
   private contactRouter: ContactRouter;
+  private whatsappRouter: WhatsappRouter;
   private configurationRouter: ConfigurationRouter;
-
+  private automationRouter: AutomationRouter;
   private router: Router;
 
   constructor() {
@@ -61,7 +64,11 @@ export class AppRoutes {
 
     this.notificationRouter = new NotificationRouter();
     this.contactRouter = new ContactRouter();
+    this.whatsappRouter = new WhatsappRouter();
+    this.notificationRouter = new NotificationRouter();
+    this.contactRouter = new ContactRouter();
     this.configurationRouter = new ConfigurationRouter();
+    this.automationRouter = new AutomationRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -83,9 +90,13 @@ export class AppRoutes {
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
 
+    this.router.use("/notifications", this.notificationRouter.getRouter());
+    this.router.use("/contacts", this.contactRouter.getRouter());
+    this.router.use("/whatsapp", this.whatsappRouter.getRouter());
     this.router.use("/configuration", this.configurationRouter.getRouter());
     this.router.use("/notification", this.notificationRouter.getRouter());
     this.router.use("/contact", this.contactRouter.getRouter());
+    this.router.use("/automation", this.automationRouter.getRouter());
   }
 
   public getRouter(): Router {

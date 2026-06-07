@@ -8,7 +8,6 @@ import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
 import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 import { config } from "./config/index.js";
-// import { seedPlans } from "./scripts/seedPlan";
 
 export class App {
   public app: Application;
