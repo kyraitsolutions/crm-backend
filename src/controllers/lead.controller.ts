@@ -6,6 +6,8 @@ import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 import { EmailService } from "../services/email.service.js";
 import { AccountModel } from "../models/accounts.model.js";
+import { getMetaData } from "../utils/request-meta.utils.js";
+import { LeadDto } from "../dtos/lead.dto.js";
 
 export class LeadController {
   private leadService: LeadService;
@@ -67,6 +69,7 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       const leadData = req.body;
 
+      // console.log("Updating lead", { accountId, leadId, leadData });
       const lead = await this.leadService.updateLead(
         accountId,
         leadId,
@@ -83,9 +86,11 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       console.log("AccountId:", accountId, "LeadId:", leadId);
       const lead = await this.leadService.getLead(accountId, leadId);
+
+      console.log("Fetched lead:", lead);
       httpResponse(req, res, 200, "Lead fetched successfully", 
         {
-          doc:lead
+          doc:lead,
         });
     } catch (error) {
       next(error);
@@ -115,18 +120,26 @@ export class LeadController {
     try {
 
       console.log(req)
-      const { accountId } = req.params;
 
-      console.log("accountId", accountId);
+      const { accountId } = req.params;
+      const meta=await getMetaData(req);
+
+      // console.log("accountId", accountId);
       const leadData = req.body;
 
+      const leadDto=new LeadDto(leadData);
+
+      console.log("leadDto", leadDto);
+
       const lead = await this.leadService.createLead({
-        ...leadData,
+        ...leadDto,
         accountId: accountId,
         source: {
+          ...leadDto.source,
           name: "webhook",
           url: "https://www.google.com",
         },
+        meta:meta,
       });
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {

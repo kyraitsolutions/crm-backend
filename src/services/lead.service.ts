@@ -1,9 +1,10 @@
 import { LeadRespository } from "../repositories/lead.respository.js";
-import { Lead } from "../models/lead.model.js";
+import { Lead, LeadModel } from "../models/lead.model.js";
 // import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
 import { EmailService } from "./email.service.js";
+import { LeadDto } from "../dtos/lead.dto.js";
 
 export class LeadService {
   private leadRepository: LeadRespository;
@@ -154,7 +155,7 @@ export class LeadService {
   async createLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.create(lead);
   }
-  async createLead(lead: Lead): Promise<Lead> {
+  async createLead(lead: LeadDto): Promise<Lead> {
     const result = await this.leadRepository.create(lead);
 
     this.emailService.queueWelcomeEmail(
@@ -168,6 +169,28 @@ export class LeadService {
     leadId: string,
     lead: Lead,
   ): Promise<Lead | null> {
+    const updateData: Record<string, any> = {};
+    const customFields: Record<string, any> = {};
+
+    const schemaPaths = Object.keys(
+      LeadModel.schema.paths
+    );
+
+    for (const [key, value] of Object.entries(lead)) {
+      // protected fields
+      if (["_id", "id", "createdAt", "updatedAt"].includes(key)) {
+        continue;
+      }
+
+      // schema field exists
+      if (LeadModel.schema.path(key)) {
+        updateData[key] = value;
+      } else {
+        customFields[key] = value;
+      }
+    }
+
+    console.log("schema paths", schemaPaths);
     return await this.leadRepository.updateLeadById(leadId, lead);
   }
   async updateLeadWs(lead: Lead): Promise<Lead | null> {

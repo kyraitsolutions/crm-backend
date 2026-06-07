@@ -1,57 +1,53 @@
 import { Document, model, Schema } from "mongoose";
 
 export interface LeadNote {
-  activitySource: string;
-  attachment?: string;
+  activitySource: "phone_call" | "message" | "note" | "email" | "whatsapp";
+  attachment: string;
   message: string;
-  // createdBy?: string; // Optional: User ID or name
+  createdBy?: Schema.Types.ObjectId | string;
   createdAt: Date;
 }
+
 export interface Lead extends Document {
   userId?: Schema.Types.ObjectId | string;
   accountId: Schema.Types.ObjectId | string;
   name: string;
-  email?: string;
-  phone?: string;
-  message?: string;
+  email: string;
+  phone: string;
+  mobile: string;
+  message: string;
+  description: string;
+  company: string;
+  title: string;
+  website: string;
   customFields: Record<string, any>;
 
   stage: "intake" | "qualified" | "converted";
   status: "active" | "inactive" | "pending";
 
   source: {
-    name: {
-      type: String;
-      enum: [
-        "chatbot",
-        "website",
-        "google_ads",
-        "whatsapp",
-        "facebook",
-        "instagram",
-        "webform",
-        "manual",
-        "webhook"
-
-      ];
-    };
-    url?: string;
-    formId?: string;
-    chatbotId?: string;
+    name: string;
+    url: string;
+    formId: string;
+    chatbotId: string;
   };
 
-  assignedTo?: string;
-  company?: string;
-  tags?: string[];
+  assignedTo?: Schema.Types.ObjectId | string;
+  tags: string[];
   notes: LeadNote[];
+  attachments: string[];
 
   meta: {
-    ip?: string;
-    userAgent?: string;
-    location?: {
-      country?: string;
-      city?: string;
-      coordinates?: { lat: number; lng: number };
+    ip: string;
+    userAgent: string;
+    location: {
+      address: string;
+      country: string;
+      city: string;
+      coordinates: {
+        lat: number | null;
+        lng: number | null;
+      };
     };
   };
 
@@ -63,10 +59,18 @@ const leadSchema = new Schema<Lead>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User" },
     accountId: { type: Schema.Types.ObjectId, ref: "Account", required: true },
-    name: { type: String, required: true },
-    email: { type: String, lowercase: true, trim: true },
-    phone: { type: String, trim: true },
-    message: { type: String },
+
+    // ✅ All string fields default to "" so they always exist in DB
+    name: { type: String, default: "" },
+    email: { type: String, lowercase: true, trim: true, default: "" },
+    phone: { type: String, trim: true, default: "" },
+    mobile: { type: String, trim: true, default: "" },
+    message: { type: String, default: "" },
+    description: { type: String, default: "" },
+    company: { type: String, default: "" },
+    title: { type: String, default: "" },
+    website: { type: String, default: "" },
+
     customFields: {
       type: Map,
       of: Schema.Types.Mixed,
@@ -87,53 +91,66 @@ const leadSchema = new Schema<Lead>(
     },
 
     source: {
+      // ✅ required removed — handled by DTO default ("manual")
+      // ✅ enum expanded to match all sources used across the app
       name: {
         type: String,
         enum: [
-          "chatbot",
           "website",
           "google_ads",
-          "whatsapp",
           "facebook",
-          "instagram",
           "webform",
           "manual",
-          "webhook"
+          "webhook",
+          "chatbot",
+          "whatsapp",
+          "instagram",
         ],
+        default: "manual",
         set: (v: string) => v?.toLowerCase(),
-        required: true,
       },
-      url: { type: String },
-      formId: { type: Schema.Types.ObjectId, ref: "WebForm" },
-      chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot" },
+      url: { type: String, default: "" },
+      // ✅ formId / chatbotId stored as plain String, not ObjectId ref
+      //    so empty string "" is valid and won't throw CastError
+      formId: { type: String, default: "" },
+      chatbotId: { type: String, default: "" },
     },
 
-    assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
-    company: { type: String },
-    tags: [{ type: String }],
+    // ✅ assignedTo is fully optional — never set to "" (would cause CastError)
+    assignedTo: { type: Schema.Types.ObjectId, ref: "User", default: undefined },
 
-    notes: [
-      {
-        activitySource: {
-          type: String,
-          enum: ["phone_call", "message", "note", "email", "whatsapp"],
-          default: "note",
+    tags: { type: [String], default: [] },
+
+    notes: {
+      type: [
+        {
+          activitySource: {
+            type: String,
+            enum: ["phone_call", "message", "note", "email", "whatsapp"],
+            default: "note",
+          },
+          attachment: { type: String, default: "" },
+          message: { type: String, required: true },
+          createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+          createdAt: { type: Date, default: Date.now },
         },
-        attachment: { type: String },
-        message: { type: String, required: true },
-        // createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
+      ],
+      default: [],
+    },
+
+    attachments: { type: [String], default: [] },
+
     meta: {
-      ip: String,
-      userAgent: String,
+      ip: { type: String, default: "" },
+      userAgent: { type: String, default: "" },
       location: {
-        country: String,
-        city: String,
+        address: { type: String, default: "" },
+        country: { type: String, default: "" },
+        city: { type: String, default: "" },
         coordinates: {
-          lat: Number,
-          lng: Number,
+          // ✅ null is valid — use Mixed instead of Number
+          lat: { type: Schema.Types.Mixed, default: null },
+          lng: { type: Schema.Types.Mixed, default: null },
         },
       },
     },
@@ -142,14 +159,16 @@ const leadSchema = new Schema<Lead>(
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform(_, ret: any) {
-        delete (ret as any)._id;
+      transform(_, ret) {
         delete (ret as any).__v;
+        ret.id = ret._id;
+        delete ret._id;
         return ret;
       },
     },
   }
 );
+
 
 leadSchema.index({ accountId: 1 });
 leadSchema.index({ userId: 1 });
