@@ -69,7 +69,7 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       const leadData = req.body;
 
-      // console.log("Updating lead", { accountId, leadId, leadData });
+      console.log("Updating lead", { accountId, leadId, leadData });
       const lead = await this.leadService.updateLead(
         accountId,
         leadId,
