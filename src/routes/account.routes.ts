@@ -176,11 +176,11 @@ export class AccountRouter {
       requirePermission("leads.edit"),
       this.leadController.updateLead.bind(this.leadController),
     );
-
-    this.router.get(
-      "/:accountId/lead/:leadId/ai-summary",
+    this.router.post(
+      "/:accountId/lead/",
       AuthMiddleware.authenticate,
-      this.leadController.getLeadSummary.bind(this.leadController),
+      requirePermission("leads.create"),
+      this.leadController.createWebhookLead.bind(this.leadController),
     );
 
     // TODO: Lead Webhook
@@ -190,12 +190,18 @@ export class AccountRouter {
       // requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
     );
-    this.router.post(
-      "/:accountId/lead/:formId/create",
+
+    this.router.get(
+      "/:accountId/lead/:leadId/ai-summary",
       AuthMiddleware.authenticate,
-      requirePermission("leads.create"),
-      this.leadController.createLead.bind(this.leadController),
+      this.leadController.getLeadSummary.bind(this.leadController),
     );
+    // this.router.post(
+    //   "/:accountId/lead/:formId/create",
+    //   AuthMiddleware.authenticate,
+    //   requirePermission("leads.create"),
+    //   this.leadController.createWebhookLead.bind(this.leadController),
+    // );
 
     // TODO: =============================================================================================
 

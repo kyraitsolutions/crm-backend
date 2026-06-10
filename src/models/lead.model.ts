@@ -22,7 +22,7 @@ export interface Lead extends Document {
   website: string;
   customFields: Record<string, any>;
 
-  stage: "intake" | "qualified" | "converted";
+  stage:string;
   status: "active" | "inactive" | "pending";
 
   source: {
@@ -79,9 +79,7 @@ const leadSchema = new Schema<Lead>(
 
     stage: {
       type: String,
-      enum: ["intake", "qualified", "converted"],
-      default: "intake",
-      set: (v: string) => v?.toLowerCase(),
+      default:"new"
     },
     status: {
       type: String,

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { ContactModel } from "../models/contact.model.js";
 import { Lead, LeadModel } from "../models/lead.model.js";
 import { Router, Request, Response } from "express";
@@ -5,13 +6,13 @@ import { Router, Request, Response } from "express";
 // "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
 
 export class LeadRespository {
-  async find(criteria: any, limit?: number, skip?: number,sort?: Record<string,1 | -1  > ) {
+  async find(criteria: any, limit?: number, skip?: number, sort?: Record<string, 1 | -1>) {
 
-    const query = LeadModel.find(criteria).sort(sort || {createdAt:-1,});
-    if (limit !==undefined) {
+    const query = LeadModel.find(criteria).sort(sort || { createdAt: -1, });
+    if (limit !== undefined) {
       query.limit(limit);
     }
-    if (skip !==undefined) {
+    if (skip !== undefined) {
       query.skip(skip);
     }
     return await query.exec();
@@ -28,7 +29,7 @@ export class LeadRespository {
   async updateLeadById(id: string, lead: any) {
     return await LeadModel.findByIdAndUpdate(id, lead, {
       new: true,
-      upsert:true,
+      upsert: true,
     }).lean();
   }
 
@@ -89,7 +90,43 @@ export class LeadRespository {
   }
 
   async getLeadById(accountId: string, id: string) {
-    const lead= await LeadModel.findOne({ _id: id, accountId: accountId })
+    const lead = await LeadModel.aggregate([
+      {
+        $match: {
+          _id: new Types.ObjectId(id),
+          accountId: new Types.ObjectId(accountId)
+        }
+      },
+      {
+        $lookup: {
+          from: "emailactivities",
+          localField: "_id",
+          foreignField: "leadId",
+          as: "emails",
+          pipeline: [
+            {
+              $sort: {
+                createdAt: -1,
+              },
+            },
+          ],
+        }
+      },
+      {
+        $addFields: {
+          id: "$_id",
+        },
+      },
+
+      // remove _id
+      {
+        $project: {
+          _id: 0,
+        },
+      },
+    ])
+    // const lead= await LeadModel.findOne({ _id: id, accountId: accountId })
+    //   .populate()
     // .populate({
     //   path: "assignedTo",
     //   select: "email",
@@ -98,8 +135,8 @@ export class LeadRespository {
     //     select: "firstName lastName profilePicture",
     //   },
     // });
-    console.log("Fetched lead in repository:", lead);
-    return lead;
+    console.log("Fetched lead in repository:", lead[0]);
+    return lead[0];
   }
 }
 

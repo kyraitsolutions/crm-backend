@@ -14,7 +14,7 @@ export class LeadDto {
 
     customFields: Record<string, any>;
 
-    stage: "intake" | "qualified" | "converted";
+    stage: string;
     status: "active" | "inactive" | "pending";
 
     source: {
@@ -58,7 +58,7 @@ export class LeadDto {
 
         this.customFields = data?.customFields || {};
 
-        this.stage = data?.stage || "intake";
+        this.stage = data?.stage||"new";
         this.status = data?.status || "active";
 
         this.source = {

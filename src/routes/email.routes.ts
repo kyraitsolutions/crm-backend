@@ -36,6 +36,13 @@ export class EmailRouter {
     //   AuthMiddleware.authenticate,
     //   this.emailController.createTemplate.bind(this.emailController)
     // );
+
+    this.router.post(
+      "/:accountId/send-email", 
+      AuthMiddleware.authenticate,
+      this.emailController.sendMultipleMail.bind(this.emailController)
+    )
+
   }
 
   public getRouter(): Router {

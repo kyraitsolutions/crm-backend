@@ -97,29 +97,30 @@ export class LeadController {
     }
   };
 
-  createLead = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { accountId, formId } = req.params;
-      const leadData = req.body;
+  // createLead = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const { accountId, formId } = req.params;
+  //     const leadData = req.body;
 
-      const lead = await this.leadService.createLead({
-        ...leadData,
-        accountId: accountId,
-        source: {
-          name: "webform",
-          url: "https://www.google.com",
-          formId: formId,
-        },
-      });
-      httpResponse(req, res, 200, "Lead create successfully", lead);
-    } catch (error) {
-      next(error);
-    }
-  };
+  //     const lead = await this.leadService.createLead({
+  //       ...leadData,
+  //       accountId: accountId,
+  //       source: {
+  //         name: "webform",
+  //         url: "https://www.google.com",
+  //         formId: formId,
+  //       },
+  //     });
+  //     httpResponse(req, res, 200, "Lead create successfully", lead);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
   createWebhookLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
-      console.log(req)
+      console.log(req.params)
+
 
       const { accountId } = req.params;
       const meta=await getMetaData(req);
@@ -139,7 +140,16 @@ export class LeadController {
           name: "webhook",
           url: "https://www.google.com",
         },
-        meta:meta,
+        meta:{
+          ...meta,
+          location:{
+            ...meta.location,
+            address:leadData.address,
+            country:leadData.country,
+            city:leadData.city
+          }
+
+        },
       });
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
