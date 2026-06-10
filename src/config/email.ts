@@ -1,21 +1,20 @@
 // config/email.js
 import nodemailer from "nodemailer";
-import dotenv from "dotenv";
+import { ENV } from "../constants";
 import logger from "../utils/logger";
 
-dotenv.config();
-
+console.log("ENV", ENV);
 export class Transporter {
   private transporter: nodemailer.Transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || "587"),
+      host: ENV.SMTP.SMTP_HOST,
+      port: parseInt(ENV.SMTP.SMTP_PORT || "587"),
       secure: true, // true for 465, false for other ports
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: ENV.SMTP.SMTP_USER,
+        pass: ENV.SMTP.SMTP_PASS,
       },
       debug: false,
       logger: false,

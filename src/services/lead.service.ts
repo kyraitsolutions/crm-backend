@@ -1,22 +1,29 @@
 import { LeadRespository } from "../repositories/lead.respository.js";
-import { Lead } from "../models/lead.model.js";
+import { Lead, LeadModel } from "../models/lead.model.js";
 // import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
 import { EmailService } from "./email.service.js";
+import { LeadDto } from "../dtos/lead.dto.js";
+import { ActivityLogService } from "./activityLog.service.js";
 import { AutomationEngine } from "./automation-engine.service.js";
+import { TActivityLog } from "../types/activityLog.type.js";
+import { AUTOMATION_TRIGGERS } from "../constants/automation.constant.js";
+import { RequestContext } from "../types/common.js";
 
 export class LeadService {
-  private leadRepository: LeadRespository;
-  private emailService: EmailService;
-  private AutomationEngine = new AutomationEngine();
   private ai: GeminiAIUtil;
+  private emailService: EmailService;
+  private leadRepository: LeadRespository;
+  private automationEngine = new AutomationEngine();
+  private activityLogService = new ActivityLogService();
 
   constructor() {
-    this.leadRepository = new LeadRespository();
-    this.emailService = new EmailService();
     this.ai = new GeminiAIUtil();
-    this.AutomationEngine = new AutomationEngine();
+    this.emailService = new EmailService();
+    this.leadRepository = new LeadRespository();
+    this.automationEngine = new AutomationEngine();
+    this.activityLogService = new ActivityLogService();
   }
 
   /**
@@ -153,13 +160,44 @@ export class LeadService {
   async createLeadWs(lead: Lead): Promise<Lead> {
     return await this.leadRepository.create(lead);
   }
-  async createLead(lead: Lead): Promise<Lead> {
+  async createLead(context: RequestContext, lead: LeadDto): Promise<Lead> {
     const result = await this.leadRepository.create(lead);
 
-    this.emailService.queueWelcomeEmail(
-      "abhijeetsingh5631@gmail.com",
-      "https://www.google.com",
-    );
+    // Activity Log
+    const activityLogDataPayload: Partial<TActivityLog> = {
+      accountId: String(lead.accountId),
+      organizationId: String(context?.organizationId),
+
+      entityType: "lead",
+      entityId: String(result._id),
+
+      actor: {
+        type: "user",
+        id: context.userId,
+        name: context.userName,
+      },
+
+      metadata: {
+        leadName: result?.name,
+      },
+    };
+
+    await this.activityLogService.logCreate(activityLogDataPayload);
+
+    // Trigger automation
+    const automationDataPayload = {
+      ...result?.toJSON(),
+      organizationId: context?.organizationId,
+      entityType: "lead",
+      entityId: result._id,
+    };
+
+    await this.automationEngine.process({
+      accountId: result?.accountId,
+      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+      payload: automationDataPayload,
+    });
+
     return result;
   }
   // async updateLead(
@@ -192,9 +230,9 @@ export class LeadService {
   async updateLead(
     accountId: string,
     leadId: string,
-    lead: Partial<Lead>,
-    currentUserId: string,
-  ): Promise<Lead> {
+    lead: Lead,
+    currentUser: any,
+  ): Promise<Lead | null> {
     const existingLead = await this.leadRepository.getLeadById(
       accountId,
       leadId,
@@ -204,51 +242,48 @@ export class LeadService {
       throw new Error("Lead not found");
     }
 
-    const changes = {
-      stageChanged: lead.stage && existingLead.stage !== lead.stage,
-      statusChanged: lead.status && existingLead.status !== lead.status,
-      assigneeChanged:
-        lead.assignment?.assignedTo &&
-        String(existingLead.assignment?.assignedTo) !==
-          String(lead.assignment.assignedTo),
-    };
+    const updateData: Record<string, any> = {};
+    const customFields: Record<string, any> = {};
 
-    if (changes.assigneeChanged) {
-      lead.assignment = {
-        assignedTo: lead.assignment!.assignedTo,
-        assignedAt: new Date(),
-        assignedBy: currentUserId,
-        assignmentType: "manual",
-      };
+    const schemaPaths = Object.keys(LeadModel.schema.paths);
+
+    for (const [key, value] of Object.entries(lead)) {
+      // protected fields
+      if (["_id", "id", "createdAt", "updatedAt"].includes(key)) {
+        continue;
+      }
+
+      // schema field exists
+      if (LeadModel.schema.path(key)) {
+        updateData[key] = value;
+      } else {
+        customFields[key] = value;
+      }
     }
 
     const updatedLead = await this.leadRepository.updateLeadById(leadId, lead);
 
-    // await this.createLeadActivities(existingLead, updatedLead, currentUserId);
+    await this.activityLogService.logUpdate({
+      accountId: accountId,
+      organizationId: currentUser?.organizationId,
 
-    const triggers = [];
+      entityType: "lead",
+      entityId: leadId,
 
-    if (changes.stageChanged) {
-      triggers.push("lead-stage-changed");
-    }
+      action: "lead.updated",
 
-    if (changes.statusChanged) {
-      triggers.push("lead-status-changed");
-    }
+      actor: {
+        type: "user",
+        id: currentUser.id,
+      },
 
-    if (changes.assigneeChanged) {
-      triggers.push("lead-assigned");
-    }
+      metadata: {
+        leadName: updatedLead?.name,
+      },
 
-    await Promise.all(
-      triggers.map((trigger) =>
-        this.AutomationEngine.process({
-          accountId,
-          trigger,
-          payload: updatedLead,
-        }),
-      ),
-    );
+      oldDoc: existingLead,
+      newDoc: updatedLead,
+    });
 
     return updatedLead;
   }

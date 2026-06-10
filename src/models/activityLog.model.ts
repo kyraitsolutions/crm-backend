@@ -12,7 +12,7 @@ const activityLogSchema = new Schema(
     accountId: {
       type: Schema.Types.ObjectId,
       ref: "Account",
-      required: true,
+      // required: true,
       index: true,
     },
 

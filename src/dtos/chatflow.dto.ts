@@ -1,8 +1,4 @@
-import {
-  TChatFlow,
-  TChatFlowEdge,
-  TChatFlowNode,
-} from "../types/chatflow.type";
+import { TChatFlowEdge, TChatFlowNode } from "../types/chatflow.type";
 export class CreateChatFlowDto {
   name!: string;
   description: string = "";

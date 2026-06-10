@@ -22,6 +22,16 @@ const userSchema = new Schema(
   },
 );
 
+userSchema.virtual("profile", {
+  ref: "UserProfile",
+  localField: "_id",
+  foreignField: "userId",
+  justOne: true,
+});
+
+userSchema.set("toJSON", { virtuals: true });
+userSchema.set("toObject", { virtuals: true });
+
 export const UserModel = model("User", userSchema);
 
 export const RoleModel = model("Role", new Schema({ name: String }));

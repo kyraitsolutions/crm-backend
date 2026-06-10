@@ -6,6 +6,8 @@ import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 import { EmailService } from "../services/email.service.js";
 import { AccountModel } from "../models/accounts.model.js";
+import { getMetaData } from "../utils/request-meta.utils.js";
+import { LeadDto } from "../dtos/lead.dto.js";
 
 export class LeadController {
   private leadService: LeadService;
@@ -65,10 +67,15 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       const leadData = req.body;
 
+      const currentUser = {
+        ...req.user,
+      };
+
       const lead = await this.leadService.updateLead(
         accountId,
         leadId,
         leadData,
+        currentUser,
       );
       httpResponse(req, res, 200, "Lead updated successfully", lead);
     } catch (error) {
@@ -79,8 +86,8 @@ export class LeadController {
   getLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId, leadId } = req.params;
-      console.log("AccountId:", accountId, "LeadId:", leadId);
       const lead = await this.leadService.getLead(accountId, leadId);
+
       httpResponse(req, res, 200, "Lead fetched successfully", {
         doc: lead,
       });
@@ -94,40 +101,56 @@ export class LeadController {
       const { accountId, formId } = req.params;
       const leadData = req.body;
 
-      const lead = await this.leadService.createLead({
-        ...leadData,
-        accountId: accountId,
-        source: {
-          name: "webform",
-          url: "https://www.google.com",
-          formId: formId,
+      const lead = await this.leadService.createLead(
+        {
+          ...leadData,
+          accountId: accountId,
+          source: {
+            name: "webform",
+            url: "https://www.google.com",
+            formId: formId,
+          },
         },
-      });
+        req.user,
+      );
+
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
       next(error);
     }
   };
+
   createWebhookLead = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      console.log(req);
       const { accountId } = req.params;
+      const meta = await getMetaData(req);
 
-      console.log("accountId", accountId);
       const leadData = req.body;
+      const leadDto = new LeadDto(leadData);
 
-      const lead = await this.leadService.createLead({
-        ...leadData,
-        accountId: accountId,
+      const leadDataPayload = {
+        ...leadDto,
+        accountId: String(accountId),
         source: {
+          ...leadDto.source,
           name: "webhook",
           url: "https://www.google.com",
         },
-      });
+        meta: meta,
+      };
+
+      const context = {
+        accountId: String(accountId),
+        organizationId: String(req?.user?.organizationId),
+        userId: String(req?.user?.organizationId),
+        userName: String(req?.user?.name),
+      };
+
+      const lead = await this.leadService.createLead(context, leadDataPayload);
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
       next(error);

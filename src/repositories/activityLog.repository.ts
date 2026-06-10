@@ -1,11 +1,31 @@
 import { ActivityLog } from "../models/activityLog.model";
+import { TActivityLog } from "../types/activityLog.type";
 
 export class ActivityLogRepository {
-  async create(data: any) {
-    return await ActivityLog.create(data);
+  async count(filter: any) {
+    return ActivityLog.countDocuments(filter);
   }
 
-  async createMany(data: any[]) {
+  async find(
+    filter: any,
+    options?: {
+      skip: number;
+      limit: number;
+      sort: Record<string, 1 | -1>;
+    },
+  ) {
+    return ActivityLog.find(filter)
+      .sort(options?.sort ?? { createdAt: -1 })
+      .skip(options?.skip ?? 0)
+      .limit(Number(options?.limit))
+      .lean();
+  }
+
+  async create(data: Partial<TActivityLog>): Promise<TActivityLog | null> {
+    return (await ActivityLog.create([data]))[0].toJSON();
+  }
+
+  async createMany(data: Partial<TActivityLog>[]) {
     return await ActivityLog.insertMany(data);
   }
 
@@ -16,5 +36,9 @@ export class ActivityLogRepository {
     })
       .sort({ createdAt: -1 })
       .limit(limit);
+  }
+
+  async findById(id: string) {
+    return ActivityLog.findById(id).lean();
   }
 }

@@ -41,8 +41,6 @@ export class AccountRouter {
   }
 
   private initializeRoutes(): void {
-
-
     // TODO:=======================================================================
     // TODO: Account
     this.router.get(
@@ -186,7 +184,7 @@ export class AccountRouter {
     // TODO: Lead Webhook
     this.router.post(
       "/:accountId/lead/webhook/create",
-      // AuthMiddleware.authenticate,
+      AuthMiddleware.authenticate,
       // requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
     );

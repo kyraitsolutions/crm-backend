@@ -10,8 +10,8 @@ export type RoleName =
 export interface AuthUser {
   id: string;
   email?: string;
+  name?: string;
   role?: { id: string; name: string; level: number };
-
   organizationId?: string | Types.ObjectId | null;
 }
 
@@ -46,4 +46,11 @@ export interface AccountDtoShape {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface RequestContext {
+  accountId: string;
+  organizationId: string;
+  userId: string;
+  userName: string;
 }

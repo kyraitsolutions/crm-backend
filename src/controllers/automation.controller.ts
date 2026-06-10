@@ -15,14 +15,19 @@ export default class AutomationController {
       const { accountId } = req.params;
       const automationDataPayload = new AutomationDto(req.body);
 
+      const context = {
+        accountId: String(accountId),
+        organizationId: String(req?.user?.organizationId),
+        userId: String(req?.user?.organizationId),
+        userName: String(req?.user?.name),
+      };
+
       const result = await this.service.createAutomation(
-        accountId,
+        context,
         automationDataPayload,
       );
 
-      httpResponse(req, res, 200, "Automation created successfully", {
-        doc: result,
-      });
+      httpResponse(req, res, 200, "Automation created successfully", result);
     } catch (error) {
       next(error);
     }

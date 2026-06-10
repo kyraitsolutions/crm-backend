@@ -5,13 +5,17 @@ import { Router, Request, Response } from "express";
 // "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
 
 export class LeadRespository {
-  async find(criteria: any, limit?: number, skip?: number,sort?: Record<string,1 | -1  > ) {
-
-    const query = LeadModel.find(criteria).sort(sort || {createdAt:-1,}).lean();
-    if (limit !==undefined) {
+  async find(
+    criteria: any,
+    limit?: number,
+    skip?: number,
+    sort?: Record<string, 1 | -1>,
+  ) {
+    const query = LeadModel.find(criteria).sort(sort || { createdAt: -1 });
+    if (limit !== undefined) {
       query.limit(limit);
     }
-    if (skip !==undefined) {
+    if (skip !== undefined) {
       query.skip(skip);
     }
     return await query.exec();
@@ -28,6 +32,7 @@ export class LeadRespository {
   async updateLeadById(id: string, lead: any) {
     return await LeadModel.findByIdAndUpdate(id, lead, {
       new: true,
+      upsert: true,
     }).lean();
   }
 
@@ -88,7 +93,16 @@ export class LeadRespository {
   }
 
   async getLeadById(accountId: string, id: string) {
-    return await LeadModel.findOne({ _id: id, accountId: accountId });
+    const lead = await LeadModel.findOne({ _id: id, accountId: accountId });
+    // .populate({
+    //   path: "assignedTo",
+    //   select: "email",
+    //   populate: {
+    //     path: "profile",
+    //     select: "firstName lastName profilePicture",
+    //   },
+    // });
+    return lead;
   }
 }
 

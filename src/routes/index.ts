@@ -19,6 +19,7 @@ import { ChatFlowRouter } from "./chatflow.route.js";
 import { WhatsappRouter } from "./whatsapp.routes.js";
 import { ConfigurationRouter } from "./configuration.routes.js";
 import { AutomationRouter } from "./automation.routes.js";
+import { ActivityLogRouter } from "./activityLog.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -42,6 +43,8 @@ export class AppRoutes {
   private whatsappRouter: WhatsappRouter;
   private configurationRouter: ConfigurationRouter;
   private automationRouter: AutomationRouter;
+  private activityLogRouter: ActivityLogRouter;
+
   private router: Router;
 
   constructor() {
@@ -69,6 +72,8 @@ export class AppRoutes {
     this.contactRouter = new ContactRouter();
     this.configurationRouter = new ConfigurationRouter();
     this.automationRouter = new AutomationRouter();
+    this.activityLogRouter = new ActivityLogRouter();
+
     this.router = Router();
     this.initializeRoutes();
   }
@@ -97,6 +102,7 @@ export class AppRoutes {
     this.router.use("/notification", this.notificationRouter.getRouter());
     this.router.use("/contact", this.contactRouter.getRouter());
     this.router.use("/automation", this.automationRouter.getRouter());
+    this.router.use("/activity-logs", this.activityLogRouter.getRouter());
   }
 
   public getRouter(): Router {

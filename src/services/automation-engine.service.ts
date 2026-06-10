@@ -23,7 +23,13 @@ export class AutomationEngine {
         continue;
       }
 
-      await this.actionExecutor.execute(automation.actions, event);
+      const eventDataPayload = {
+        ...event.payload,
+        automationId: automation._id,
+        automationName: automation.name,
+      };
+
+      await this.actionExecutor.execute(automation.actions, eventDataPayload);
     }
   }
 }

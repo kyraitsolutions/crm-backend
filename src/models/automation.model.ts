@@ -32,8 +32,19 @@ const automationSchema = new Schema(
 
     trigger: {
       type: String,
-      required: true,
-      index: true,
+      enum: [
+        "LEAD_CREATED",
+        "LEAD_STAGE_CHANGED",
+        "LEAD_STATUS_CHANGED",
+        "LEAD_ASSIGNED",
+        "CONVERSATION_CREATED",
+        "CONVERSATION_CLOSED",
+      ],
+      set: (value: string) =>
+        value
+          ?.trim()
+          .replace(/[-\s]+/g, "_") // - and space => _
+          .toUpperCase(),
     },
 
     conditions: [

@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import { AutomationModel } from "../models/automation.model";
 
 export default class AutomationRepository {
@@ -14,10 +15,12 @@ export default class AutomationRepository {
   }
 
   async findByTrigger(accountId: string, trigger: string) {
-    return await AutomationModel.find({
-      accountId,
+    const automations = await AutomationModel.find({
+      accountId: new Types.ObjectId(accountId),
       trigger,
       isActive: true,
-    }).lean();
+    });
+
+    return automations;
   }
 }

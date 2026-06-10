@@ -5,7 +5,7 @@
     "dev": "cross-env NODE_ENV=development concurrently \"npm:dev:server\"",
     "production": "cross-env NODE_ENV=production concurrently \"npm:dev:server\"",
     "dev:server": "tsx watch src/server.ts",
-    "dev:worker": "tsx watch src/workers/email.worker.ts",
+    "dev:worker": "cross-env NODE_ENV=development tsx watch src/workers/email.worker.ts",
     "play": "tsx src/playground.ts",
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node dist/server.js",

@@ -1,10 +1,12 @@
+import { CONDITION_OPERATORS } from "../constants";
+
 export default class ConditionEvaluator {
   evaluate(conditions: any[], payload: any) {
     for (const condition of conditions) {
       const value = payload[this.mapField(condition.field)];
 
-      if (condition.operator === "Is Equal To") {
-        if (value !== condition.value) {
+      if (condition.operator === CONDITION_OPERATORS.EQUALS) {
+        if (condition.values.includes(value)) {
           return false;
         }
       }
@@ -15,7 +17,7 @@ export default class ConditionEvaluator {
   private mapField(field: string) {
     const map: Record<string, string> = {
       "Lead Status": "stage",
-      "Lead Source": "source",
+      "Lead Source": "source.name",
       "Assigned User": "assignedUser",
     };
 

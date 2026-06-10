@@ -27,4 +27,11 @@ type TConversationFilters = {
   platform?: "whatsapp" | "instagram" | "chatbot";
 };
 
+type TActivityLogFilters = {
+  entityType?: string;
+  entityId?: string;
+  action?: string;
+};
+
 export type TConversationQuery = TQueryParams<TConversationFilters>;
+export type TActivityLogQuery = TQueryParams<TActivityLogFilters>;

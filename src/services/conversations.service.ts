@@ -125,8 +125,6 @@ export class ConversationService {
         ...new Set(matchedMessages.map((msg) => msg.conversationId.toString())),
       ];
 
-      console.log("matchedMessages", matchedMessages);
-
       // store first matched message preview
 
       matchedMessages.forEach((msg) => {

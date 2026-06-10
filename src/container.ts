@@ -32,6 +32,7 @@ import { WhatsappService } from "./services/whatsapp.service";
 import { WhatsappRepository } from "./repositories/whatsapp.respository";
 import { ConfigRepository } from "./repositories/config.repository";
 import { ConfigBootstrapService } from "./services/configBootstrap.service";
+import {SubscriptionService} from "./services/subscription.service"
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -53,6 +54,7 @@ export const whatsappRepository=new WhatsappRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
+export const subscriptionService=new SubscriptionService()
 
 export const userService = new UserService(
   userRepository,
@@ -79,6 +81,7 @@ export const accountService = new AccountService(
 export const userAggregateService = new UserAggregateService(
   userService,
   organizationService,
+  subscriptionService
 );
 
 export const configBootstrapService = new ConfigBootstrapService(
