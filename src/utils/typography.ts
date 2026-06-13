@@ -4,3 +4,9 @@ export const generateSlug = (str: string) =>
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^\w-]+/g, "");
+
+// export const normalizeTrigger = (trigger: string) =>
+// trigger
+//   ?.trim()
+//   .replace(/[-\s]+/g, "_")
+//   .toUpperCase();

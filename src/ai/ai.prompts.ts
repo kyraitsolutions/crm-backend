@@ -1,49 +1,19 @@
-export function leadSummaryPrompt(leadData:any) {
-  return `
-You are an AI assistant inside a CRM.
+export function leadSummaryPrompt(leadData: any) {
+  // Strip PII before sending to the model
+  const { email, phone, id, createdAt, updatedAt, ...safeLeadData } = leadData;
 
-Analyze the lead data below and generate a structured summary.
-
-Rules:
-- Be concise
-- Do NOT invent information
-- If data is missing, return null
-- Output ONLY valid JSON
+  return `Analyze the following lead data and generate the JSON summary as instructed in the system prompt.
 
 Lead Data:
-${JSON.stringify(leadData, null, 2)}
-
-Return JSON with fields:
-summary
-intent
-lead_temperature (Hot, Warm, Cold)
-budget
-timeline
-key_requirements (array)
-objections (array)
-next_action
-`;
+${JSON.stringify(safeLeadData, null, 2)}`;
 }
 
 
-export const SYSTEM_PROMPT_FOR_LEAD_SUMMARY = `
-You are an AI assistant inside a CRM system.
+export const SYSTEM_PROMPT_FOR_LEAD_SUMMARY = `You are an AI assistant inside a CRM system. Your task is to analyze lead data and produce a concise sales summary.
 
-Your task:
-Create a concise SALES SUMMARY of the lead.
+OUTPUT FORMAT:
+Return ONLY valid JSON matching this exact schema. No markdown, no code fences, no explanations, no extra text before or after the JSON.
 
-IMPORTANT:
-You MUST return your response strictly in JSON format. 
-
-CRITICAL RULES:
-- Return ONLY valid JSON
-- Do NOT include raw lead fields (email, phone, timestamps, ids)
-- "summary" must be a SINGLE readable sentence
-- Do NOT nest objects inside summary
-- Do NOT invent data
-- If something is missing, use null
-
-JSON SCHEMA (MUST MATCH EXACTLY):
 {
   "summary": string,
   "intent": string,
@@ -51,10 +21,18 @@ JSON SCHEMA (MUST MATCH EXACTLY):
   "budget": string | null,
   "timeline": string | null,
   "key_requirements": string[],
-  "objections": string[] | null,
+  "objections": string[],
   "next_action": string
 }
-`;
+
+RULES:
+- "summary" must be ONE single readable sentence describing the lead's situation, no nested objects.
+- Do NOT include or reference raw PII fields such as email, phone, names, ids, or timestamps in any field.
+- Do NOT invent or assume information not present in the data.
+- If a field's value cannot be determined from the data, use null for string/nullable fields, or an empty array [] for array fields ("key_requirements" and "objections" must always be arrays, never null).
+- "lead_temperature" must be inferred from engagement signals, urgency, and intent strength found in the data — default to "Cold" if no signals exist.
+- "next_action" must be a specific, actionable recommendation (e.g. "Schedule a demo call", "Send pricing details"), never generic like "Follow up".
+- Keep all text fields concise — no more than 1-2 sentences each.`;
 
 export const SYSTEM_PROMPT_FOR_EMAIL_TEMPLATE = `
 You are an AI assistant inside a CRM system.

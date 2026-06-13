@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Lead Assigned</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f7fb;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding:30px;">
+        <table
+          width="600"
+          cellpadding="0"
+          cellspacing="0"
+          style="background:#ffffff;border-radius:8px;overflow:hidden;"
+        >
+          <tr>
+            <td
+              style="
+                background:#3b5d50;
+                color:#ffffff;
+                padding:24px;
+              "
+            >
+              <h2 style="margin:0;">
+                New Lead Assigned
+              </h2>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:24px;">
+              <p>Hello <strong>{{assigneeName}}</strong>,</p>
+
+              <p>
+                A new lead has been assigned to you. Please review the details below and follow up as soon as possible.
+              </p>
+
+              <table
+                width="100%"
+                cellpadding="10"
+                cellspacing="0"
+                style="
+                  background:#f9fafb;
+                  border:1px solid #e5e7eb;
+                  border-radius:6px;
+                "
+              >
+                <tr>
+                  <td width="180"><strong>Lead Name</strong></td>
+                  <td>{{leadName}}</td>
+                </tr>
+
+                {{#if leadEmail}}
+                <tr>
+                  <td><strong>Email</strong></td>
+                  <td>{{leadEmail}}</td>
+                </tr>
+                {{/if}}
+
+                {{#if leadPhone}}
+                <tr>
+                  <td><strong>Phone</strong></td>
+                  <td>{{leadPhone}}</td>
+                </tr>
+                {{/if}}
+
+                {{#if leadSource}}
+                <tr>
+                  <td><strong>Source</strong></td>
+                  <td>{{leadSource}}</td>
+                </tr>
+                {{/if}}
+              </table>
+
+              <div style="margin-top:30px;text-align:center;">
+                <a
+                  href="{{dashboardUrl}}"
+                  style="
+                    display:inline-block;
+                    background:#3b5d50;
+                    color:#ffffff;
+                    text-decoration:none;
+                    padding:12px 24px;
+                    border-radius:6px;
+                    font-weight:bold;
+                  "
+                >
+                  View Lead
+                </a>
+              </div>
+
+              <p style="margin-top:30px;">
+                Thank you,<br />
+                <strong>Kyra CRM</strong>
+              </p>
+            </td>
+          </tr>
+
+          <tr>
+            <td
+              style="
+                background:#f8f9fa;
+                padding:16px;
+                text-align:center;
+                color:#6b7280;
+                font-size:12px;
+              "
+            >
+              © {{year}} Kyra CRM. All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

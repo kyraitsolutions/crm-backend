@@ -18,6 +18,8 @@ import { ContactRouter } from "./contact.routes.js";
 import { ChatFlowRouter } from "./chatflow.route.js";
 import { WhatsappRouter } from "./whatsapp.routes.js";
 import { ConfigurationRouter } from "./configuration.routes.js";
+import { AutomationRouter } from "./automation.routes.js";
+import { ActivityLogRouter } from "./activityLog.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -36,10 +38,12 @@ export class AppRoutes {
   private conversationRouter: ConversationRouter;
   private messageRouter: MessageRouter;
   private paymentRouter: PaymentRouter;
-  private notificationRouter:NotificationRouter;
-  private contactRouter:ContactRouter;
-  private whatsappRouter:WhatsappRouter;
+  private notificationRouter: NotificationRouter;
+  private contactRouter: ContactRouter;
+  private whatsappRouter: WhatsappRouter;
   private configurationRouter: ConfigurationRouter;
+  private automationRouter: AutomationRouter;
+  private activityLogRouter: ActivityLogRouter;
 
   private router: Router;
 
@@ -61,12 +65,15 @@ export class AppRoutes {
     this.mediaRouter = new MediaRouter();
     this.paymentRouter = new PaymentRouter();
 
-    this.notificationRouter= new NotificationRouter()
-    this.contactRouter=new ContactRouter()
-    this.whatsappRouter=new WhatsappRouter()
+    this.notificationRouter = new NotificationRouter();
+    this.contactRouter = new ContactRouter();
+    this.whatsappRouter = new WhatsappRouter();
     this.notificationRouter = new NotificationRouter();
     this.contactRouter = new ContactRouter();
     this.configurationRouter = new ConfigurationRouter();
+    this.automationRouter = new AutomationRouter();
+    this.activityLogRouter = new ActivityLogRouter();
+
     this.router = Router();
     this.initializeRoutes();
   }
@@ -88,12 +95,14 @@ export class AppRoutes {
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());
 
-    this.router.use('/notifications', this.notificationRouter.getRouter());
-    this.router.use('/contacts', this.contactRouter.getRouter());
-    this.router.use('/whatsapp', this.whatsappRouter.getRouter());
+    this.router.use("/notifications", this.notificationRouter.getRouter());
+    this.router.use("/contacts", this.contactRouter.getRouter());
+    this.router.use("/whatsapp", this.whatsappRouter.getRouter());
     this.router.use("/configuration", this.configurationRouter.getRouter());
     this.router.use("/notification", this.notificationRouter.getRouter());
     this.router.use("/contact", this.contactRouter.getRouter());
+    this.router.use("/automation", this.automationRouter.getRouter());
+    this.router.use("/activity-logs", this.activityLogRouter.getRouter());
   }
 
   public getRouter(): Router {

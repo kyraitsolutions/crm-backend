@@ -8,7 +8,7 @@ import { Router, Request, Response } from "express";
 export class LeadRespository {
   async find(criteria: any, limit?: number, skip?: number, sort?: Record<string, 1 | -1>) {
 
-    const query = LeadModel.find(criteria).sort(sort || { createdAt: -1, });
+    const query = LeadModel.find(criteria).sort(sort || { createdAt: -1 });
     if (limit !== undefined) {
       query.limit(limit);
     }

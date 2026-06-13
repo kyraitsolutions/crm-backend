@@ -2,6 +2,7 @@
 import * as dotenv from "dotenv";
 
 const env = process.env.NODE_ENV || "development";
+console.log("env", env);
 
 // Load specific env file
 dotenv.config({
@@ -56,18 +57,24 @@ export const ENV = {
     ORIGIN: process.env.CORS_ORIGINS,
   },
 
-  URL:{
-    BACKEND_URL:process.env.BACKEND_URL!,
-    FRONTEND_URL:process.env.FRONTEND_URL!,
+  URL: {
+    BACKEND_URL: process.env.BACKEND_URL!,
+    FRONTEND_URL: process.env.FRONTEND_URL!,
   },
-  
-  META:{
-    APP_ID:process.env.META_APP_ID!,
-    APP_SECRET:process.env.META_APP_SECRET!,
-    VERIFY_WEBHOOK_TOKEN:process.env.WEBHOOK_VERIFY_TOKEN!,
-    SYSTEM_USER_ACCESS_TOKEN:process.env.SYSTEM_USER_ACCESS_TOKEN!
-  }
 
+  META: {
+    APP_ID: process.env.META_APP_ID!,
+    APP_SECRET: process.env.META_APP_SECRET!,
+    VERIFY_WEBHOOK_TOKEN: process.env.WEBHOOK_VERIFY_TOKEN!,
+    SYSTEM_USER_ACCESS_TOKEN: process.env.SYSTEM_USER_ACCESS_TOKEN!,
+  },
+
+  SMTP: {
+    SMTP_HOST: process.env.SMTP_HOST!,
+    SMTP_PORT: process.env.SMTP_PORT!,
+    SMTP_USER: process.env.SMTP_USER!,
+    SMTP_PASS: process.env.SMTP_PASS!,
+  },
 };
 
 // import * as dotenv from "dotenv";

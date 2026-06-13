@@ -102,3 +102,18 @@ emailQueue.process(QUEUE_JOBS.SEND_ONBOARDING_EMAIL, async (job) => {
     year,
   });
 });
+
+emailQueue.process(QUEUE_JOBS.SEND_TASK_ASSIGNED_EMAIL, async (job) => {
+  const { email, task } = job.data;
+  await emailUtils.sendTaskAssignedEmail(email, task);
+  // await emailUtils.sendEmail(
+  //   email,
+  //   `New Task Assigned: ${task?.taskTitle}`,
+  //   `New Task Assigned: ${task?.taskTitle}`,
+  // );
+});
+
+emailQueue.process(QUEUE_JOBS.SEND_LEAD_ASSIGNED_EMAIL, async (job) => {
+  const { email, lead } = job.data;
+  await emailUtils.sendLeadAssignedEmail(email, lead);
+});

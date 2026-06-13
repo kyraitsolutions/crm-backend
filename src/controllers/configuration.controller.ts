@@ -61,7 +61,7 @@ export class ConfigurationController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const dto = req.body;
+      const dto = new ConfigurationItemDto(req.body);
 
       const result = await configBootstrapService.updateConfigItem(
         req.params.configId,
@@ -69,9 +69,13 @@ export class ConfigurationController {
         dto,
       );
 
-      httpResponse(req, res, 200, "Configuration item updated successfully", {
-        doc: result,
-      });
+      httpResponse(
+        req,
+        res,
+        200,
+        "Configuration item updated successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

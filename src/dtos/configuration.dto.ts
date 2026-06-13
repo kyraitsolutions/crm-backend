@@ -1,6 +1,6 @@
 export class ConfigurationItemDto {
-  key!: string;
-  label?: string;
+  label!: string;
+  key?: string;
   color?: string;
   order?: number;
 

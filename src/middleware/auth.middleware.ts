@@ -3,6 +3,7 @@ import passport from "passport";
 import { ENV } from "../constants/index.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
 import { TUser } from "../types/user.type.js";
+import { UserProfileModel } from "../models/userProfile.model.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
@@ -10,12 +11,10 @@ export class AuthMiddleware {
       "jwt",
       { session: false },
       async (err: any, user: TUser, _info: any) => {
-        console.log(err);
         if (err) {
           return next(err);
         }
         if (!user) {
-          console.log("req", req);
           return res.status(401).json({ message: "Unauthorized" });
         }
 
@@ -25,9 +24,15 @@ export class AuthMiddleware {
           }).populate("roleId", "name level")
         )?.toJSON();
 
+        const userProfile = await UserProfileModel.findOne({
+          userId: user.id,
+        }).populate("userId", "email");
+
         req.user = {
           ...user,
           id: user.id as string,
+          name: `${userProfile?.firstName} ${userProfile?.lastName}`,
+          // email: userProfile?.userId?.email,
           organizationId: organizationMember?.organizationId,
           role: organizationMember?.roleId as {
             name: string;

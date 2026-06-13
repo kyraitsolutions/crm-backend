@@ -201,6 +201,82 @@ export class EmailUtils {
     }
   }
 
+  async sendTaskAssignedEmail(email: string, data: any): Promise<boolean> {
+    console.log("iska matal to yaa par bhi aaya ahi");
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        EMAIL_TEMPLATES_PATH.TASK_ASSIGNED,
+      );
+
+      const source = fs.readFileSync(templatePath, "utf8");
+
+      const template = Handlebars.compile(source);
+
+      const html = template({
+        assigneeName: data.assigneeName,
+        taskTitle: data.taskTitle,
+        taskDescription: data.taskDescription,
+        priority: data.priority,
+        dueDate: data.dueDate,
+        leadName: data.leadName,
+        dashboardUrl: data.dashboardUrl,
+        year: new Date().getFullYear(),
+      });
+
+      await this.sendEmail(
+        email,
+        `New Task Assigned: ${data?.taskTitle}`,
+        html,
+      );
+
+      return true;
+    } catch (error) {
+      logger.error("Task assignment email error", error);
+      return false;
+    }
+  }
+
+  async sendLeadAssignedEmail(
+    email: string,
+    data: {
+      assigneeName: string;
+      leadName: string;
+      leadEmail?: string;
+      leadPhone?: string;
+      leadSource?: string;
+      dashboardUrl: string;
+    },
+  ): Promise<boolean> {
+    try {
+      const templatePath = path.join(
+        process.cwd(),
+        EMAIL_TEMPLATES_PATH.LEAD_ASSIGNED,
+      );
+
+      const source = fs.readFileSync(templatePath, "utf8");
+
+      const template = Handlebars.compile(source);
+
+      const html = template({
+        assigneeName: data.assigneeName,
+        leadName: data.leadName,
+        leadEmail: data.leadEmail,
+        leadPhone: data.leadPhone,
+        leadSource: data.leadSource,
+        dashboardUrl: data.dashboardUrl,
+        year: new Date().getFullYear(),
+      });
+
+      await this.sendEmail(email, `New Lead Assigned: ${data.leadName}`, html);
+
+      return true;
+    } catch (error) {
+      logger.error("Lead assignment email error", error);
+      return false;
+    }
+  }
+
   // Template methods
   generateEmailTemplate(templateName: string, data: any): string {
     const templates: { [key: string]: (data: any) => string } = {

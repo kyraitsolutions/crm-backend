@@ -4,41 +4,32 @@ import { contactService } from "../container.js";
 
 export class ContactController {
 
-  getContacts = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getContacts = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const {accountId,rowPerPage,pageIndex} = req.body;
 
-      const limit = rowPerPage
-        ? parseInt(String(rowPerPage), 10)
-        : 10;
+      const payload=req.body;
+
+      const limit = rowPerPage? parseInt(String(rowPerPage), 10): 10;
       
       const page =Math.max(Number(pageIndex),1);
       const skip = (Math.max(Number(pageIndex), 1) - 1) * limit;
 
-      const contacts = await contactService.getContacts(String(accountId||""),{limit,skip});
+      const [contacts, totalDocs] = await contactService.getContacts(String(accountId||""), payload,skip);
 
-      const totalPages =
-        Math.ceil(
-          contacts.totalDocs /
-            limit
-        ) || 1;
+      console.log(contacts)
+      const totalPages =Math.ceil(contacts.totalDocs /limit) || 1;
+
       httpResponse(req, res, 200, "contacts fetched successfully", {
-        docs: contacts.docs,
+        docs: contacts,
         pagination: {
           page,
           limit,
           skip,
-          totalDocs: contacts?.totalDocs,
+          totalDocs: totalDocs,
           totalPages:totalPages,
-          hasNextPage:
-              page <
-              totalPages,
-            hasPrevPage:
-              page > 1,
+          hasNextPage:page <totalPages,
+          hasPrevPage:page > 1,
         },
       });
     } catch (error) {

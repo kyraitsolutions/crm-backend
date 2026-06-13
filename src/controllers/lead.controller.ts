@@ -18,29 +18,26 @@ export class LeadController {
     this.emailService = new EmailService();
   }
 
-  getLeads = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getLeads = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const user = req.user as any;
       const { accountId } = req.params;
 
-      const payload=req.body;
+      const payload = req.body;
 
-      const limit = req.body.limit
-        ? Number(req.body.limit)
-        : 10;
+      const limit = req.body.limit ? Number(req.body.limit) : 10;
 
-      const page =Math.max(Number(payload.page),1);
+      const page = Math.max(Number(payload.page), 1);
       const skip = (Math.max(Number(page), 1) - 1) * limit;
 
+      const [leads, totalDocs] = await this.leadService.getLeads(
+        user.id,
+        accountId,
+        payload,
+        skip,
+      );
 
-      const [leads,totalDocs] = await this.leadService.getLeads(user.id,accountId,payload,skip);
-
-      const totalPages = Math.ceil(totalDocs /limit) || 1;
-
+      const totalPages = Math.ceil(totalDocs / limit) || 1;
 
       // console.log(leads,totalDocs)
 
@@ -50,13 +47,10 @@ export class LeadController {
           page,
           limit,
           skip,
-          totalDocs:totalDocs,
-          totalPages:totalPages,
-          hasNextPage:
-              page <
-              totalPages,
-            hasPrevPage:
-              page > 1,
+          totalDocs: totalDocs,
+          totalPages: totalPages,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
         },
       });
     } catch (error) {
@@ -70,10 +64,15 @@ export class LeadController {
       const leadData = req.body;
 
       console.log("Updating lead", { accountId, leadId, leadData });
+      const currentUser = {
+        ...req.user,
+      };
+
       const lead = await this.leadService.updateLead(
         accountId,
         leadId,
         leadData,
+        currentUser,
       );
       httpResponse(req, res, 200, "Lead updated successfully", lead);
     } catch (error) {
@@ -84,14 +83,11 @@ export class LeadController {
   getLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId, leadId } = req.params;
-      console.log("AccountId:", accountId, "LeadId:", leadId);
       const lead = await this.leadService.getLead(accountId, leadId);
 
-      console.log("Fetched lead:", lead);
-      httpResponse(req, res, 200, "Lead fetched successfully", 
-        {
-          doc:lead,
-        });
+      httpResponse(req, res, 200, "Lead fetched successfully", {
+        doc: lead,
+      });
     } catch (error) {
       next(error);
     }
@@ -116,29 +112,25 @@ export class LeadController {
   //     next(error);
   //   }
   // };
-  createWebhookLead = async (req: Request, res: Response, next: NextFunction) => {
+  createWebhookLead = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-
-      console.log(req.params)
-
-
       const { accountId } = req.params;
-      const meta=await getMetaData(req);
+      const meta = await getMetaData(req);
 
-      // console.log("accountId", accountId);
       const leadData = req.body;
+      const leadDto = new LeadDto(leadData);
 
-      const leadDto=new LeadDto(leadData);
-
-      console.log("leadDto", leadDto);
-
-      const lead = await this.leadService.createLead({
+      const leadDataPayload = {
         ...leadDto,
-        accountId: accountId,
+        accountId: String(accountId),
         source: {
           ...leadDto.source,
-          name: "webhook",
-          url: "https://www.google.com",
+          name: leadDto.source.name|| "webhook",
+          url: leadDto.source.url||"https://www.google.com",
         },
         meta:{
           ...meta,
@@ -150,7 +142,16 @@ export class LeadController {
           }
 
         },
-      });
+      };
+
+      const context = {
+        accountId: String(accountId),
+        organizationId: String(req?.user?.organizationId),
+        userId: String(req?.user?.organizationId),
+        userName: String(req?.user?.name),
+      };
+
+      const lead = await this.leadService.createLead(context, leadDataPayload);
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
       next(error);

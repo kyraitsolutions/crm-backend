@@ -26,14 +26,27 @@ export interface Lead extends Document {
   status: "active" | "inactive" | "pending";
 
   source: {
-    name: string;
-    url: string;
-    formId: string;
-    chatbotId: string;
+    name: {
+      type: String;
+      enum: [
+        "chatbot",
+        "website",
+        "google_ads",
+        "whatsapp",
+        "facebook",
+        "instagram",
+        "webform",
+        "manual",
+        "webhook",
+      ];
+    };
+    url?: string;
+    formId?: string;
+    chatbotId?: string;
   };
 
-  assignedTo?: Schema.Types.ObjectId | string;
-  tags: string[];
+  assignedTo?: string;
+  tags?: string[];
   notes: LeadNote[];
   attachments: string[];
 
@@ -70,13 +83,11 @@ const leadSchema = new Schema<Lead>(
     company: { type: String, default: "" },
     title: { type: String, default: "" },
     website: { type: String, default: "" },
-
     customFields: {
       type: Map,
       of: Schema.Types.Mixed,
       default: {},
     },
-
     stage: {
       type: String,
       default:"new"
@@ -87,7 +98,6 @@ const leadSchema = new Schema<Lead>(
       default: "active",
       set: (v: string) => v?.toLowerCase(),
     },
-
     source: {
       // ✅ required removed — handled by DTO default ("manual")
       // ✅ enum expanded to match all sources used across the app
@@ -100,9 +110,6 @@ const leadSchema = new Schema<Lead>(
           "webform",
           "manual",
           "webhook",
-          "chatbot",
-          "whatsapp",
-          "instagram",
         ],
         default: "manual",
         set: (v: string) => v?.toLowerCase(),
@@ -113,31 +120,21 @@ const leadSchema = new Schema<Lead>(
       formId: { type: String, default: "" },
       chatbotId: { type: String, default: "" },
     },
-
-    // ✅ assignedTo is fully optional — never set to "" (would cause CastError)
-    assignedTo: { type: Schema.Types.ObjectId, ref: "User", default: undefined },
-
-    tags: { type: [String], default: [] },
-
-    notes: {
-      type: [
-        {
-          activitySource: {
-            type: String,
-            enum: ["phone_call", "message", "note", "email", "whatsapp"],
-            default: "note",
-          },
-          attachment: { type: String, default: "" },
-          message: { type: String, required: true },
-          createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-          createdAt: { type: Date, default: Date.now },
+    assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
+    tags: [{ type: String }],
+    notes: [
+      {
+        activitySource: {
+          type: String,
+          enum: ["phone_call", "message", "note", "email", "whatsapp"],
+          default: "note",
         },
-      ],
-      default: [],
-    },
-
-    attachments: { type: [String], default: [] },
-
+        attachment: { type: String },
+        message: { type: String, required: true },
+        // createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
     meta: {
       ip: { type: String, default: "" },
       userAgent: { type: String, default: "" },
@@ -164,9 +161,8 @@ const leadSchema = new Schema<Lead>(
         return ret;
       },
     },
-  }
+  },
 );
-
 
 leadSchema.index({ accountId: 1 });
 leadSchema.index({ userId: 1 });

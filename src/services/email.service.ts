@@ -127,10 +127,6 @@ export class EmailService {
     const subscribers = await this.emailRepository.getSubscribers(accountId);
     return subscribers;
   }
-  // async deleteSubscriber(accountId:string,contactId:string):Promise<any|null>{
-  //     const result=await this.emailRepository.deleteSubscriber(accountId,contactId);
-  //     return result;
-  // }
 
   async getTemplates(accountId: string): Promise<any[]> {
     const templates = await this.emailRepository.getTemplates(accountId);
@@ -140,11 +136,17 @@ export class EmailService {
   //     const template=await this.emailRepository.getTemplateById(accountId,templateId);
   //     return template;
   // }
-  async createTemplate(accountId: string, templateData: TEmailTemplate): Promise<any> {
+  async createTemplate(
+    accountId: string,
+    templateData: TEmailTemplate,
+  ): Promise<any> {
     console.log("Template data:", templateData);
-    const template = await this.emailRepository.createTemplate(accountId, templateData);
+    const template = await this.emailRepository.createTemplate(
+      accountId,
+      templateData,
+    );
     return template;
-    return
+    return;
   }
   // async updateTemplate(accountId:string,templateId:string,updateData:any):Promise<any|null>{
   //     const template=await this.emailRepository.updateTemplate(accountId,templateId,updateData);
@@ -181,6 +183,35 @@ export class EmailService {
       lead,
     });
     logger.info(`Lead Acknowledgement email queued for ${email}`);
+  }
+
+  async queueTaskAssignedEmail(data: {
+    email: string;
+    assigneeName: string;
+    taskTitle: string;
+    taskDescription: string;
+    priority: string;
+    dueDate: string;
+    leadName?: string;
+    dashboardUrl: string;
+  }): Promise<void> {
+    const jobData = {
+      email: data.email,
+      task: data,
+    };
+    console.log("Job Data bata do", jobData);
+    await emailQueue.add(QUEUE_JOBS.SEND_TASK_ASSIGNED_EMAIL, jobData);
+    logger.info(`Task assignment email queued for ${data.email}`);
+  }
+
+  async queueLeadAssignedEmail(data: any): Promise<void> {
+    console.log("Data bata do", data);
+    const jobData = {
+      email: data.email,
+      lead: data,
+    };
+    await emailQueue.add(QUEUE_JOBS.SEND_LEAD_ASSIGNED_EMAIL, jobData);
+    logger.info(`Lead assignment email queued for ${data.email}`);
   }
 }
 
