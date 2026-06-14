@@ -2,13 +2,12 @@ export type LeadSourceName =
   | "website"
   | "google_ads"
   | "facebook"
+  | "instagram"
   | "webform"
+  | "whatsapp"
   | "manual"
   | "webhook"
-  | "chatbot"
-  | "whatsapp"
-  | "instagram";
-
+  | "import"
 export interface ILead {
   accountId?: string;
   name?: string;
