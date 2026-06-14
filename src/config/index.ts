@@ -4,13 +4,16 @@ export const config = {
   app: {
     port: Number(ENV.APP.PORT) || 3000,
   },
+
   auth: {
     jwtSecret: ENV.AUTH.JWT_SECRET as string,
     jwtExpiresIn: ENV.AUTH.JWT_EXPIRES_IN,
   },
+
   db: {
     url: ENV.DB.DATABASE_URL,
   },
+
   google: {
     clientId: ENV.GOOGLE.CLIENT_ID,
     clientSecret: ENV.GOOGLE.CLIENT_SECRET,
@@ -18,6 +21,14 @@ export const config = {
       ENV.GOOGLE.CALLBACK_URL ||
       "http://localhost:3000/api/auth/google/callback",
   },
+
+  meta: {
+    APP_ID: ENV.META.APP_ID,
+    APP_SECRET: ENV.META.APP_SECRET,
+    GRAPH_VERSION: ENV.META.GRAPH_VERSION,
+    REDIRECT_URI: ENV.META.REDIRECT_URI,
+  },
+
   aws: {
     cdnDomain: ENV.AWS.CDN_DOMAIN,
     region: ENV.AWS.REGION,
