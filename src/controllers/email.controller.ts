@@ -32,8 +32,6 @@ export class EmailController {
             next(error);
         }
     }
-
-    
     startEmailCampaign = async (req: Request, res: Response, next: NextFunction) => {
         try {
             // const user = req.user as any;
@@ -56,9 +54,6 @@ export class EmailController {
             next(error)
         }
     };
-
-
-
     getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
         try {
             const {accountId}=req.params;  
@@ -73,8 +68,6 @@ export class EmailController {
             next(error)
         }
     };
-
-
     createTemplate=async(req:Request,res:Response,next:NextFunction)=>{
         try {
             const {accountId}=req.params;  
@@ -100,6 +93,33 @@ export class EmailController {
             next(error)
         }   
     };
+
+    sendMultipleMail=async(req:Request,res:Response,next:NextFunction)=>{
+        try {
+            // const user = req.user as any;
+            const { accountId } = req.params;
+            console.log(accountId)
+            const {leadId,contactId, name , emails, subject, html} = req.body;
+
+            await this.emailService.sendMultipleEmail({
+                accountId,
+                leadId,
+                contactId,
+                name,
+                emails,
+                subject,
+                html,
+                fromEmail:"kyraitsolutions"
+            });
+
+            httpResponse(req, res, 200, "Campaign setup successfully", {
+                status: true,
+                totalLeads: emails.length,
+            });
+        } catch (error) {
+            next(error)
+        }
+    }
 
 
 };

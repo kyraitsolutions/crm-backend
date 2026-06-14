@@ -710,7 +710,6 @@ export default class AnalyticsService {
       contacts,
     };
   }
-
 }
 
 // import AnalyticsRepository from "../repositories/analytics.repository.js";

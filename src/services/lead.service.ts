@@ -10,6 +10,7 @@ import { AutomationEngine } from "./automation-engine.service.js";
 import { TActivityLog } from "../types/activityLog.type.js";
 import { AUTOMATION_TRIGGERS } from "../constants/automation.constant.js";
 import { RequestContext } from "../types/common.js";
+import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 
 export class LeadService {
   private ai: GeminiAIUtil;
@@ -35,30 +36,11 @@ export class LeadService {
    * @param accountId - The account's ID (from req.params)
    * @returns Promise<Lead[]>
    */
-  async getLeads(
-    _userId: string,
-    accountId: string,
-    payload: Record<string, any>,
-    skip: number,
-    // queryFilters?: any, // Define/expand as needed
-    // paginationOptions?: { limit?: number; skip?: number },
-  ): Promise<any | null> {
-    // Only fetch leads that belong to the user and account
-    // Add additional filters if provided
+  async getLeads(_userId: string, accountId: string, payload: Record<string, any>, skip: number): Promise<any | null> {
     if (!accountId) {
       return null;
     }
-    const {
-      page = 1,
-      limit = 10,
-      search,
-      filters = {},
-      assignedTo,
-      form,
-      dateRange,
-      read,
-      sort = {},
-    } = payload;
+    const { page = 1, limit = 10, search, filters = {}, assignedTo, form, dateRange, read, sort = {}, } = payload;
 
     const criteria: any = {
       // userId,
@@ -128,10 +110,15 @@ export class LeadService {
     // DATE RANGE
     // -------------------------
     if (dateRange?.startDate && dateRange?.endDate) {
-      criteria.createdAt = {
-        $gte: new Date(dateRange.startDate),
 
-        $lte: new Date(dateRange.endDate),
+      const start = new Date(dateRange.startDate);
+      const end = new Date(dateRange.endDate);
+      if (end.getUTCHours() === 0 && end.getUTCMinutes() === 0 && end.getUTCSeconds() === 0 && end.getUTCMilliseconds() === 0) {
+        end.setUTCHours(23, 59, 59, 999);
+      }
+      criteria.createdAt = {
+        $gte: start,
+        $lte: end,
       };
     }
 
@@ -297,16 +284,16 @@ export class LeadService {
     const lead = await this.leadRepository.getLeadById(accountId, leadId);
 
     // For Gemini
-    // const prompt=leadSummaryPrompt(lead);
-    // const rawResponse = await this.ai.runGoogleAI({ prompt });
+    const prompt=leadSummaryPrompt(lead);
+    const rawResponse = await this.ai.runGoogleAI({ prompt });
 
     // For Open AI
-    const prompt = JSON.stringify(lead);
-    const rawResponse = await this.ai.runOpenAI(
-      prompt,
-      "one parameter expected here",
-    );
-    // console.log(rawResponse);
+    // const prompt = JSON.stringify(lead);
+    // const rawResponse = await this.ai.runOpenAI(
+    //   prompt,
+    //   "one parameter expected here",
+    // );
+    console.log(rawResponse);
 
     if (!rawResponse) {
       return null;

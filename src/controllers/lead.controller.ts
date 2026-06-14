@@ -18,11 +18,7 @@ export class LeadController {
     this.emailService = new EmailService();
   }
 
-  getLeads = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getLeads = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const user = req.user as any;
       const { accountId } = req.params;
@@ -67,6 +63,7 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       const leadData = req.body;
 
+      console.log("Updating lead", { accountId, leadId, leadData });
       const currentUser = {
         ...req.user,
       };
@@ -96,30 +93,25 @@ export class LeadController {
     }
   };
 
-  createLead = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { accountId, formId } = req.params;
-      const leadData = req.body;
+  // createLead = async (req: Request, res: Response, next: NextFunction) => {
+  //   try {
+  //     const { accountId, formId } = req.params;
+  //     const leadData = req.body;
 
-      const lead = await this.leadService.createLead(
-        {
-          ...leadData,
-          accountId: accountId,
-          source: {
-            name: "webform",
-            url: "https://www.google.com",
-            formId: formId,
-          },
-        },
-        req.user,
-      );
-
-      httpResponse(req, res, 200, "Lead create successfully", lead);
-    } catch (error) {
-      next(error);
-    }
-  };
-
+  //     const lead = await this.leadService.createLead({
+  //       ...leadData,
+  //       accountId: accountId,
+  //       source: {
+  //         name: "webform",
+  //         url: "https://www.google.com",
+  //         formId: formId,
+  //       },
+  //     });
+  //     httpResponse(req, res, 200, "Lead create successfully", lead);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // };
   createWebhookLead = async (
     req: Request,
     res: Response,
@@ -137,10 +129,19 @@ export class LeadController {
         accountId: String(accountId),
         source: {
           ...leadDto.source,
-          name: "webhook",
-          url: "https://www.google.com",
+          name: leadDto.source.name|| "webhook",
+          url: leadDto.source.url||"https://www.google.com",
         },
-        meta: meta,
+        meta:{
+          ...meta,
+          location:{
+            ...meta.location,
+            address:leadData.address,
+            country:leadData.country,
+            city:leadData.city
+          }
+
+        },
       };
 
       const context = {

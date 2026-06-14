@@ -57,7 +57,7 @@ export class EmailUtils {
     html: string,
     text?: string,
     from?: string,
-  ): Promise<boolean> {
+  ): Promise<{status:boolean,messageId:string|null}> {
     try {
       const mailOptions = {
         from: from || process.env.FROM_EMAIL,
@@ -69,13 +69,14 @@ export class EmailUtils {
 
       const result = await this.transporter.sendMail(mailOptions);
       logger.info(`Email sent successfully to ${to}:`, result.messageId);
-      return true;
+      return {status:true,messageId:result.messageId};
     } catch (error) {
       logger.error(`Failed to send email to ${to}:`, error);
-      return false;
+      return {status:false,messageId:null};;
     }
   }
 
+  
   async sendWelcomeEmail(email: string, url: string): Promise<boolean> {
     const subject = "Welcome to Kyra CRM";
     const html = `

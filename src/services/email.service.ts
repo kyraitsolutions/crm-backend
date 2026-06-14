@@ -3,6 +3,7 @@ import { emailQueue } from "../queue/queue.js";
 import { EmailRepository } from "../repositories/email.repository.js";
 import { TEmailTemplate } from "../types/email.type.js";
 import { QUEUE_JOBS } from "../constants/queue-jobs.constant.js";
+import { EmailActivity } from "../models/emailActivity.model.js";
 
 export class EmailService {
   private emailRepository: EmailRepository;
@@ -31,13 +32,7 @@ export class EmailService {
       year,
     });
   }
-  async startCampaign({
-    accountId,
-    leadIds,
-    subject,
-    html,
-    fromEmail,
-  }: {
+  async startCampaign({accountId,leadIds,subject,html,fromEmail}: {
     accountId: string;
     leadIds: { email: string; name?: string; id?: string }[];
     subject: string;
@@ -72,6 +67,62 @@ export class EmailService {
       `📨 Email campaign queued | account=${accountId} | emails=${leadIds.length}`,
     );
   }
+  async sendMultipleEmail({accountId,leadId,contactId,name,emails,subject,html,fromEmail}: {
+    accountId: string;
+    leadId:string;
+    contactId:string;
+    name:string;
+    emails: string[];
+    subject: string;
+    html: string;
+    fromEmail: string;
+  }): Promise<void> {
+    if (!emails.length) {
+      throw new Error("No leads provided for campaign");
+    }
+    for (let i = 0; i < emails.length; i++) {
+      const email = emails[i];
+
+      // 1: Create entery in database
+      const emailActivity=await EmailActivity.create({
+        accountId,
+        leadId: leadId || null,
+        contactId: contactId || null,
+        to: email,
+        subject,
+        html,
+        fromEmail,
+        name:name,
+        status: "queued",
+        type: "follow_up",
+      })
+
+      // Step 2: Queue email
+      await emailQueue.add(
+        "send-email-activity",
+        {
+          emailActivityId: emailActivity._id,
+          to: email,
+          subject,
+          html,
+          fromEmail,
+
+          accountId,
+          leadId: leadId||"",
+          contactId: contactId||"",
+
+          name:name||""
+        },
+        {
+          delay: i * 300, // ⏳ rate limit safety (VERY IMPORTANT)
+          attempts: 3,
+        },
+      );
+    }
+
+    logger.info(`📨 Email campaign queued | account=${accountId} | emails=${emails.length}`);
+  }
+
   async getSubscribers(accountId: string): Promise<any[]> {
     const subscribers = await this.emailRepository.getSubscribers(accountId);
     return subscribers;

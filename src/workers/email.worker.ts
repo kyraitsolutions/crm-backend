@@ -4,6 +4,7 @@ import { emailQueue } from "../queue/queue";
 import logger from "../utils/logger";
 import { EmailUtils } from "../utils/email.utils";
 import { QUEUE_JOBS } from "../constants/queue-jobs.constant";
+import { EmailActivity } from "../models/emailActivity.model";
 
 dotenv.config();
 
@@ -34,6 +35,43 @@ emailQueue.process("campaign-email", async (job) => {
     fromEmail,
   );
 });
+
+emailQueue.process(
+  "send-email-activity",
+  async (job) => {
+    const { emailActivityId, to, name, subject, html, fromEmail, } = job.data;
+
+    try {
+      const personalizedHtml = html.replace("{{name}}", name || "there");
+
+      // send email
+      const result = await emailUtils.sendEmail(to, subject, personalizedHtml, undefined, fromEmail);
+
+      // update DB success
+      await EmailActivity.findByIdAndUpdate(
+        emailActivityId,
+        {
+          status: "sent",
+          sentAt: new Date(),
+          messageId: result?.messageId,
+        }
+      );
+
+    } catch (error: any) {
+
+      // update DB failed
+      await EmailActivity.findByIdAndUpdate(
+        emailActivityId,
+        {
+          status: "failed",
+          error: error.message,
+        }
+      );
+
+      throw error;
+    }
+  }
+);
 
 emailQueue.process(QUEUE_JOBS.LEAD_ACKNOWLEDGEMENT_EMAIL, async (job) => {
   const { email, lead } = job.data;

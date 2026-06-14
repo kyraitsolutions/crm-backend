@@ -2,24 +2,16 @@ import { ContactModel } from "../models/contact.model.js";
 import { TContact, TCreateContact } from "../types/contact.type.js";
 
 export class ContactRepository {
-  async getContacts(accountId: string,paginationOptions?: { limit?: number; skip?: number }): Promise<any> {
+  async getContacts(criteria: any, skip: number,limit?: number, sort?: Record<string, 1 | -1> ): Promise<any> {
+    const query= ContactModel.find(criteria).sort(sort||{createdAt:-1}).limit(limit||10).skip(skip);
 
-    const limit=paginationOptions?.limit||25;
-    const skip=paginationOptions?.skip||0;
-
-    const [contacts,totalDocs]=await Promise.all([
-      ContactModel.find({accountId}).sort({createdAt:-1}).skip(skip).limit(limit).lean(),
-      ContactModel.countDocuments({accountId})
-    ]);
-    return {
-      docs:contacts,
-      totalDocs
-    }
-    // return await ContactModel.find({ accountId})
-    //   .sort({ createdAt: -1 })
-    //   .lean();
+    return await query.exec();
   }
 
+  async countDocuments(criteria: any) {
+    return await ContactModel.find(criteria).countDocuments();
+  }
+  
   async findExistingContact(
     accountId: string,
     email?: string | null,
