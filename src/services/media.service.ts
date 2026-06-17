@@ -2,10 +2,10 @@
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { S3KeyBuilder } from "../utils/s3-key.builder..utils";
-import { MEDIA } from "../constants";
-import { CreateMediaUploadUrlDto } from "../dtos/media.dto";
-import { config } from "../config";
+import { S3KeyBuilder } from "../utils/s3-key.builder..utils.js";
+import { MEDIA } from "../constants/index.js";
+import { CreateMediaUploadUrlDto } from "../dtos/media.dto.js";
+import { config } from "../config/index.js";
 
 export class MediaService {
   constructor(private s3: S3Client) {}
