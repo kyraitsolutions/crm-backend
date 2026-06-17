@@ -1,9 +1,9 @@
 // container.ts
-import { s3Client } from "./config/s3.client";
+import { s3Client } from "./config/s3.client.js";
 import { UserRepository } from "./repositories";
-import { AccountRepository } from "./repositories/account.repository";
-import { OrganizationRepository } from "./repositories/organization.repository";
-import { RbacRepository } from "./repositories/rbac.repository";
+import { AccountRepository } from "./repositories/account.repository.js";
+import { OrganizationRepository } from "./repositories/organization.repository.js";
+import { RbacRepository } from "./repositories/rbac.repository.js";
 import { SubscriptionRepository } from "./repositories/subscription.repository";
 import { TeamRepository } from "./repositories/team.repository";
 import { UserAccountRepository } from "./repositories/user-account.repository";
