@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { AuthMiddleware } from "../middleware";
-import { PaymentController } from "../controllers/payment.controller";
+import { PaymentController } from "../controllers/payment.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 
 export class PaymentRouter{
