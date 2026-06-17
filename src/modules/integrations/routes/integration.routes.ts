@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { AuthMiddleware } from "../../../middleware";
 import { IntegrationController } from "../controllers/integration.controller";
+import { AuthMiddleware } from "../../../middleware";
 
 export class IntegrationRouter {
   public router: Router;
