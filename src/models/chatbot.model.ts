@@ -1,0 +1,208 @@
+import mongoose, { Schema, model } from "mongoose";
+
+const chatbotSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: false },
+    status: { type: Boolean, default: true },
+    config: {
+      enableWidgetMessage: {
+        type: Boolean,
+        default: true,
+      },
+
+      language: {
+        type: String,
+        enum: ["english", "hindi"],
+        default: "english",
+      },
+
+      enableRantingAndFeedback: {
+        type: Boolean,
+        default: true,
+      },
+
+      ratingAndFeedback: {
+        rating: {
+          type: Number,
+          enum: [1, 2, 3, 4, 5],
+          default: 5,
+        },
+        feedback: {
+          type: String,
+          default: "",
+        },
+      },
+
+      chat_transcript: {
+        type: Boolean,
+        default: true,
+      },
+
+      enableVoiceNote: {
+        type: Boolean,
+        default: false,
+      },
+
+      responseInterval: {
+        type: Number,
+        enum: [0, 1, 2],
+        default: 0,
+      },
+
+      initiateChatbot: {
+        type: String,
+        enum: ["immediate", "action"],
+        default: "immediate",
+      },
+
+      showBranding: {
+        type: Boolean,
+        default: true,
+      },
+
+      autoOpenAfterSeconds: {
+        type: Number,
+        default: null,
+      },
+
+      brandLabelText: {
+        type: String,
+        default: "",
+      },
+
+      enableBrandLabel: {
+        type: Boolean,
+        default: true,
+      },
+
+      showTypingIndicator: {
+        type: Boolean,
+        default: true,
+      },
+    },
+    theme: {
+      brandColor: { type: String, required: true },
+      contrastColor: { type: String, required: true },
+      backgroundColor: { type: String, required: true },
+      messageColor: { type: String, required: true },
+      userMessageColor: { type: String, required: true },
+      typeface: { type: String, required: true },
+      fontSize: { type: Number, required: true },
+      fontWeight: { type: String, required: true },
+      avatarStyle: { type: String, required: true },
+      avatarUrl: { type: String, default: "" },
+      showAvatar: { type: Boolean, default: true },
+      roundedCorners: { type: Boolean, default: true },
+      borderWidth: { type: Number, default: 1 },
+      borderColor: { type: String, default: "#e2e8f0" },
+      widgetPosition: { type: String, default: "bottom-right" },
+      showLauncher: { type: Boolean, default: true },
+      launcherLabel: { type: String, default: "" },
+      launcherSize: { type: Number, default: 56 },
+      messageAlignment: { type: String, default: "left" },
+      showTimestamps: { type: Boolean, default: true },
+      animationStyle: { type: String, default: "slide" },
+      shadowIntensity: { type: Number, default: 20 },
+      opacity: { type: Number, default: 100 },
+      customCSS: { type: String, default: "" },
+    },
+    conversation: {
+      welcomeMessage: {
+        type: String,
+        default: "Hello! How can I help you today?",
+      },
+      fallbackMessage: {
+        type: String,
+        default:
+          "I apologize, but I didn't understand that. Could you please rephrase your question?",
+      },
+      showWelcomeMessage: { type: Boolean, default: true },
+      thankyouMessage: {
+        type: String,
+        default:
+          "It's been a pleasure chatting with you today, Please take a moment to drop us your rating",
+      },
+      waitingMessage: {
+        type: String,
+        default:
+          "Please wait while we connect you to our support representative",
+      },
+    },
+    flowId: {
+      type: Schema.Types.ObjectId,
+      ref: "ChatFlow",
+      index: true,
+    },
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  },
+);
+
+const nodeDataSchema = new Schema(
+  {
+    label: String,
+    type: String,
+    payload: { type: Schema.Types.Mixed, required: true },
+  },
+  { _id: false }, // IMPORTANT
+);
+
+const chatbotNodesSchema = new Schema({
+  id: String, // use UUID (from frontend)
+  // chatbotId: ObjectId,          // ref → chatbots._id
+  type: { type: String },
+  position: { x: Number, y: Number },
+  width: Number,
+  height: Number,
+  selected: Boolean,
+  dragging: Boolean,
+  data: nodeDataSchema,
+});
+
+const chatbotEdgesSchema = new Schema({
+  id: String,
+  source: String,
+  animated: Boolean,
+  target: String,
+  sourceHandle: { type: String, default: null },
+  targetHandle: { type: String, default: null },
+});
+
+const chatbotFlowSchema = new Schema(
+  {
+    accountId: { type: Schema.Types.ObjectId, ref: "Account", required: true },
+    chatbotId: { type: Schema.Types.ObjectId, ref: "Chatbot", required: true },
+    nodes: [chatbotNodesSchema],
+    edges: [chatbotEdgesSchema],
+  },
+  {
+    timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        delete (ret as any).__v;
+        return ret;
+      },
+    },
+  },
+);
+
+// index on this table
+chatbotFlowSchema.index({ accountId: 1, chatbotId: 1 });
+
+delete mongoose.models.ChatbotFlow;
+
+export const ChatbotFlowModel = model("ChatbotFlow", chatbotFlowSchema);
+
+export const ChatbotModel = model("Chatbot", chatbotSchema);

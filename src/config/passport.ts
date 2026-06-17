@@ -1,0 +1,69 @@
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+import { config } from "../config/index.js";
+import { TGoogleUser } from "../types/user.type.js";
+import { userService } from "../container.js";
+
+passport.use(
+  "local-login",
+  new LocalStrategy(
+    {
+      usernameField: "email",
+      passwordField: "password",
+    },
+    async (email, password, done) => {
+      try {
+        const result = await userService.login({ email, password });
+        return done(null, result as unknown as Express.User);
+      } catch (error) {
+        return done(error, false);
+      }
+    },
+  ),
+);
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: config.google.clientId,
+      clientSecret: config.google.clientSecret,
+      callbackURL: config.google.callbackUrl,
+      scope: ["profile", "email"],
+    },
+    async (_accessToken, _refreshToken, profile, done) => {
+      try {
+        const user = await userService.findOrCreateGoogleUser(
+          profile as TGoogleUser,
+        );
+
+        return done(null, user as Express.User);
+      } catch (error) {
+        return done(error as Error, undefined);
+      }
+    },
+  ),
+);
+
+passport.use(
+  new JwtStrategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: config.auth.jwtSecret,
+    },
+    async (payload, done) => {
+      try {
+        const user = await userService.getUserById(payload.userId);
+        if (user) {
+          return done(null, user);
+        }
+        return done(null, false);
+      } catch (error) {
+        return done(error, false);
+      }
+    },
+  ),
+);
+
+export default passport;

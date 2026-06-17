@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body
+  style="
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f5f7fb;
+    padding:30px;
+  "
+>
+  <table
+    width="600"
+    align="center"
+    cellpadding="0"
+    cellspacing="0"
+    style="
+      background:#ffffff;
+      border-radius:8px;
+      overflow:hidden;
+    "
+  >
+    <tr>
+      <td
+        style="
+          background:#3b5d50;
+          color:white;
+          padding:24px;
+        "
+      >
+        <h2 style="margin:0">
+          New Task Assigned
+        </h2>
+      </td>
+    </tr>
+
+    <tr>
+      <td style="padding:24px">
+        <p>Hello {{assigneeName}},</p>
+
+        <p>
+          A new task has been assigned to you.
+        </p>
+
+        <table
+          width="100%"
+          cellpadding="8"
+          cellspacing="0"
+          style="
+            background:#f8f9fa;
+            border:1px solid #e5e7eb;
+          "
+        >
+          <tr>
+            <td><strong>Task</strong></td>
+            <td>{{taskTitle}}</td>
+          </tr>
+
+          <tr>
+            <td><strong>Description</strong></td>
+            <td>{{taskDescription}}</td>
+          </tr>
+
+          <tr>
+            <td><strong>Priority</strong></td>
+            <td>{{priority}}</td>
+          </tr>
+
+          <tr>
+            <td><strong>Due Date</strong></td>
+            <td>{{dueDate}}</td>
+          </tr>
+
+          {{#if leadName}}
+          <tr>
+            <td><strong>Related Lead</strong></td>
+            <td>{{leadName}}</td>
+          </tr>
+          {{/if}}
+        </table>
+
+        <div
+          style="
+            margin-top:24px;
+            text-align:center;
+          "
+        >
+          <a
+            href="{{dashboardUrl}}"
+            style="
+              background:#3b5d50;
+              color:white;
+              text-decoration:none;
+              padding:12px 20px;
+              border-radius:6px;
+            "
+          >
+            View Task
+          </a>
+        </div>
+
+        <p style="margin-top:24px">
+          Regards,<br />
+          Kyra CRM
+        </p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
