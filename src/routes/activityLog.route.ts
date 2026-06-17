@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ActivityLogController from "../controllers/activityLog.controller";
+import ActivityLogController from "../controllers/activityLog.controller.js";
 import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class ActivityLogRouter {
