@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthMiddleware } from "../middleware/index.js";
-import AutomationController from "../controllers/automation.controller";
+import AutomationController from "../controllers/automation.controller.js";
 
 export class AutomationRouter {
   public router: Router;
