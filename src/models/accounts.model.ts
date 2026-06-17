@@ -1,11 +1,18 @@
 import mongoose, { model } from "mongoose";
 const accountSchema = new mongoose.Schema(
   {
-    userId: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+
+    organizationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Organization",
+      required: true,
+    },
+
     accountName: {
       type: String,
       required: true,
@@ -29,12 +36,13 @@ const accountSchema = new mongoose.Schema(
     versionKey: false,
     toJSON: {
       transform(_, ret) {
-        delete (ret as any)._id;
         delete (ret as any).__v;
+        ret.id = ret._id;
+        delete ret._id;
         return ret;
       },
     },
-  }
+  },
 );
 
 // Indexes for better performance

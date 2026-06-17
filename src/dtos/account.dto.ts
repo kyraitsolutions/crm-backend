@@ -1,42 +1,39 @@
+export class AccountDto {
+  id: string;
+  createdBy: string;
+  organizationId: string;
+  accountName: string;
+  email: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
 
-export class AccountDto{
-    id:string;
-    userId:string;
-    accountName:string;
-    email:string;   
-    status:string;
-    createdAt: Date;
-    updatedAt: Date;
-
-
-    constructor(data:{
-        id:string;
-        userId:string;
-        accountName:string;
-        email:string;    
-        status:string;
-        createdAt: Date;
-        updatedAt: Date;
-    }){
-        this.id=data.id;
-        this.userId=data.userId;
-        this.accountName=data.accountName;
-        this.email=data.email;
-        this.status=data.status;
-        this.createdAt=data.createdAt;
-        this.updatedAt=data.updatedAt;
-    }
+  constructor(data: {
+    id: string;
+    createdBy: string;
+    accountName: string;
+    organizationId: string;
+    email: string;
+    status: string;
+    createdAt: string;
+    updatedAt: string;
+  }) {
+    this.id = data.id;
+    this.createdBy = data.createdBy;
+    this.organizationId = data.organizationId;
+    this.accountName = data.accountName;
+    this.email = data.email;
+    this.status = data.status;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
+  }
 }
 
-
-export class CreateAccountDto{
-    accountName:string;
-    email:string;
-    constructor(data:{
-        accountName:string;
-        email:string;
-    }){
-        this.accountName=data.accountName;
-        this.email=data.email;
-    }
+export class CreateAccountDto {
+  accountName: string;
+  email: string;
+  constructor(data: { accountName: string; email: string }) {
+    this.accountName = data.accountName;
+    this.email = data.email;
+  }
 }

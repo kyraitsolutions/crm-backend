@@ -1,7 +1,7 @@
-import { App } from './app';
-import { config } from './config';
+import { App } from "./app.js";
+import { config } from "./config/index.js";
 
 const app = new App();
-const port = typeof config.port === 'string' ? parseInt(config.port, 10) : config.port;
+const port = config.app.port;
 
 app.listen(port);

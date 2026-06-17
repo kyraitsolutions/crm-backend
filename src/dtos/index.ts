@@ -1,2 +1,2 @@
-export * from "./user.dto";
-export * from "./chat-bot.dto";
+export * from "./user.dto.js";
+export * from "./chat-bot.dto.js";

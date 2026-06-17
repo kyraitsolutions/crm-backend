@@ -1,0 +1,101 @@
+export const DEFAULT_CONFIGS = [
+  {
+    module: "lead",
+    configType: "status",
+    name: "Lead Statuses",
+    values: [
+      {
+        key: "new",
+        label: "New",
+        color: "#22C55E",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 1,
+      },
+      {
+        key: "contacted",
+        label: "Contacted",
+        color: "#3B82F6",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 2,
+      },
+      {
+        key: "proposal",
+        label: "Proposal",
+        color: "#F59E0B",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 3,
+      },
+      {
+        key: "negotiation",
+        label: "Negotiation",
+        color: "#FBBF24",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 4,
+      },
+      {
+        key: "closed_won",
+        label: "Closed Won",
+        color: "#22C55E",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 5,
+      },
+      {
+        key: "closed_lost",
+        label: "Closed Lost",
+        color: "#EF4444",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 6,
+      },
+    ],
+  },
+
+  {
+    module: "conversation",
+    configType: "status",
+    name: "Conversation Statuses",
+
+    values: [
+      {
+        key: "open",
+        label: "Open",
+        system: true,
+        deletable: false,
+        order: 1,
+      },
+
+      {
+        key: "pending",
+        label: "Pending",
+        system: true,
+        deletable: false,
+        order: 2,
+      },
+
+      {
+        key: "closed",
+        label: "Closed",
+        system: true,
+        deletable: false,
+        order: 3,
+      },
+    ],
+  },
+];

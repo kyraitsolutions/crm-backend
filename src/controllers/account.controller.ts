@@ -1,23 +1,19 @@
-import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { AccountService } from "../services/account.service";
-import { CreateAccountDto } from "../dtos/account.dto";
+import { NextFunction, Request, Response } from "express";
+import { accountService } from "../container.js";
+import { CreateAccountDto } from "../dtos/account.dto.js";
+import { TUser } from "../types/user.type.js";
+import httpResponse from "../utils/http.response.js";
 
 export class AccountController {
-  private accountService: AccountService;
-
-  constructor() {
-    this.accountService = new AccountService();
-  }
-
   getAccounts = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
-      const accounts = await this.accountService.getAllAccounts(user.id);
+      const user = req.user;
+      const accounts = await accountService.getAllAccounts(user as TUser);
+
       httpResponse(req, res, 200, "Accounts fetched successfully", {
         docs: accounts,
         limit: 10,
@@ -28,27 +24,62 @@ export class AccountController {
     }
   };
 
-  // getAccountById= async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
-  //     try {
-  //         const account=req.user;
-  //         res.status(200).json(account);
-  //     } catch (error) {
-  //         next(error);
-  //     }
-  // }
+  getAccountById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { accountId } = req.params;
+      const result = await accountService.getAccountById(accountId);
+
+      httpResponse(req, res, 200, "Account fetched successfully", {
+        doc: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getAccountAccess = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const userId = req?.user?.id;
+      const role = req?.user?.role;
+      const { accountId } = req.params;
+
+      const data = await accountService.getAccountAccess(
+        userId as string,
+        accountId,
+        role?.name as string,
+      );
+
+      httpResponse(req, res, 200, "Account access fetched successfully", {
+        doc: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   createAccount = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
+      const user = req.user;
       const createAccountDto = new CreateAccountDto(req.body);
-      const result = await this.accountService.createAccount(
-        user.id,
-        createAccountDto
+
+      const result = await accountService.createAccount(
+        user?.id as string,
+        user?.organizationId as string,
+        createAccountDto,
       );
+
       httpResponse(req, res, 201, "Account created successfully", {
         docs: result,
       });
@@ -60,8 +91,7 @@ export class AccountController {
   deleteAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = req.params.id;
-      const result = await this.accountService.deleteAccount(id);
-      console.log("result", result);
+      const result = await accountService.deleteAccount(id, req.user);
       if (!result) {
         httpResponse(
           req,
@@ -70,7 +100,7 @@ export class AccountController {
           "Account with the user id does not exist!",
           {
             data: null,
-          }
+          },
         );
       }
       httpResponse(req, res, 200, "Account deleted successfully", {

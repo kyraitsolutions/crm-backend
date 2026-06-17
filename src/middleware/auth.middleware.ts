@@ -1,30 +1,65 @@
 import { Request, Response, NextFunction } from "express";
 import passport from "passport";
-import { ENV } from "../constants";
+import { ENV } from "../constants/index.js";
+import { OrganizationMember } from "../models/organizationMember.model.js";
+import { TUser } from "../types/user.type.js";
+import { UserProfileModel } from "../models/userProfile.model.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
     passport.authenticate(
       "jwt",
       { session: false },
-      (err: any, user: any, _info: any) => {
+      async (err: any, user: TUser, _info: any) => {
         if (err) {
           return next(err);
         }
         if (!user) {
           return res.status(401).json({ message: "Unauthorized" });
         }
-        req.user = user;
+
+        const organizationMember = (
+          await OrganizationMember.findOne({
+            userId: user.id,
+          }).populate("roleId", "name level")
+        )?.toJSON();
+
+        const userProfile = await UserProfileModel.findOne({
+          userId: user.id,
+        }).populate("userId", "email");
+
+        req.user = {
+          ...user,
+          id: user.id as string,
+          name: `${userProfile?.firstName} ${userProfile?.lastName}`,
+          // email: userProfile?.userId?.email,
+          organizationId: organizationMember?.organizationId,
+          role: organizationMember?.roleId as {
+            name: string;
+            level: number;
+            id: string;
+          },
+        };
         next();
-      }
+      },
     )(req, res, next);
   }
 
   static googleAuth() {
-    return passport.authenticate("google", {
-      scope: ["profile", "email"],
-      session: false,
-    });
+    return (req: Request, res: Response, next: NextFunction) => {
+      const platform = req.query.platform === "mobile" ? "mobile" : "web";
+
+      passport.authenticate("google", {
+        scope: ["profile", "email"],
+        session: false,
+        state: platform, // 👈 preserved through OAuth
+      })(req, res, next);
+    };
+    // return passport.authenticate("google", {
+    //   scope: ["profile", "email"],
+    //   session: false,
+    //   state: "mobile",
+    // });
   }
 
   static googleCallback() {
@@ -44,17 +79,15 @@ export class ErrorMiddleware {
     err: any,
     _req: Request,
     res: Response,
-    _next: NextFunction
+    _next: NextFunction,
   ): void {
-    console.error("Error:", err);
-
     const statusCode = err.statusCode || 500;
     const message = err.message || "Internal server error";
 
     res.status(statusCode).json({
       error: {
         message,
-        ...(ENV.NODE_ENV === "development" && { stack: err.stack }),
+        ...(ENV.APP.NODE_ENV === "development" && { stack: err.stack }),
       },
     });
   }

@@ -1,9 +1,13 @@
 import express, { Application } from "express";
-import passport from "./config/passport";
-import { ErrorMiddleware } from "./middleware/auth.middleware";
+import passport from "./config/passport.js";
+import { ErrorMiddleware } from "./middleware/auth.middleware.js";
 import cors from "cors";
-import { AppRoutes } from "./routes";
-import { initDB } from "./db";
+import { AppRoutes } from "./routes/index.js";
+import { initDB } from "./db/index.js";
+import { createWebSocketServer } from "./config/wsServer/wsServer.js";
+import http from "http";
+import { seedPermissions } from "./scripts/seed/seedPermissions.js";
+import { config } from "./config/index.js";
 
 export class App {
   public app: Application;
@@ -23,7 +27,13 @@ export class App {
   }
 
   private initializeMiddlewares(): void {
-    this.app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+    this.app.use(
+      cors({
+        origin: config.cross_domains?.origin || "*",
+        // origin: "*",
+        credentials: true,
+      }),
+    );
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
     this.app.use(passport.initialize());
@@ -38,8 +48,11 @@ export class App {
     this.app.use(ErrorMiddleware.handle);
   }
 
-  public listen(port: number): void {
-    this.app.listen(port, () => {
+  public async listen(port: number): Promise<void> {
+    const server = http.createServer(this.app);
+    createWebSocketServer(server);
+    await seedPermissions();
+    server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   }

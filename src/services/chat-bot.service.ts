@@ -1,142 +1,142 @@
-import { CreateChatBotDto } from "../dtos";
-import { ChatbotRepository } from "../repositories";
-import { ChatBotUtil, GeminiAIUtil } from "../utils";
+import {
+  ChatBotListDto,
+  ChatbotWithFlowDto,
+  CreateChatBotDto,
+  ResponseChatBotDto,
+} from "../dtos/chat-bot.dto.js";
+import { AccountRepository } from "../repositories/account.repository.js";
+import { ChatbotRepository } from "../repositories/chat-bot.repository.js";
+import {
+  TPaginatedResponse,
+  TQueryParams,
+} from "../types/api-response.type.js";
+import { buildPagination } from "../utils/paginationBuilder.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
-  private geminiAIUtil: GeminiAIUtil;
+  private accountRepository: AccountRepository;
 
   constructor() {
     this.repo = new ChatbotRepository();
-    this.geminiAIUtil = new GeminiAIUtil();
+    this.accountRepository = new AccountRepository();
   }
 
-  async getChatBots() {
-    // Implement logic to get chatbots
+  async getAllChatBotsByUserId(userId: string): Promise<ChatBotListDto[] | []> {
+    const chatbots = await this.repo.findAllByUserId(userId);
+    return chatbots?.map((chatbot) => new ChatBotListDto(chatbot)) ?? [];
   }
 
-  async createChatBot(userId: string, createChatBotDto: CreateChatBotDto) {
+  async getChatBots(
+    accountId: string,
+    query: TQueryParams = {},
+  ): Promise<TPaginatedResponse<ChatBotListDto[] | []>> {
+    const { page, limit, search } = query;
+
+    const queryParms = {
+      page,
+      limit,
+      search,
+    };
+
+    let chatbots: any = [];
+    const countDocs = await this.repo.countDocumentByAccountId(accountId);
+    chatbots = await this.repo.findAllByAccountId(accountId, queryParms);
+
+    const chatbotList =
+      chatbots?.map((chatbot: any) => new ChatBotListDto(chatbot)) ?? [];
+
+    return {
+      docs: chatbotList,
+      pagination: buildPagination({
+        page: 1,
+        limit: 1,
+        totalDocs: countDocs,
+        docsCount: chatbots.length,
+      }),
+    };
+  }
+
+  async getChatBotWithFlow(
+    accountId: string,
+    chatbotId: string,
+  ): Promise<ChatbotWithFlowDto | null> {
+    const chatbotWithFlow = await this.repo.findChatbotWithFlow(
+      accountId,
+      chatbotId,
+    );
+    return new ChatbotWithFlowDto(chatbotWithFlow);
+  }
+
+  async getChatBotById(
+    accountId: string,
+    chatbotId: string,
+  ): Promise<ResponseChatBotDto | null> {
+    const chatbot = await this.repo.findChatbotById(accountId, chatbotId);
+    if (!chatbot) {
+      throw new Error("Chatbot not Found");
+    }
+    return new ResponseChatBotDto(chatbot);
+  }
+
+  async createChatBot(
+    userId: string,
+    accountId: string,
+    createChatBotDto: CreateChatBotDto,
+  ): Promise<ResponseChatBotDto> {
+    const isAccountExist = await this.accountRepository.findOne(accountId);
+
+    if (!isAccountExist) {
+      throw new Error("Account not found for this account id");
+    }
+
     const chatbot = await this.repo.createChatbot({
-      name: createChatBotDto.name,
-      description: createChatBotDto.description,
+      ...createChatBotDto,
       userId,
+      accountId: accountId,
     });
 
-    if (createChatBotDto.knowledgeBase) {
-      const source = await this.repo.addKnowledgeSource({
-        chatbotId: chatbot._id,
-        type: createChatBotDto.knowledgeBase.type ?? "text",
-        name: createChatBotDto.name,
-        source: createChatBotDto.knowledgeBase.url ?? "manual",
-        data: createChatBotDto.knowledgeBase.manual,
-      });
+    return new ResponseChatBotDto(chatbot);
+  }
 
-      if (createChatBotDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(
-          createChatBotDto.knowledgeBase.manual
-        );
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
+  async getChatBotFlowById(accountId: string, chatbotId: string) {
+    const isAccountExist = await this.accountRepository.findOne(accountId);
 
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId: chatbot._id,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
-        await this.repo.addKnowledgeChunks(chunkData);
-      }
+    if (!isAccountExist) {
+      throw new Error("Account not found for this account id");
     }
 
-    if (createChatBotDto.suggestions?.length) {
-      const questions = createChatBotDto.suggestions.map((q) => ({
-        chatbotId: chatbot._id,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
+    const chatbotFlow = await this.repo.findChatbotFlowById(
+      accountId,
+      chatbotId,
+    );
 
-    if (createChatBotDto.conversation) {
-      await this.repo.addConversationSettings({
-        chatbotId: chatbot._id,
-        model: "gemini-pro",
-        temperature: createChatBotDto.conversation.temperature || 1,
-        prompt: createChatBotDto.conversation.prompt || "",
-      });
+    if (!chatbotFlow) {
+      throw new Error("Chatbot flow not Found");
     }
-
-    if (createChatBotDto.theme) {
-      await this.repo.addTheme({
-        chatbotId: chatbot._id,
-        ...createChatBotDto.theme,
-      });
-    }
-
-    return chatbot;
+    return chatbotFlow;
   }
 
   async updateChatBot(
-    userId: string,
+    accountId: string,
     chatbotId: string,
-    updateDto: CreateChatBotDto
+    updateDto: CreateChatBotDto,
   ) {
-    const chatbot = await this.repo.updateChatbot(chatbotId, {
-      name: updateDto.name,
-      description: updateDto.description,
-    });
-
-    if (!chatbot) {
+    const result = await this.repo.updateChatbot(
+      accountId,
+      chatbotId,
+      updateDto,
+    );
+    if (!result) {
       throw new Error("Chatbot not found");
     }
-
-    if (updateDto.knowledgeBase) {
-      const source = await this.repo.updateKnowledgeSource(chatbotId, {
-        type: updateDto.knowledgeBase.type ?? "text",
-        name: updateDto.name,
-        source: updateDto.knowledgeBase.url ?? "manual",
-        data: updateDto.knowledgeBase.manual,
-      });
-
-      if (source && updateDto.knowledgeBase.manual) {
-        const chunks = ChatBotUtil.chunkText(updateDto.knowledgeBase.manual);
-        const embeddings = await this.geminiAIUtil.generateEmbedding(chunks);
-
-        const chunkData = chunks.map((c, idx) => ({
-          chatbotId,
-          sourceId: source._id,
-          text: c,
-          embedding: embeddings[idx],
-        }));
-
-        await this.repo.deleteKnowledgeChunks(chatbotId, source._id);
-        await this.repo.addKnowledgeChunks(chunkData);
-      }
-    }
-
-    if (updateDto.suggestions) {
-      await this.repo.deleteSuggestedQuestions(chatbotId);
-
-      const questions = updateDto.suggestions.map((q) => ({
-        chatbotId,
-        question: q,
-      }));
-      await this.repo.addSuggestedQuestions(questions);
-    }
-
-    if (updateDto.conversation) {
-      await this.repo.updateConversationSettings(chatbotId, {
-        temperature: updateDto.conversation.temperature,
-        prompt: updateDto.conversation.prompt,
-      });
-    }
-
-    if (updateDto.theme) {
-      await this.repo.updateTheme(chatbotId, updateDto.theme);
-    }
-
-    return chatbot;
+    return result;
   }
 
-  async deleteChatBot() {
-    // Implement logic to delete a chatbot
+  async deleteChatBot(accountId: string, chatbotId: string): Promise<boolean> {
+    const result = await this.repo.deleteChatbotById(accountId, chatbotId);
+    if (!result) {
+      throw new Error("Chatbot not Found for this Chatbot Id");
+    }
+    return true;
   }
 }
