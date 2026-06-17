@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { AuthMiddleware } from "../../../middleware";
-import { WhatsAppController } from "../controllers/whatsapp.controller";
+import { WhatsAppController } from "../controllers/whatsapp.controller.js";
+import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
 
 export class WhatsappRouter {
   public router: Router;
