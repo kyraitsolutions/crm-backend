@@ -180,6 +180,12 @@ export class AccountRouter {
       requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
     );
+    this.router.post(
+      "/:accountId/lead/bulk-update",
+      AuthMiddleware.authenticate,
+      requirePermission("leads.create"),
+      this.leadController.createBulkLead.bind(this.leadController),
+    );
 
     // TODO: Lead Webhook
     this.router.post(

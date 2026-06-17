@@ -121,6 +121,31 @@ export class LeadController {
       const { accountId } = req.params;
       const meta = await getMetaData(req);
 
+      const {leads,uniqueKey,mode} = req.body;
+
+      const context = {
+        accountId: String(accountId),
+        organizationId: String(req?.user?.organizationId),
+        userId: String(req?.user?.organizationId),
+        userName: String(req?.user?.name),
+      };
+
+      const lead = await this.leadService.createBulkLead(context, leads,uniqueKey,mode);
+      httpResponse(req, res, 200, "Lead create successfully", lead);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  createBulkLead = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { accountId } = req.params;
+      const meta = await getMetaData(req);
+
       const leadData = req.body;
       const leadDto = new LeadDto(leadData);
 

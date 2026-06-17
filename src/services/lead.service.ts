@@ -187,6 +187,46 @@ export class LeadService {
 
     return result;
   }
+  async createBulkLead(context: RequestContext, lead: LeadDto, uniqueKey:string,mode:any): Promise<Lead> {
+    const result = await this.leadRepository.create(lead);
+
+    // Activity Log
+    const activityLogDataPayload: Partial<TActivityLog> = {
+      accountId: String(lead.accountId),
+      organizationId: String(context?.organizationId),
+
+      entityType: "lead",
+      entityId: String(result._id),
+
+      actor: {
+        type: "user",
+        id: context.userId,
+        name: context.userName,
+      },
+
+      metadata: {
+        leadName: result?.name,
+      },
+    };
+
+    await this.activityLogService.logCreate(activityLogDataPayload);
+
+    // Trigger automation
+    const automationDataPayload = {
+      ...result?.toJSON(),
+      organizationId: context?.organizationId,
+      entityType: "lead",
+      entityId: result._id,
+    };
+
+    await this.automationEngine.process({
+      accountId: result?.accountId,
+      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+      payload: automationDataPayload,
+    });
+
+    return result;
+  }
   // async updateLead(
   //   _accountId: string,
   //   leadId: string,

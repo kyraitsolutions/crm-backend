@@ -6,11 +6,7 @@ import axios from "axios";
 
 export class WhatsappController {
 
-  connectWhatsapp = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  connectWhatsapp = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const { accountId } = req.query;
 

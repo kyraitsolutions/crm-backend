@@ -16,10 +16,11 @@ import { MessageRouter } from "./message.route.js";
 import { NotificationRouter } from "./notification.routes.js";
 import { ContactRouter } from "./contact.routes.js";
 import { ChatFlowRouter } from "./chatflow.route.js";
-import { WhatsappRouter } from "./whatsapp.routes.js";
 import { ConfigurationRouter } from "./configuration.routes.js";
 import { AutomationRouter } from "./automation.routes.js";
 import { ActivityLogRouter } from "./activityLog.route.js";
+import { IntegrationRouter } from "../modules/integrations/routes/integration.routes.js";
+import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -40,10 +41,12 @@ export class AppRoutes {
   private paymentRouter: PaymentRouter;
   private notificationRouter: NotificationRouter;
   private contactRouter: ContactRouter;
-  private whatsappRouter: WhatsappRouter;
+  // private whatsappRouter: WhatsappRouter;
   private configurationRouter: ConfigurationRouter;
   private automationRouter: AutomationRouter;
   private activityLogRouter: ActivityLogRouter;
+  private integrationRouter: IntegrationRouter;
+  private whatsappRouter: WhatsappRouter;
 
   private router: Router;
 
@@ -73,7 +76,8 @@ export class AppRoutes {
     this.configurationRouter = new ConfigurationRouter();
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();
-
+    this.integrationRouter = new IntegrationRouter();
+    this.whatsappRouter = new WhatsappRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -103,6 +107,8 @@ export class AppRoutes {
     this.router.use("/contact", this.contactRouter.getRouter());
     this.router.use("/automation", this.automationRouter.getRouter());
     this.router.use("/activity-logs", this.activityLogRouter.getRouter());
+    this.router.use("/integration", this.integrationRouter.getRouter());
+    this.router.use("/whatsapp", this.whatsappRouter.getRouter());
   }
 
   public getRouter(): Router {
