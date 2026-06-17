@@ -4,24 +4,14 @@ import { TUser } from "../types";
 export class UserMapper {
   static toDto(user: TUser): UserDto {
     return new UserDto({
-<<<<<<< HEAD
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      profilePicture: user.profilePicture,
-      roleId: user.roleId,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-=======
-      _id: user.id,
-      email: user.email,
-      profilePicture: user.profilePicture,
-      roleId: user.roleId!,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-      onboarding: user.onboarding,
->>>>>>> 90ddbebf0681a94c6af7cd4b3ccdaa91ebb69e29
+      profilePicture: (user as TUser & { profilePicture?: string }).profilePicture,
+      roleId: String(user.role?.id),
+      token: (user as TUser & { token?: string }).token ?? "",
+      // createdAt: user?.createdAt,
+      // updatedAt: user.updatedAt, 
+      onboarding: user.onboarding ?? false,
     });
   }
 

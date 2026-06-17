@@ -3,7 +3,7 @@ import { Lead, LeadModel } from "../models/lead.model.js";
 // import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
-import { EmailService } from "./email.service.js";
+// import { EmailService } from "./email.service.js";
 import { LeadDto } from "../dtos/lead.dto.js";
 import { ActivityLogService } from "./activityLog.service.js";
 import { AutomationEngine } from "./automation-engine.service.js";
@@ -14,14 +14,14 @@ import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 
 export class LeadService {
   private ai: GeminiAIUtil;
-  private emailService: EmailService;
+  // private emailService: EmailService;
   private leadRepository: LeadRespository;
   private automationEngine = new AutomationEngine();
   private activityLogService = new ActivityLogService();
 
   constructor() {
     this.ai = new GeminiAIUtil();
-    this.emailService = new EmailService();
+    // this.emailService = new EmailService();
     this.leadRepository = new LeadRespository();
     this.automationEngine = new AutomationEngine();
     this.activityLogService = new ActivityLogService();
@@ -41,7 +41,7 @@ export class LeadService {
       return null;
     }
     const { page = 1, limit = 10, search, filters = {}, assignedTo, form, dateRange, read, sort = {}, } = payload;
-
+    console.log(page,read);
     const criteria: any = {
       // userId,
       accountId,
@@ -272,7 +272,7 @@ export class LeadService {
     const updateData: Record<string, any> = {};
     const customFields: Record<string, any> = {};
 
-    const schemaPaths = Object.keys(LeadModel.schema.paths);
+    // const schemaPaths = Object.keys(LeadModel.schema.paths);
 
     for (const [key, value] of Object.entries(lead)) {
       // protected fields

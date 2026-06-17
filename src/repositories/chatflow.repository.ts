@@ -54,8 +54,8 @@ export class ChatFlowRepository {
     accountId: string,
     options: TQueryParams = {},
   ): Promise<TChatFlow[]> {
-    const { page, limit, filters, search } = options;
-    const skip = (Number(page) - 1) * Number(limit);
+    // const { page, limit, filters, search } = options;
+    // const skip = (Number(page) - 1) * Number(limit);
 
     return await ChatFlow.find({
       accountId: new mongoose.Types.ObjectId(accountId),

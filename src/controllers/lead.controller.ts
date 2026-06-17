@@ -120,6 +120,7 @@ export class LeadController {
     try {
       const { accountId } = req.params;
       const meta = await getMetaData(req);
+      console.log(meta)
 
       const {leads,uniqueKey,mode} = req.body;
 

@@ -7,7 +7,9 @@ import { AccountRepository } from "../repositories/account.repository";
 import { ConversationRepository } from "../repositories/conversations.repository";
 import { NotificationRepository } from "../repositories/notification.repository";
 import { buildPagination } from "../utils/paginationBuilder";
-import { TConversationQuery, TQueryParams } from "../types/api-response.type";
+import { TConversationQuery, 
+  // TQueryParams
+ } from "../types/api-response.type";
 import { TConversation } from "../types/conversation.type";
 import { MessageRepository } from "../repositories/messages.repository";
 import { buildSearchPreview } from "../utils/buildSearchPreview";

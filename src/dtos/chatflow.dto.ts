@@ -21,7 +21,7 @@ export class CreateChatFlowDto {
 }
 
 export class ResponseChatFlowDto {
-  id!: string;
+  id?: string;
   name!: string;
   description: string = "";
   accountId!: string;

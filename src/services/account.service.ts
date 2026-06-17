@@ -3,7 +3,7 @@ import { ClientSession } from "mongoose";
 import { ROLES } from "../config/permissions.js";
 import { AccountDto } from "../dtos/account.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
-import { TeamRepository } from "../repositories/team.repository.js";
+// import { TeamRepository } from "../repositories/team.repository.js";
 import { UserAccountRepository } from "../repositories/user-account.repository.js";
 import { TUser } from "../types/user.type.js";
 import { TAccount, TCreateAccount } from "./../types/account.type.js";
@@ -14,7 +14,7 @@ export class AccountService {
     private rbacService: RbacService,
     private accountRepository: AccountRepository,
     private userAccountRepository: UserAccountRepository,
-    private teamRepository: TeamRepository,
+    // private teamRepository: TeamRepository,
     // private userRepository: UserRepository,
     // private emailService: EmailService,
   ) {}

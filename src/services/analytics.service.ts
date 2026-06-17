@@ -56,6 +56,7 @@ export default class AnalyticsService {
           filters,
         });
     }
+    return ;
   }
 
   // All Analytics Dashboard
@@ -191,7 +192,7 @@ export default class AnalyticsService {
 
     currentHandler: () => Promise<number>;
     previousHandler: () => Promise<number>;
-    trendHandler: () => Promise<number[]>;
+    trendHandler: () => Promise<any[]>;
   }) {
     const [current, previous, chartData] = await Promise.all([
       currentHandler(),

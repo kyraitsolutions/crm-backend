@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { ConversationService } from "../services/conversations.service";
 import httpResponse from "../utils/http.response";
 import { InitConversationDto } from "../dtos/conversation.dot";
-import { TConversationQuery } from "../types/api-response.type";
+// import { TConversationQuery } from "../types/api-response.type";
 import { parseQueryParams } from "../utils/query.utils";
 
 export class ConversationController {

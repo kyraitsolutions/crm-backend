@@ -1,8 +1,8 @@
 export class WhatsappRepository {
   async getList(accountId: string,paginationOptions?: { limit?: number; skip?: number }): Promise<any> {
 
-    const limit=paginationOptions?.limit||25;
-    const skip=paginationOptions?.skip||0;
+    // const limit=paginationOptions?.limit||25;
+    // const skip=paginationOptions?.skip||0;
 
 
     return {

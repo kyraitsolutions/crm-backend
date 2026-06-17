@@ -78,9 +78,10 @@ export class WhatsappController {
           }
         }
       );
+      console.log(longLivedTokenResponse)
 
-      const accessToken = longLivedTokenResponse.data.access_token;
-      const expiresIn = longLivedTokenResponse.data.expires_in;
+      // const accessToken = longLivedTokenResponse.data.access_token;
+      // const expiresIn = longLivedTokenResponse.data.expires_in;
 
     }
     catch (error) {

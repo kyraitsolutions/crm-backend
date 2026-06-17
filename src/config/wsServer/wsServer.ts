@@ -6,8 +6,8 @@ import { handleEvent } from "./handlers/handleEvent.js";
 import { AuthenticatedWebSocket } from "../../types/websocket.type.js";
 import { handleSocketDisconnect } from "./handlers/handleSocketDisconnect.js";
 import { setWssInstance } from "./wsStore.js";
-import { AccountModel } from "../../models/accounts.model.js";
-import { Types } from 'mongoose';
+// import { AccountModel } from "../../models/accounts.model.js";
+// import { Types } from 'mongoose';
 
 export const createWebSocketServer = (server: http.Server) => {
   // ✅ Attach WS to the same HTTP server (no extra port)

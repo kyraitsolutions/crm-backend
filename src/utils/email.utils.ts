@@ -98,7 +98,8 @@ export class EmailUtils {
             </div>
         `;
 
-    return await this.sendEmail(email, subject, html);
+    const result = await this.sendEmail(email, subject, html);
+    return result.status;
   }
 
   async sendAccountCreationEmail(
@@ -150,7 +151,8 @@ export class EmailUtils {
             </div>
         `;
 
-    return await this.sendEmail(accountEmail, subject, html);
+    const result = await this.sendEmail(accountEmail, subject, html);
+    return result.status;
   }
 
   async sendLeadAcknowledgementEmail(

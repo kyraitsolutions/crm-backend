@@ -61,7 +61,7 @@ const dummyPlans = [
 
 export const seedPlans = async () => {
   try {
-    await mongoose.connect(ENV.DATABASE_URL!);
+    await mongoose.connect(ENV.DB.DATABASE_URL!);
 
     for (const plan of dummyPlans) {
       await Plan.findOneAndUpdate({ name: plan.name }, plan, {

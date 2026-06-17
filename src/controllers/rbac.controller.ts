@@ -73,7 +73,7 @@ export class RoleController {
         updateRoleDataPayloadDto,
       );
 
-      return httpResponse(req, res, 200, "Role updated successfully", {
+      httpResponse(req, res, 200, "Role updated successfully", {
         docs: role,
       });
     } catch (error) {
@@ -85,7 +85,7 @@ export class RoleController {
     try {
       const { roleId } = req.params;
       await this.rbacService.deleteRole(roleId);
-      return httpResponse(req, res, 200, "Role deleted successfully", {
+      httpResponse(req, res, 200, "Role deleted successfully", {
         docs: {
           roleId,
         },

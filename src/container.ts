@@ -72,7 +72,7 @@ export const accountService = new AccountService(
   rbacService,
   accountRepository,
   userAccountRepository,
-  teamRepository,
+  // teamRepository,
   // userRepository,
   // emailService,
 );
@@ -111,8 +111,8 @@ export const mediaService = new MediaService(s3Client);
 
 // recyclebin service
 export const recyclebinService = new RecyclebinService(
-  accountRepository,
-  userAccountRepository,
+  // accountRepository,
+  // userAccountRepository,
 );
 // notification service
 export const notificationService = new NotificationService(

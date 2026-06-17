@@ -3,7 +3,7 @@ import { ActivityLogService } from "./activityLog.service.js";
 
 export class TaskService {
   private repository = new TaskRepository();
-  private activityLogService = new ActivityLogService();
+  private activityLogService: any = new ActivityLogService();
 
   async createTask(taskData: any, currentUser: any) {
     const task = await this.repository.create(taskData);
@@ -42,9 +42,13 @@ export class TaskService {
 
     const updatedTask = await this.repository.update(taskId, updateData);
 
+    if (!updatedTask) {
+      throw new Error("Task update failed");
+    }
+
     const changes = this.getChanges(
       existingTask.toObject(),
-      updatedTask?.toObject(),
+      updatedTask.toObject(),
     );
 
     if (Object.keys(changes).length) {

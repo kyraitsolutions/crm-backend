@@ -1,13 +1,13 @@
-import { AccountRepository } from "../repositories/account.repository";
-import { UserAccountRepository } from "../repositories/user-account.repository";
+// import { AccountRepository } from "../repositories/account.repository";
+// import { UserAccountRepository } from "../repositories/user-account.repository";
 
 
 
 
 export class RecyclebinService {
   constructor(
-    private accountRepository: AccountRepository,
-    private userAccountRepository: UserAccountRepository,
+    // private accountRepository: AccountRepository,
+    // private userAccountRepository: UserAccountRepository,
   ) {}
 
   async list(accountId: string): Promise<{} | null> {
