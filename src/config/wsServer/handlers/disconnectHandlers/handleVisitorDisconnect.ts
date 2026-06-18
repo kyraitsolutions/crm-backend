@@ -1,6 +1,6 @@
-import { VisitorModel } from "../../../../models/visitors.model";
-import { AuthenticatedWebSocket } from "../../../../types";
-import { disconnectTimeouts } from "../../presenceTimeouts";
+import { VisitorModel } from "../../../../models/visitors.model.js";
+import { AuthenticatedWebSocket } from "../../../../types/websocket.type.js";
+import { disconnectTimeouts } from "../../presenceTimeouts.js";
 
 export const handleVisitorDisconnect = async (ws: AuthenticatedWebSocket) => {
   if (!ws.visitorId) return;

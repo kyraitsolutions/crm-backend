@@ -1,11 +1,11 @@
 // controllers/conversation.controller.ts
 
 import { NextFunction, Request, Response } from "express";
-import { ConversationService } from "../services/conversations.service";
-import httpResponse from "../utils/http.response";
-import { InitConversationDto } from "../dtos/conversation.dot";
+import { ConversationService } from "../services/conversations.service.js";
+import httpResponse from "../utils/http.response.js";
+import { InitConversationDto } from "../dtos/conversation.dot.js";
 // import { TConversationQuery } from "../types/api-response.type";
-import { parseQueryParams } from "../utils/query.utils";
+import { parseQueryParams } from "../utils/query.utils.js";
 
 export class ConversationController {
   private service: ConversationService;

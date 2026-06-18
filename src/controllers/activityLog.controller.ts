@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import httpResponse from "../utils/http.response";
-import { ActivityLogService } from "../services/activityLog.service";
-import { parseQueryParams } from "../utils/query.utils";
+import httpResponse from "../utils/http.response.js";
+import { ActivityLogService } from "../services/activityLog.service.js";
+import { parseQueryParams } from "../utils/query.utils.js";
 
 export default class ActivityLogController {
   private service = new ActivityLogService();

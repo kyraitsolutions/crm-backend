@@ -1,6 +1,6 @@
 import {Request,Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { recyclebinService } from "../container";
+import httpResponse from "../utils/http.response.js";
+import { recyclebinService } from "../container.js";
 
 
 export class RecyclebinController {

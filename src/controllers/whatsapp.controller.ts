@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { whatsppService } from "../container";
-import { ENV } from "../constants";
+import httpResponse from "../utils/http.response.js";
+import { whatsppService } from "../container.js";
 import axios from "axios";
+import { ENV } from "../constants/env.constants.js";
 
 export class WhatsappController {
 

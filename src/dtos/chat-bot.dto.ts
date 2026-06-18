@@ -1,4 +1,4 @@
-import { TChatbotEdge, TChatbotNode, TCreateChatBot } from "../types";
+import { TChatbotEdge, TChatbotNode, TCreateChatBot } from "../types/chat-bot.type.js";
 // create chatbot dto
 export class CreateChatBotDto {
   name: string;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ZBaseEntity } from "./base.type";
+import { ZBaseEntity } from "./base.type.js";
 
 // user
 export const ZUserSchema = ZBaseEntity.extend({

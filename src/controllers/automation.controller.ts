@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import AutomationService from "../services/automation.service";
-import httpResponse from "../utils/http.response";
-import { AutomationDto } from "../dtos/automation.dto";
+import AutomationService from "../services/automation.service.js";
+import httpResponse from "../utils/http.response.js";
+import { AutomationDto } from "../dtos/automation.dto.js";
 
 export default class AutomationController {
   private service = new AutomationService();

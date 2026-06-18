@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   organizationOnboardingService,
   organizationService,
-} from "../container";
-import { CreateOrganizationDto } from "../dtos/organization.dto";
-import { generateSlug } from "../utils";
-import httpResponse from "../utils/http.response";
+} from "../container.js";
+import { CreateOrganizationDto } from "../dtos/organization.dto.js";
+import httpResponse from "../utils/http.response.js";
+import { generateSlug } from "../utils/typography.js";
 
 export class OrganizationController {
   createOrganizationOnboarding = async (

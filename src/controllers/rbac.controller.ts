@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { RbacService } from "../services/rbac.service";
-import httpResponse from "../utils/http.response";
-import { UpdateRoleDto } from "../dtos/rbac.dto";
+import { RbacService } from "../services/rbac.service.js";
+import httpResponse from "../utils/http.response.js";
+import { UpdateRoleDto } from "../dtos/rbac.dto.js";
 
 export class RoleController {
   constructor(private rbacService: RbacService) {}

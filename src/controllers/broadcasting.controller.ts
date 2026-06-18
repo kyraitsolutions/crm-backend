@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { BroadcastService } from "../services/broadcast.service";
+import httpResponse from "../utils/http.response.js";
+import { BroadcastService } from "../services/broadcast.service.js";
 
 export class BroadcastController {
 

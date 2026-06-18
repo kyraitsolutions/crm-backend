@@ -1,9 +1,9 @@
 // controllers/visitor.controller.ts
 
 import { NextFunction, Request, Response } from "express";
-import { visitorService } from "../container";
-import { InitVisitorDto } from "../dtos/visitor.dto";
-import httpResponse from "../utils/http.response";
+import { visitorService } from "../container.js";
+import { InitVisitorDto } from "../dtos/visitor.dto.js";
+import httpResponse from "../utils/http.response.js";
 
 export class VisitorController {
   public async initializeVisitor(
