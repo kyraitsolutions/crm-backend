@@ -1,7 +1,7 @@
 // handleSocketDisconnect.ts
 
-import { AuthenticatedWebSocket } from "../../../types";
-import { handleVisitorDisconnect } from "./disconnectHandlers/handleVisitorDisconnect";
+import { AuthenticatedWebSocket } from "../../../types/websocket.type.js";
+import { handleVisitorDisconnect } from "./disconnectHandlers/handleVisitorDisconnect.js";
 
 export const handleSocketDisconnect = async (ws: AuthenticatedWebSocket) => {
   try {
