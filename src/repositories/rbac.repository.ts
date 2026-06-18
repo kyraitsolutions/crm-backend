@@ -1,7 +1,7 @@
 import { ClientSession, Types } from "mongoose";
-import { PermissionModel } from "../models/permissions.model";
-import { RolePermissionModel } from "../models/role-permissions";
-import { RoleModel } from "../models/role.model";
+import { PermissionModel } from "../models/permissions.model.js";
+import { RolePermissionModel } from "../models/role-permissions.js";
+import { RoleModel } from "../models/role.model.js";
 import {
   TPermission,
   TRole,

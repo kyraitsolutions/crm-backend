@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
   {
@@ -34,4 +34,4 @@ userSchema.set("toObject", { virtuals: true });
 
 export const UserModel = model("User", userSchema);
 
-export const RoleModel = model("Role", new Schema({ name: String }));
+export const RoleModel = mongoose.models.Role||model("Role", new Schema({ name: String }));
