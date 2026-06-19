@@ -1,8 +1,8 @@
 // repositories/conversation.repository.ts
 
 import { ClientSession } from "mongoose";
-import { ConversationModel } from "../models/conversations.model";
-import { TConversation } from "../types/conversation.type";
+import { ConversationModel } from "../models/conversations.model.js";
+import { TConversation } from "../types/conversation.type.js";
 
 // type CreateConversationPayload = {
 //   accountId: string;

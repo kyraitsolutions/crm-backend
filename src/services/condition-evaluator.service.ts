@@ -1,4 +1,4 @@
-import { CONDITION_OPERATORS } from "../constants";
+import { CONDITION_OPERATORS } from "../constants/automation.constant.js";
 
 export default class ConditionEvaluator {
   evaluate(conditions: any[], payload: any) {

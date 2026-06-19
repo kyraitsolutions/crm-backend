@@ -1,10 +1,10 @@
-import { AUTOMATION_ACTIONS } from "../constants";
-import { UserRepository } from "../repositories";
-import { LeadRespository } from "../repositories/lead.respository";
-import { TaskRepository } from "../repositories/task.repository";
-import { TActivityLog } from "../types/activityLog.type";
-import { ActivityLogService } from "./activityLog.service";
-import { EmailService } from "./email.service";
+import { AUTOMATION_ACTIONS } from "../constants/automation.constant.js";
+import { LeadRespository } from "../repositories/lead.respository.js";
+import { TaskRepository } from "../repositories/task.repository.js";
+import { UserRepository } from "../repositories/user.repository.js";
+import { TActivityLog } from "../types/activityLog.type.js";
+import { ActivityLogService } from "./activityLog.service.js";
+import { EmailService } from "./email.service.js";
 
 export default class ActionExecutor {
   private leadRepository = new LeadRespository();

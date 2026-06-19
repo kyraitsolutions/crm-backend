@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import httpResponse from "../../../utils/http.response";
-import { WhatsAppService } from "../services/whatsapp.service";
-import { RegisterPhoneNumberDto } from "../dtos/whatsapp.dto";
+import httpResponse from "../../../utils/http.response.js";
+import { WhatsAppService } from "../services/whatsapp.service.js";
+import { RegisterPhoneNumberDto } from "../dtos/whatsapp.dto.js";
 
 export class WhatsAppController {
   constructor(private service = new WhatsAppService()) {}

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { TemplateCategory } from "../enums/email.enum";
+import { TemplateCategory } from "../enums/email.enum.js";
 
 export const ZEmailTemplateSchema = z.object({
     accountId: z.string(),

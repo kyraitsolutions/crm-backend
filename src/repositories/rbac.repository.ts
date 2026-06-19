@@ -6,8 +6,8 @@ import {
   TPermission,
   TRole,
   TRolePermission,
-} from "../types/roles-permissions.type";
-import { ROLES } from "../config/permissions";
+} from "../types/roles-permissions.type.js";
+import { ROLES } from "../config/permissions.js";
 
 export class RbacRepository {
   // ROLES RELATED REPOSITORIES

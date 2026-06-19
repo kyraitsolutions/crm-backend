@@ -1,4 +1,4 @@
-import { ILead, LeadSourceName } from "../types/lead.type";
+import { ILead, LeadSourceName } from "../types/lead.type.js";
 
 export class LeadDto {
     accountId?: string;

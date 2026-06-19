@@ -1,5 +1,5 @@
-import { ActivityLog } from "../models/activityLog.model";
-import { TActivityLog } from "../types/activityLog.type";
+import { ActivityLog } from "../models/activityLog.model.js";
+import { TActivityLog } from "../types/activityLog.type.js";
 
 export class ActivityLogRepository {
   async count(filter: any) {

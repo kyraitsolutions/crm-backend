@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import httpResponse from "../../../utils/http.response";
-import { IntegrationService } from "../services/integration.service";
-import { IntegrationProvider } from "../../../models/integration.model";
+import httpResponse from "../../../utils/http.response.js";
+import { IntegrationService } from "../services/integration.service.js";
+import { IntegrationProvider } from "../../../models/integration.model.js";
 
 export class IntegrationController {
   constructor(private service = new IntegrationService()) {}

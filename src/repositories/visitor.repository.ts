@@ -1,7 +1,7 @@
 // repositories/visitor.repository.ts
 
-import { VisitorModel } from "../models/visitors.model";
-import { TVisitor } from "../types/visitor.type";
+import { VisitorModel } from "../models/visitors.model.js";
+import { TVisitor } from "../types/visitor.type.js";
 
 export class VisitorRepository {
   public async createVisitor(data: Partial<TVisitor>) {

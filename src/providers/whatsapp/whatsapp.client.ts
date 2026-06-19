@@ -1,7 +1,8 @@
 // providers/whatsapp/whatsapp.client.ts
 
 import axios, { AxiosInstance } from "axios";
-import { config } from "../../config";
+import { config } from "../../config/index.js";
+
 
 export class WhatsAppClient {
   private readonly graphApi: AxiosInstance;

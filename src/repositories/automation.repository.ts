@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { AutomationModel } from "../models/automation.model";
+import { AutomationModel } from "../models/automation.model.js";
 
 export default class AutomationRepository {
   async create(data: any) {

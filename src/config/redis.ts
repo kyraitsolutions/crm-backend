@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import IORedis, { RedisOptions } from "ioredis";
+import {Redis, RedisOptions } from "ioredis";
 import logger from "../utils/logger.js";
 
 dotenv.config();
@@ -21,7 +21,7 @@ export interface RedisMessageCallback {
 }
 
 class RedisClient {
-  private client: IORedis;
+  private client: Redis;
   private isConnected: boolean = false;
 
   constructor() {
@@ -35,7 +35,7 @@ class RedisClient {
         return Math.min(times * 100, 2000);
       },
     };
-    this.client = new IORedis(
+    this.client = new Redis(
       redisHost,
       redisOptions
     );

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document, model, Model } from "mongoose";
-import { RecycleBinType } from "../enums/recyclebin.enum";
+import { RecycleBinType } from "../enums/recyclebin.enum.js";
 
 export interface IRecycleBinItem extends Document {
   originalId: mongoose.Types.ObjectId;

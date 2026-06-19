@@ -1,9 +1,9 @@
 import { FilterQuery } from "mongoose";
-import { ActivityLogRepository } from "../repositories/activityLog.repository";
-import { TActivityLog } from "../types/activityLog.type";
-import { TActivityLogQuery } from "../types/api-response.type";
-import { getObjectChanges } from "../utils/getObjectChanges.utils";
-import { buildPagination } from "../utils/paginationBuilder";
+import { ActivityLogRepository } from "../repositories/activityLog.repository.js";
+import { TActivityLog } from "../types/activityLog.type.js";
+import { TActivityLogQuery } from "../types/api-response.type.js";
+import { getObjectChanges } from "../utils/getObjectChanges.utils.js";
+import { buildPagination } from "../utils/paginationBuilder.js";
 
 export class ActivityLogService {
   private repository = new ActivityLogRepository();

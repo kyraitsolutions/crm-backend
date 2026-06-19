@@ -1,8 +1,8 @@
 import { ClientSession } from "mongoose";
-import { CreateOrganizationDto } from "../dtos/organization.dto";
-import { OrganizationRepository } from "../repositories/organization.repository";
-import { TOrganizationMember } from "../types/organization.type";
-import { TeamRepository } from "../repositories/team.repository";
+import { CreateOrganizationDto } from "../dtos/organization.dto.js";
+import { OrganizationRepository } from "../repositories/organization.repository.js";
+import { TOrganizationMember } from "../types/organization.type.js";
+import { TeamRepository } from "../repositories/team.repository.js";
 
 export class OrganizationService {
   constructor(

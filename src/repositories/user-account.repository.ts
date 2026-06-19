@@ -1,5 +1,5 @@
 import { ClientSession } from "mongoose";
-import { UserAccount } from "../models/user.accounts.model";
+import { UserAccount } from "../models/user.accounts.model.js";
 
 export class UserAccountRepository {
   async deleteByUserAndOrg(userId: string, orgId: string) {

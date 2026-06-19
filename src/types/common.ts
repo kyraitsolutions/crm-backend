@@ -8,7 +8,7 @@ export type RoleName =
   | "LEAD_MANAGER";
 
 export interface AuthUser {
-  id: string;
+  id?: string;
   email?: string;
   name?: string;
   role?: { id: string; name: string; level: number };

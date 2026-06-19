@@ -1,8 +1,8 @@
-import { IntegrationProvider } from "../../../models/integration.model";
-import { WhatsAppClient } from "../../../providers/whatsapp/whatsapp.client";
-import { IntegrationCredentialRepository } from "../../integrations/repositories/integration-credential.repository";
-import { IntegrationRepository } from "../../integrations/repositories/integration.repository";
-import { WhatsAppAccountRepository } from "../repositories/whatsapp-account.repository";
+import { IntegrationProvider } from "../../../models/integration.model.js";
+import { WhatsAppClient } from "../../../providers/whatsapp/whatsapp.client.js";
+import { IntegrationCredentialRepository } from "../../integrations/repositories/integration-credential.repository.js";
+import { IntegrationRepository } from "../../integrations/repositories/integration.repository.js";
+import { WhatsAppAccountRepository } from "../repositories/whatsapp-account.repository.js";
 
 export class WhatsAppService {
   constructor(

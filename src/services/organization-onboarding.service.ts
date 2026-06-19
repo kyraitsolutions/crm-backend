@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
-import { ROLES } from "../config/permissions";
-import { DASHBOARD_URL_PATH } from "../constants";
+import { ROLES } from "../config/permissions.js";
 import {
   CreateOrganizationDto,
   OrganizationResponseDto,
-} from "../dtos/organization.dto";
-import { AccountService } from "./account.service";
-import { ConfigBootstrapService } from "./configBootstrap.service";
-import { EmailService } from "./email.service";
-import { OrganizationService } from "./organization.service";
-import { RbacService } from "./rbac.service";
-import { UserService } from "./user.service";
-import { UserProfileService } from "./userprofile.service";
+} from "../dtos/organization.dto.js";
+import { AccountService } from "./account.service.js";
+import { ConfigBootstrapService } from "./configBootstrap.service.js";
+import { EmailService } from "./email.service.js";
+import { OrganizationService } from "./organization.service.js";
+import { RbacService } from "./rbac.service.js";
+import { UserService } from "./user.service.js";
+import { UserProfileService } from "./userprofile.service.js";
+import { DASHBOARD_URL_PATH } from "../constants/path.js";
 
 export class OrganizationOnboardingService {
   constructor(

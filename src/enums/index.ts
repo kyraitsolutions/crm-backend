@@ -1,1 +1,1 @@
-export * from "./chat-bot.enum";
+export * from "./chat-bot.enum.js";

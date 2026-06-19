@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
 
-import { emailQueue } from "../queue/queue";
-import logger from "../utils/logger";
-import { EmailUtils } from "../utils/email.utils";
-import { QUEUE_JOBS } from "../constants/queue-jobs.constant";
-import { EmailActivity } from "../models/emailActivity.model";
+import { emailQueue } from "../queue/queue.js";
+import logger from "../utils/logger.js";
+import { EmailUtils } from "../utils/email.utils.js";
+import { QUEUE_JOBS } from "../constants/queue-jobs.constant.js";
+import { EmailActivity } from "../models/emailActivity.model.js";
 
 dotenv.config();
 

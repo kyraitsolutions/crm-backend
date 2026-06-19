@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { emitToAccount } from "../config/wsServer/wsEmitter";
-import { ConversationRepository } from "../repositories/conversations.repository";
-import { MessageRepository } from "../repositories/messages.repository";
-import { buildMessageSearchText } from "../utils/buildMessageSearchTextPayload";
+import { emitToAccount } from "../config/wsServer/wsEmitter.js";
+import { ConversationRepository } from "../repositories/conversations.repository.js";
+import { MessageRepository } from "../repositories/messages.repository.js";
+import { buildMessageSearchText } from "../utils/buildMessageSearchTextPayload.js";
 
 export class MessageService {
   private messageRepository: MessageRepository;

@@ -1,7 +1,7 @@
-import { AutomationDto } from "../dtos/automation.dto";
-import AutomationRepository from "../repositories/automation.repository";
-import { RequestContext } from "../types/common";
-import { ActivityLogService } from "./activityLog.service";
+import { AutomationDto } from "../dtos/automation.dto.js";
+import AutomationRepository from "../repositories/automation.repository.js";
+import { RequestContext } from "../types/common.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export default class AutomationService {
   private repository = new AutomationRepository();

@@ -1,5 +1,5 @@
 import type { ParsedQs } from "qs";
-import { TQueryParams } from "../types/api-response.type";
+import { TQueryParams } from "../types/api-response.type.js";
 
 type TParseQueryOptions = {
   defaultPage?: number;

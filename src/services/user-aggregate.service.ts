@@ -1,11 +1,11 @@
 // services/user-aggregate.service.ts
 
-import { ROLES } from "../config/permissions";
-import { rbacService } from "../container";
-import { TUserAggregate } from "../types";
-import { OrganizationService } from "./organization.service";
-import { SubscriptionService } from "./subscription.service";
-import { UserService } from "./user.service";
+import { ROLES } from "../config/permissions.js";
+import { rbacService } from "../container.js";
+import { TUserAggregate } from "../types/user.type.js";
+import { OrganizationService } from "./organization.service.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { UserService } from "./user.service.js";
 
 export class UserAggregateService {
   constructor(

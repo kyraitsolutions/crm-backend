@@ -1,5 +1,5 @@
-import { UserDto } from "../dtos";
-import { TUser } from "../types";
+import { UserDto } from "../dtos/user.dto.js";
+import { TUser } from "../types/user.type.js";
 
 export class UserMapper {
   static toDto(user: TUser): UserDto {

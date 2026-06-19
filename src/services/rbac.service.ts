@@ -1,10 +1,7 @@
 import mongoose, { ClientSession } from "mongoose";
-import {
-  NOT_ALLOWED_PERMISSIONS_ACCOUNT_MANGER,
-  ROLES,
-} from "../config/permissions";
-import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto";
-import { RbacRepository } from "../repositories/rbac.repository";
+import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
+import { RbacRepository } from "../repositories/rbac.repository.js";
+import { NOT_ALLOWED_PERMISSIONS_ACCOUNT_MANGER, ROLES } from "../config/permissions.js";
 
 export class RbacService {
   constructor(private rbacRepo: RbacRepository) {}

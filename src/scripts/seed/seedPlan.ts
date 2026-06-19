@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { Plan } from "../../models/subscription.model";
-import { ENV } from "../../constants";
+import { Plan } from "../../models/subscription.model.js";
+import { ENV } from "../../constants/env.constants.js";
 
 const commonFeatures = [
   "Analytics",

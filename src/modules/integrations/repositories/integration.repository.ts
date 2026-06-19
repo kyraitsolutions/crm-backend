@@ -3,7 +3,7 @@ import {
   IntegrationModel,
   IntegrationProvider,
   IntegrationStatus,
-} from "../../../models/integration.model";
+} from "../../../models/integration.model.js";
 import { Types } from "mongoose";
 
 export class IntegrationRepository {

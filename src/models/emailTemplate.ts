@@ -1,5 +1,5 @@
 import { Schema, model, Types } from "mongoose";
-import { TemplateCategory } from "../enums/email.enum";
+import { TemplateCategory } from "../enums/email.enum.js";
 
 export interface EmailTemplate {
     accountId: Types.ObjectId;

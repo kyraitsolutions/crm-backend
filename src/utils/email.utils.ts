@@ -1,9 +1,9 @@
-import logger from "./logger";
-import { Transporter } from "../config/email";
+import logger from "./logger.js";
+import { Transporter } from "../config/email.js";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
-import { EMAIL_TEMPLATES_PATH } from "../constants";
+import { EMAIL_TEMPLATES_PATH } from "../constants/path.js";
 
 export class EmailUtils {
   private transporter: Transporter;
