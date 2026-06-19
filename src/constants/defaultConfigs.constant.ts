@@ -64,6 +64,16 @@ export const DEFAULT_CONFIGS = [
         isDefault: true,
         order: 6,
       },
+      {
+        key: "converted",
+        label: "Converted",
+        color: "#22C55E",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 6,
+      },
     ],
   },
 
