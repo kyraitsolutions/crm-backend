@@ -32,7 +32,7 @@ import { WhatsappService } from "./services/whatsapp.service";
 import { WhatsappRepository } from "./repositories/whatsapp.respository";
 import { ConfigRepository } from "./repositories/config.repository";
 import { ConfigBootstrapService } from "./services/configBootstrap.service";
-import {SubscriptionService} from "./services/subscription.service"
+import { SubscriptionService } from "./services/subscription.service";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -48,13 +48,13 @@ export const chatflowRepo = new ChatFlowRepository();
 export const visitorRepository = new VisitorRepository();
 export const conversationRepository = new ConversationRepository();
 export const messageRepository = new MessageRepository();
-export const notificationRepository=new NotificationRepository();
-export const contactRepository=new ContactRepository();
-export const whatsappRepository=new WhatsappRepository();
+export const notificationRepository = new NotificationRepository();
+export const contactRepository = new ContactRepository();
+export const whatsappRepository = new WhatsappRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
-export const subscriptionService=new SubscriptionService()
+export const subscriptionService = new SubscriptionService();
 
 export const userService = new UserService(
   userRepository,
@@ -81,7 +81,7 @@ export const accountService = new AccountService(
 export const userAggregateService = new UserAggregateService(
   userService,
   organizationService,
-  subscriptionService
+  subscriptionService,
 );
 
 export const configBootstrapService = new ConfigBootstrapService(
@@ -114,18 +114,15 @@ export const recyclebinService = new RecyclebinService(
   accountRepository,
   userAccountRepository,
 );
+
 // notification service
 export const notificationService = new NotificationService(
   accountRepository,
   notificationRepository,
 );
+
 // Contact service
-export const contactService = new ContactService(
-  contactRepository
-);
+export const contactService = new ContactService(contactRepository);
 
-
-
-export const whatsppService=new WhatsappService(
-  whatsappRepository
-)
+// Whatsapp service
+export const whatsppService = new WhatsappService(whatsappRepository);

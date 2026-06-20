@@ -14,7 +14,7 @@ export class OrganizationRepository {
   async findAll(): Promise<any> {
     return await Organization.find({});
   }
-  async findById(id: string): Promise<any> {
+  async findById(id: string): Promise<TOrganization | null> {
     return Organization.findById(id);
   }
   async findByCreatedById(id: string): Promise<any> {

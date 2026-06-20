@@ -50,11 +50,16 @@ export class OrganizationController {
       const orgId =
         (organizationId as string) || (user?.organizationId as string);
 
-      const organization =
+      const result =
         await organizationService.getOrganizationDetailsByOrganizationId(orgId);
-      httpResponse(req, res, 200, "Organization details fetched successfully", {
-        docs: organization,
-      });
+
+      httpResponse(
+        req,
+        res,
+        200,
+        "Organization details fetched successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

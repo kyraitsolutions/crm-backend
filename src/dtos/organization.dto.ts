@@ -1,5 +1,20 @@
 // ORGANIZATION DTO
 export class CreateOrganizationDto {
+  private static readonly ALLOWED_FIELDS = [
+    "firstName",
+    "lastName",
+    "name",
+    "email",
+    "slug",
+    "createdBy",
+    "website",
+    "address",
+    "industry",
+    "phone",
+    "privacyPolicy",
+    "terms",
+  ];
+
   firstName?: string;
   lastName?: string;
   name: string;
@@ -20,12 +35,15 @@ export class CreateOrganizationDto {
   privacyPolicy?: string;
   terms?: string;
 
-  constructor(data: {
-    name: string;
-    email: string;
-    slug: string;
-    createdBy: string;
-  }) {
+  constructor(data: CreateOrganizationDto) {
+    const unknownFields = Object.keys(data).filter(
+      (key) => !CreateOrganizationDto.ALLOWED_FIELDS.includes(key),
+    );
+
+    if (unknownFields.length) {
+      throw new Error(`Unknown fields: ${unknownFields.join(", ")}`);
+    }
+
     if (!data.name) throw new Error("Organization name is required");
     if (!data.email) throw new Error("Organization email is required");
 
@@ -41,10 +59,41 @@ export class CreateOrganizationDto {
 export class OrganizationResponseDto {
   id: string;
   name: string;
+  email: string;
+  logo?: string;
+  website?: string;
+  industry?: string;
+  size?: string;
+  phone?: string;
+  address?: {
+    city: string;
+    state: string;
+    country: string;
+    pincode: string;
+    line1?: string;
+    line2?: string;
+  };
+  createdBy: string;
 
-  constructor(data: { id: string; name: string }) {
+  createdAt: Date;
+  updatedAt: Date;
+  constructor(data: OrganizationResponseDto) {
+    console.log("data ha kya bhai", data.address);
     this.id = data.id;
     this.name = data.name;
+    this.email = data.email;
+    this.createdAt = data.createdAt;
+    this.updatedAt = data.updatedAt;
+    this.logo = data.logo;
+    this.website = data.website;
+    this.industry = data.industry;
+    this.size = data.size;
+    this.phone = data.phone;
+    this.createdBy = data.createdBy;
+
+    if (data?.address && Object.keys(data.address).length > 0) {
+      this.address = data.address;
+    }
   }
 }
 

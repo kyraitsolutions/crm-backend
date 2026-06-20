@@ -51,12 +51,15 @@ const organizationSchema = new Schema(
     },
 
     address: {
-      line1: String,
-      line2: String,
-      city: String,
-      state: String,
-      country: String,
-      pincode: String,
+      type: {
+        line1: String,
+        line2: String,
+        city: String,
+        state: String,
+        country: String,
+        pincode: String,
+      },
+      default: null,
     },
 
     billingEmail: {

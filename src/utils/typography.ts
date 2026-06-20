@@ -1,9 +1,11 @@
-export const generateSlug = (str: string) =>
-  str
+export const generateSlug = (str: string) => {
+  if (!str) return;
+  return str
     .toLowerCase()
     .trim()
     .replace(/\s+/g, "-")
     .replace(/[^\w-]+/g, "");
+};
 
 // export const normalizeTrigger = (trigger: string) =>
 // trigger

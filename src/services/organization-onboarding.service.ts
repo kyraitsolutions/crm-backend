@@ -31,6 +31,14 @@ export class OrganizationOnboardingService {
     try {
       session.startTransaction();
 
+      // check organization exists
+      const organizationExists =
+        await this.organizationService.isOrganizationExists(data?.createdBy);
+
+      if (organizationExists) {
+        throw new Error("Organization already exists");
+      }
+
       // create organization
       const organization = await this.organizationService.create(data, session);
 
