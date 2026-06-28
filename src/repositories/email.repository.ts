@@ -13,7 +13,7 @@ export class EmailRepository {
   async updateEmailStatus(emailActivityId: string, status: string, messageId: string, error: any): Promise<any> {
     console.log("Mongo state:", mongoose.connection.readyState);
     console.log("EmailActivityId:", emailActivityId);
-    if (status === "sent") {
+    if (status === "sent"&&messageId) {
       return await EmailActivity.findByIdAndUpdate(
         emailActivityId,
         {

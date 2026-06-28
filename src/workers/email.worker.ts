@@ -55,9 +55,7 @@ emailQueue.process("campaign-email", async (job) => {
   );
 });
 
-emailQueue.process(
-  "send-email-activity",
-  async (job) => {
+emailQueue.process("send-email-activity",async (job) => {
     const { emailActivityId, to, name, subject, html, fromEmail, } = job.data;
 
     try {
