@@ -38,11 +38,27 @@ export class CreateTeamMemberDto {
     email: string;
     lastName?: string;
     roleId?: string;
-    accounts?: {
+    accounts: {
       accountId: string;
       roleId: string;
     }[];
   }) {
+    const ALLOWED_FIELDS = [
+      "firstName",
+      "lastName",
+      "email",
+      "roleId",
+      "accounts",
+    ];
+
+    const unknownFields = Object.keys(data).filter(
+      (key) => !ALLOWED_FIELDS.includes(key),
+    );
+
+    if (unknownFields.length) {
+      throw new Error(`Unknown fields: ${unknownFields.join(", ")}`);
+    }
+
     if (!data?.email) {
       throw new Error("Email is required");
     }
@@ -50,9 +66,12 @@ export class CreateTeamMemberDto {
       throw new Error("First name is required");
     }
 
+    if (!Array.isArray(data?.accounts))
+      throw new Error("Accounts must be a array");
+
     if (
       !data?.accounts?.length ||
-      data?.accounts?.some((acc) => !acc.accountId && !acc.roleId)
+      data?.accounts?.some((acc) => !acc.accountId || !acc.roleId)
     ) {
       throw new Error("Accounts are required wiht accountId and roleId");
     }

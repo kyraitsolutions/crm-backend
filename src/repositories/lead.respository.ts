@@ -27,10 +27,12 @@ export class LeadRespository {
   }
 
   async updateLeadById(id: string, lead: any) {
-    return await LeadModel.findByIdAndUpdate(id, lead, {
+    const updatedLead = await LeadModel.findByIdAndUpdate(id, lead, {
       new: true,
       upsert: true,
-    }).lean();
+    });
+
+    return updatedLead?.toJSON();
   }
 
   async update(lead: any): Promise<Lead | null> {
@@ -86,7 +88,6 @@ export class LeadRespository {
       { upsert: true, new: true },
     );
 
-    console.log(contact)
     return savedLead;
   }
 
@@ -95,8 +96,8 @@ export class LeadRespository {
       {
         $match: {
           _id: new Types.ObjectId(id),
-          accountId: new Types.ObjectId(accountId)
-        }
+          accountId: new Types.ObjectId(accountId),
+        },
       },
       {
         $lookup: {
@@ -111,21 +112,70 @@ export class LeadRespository {
               },
             },
           ],
-        }
+        },
+      },
+      {
+        $lookup: {
+          from: "userprofiles",
+          let: {
+            assignedTo: "$assignedTo",
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$userId", "$$assignedTo"],
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                userId: 1,
+                profilePicture: 1,
+                firstName: 1,
+              },
+            },
+          ],
+          as: "assignedTo",
+        },
+      },
+      {
+        $unwind: {
+          path: "$assignedTo",
+          preserveNullAndEmptyArrays: true,
+        },
       },
       {
         $addFields: {
           id: "$_id",
+          notes: {
+            $map: {
+              input: "$notes",
+              as: "note",
+              in: {
+                $mergeObjects: [
+                  "$$note",
+                  {
+                    id: "$$note._id",
+                  },
+                ],
+              },
+            },
+          },
         },
       },
-
-      // remove _id
+      {
+        $unset: ["_id", "notes._id"],
+      },
+      // // remove _id
       {
         $project: {
           _id: 0,
         },
       },
-    ])
+    ]);
+
     // const lead= await LeadModel.findOne({ _id: id, accountId: accountId })
     //   .populate()
     // .populate({
@@ -136,7 +186,7 @@ export class LeadRespository {
     //     select: "firstName lastName profilePicture",
     //   },
     // });
-    console.log("Fetched lead in repository:", lead[0]);
+
     return lead[0];
   }
 }

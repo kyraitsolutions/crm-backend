@@ -58,8 +58,8 @@ emailQueue.process("campaign-email", async (job) => {
 emailQueue.process("send-email-activity",async (job) => {
     const { emailActivityId, to, name, subject, html, fromEmail, } = job.data;
 
-    try {
-      const personalizedHtml = html.replace("{{name}}", name || "there");
+  try {
+    const personalizedHtml = html.replace("{{name}}", name || "there");
 
       // send email
       const result = await emailUtils.sendEmail(to, subject, personalizedHtml, undefined, fromEmail);
@@ -78,8 +78,7 @@ emailQueue.process("send-email-activity",async (job) => {
 
       throw error;
     }
-  }
-);
+});
 
 emailQueue.process(QUEUE_JOBS.LEAD_ACKNOWLEDGEMENT_EMAIL, async (job) => {
   const { email, lead } = job.data;

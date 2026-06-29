@@ -7,9 +7,10 @@ import { AccountRepository } from "../repositories/account.repository.js";
 import { ConversationRepository } from "../repositories/conversations.repository.js";
 import { NotificationRepository } from "../repositories/notification.repository.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
-import { TConversationQuery, 
+import {
+  TConversationQuery,
   // TQueryParams
- } from "../types/api-response.type.js";
+} from "../types/api-response.type.js";
 import { TConversation } from "../types/conversation.type.js";
 import { MessageRepository } from "../repositories/messages.repository.js";
 import { buildSearchPreview } from "../utils/buildSearchPreview.js";
@@ -124,12 +125,14 @@ export class ConversationService {
         await this.messageRepository.searchConversationIdsByMessageText(search);
 
       const conversationIds = [
-        ...new Set(matchedMessages.map((msg:any) => msg.conversationId.toString())),
+        ...new Set(
+          matchedMessages.map((msg: any) => msg.conversationId.toString()),
+        ),
       ];
 
       // store first matched message preview
 
-      matchedMessages.forEach((msg:any) => {
+      matchedMessages.forEach((msg: any) => {
         const conversationId = msg.conversationId.toString();
 
         if (!matchedMessageMap.has(conversationId)) {
@@ -171,7 +174,7 @@ export class ConversationService {
       limit: Number(limit),
     });
 
-    const formattedDocs = docs.map((conversation:any) => {
+    const formattedDocs = docs.map((conversation: any) => {
       const matchedMessage = matchedMessageMap.get(conversation._id.toString());
       return {
         ...conversation.toJSON(),

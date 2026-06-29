@@ -30,6 +30,15 @@ export class TeamRepository {
         .populate("roleId", "id name level")
     )?.toJSON();
   }
+  async getOrganizationMembersByUserIds(
+    userIds: string[],
+  ): Promise<TOrganizationMember[]> {
+    return await OrganizationMember.find({
+      userId: { $in: userIds },
+    })
+      .populate("roleId", "name level")
+      .lean();
+  }
   async getOrganizationMembersByUserIdAndOrgId(id: string): Promise<any> {
     return await OrganizationMember.find({ userId: id })
       .populate("organizationId", "name")
@@ -43,7 +52,7 @@ export class TeamRepository {
         },
       },
 
-      // 👤 Profile
+      // Profile
       {
         $lookup: {
           from: "userprofiles",
@@ -54,7 +63,7 @@ export class TeamRepository {
       },
       { $unwind: { path: "$profile", preserveNullAndEmptyArrays: true } },
 
-      // 👤 User
+      // User
       {
         $lookup: {
           from: "users",
@@ -76,7 +85,7 @@ export class TeamRepository {
       },
       { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
 
-      // ✅ Accounts for NORMAL USERS (useraccounts)
+      // Accounts for NORMAL USERS (useraccounts)
       {
         $lookup: {
           from: "useraccounts",
@@ -108,7 +117,7 @@ export class TeamRepository {
         },
       },
 
-      // ✅ Accounts for OWNER (direct from accounts collection)
+      // Accounts for OWNER (direct from accounts collection)
       {
         $lookup: {
           from: "accounts",
@@ -125,7 +134,8 @@ export class TeamRepository {
             },
             {
               $project: {
-                accountId: "$_id",
+                _id: 0,
+                id: "$_id",
                 roleId: null,
                 name: "$accountName",
               },
@@ -172,10 +182,13 @@ export class TeamRepository {
           accounts: 1,
         },
       },
-    ]).sort({ createdAt: -1 }).sort({ createdAt: 1 });
+    ])
+      .sort({ createdAt: -1 })
+      .sort({ createdAt: 1 });
 
     return memberData;
   }
+
   // async getTeamMembers(orgId: string): Promise<any[]> {
   //   const memberData = await OrganizationMember.aggregate([
   //     {
@@ -298,41 +311,51 @@ export class TeamRepository {
 
     return member?.toJSON() || null;
   }
-  async deleteTeamMembers(ids: string[]): Promise<boolean> {
-    const session = await mongoose.startSession();
 
-    try {
-      session.startTransaction();
-
-      const objectIds = Array.isArray(ids)
-        ? ids.map((id) => new mongoose.Types.ObjectId(id))
-        : ids;
-
-      // 1. delete team member relations
-      await OrganizationMember.deleteMany({
-        userId: { $in: objectIds },
-      }).session(session);
-
-      // 2. delete account mappings
-      await UserAccount.deleteMany({
-        userId: { $in: objectIds },
-      }).session(session);
-
-      // 3. delete users
-      await UserModel.deleteMany({ _id: { $in: objectIds } }).session(session);
-
-      // 4. delete users profile
-      await UserProfileModel.deleteMany({ userId: { $in: objectIds } }).session(
-        session,
-      );
-
-      await session.commitTransaction();
-      return true;
-    } catch (error) {
-      await session.abortTransaction();
-      throw error;
-    } finally {
-      session.endSession();
-    }
+  async deleteOrganizationMembers(
+    userIds: string[],
+    session?: ClientSession,
+  ): Promise<void> {
+    await OrganizationMember.deleteMany({
+      userId: { $in: userIds },
+    }).session(session || null);
   }
+
+  // async deleteTeamMembers(ids: string[]): Promise<boolean> {
+  //   const session = await mongoose.startSession();
+
+  //   try {
+  //     session.startTransaction();
+
+  //     const objectIds = Array.isArray(ids)
+  //       ? ids.map((id) => new mongoose.Types.ObjectId(id))
+  //       : ids;
+
+  //     // 1. delete team member relations
+  //     await OrganizationMember.deleteMany({
+  //       userId: { $in: objectIds },
+  //     }).session(session);
+
+  //     // 2. delete account mappings
+  //     await UserAccount.deleteMany({
+  //       userId: { $in: objectIds },
+  //     }).session(session);
+
+  //     // 3. delete users
+  //     await UserModel.deleteMany({ _id: { $in: objectIds } }).session(session);
+
+  //     // 4. delete users profile
+  //     await UserProfileModel.deleteMany({ userId: { $in: objectIds } }).session(
+  //       session,
+  //     );
+
+  //     await session.commitTransaction();
+  //     return true;
+  //   } catch (error) {
+  //     await session.abortTransaction();
+  //     throw error;
+  //   } finally {
+  //     session.endSession();
+  //   }
+  // }
 }

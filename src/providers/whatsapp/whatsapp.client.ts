@@ -3,7 +3,6 @@
 import axios, { AxiosInstance } from "axios";
 import { config } from "../../config/index.js";
 
-
 export class WhatsAppClient {
   private readonly graphApi: AxiosInstance;
   private readonly appId = config.meta.APP_ID!;

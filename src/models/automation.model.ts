@@ -64,6 +64,12 @@ const automationSchema = new Schema(
       type: Boolean,
       default: true,
     },
+
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "draft",
+    },
   },
   {
     timestamps: true,

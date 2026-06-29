@@ -27,7 +27,6 @@ export class RbacRepository {
     orgId: string,
     level?: number,
   ): Promise<TRole[]> {
-    console.log("level", level);
     const roles = await RoleModel.find({
       organizationId: orgId,
       name: { $ne: ROLES.OWNER },
@@ -50,8 +49,6 @@ export class RbacRepository {
     data: Partial<TRole>,
     session?: ClientSession,
   ) {
-    console.log("data", data);
-    console.log("roleId", roleId);
     return await RoleModel.updateOne(
       {
         _id: new Types.ObjectId(roleId),
@@ -66,23 +63,28 @@ export class RbacRepository {
     );
   }
 
-  async deleteRoleById(roleId: string, session?: ClientSession) {
-    return await RoleModel.findOneAndDelete(
+  async deleteRoleById(
+    roleId: string,
+    session?: ClientSession,
+  ): Promise<TRole> {
+    const role = await RoleModel.findOneAndDelete(
       {
         _id: roleId,
         isSystemRole: false, // 🔒 prevent deleting system roles
       },
       { session },
     );
+
+    return role.toJSON();
   }
 
   // PERMISSIONS RELATED REPOSITORIES
-  async getPermissionsByKeys(keys: string[]) {
+  async getPermissionsByKeys(keys: string[]): Promise<TPermission[]> {
     const permissions = await PermissionModel.find({
       key: { $in: keys },
     });
 
-    return permissions.map((p) => p);
+    return permissions.map((p) => p.toJSON());
   }
   async getAllPermissions(): Promise<TPermission[]> {
     const permissions = await PermissionModel.find();
@@ -120,7 +122,7 @@ export class RbacRepository {
   async createRolePermissions(
     data: Partial<TRolePermission>[],
     session?: ClientSession,
-  ) {
+  ): Promise<TRolePermission[]> {
     return await RolePermissionModel.insertMany(data, {
       ordered: false,
       session,

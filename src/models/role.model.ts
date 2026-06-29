@@ -43,4 +43,5 @@ RoleSchema.index({ name: 1, organizationId: 1 }, { unique: true });
 
 // delete mongoose.models.Role;
 // export const RoleModel = mongoose.model("Role", RoleSchema);
-export const RoleModel =  mongoose.models.Role || mongoose.model("Role", RoleSchema);
+export const RoleModel =
+  mongoose.models.Role || mongoose.model("Role", RoleSchema);

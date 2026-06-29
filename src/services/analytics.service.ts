@@ -56,7 +56,7 @@ export default class AnalyticsService {
           filters,
         });
     }
-    return ;
+    return;
   }
 
   // All Analytics Dashboard
@@ -666,19 +666,14 @@ export default class AnalyticsService {
   }
 
   async getSearch(accountId: string, query: any) {
+    const search =
+      typeof query === "string" ? query.trim() : query?.search?.trim() || "";
 
-
-    const search =typeof query ==="string"
-      ? query.trim()
-      : query?.search?.trim() ||"";
-
-    if (!search)
-        return [];
+    if (!search) return [];
 
     const regex = new RegExp(search, "i");
 
-
-    const objectAccountId =new Types.ObjectId(accountId);
+    const objectAccountId = new Types.ObjectId(accountId);
     const queryToSearch = {
       accountId: objectAccountId,
       $or: [
@@ -699,10 +694,10 @@ export default class AnalyticsService {
         },
       ],
     };
-  const [leads, contacts] = await Promise.all([
-    LeadModel.find(queryToSearch).limit(5).lean(),
-    ContactModel.find(queryToSearch).limit(5).lean(),
-  ]);
+    const [leads, contacts] = await Promise.all([
+      LeadModel.find(queryToSearch).limit(5).lean(),
+      ContactModel.find(queryToSearch).limit(5).lean(),
+    ]);
 
     // console.log("Leads",leads,contacts)
 

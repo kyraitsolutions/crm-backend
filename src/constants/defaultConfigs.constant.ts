@@ -88,6 +88,7 @@ export const DEFAULT_CONFIGS = [
         label: "Open",
         system: true,
         deletable: false,
+        color: "#28a745",
         order: 1,
       },
 
@@ -96,6 +97,7 @@ export const DEFAULT_CONFIGS = [
         label: "Pending",
         system: true,
         deletable: false,
+        color: "#ffc107",
         order: 2,
       },
 
@@ -104,6 +106,7 @@ export const DEFAULT_CONFIGS = [
         label: "Closed",
         system: true,
         deletable: false,
+        color: "#dc3545",
         order: 3,
       },
     ],

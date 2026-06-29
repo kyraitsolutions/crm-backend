@@ -26,6 +26,7 @@ export class AccountRouter {
 
   // constructor
   constructor() {
+    // INITIALIZATION
     this.router = Router();
     this.accountController = new AccountController();
     this.chatBotController = new ChatBotController();
@@ -41,8 +42,7 @@ export class AccountRouter {
   }
 
   private initializeRoutes(): void {
-    // TODO:=======================================================================
-    // TODO: Account
+    //Account
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
@@ -79,7 +79,8 @@ export class AccountRouter {
       requirePermission("accounts.delete"),
       this.accountController.deleteAccount.bind(this.accountController),
     );
-    // TODO:Chatbot
+
+    //Chatbot
     this.router.get(
       "/:accountId/chatbots",
       AuthMiddleware.authenticate,
@@ -118,16 +119,13 @@ export class AccountRouter {
       this.chatBotController.deleteChatBot.bind(this.chatBotController),
     );
 
-    // TODO: =============================================================================================
-
-    // TODO: Forms
+    //Forms
     this.router.get(
       "/:accountId/forms",
       AuthMiddleware.authenticate,
       requirePermission("leadForms.view"),
       this.formController.getForms.bind(this.formController),
     );
-
     this.router.get(
       "/:accountId/form/:formId",
       AuthMiddleware.authenticate,
@@ -153,9 +151,7 @@ export class AccountRouter {
       this.formController.deleteFormId.bind(this.formController),
     );
 
-    // TODO: =============================================================================================
-
-    // TODO: Leads
+    //Leads
     this.router.post(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
@@ -179,12 +175,6 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       requirePermission("leads.create"),
       this.leadController.createWebhookLead.bind(this.leadController),
-    );
-    this.router.post(
-      "/:accountId/lead/bulk-update",
-      AuthMiddleware.authenticate,
-      requirePermission("leads.create"),
-      this.leadController.createBulkLead.bind(this.leadController),
     );
 
     // TODO: Lead Webhook

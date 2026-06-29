@@ -18,7 +18,11 @@ export class LeadController {
     this.emailService = new EmailService();
   }
 
-  getLeads = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+  getLeads = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     try {
       const user = req.user as any;
       const { accountId } = req.params;
@@ -63,7 +67,6 @@ export class LeadController {
       const { accountId, leadId } = req.params;
       const leadData = req.body;
 
-      console.log("Updating lead", { accountId, leadId, leadData });
       const currentUser = {
         ...req.user,
       };
@@ -112,17 +115,13 @@ export class LeadController {
   //     next(error);
   //   }
   // };
-  createBulkLead = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId } = req.params;
       const meta = await getMetaData(req);
-      console.log(meta)
+      console.log(meta);
 
-      const {leads,uniqueKey,mode} = req.body;
+      const { leads, uniqueKey, mode } = req.body;
 
       const context = {
         accountId: String(accountId),
@@ -131,7 +130,12 @@ export class LeadController {
         userName: String(req?.user?.name),
       };
 
-      const lead = await this.leadService.createBulkLead(context, leads,uniqueKey,mode);
+      const lead = await this.leadService.createBulkLead(
+        context,
+        leads,
+        uniqueKey,
+        mode,
+      );
       httpResponse(req, res, 200, "Lead create successfully", lead);
     } catch (error) {
       next(error);
@@ -144,6 +148,7 @@ export class LeadController {
     next: NextFunction,
   ) => {
     try {
+      console.log(req.user);
       const { accountId } = req.params;
       const meta = await getMetaData(req);
 
@@ -155,18 +160,17 @@ export class LeadController {
         accountId: String(accountId),
         source: {
           ...leadDto.source,
-          name: leadDto.source.name|| "webhook",
-          url: leadDto.source.url||"https://www.google.com",
+          name: leadDto.source.name || "webhook",
+          url: leadDto.source.url || "https://www.google.com",
         },
-        meta:{
+        meta: {
           ...meta,
-          location:{
+          location: {
             ...meta.location,
-            address:leadData.address,
-            country:leadData.country,
-            city:leadData.city
-          }
-
+            address: leadData.address,
+            country: leadData.country,
+            city: leadData.city,
+          },
         },
       };
 
@@ -177,8 +181,11 @@ export class LeadController {
         userName: String(req?.user?.name),
       };
 
-      const lead = await this.leadService.createLead(context, leadDataPayload);
-      httpResponse(req, res, 200, "Lead create successfully", lead);
+      const result = await this.leadService.createLead(
+        context,
+        leadDataPayload,
+      );
+      httpResponse(req, res, 200, "Lead create successfully", result);
     } catch (error) {
       next(error);
     }

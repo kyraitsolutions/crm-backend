@@ -17,10 +17,10 @@ export const organizationSchema = ZBaseEntity.extend({
     .object({
       line1: z.string().optional(),
       line2: z.string().optional(),
-      city: z.string().optional(),
-      state: z.string().optional(),
-      country: z.string().optional(),
-      pincode: z.string().optional(),
+      city: z.string(),
+      state: z.string(),
+      country: z.string(),
+      pincode: z.string(),
     })
     .optional(),
 
@@ -44,18 +44,5 @@ export const organizationMemberSchema = ZBaseEntity.extend({
   invitedBy: z.string().optional(),
 });
 
-// export const organizationMemberResponseSchema = ZBaseEntity.extend({
-//   userId: z.string(),
-//   roleId: z.string(),
-//   email: z.email(),
-//   firstName: z.string(),
-//   lastName: z.string().optional(),
-//   status: z.boolean(),
-//   accounts: z.array(z.object({ accountId: z.string(), roleId: z.string() })),
-// });
-
 export type TOrganization = z.infer<typeof organizationSchema>;
 export type TOrganizationMember = z.infer<typeof organizationMemberSchema>;
-// export type TOrganizationMemberResponse = z.infer<
-//   typeof organizationMemberResponseSchema
-// >;

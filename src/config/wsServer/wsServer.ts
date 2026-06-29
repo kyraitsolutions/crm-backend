@@ -15,11 +15,10 @@ export const createWebSocketServer = (server: http.Server) => {
 
   setWssInstance(wss);
 
-  wss.on("connection", async(ws: AuthenticatedWebSocket, req) => {
+  wss.on("connection", async (ws: AuthenticatedWebSocket, req) => {
     const query = new url.URL(req.url || "", "http://localhost");
     const accountId = query.searchParams.get("accountId");
     const visitorId = query.searchParams.get("visitorId");
-
 
     // const objectAccountId = new Types.ObjectId(accountId||"");
     // const account = await AccountModel.findOne({_id:objectAccountId});

@@ -18,6 +18,7 @@ const accountSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     email: {
       type: String,
       required: true,
@@ -25,6 +26,7 @@ const accountSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+
     status: {
       type: String,
       enum: ["active", "inactive", "suspended"],

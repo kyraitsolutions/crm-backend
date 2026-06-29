@@ -9,6 +9,7 @@ export class ChatBotUtil {
     const chunks: string[] = [];
 
     let start = 0;
+
     while (start < words.length) {
       const end = start + chunkSize;
       const chunk = words.slice(start, end).join(" ");

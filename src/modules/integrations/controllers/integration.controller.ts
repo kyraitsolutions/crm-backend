@@ -38,7 +38,7 @@ export class IntegrationController {
       organizationId: decodedState.organizationId,
     });
 
-    console.log(result)
+    console.log(result);
 
     return res.redirect(`${process.env.FRONTEND_URL}/settings/whatsapp`);
   };

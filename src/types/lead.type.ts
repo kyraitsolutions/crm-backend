@@ -7,7 +7,7 @@ export type LeadSourceName =
   | "whatsapp"
   | "manual"
   | "webhook"
-  | "import"
+  | "import";
 export interface ILead {
   accountId?: string;
   name?: string;

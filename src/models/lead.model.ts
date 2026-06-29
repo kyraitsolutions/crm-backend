@@ -22,7 +22,7 @@ export interface Lead extends Document {
   website: string;
   customFields: Record<string, any>;
 
-  stage:string;
+  stage: string;
   status: "active" | "inactive" | "pending";
 
   source: {
@@ -64,9 +64,43 @@ export interface Lead extends Document {
     };
   };
 
+  isDeleted?: boolean;
+  deletedAt?: Date;
+  deletedBy?: Schema.Types.ObjectId | string;
+
   createdAt: Date;
   updatedAt: Date;
 }
+
+const leadNoteSchema = new Schema(
+  {
+    activitySource: {
+      type: String,
+      enum: ["phone_call", "message", "note", "email", "whatsapp"],
+      default: "note",
+    },
+    attachment: String,
+    message: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    _id: true,
+    id: false,
+    toJSON: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        return ret;
+      },
+    },
+  },
+);
 
 const leadSchema = new Schema<Lead>(
   {
@@ -90,7 +124,7 @@ const leadSchema = new Schema<Lead>(
     },
     stage: {
       type: String,
-      default:"new"
+      default: "new",
     },
     status: {
       type: String,
@@ -125,19 +159,7 @@ const leadSchema = new Schema<Lead>(
     },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
     tags: [{ type: String }],
-    notes: [
-      {
-        activitySource: {
-          type: String,
-          enum: ["phone_call", "message", "note", "email", "whatsapp"],
-          default: "note",
-        },
-        attachment: { type: String },
-        message: { type: String, required: true },
-        // createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
+    notes: [leadNoteSchema],
     meta: {
       ip: { type: String, default: "" },
       userAgent: { type: String, default: "" },
@@ -151,6 +173,21 @@ const leadSchema = new Schema<Lead>(
           lng: { type: Schema.Types.Mixed, default: null },
         },
       },
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
+
+    deletedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
     },
   },
   {

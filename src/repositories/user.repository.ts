@@ -47,7 +47,7 @@ export class UserRepository {
           createdAt: 1,
           updatedAt: 1,
           roleId: 1,
-          userprofile: {
+          userProfile: {
             profilePicture: "$userprofile.profilePicture",
             firstName: "$userprofile.firstName",
             lastName: "$userprofile.lastName",
@@ -110,5 +110,11 @@ export class UserRepository {
   async delete(id: string): Promise<boolean> {
     const result = await UserModel.findByIdAndDelete(id);
     return !!result;
+  }
+
+  async deleteMany(userIds: string[], session?: ClientSession): Promise<void> {
+    await UserModel.deleteMany({
+      _id: { $in: userIds },
+    }).session(session || null);
   }
 }

@@ -15,6 +15,7 @@ export class OrganizationController {
   ): Promise<void> => {
     try {
       const user = req.user;
+
       const organizationDataPayload = {
         ...req.body,
         slug: generateSlug(req.body.name as string),
@@ -25,14 +26,11 @@ export class OrganizationController {
         organizationDataPayload,
       );
 
-      const organization =
-        await organizationOnboardingService.createOrganization(
-          createOrganizationPayloadDto,
-        );
+      const result = await organizationOnboardingService.createOrganization(
+        createOrganizationPayloadDto,
+      );
 
-      httpResponse(req, res, 201, "Client onbaorded successfully", {
-        docs: organization,
-      });
+      httpResponse(req, res, 201, "Client onbaorded successfully", result);
     } catch (error) {
       next(error);
     }
@@ -44,17 +42,20 @@ export class OrganizationController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
-      const { organizationId } = req.query;
+      // const user = req.user as any;
+      const { organizationId } = req.params;
 
-      const orgId =
-        (organizationId as string) || (user?.organizationId as string);
+      const orgId = organizationId as string;
 
-      const organization =
+      const result =
         await organizationService.getOrganizationDetailsByOrganizationId(orgId);
-      httpResponse(req, res, 200, "Organization details fetched successfully", {
-        docs: organization,
-      });
+      httpResponse(
+        req,
+        res,
+        200,
+        "Organization details fetched successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

@@ -82,7 +82,11 @@ export class ActivityLogService {
     accountId,
     organizationId,
   }: Partial<TActivityLog & { oldDoc: any; newDoc: any }>) {
+    console.log("oldDoc", oldDoc, "newDoc", newDoc);
+
     const changes = getObjectChanges(oldDoc, newDoc);
+
+    console.log("changes", changes);
 
     if (Object.keys(changes).length === 0) {
       return;

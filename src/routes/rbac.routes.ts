@@ -6,15 +6,12 @@ import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class RBACRouter {
   public router: Router;
-
   private roleController: RoleController;
 
   constructor() {
+    // INITIALIZATION
     this.router = Router();
-
-    // ✅ Dependency Injection
     this.roleController = new RoleController(rbacService);
-
     this.initializeRoutes();
   }
 

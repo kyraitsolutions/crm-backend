@@ -89,9 +89,10 @@ export class IntegrationService {
       const expiresIn = token.expires_in;
 
       // 1. Get Business Info for WhatsApp
-      const business =await this.whatsappClient.getEmbeddedSignupDetails(accessToken);
+      const business =
+        await this.whatsappClient.getEmbeddedSignupDetails(accessToken);
 
-      console.log("Business",business)
+      console.log("Business", business);
       // 2. Create Integration for Whats'App
       const integration = await this.integrationRepo.createAndUpdate(
         {

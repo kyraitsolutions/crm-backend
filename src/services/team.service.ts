@@ -5,7 +5,7 @@ import {
   CreateOrganizationMemberDto,
   OrganizationMemberResponseDto,
 } from "../dtos/organization.dto.js";
-import { TeamMemberDto } from "../dtos/team.dto.js";
+import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto.js";
 // import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { TeamRepository } from "../repositories/team.repository.js";
 import { UserAccountRepository } from "../repositories/user-account.repository.js";
@@ -14,27 +14,38 @@ import { UserProfileRepository } from "../repositories/userprofile.repository.js
 import { TOrganizationMember } from "../types/organization.type.js";
 import { TUser } from "../types/user.type.js";
 import { EmailService } from "./email.service.js";
+import { OrganizationRepository } from "../repositories/organization.repository.js";
+import {
+  TApiResponse,
+  TPaginatedResponse,
+} from "../types/api-response.type.js";
 
 export class TeamService {
   private teamRepository: TeamRepository;
   private userRepository: UserRepository;
   private emailService: EmailService;
   private userprofileRepository: UserProfileRepository;
-  // private organizationRepository: OrganizationRepository;
+  private organizationRepository: OrganizationRepository;
   private userAccountRepository: UserAccountRepository;
   constructor() {
     this.userRepository = new UserRepository();
     this.emailService = new EmailService();
     this.teamRepository = new TeamRepository();
     this.userprofileRepository = new UserProfileRepository();
-    // this.organizationRepository = new OrganizationRepository();
+    this.organizationRepository = new OrganizationRepository();
     this.userAccountRepository = new UserAccountRepository();
   }
-  async getTeamMembers(orgId: string): Promise<any[]> {
+  async getTeamMembers(orgId: string): Promise<TPaginatedResponse<any>> {
+    const organization = await this.organizationRepository.findById(orgId);
+    if (!organization) {
+      throw new Error("Organization not found");
+    }
+
     const teamMembers = await this.teamRepository.getTeamMembers(orgId);
-    return (
-      teamMembers?.map((teamMember: TOrganizationMember) => teamMember) ?? []
-    );
+    return {
+      docs:
+        teamMembers?.map((teamMember: TOrganizationMember) => teamMember) ?? [],
+    };
   }
   async getTeamMemberById(id: string): Promise<any> {
     const teamMember =
@@ -62,16 +73,7 @@ export class TeamService {
   async createTeamMember(
     userId: string,
     orgId: string,
-    teamMember: {
-      email: string;
-      firstName: string;
-      lastName?: string;
-      roleId?: string;
-      accounts?: {
-        accountId: string;
-        roleId: string;
-      }[];
-    },
+    teamMember: CreateTeamMemberDto,
   ): Promise<OrganizationMemberResponseDto> {
     const session = await mongoose.startSession();
     try {
@@ -83,7 +85,7 @@ export class TeamService {
 
       const roleId = teamMember?.roleId || accountMangerRole?.id;
 
-      // create tema member user
+      // create team member user
       const newTeamMember = await this.createTemaUser(
         teamMember?.email,
         session,
@@ -99,6 +101,21 @@ export class TeamService {
         newTeamMemberProfilePayload,
         session,
       );
+
+      const role = await rbacService.getRoleById(String(roleId));
+
+      if (!role) {
+        throw new Error("Role not found");
+      }
+
+      if (role.organizationId.toString() !== orgId.toString()) {
+        throw new Error("Role not belongs to this organization");
+      }
+
+      if (role.isSystemRole && role.name === ROLES.OWNER) {
+        throw new Error("This role cannot be assigned");
+      }
+
       // create organization member
       const newOrganizationMemberPayload = new CreateOrganizationMemberDto({
         userId: newTeamMember.id as string,
@@ -226,11 +243,72 @@ export class TeamService {
       throw error;
     }
   }
-  async deleteTeamMember(ids: string[]): Promise<any> {
-    if (!ids || !ids.length) throw new Error("Ids are required");
-    const deletedTeamMember = await this.teamRepository.deleteTeamMembers(ids);
-    return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
+
+  async deleteTeamMembers(
+    orgId: string,
+    ids: string[],
+  ): Promise<TApiResponse<{ ids: string[] }>> {
+    const session = await mongoose.startSession();
+
+    try {
+      session.startTransaction();
+      const members =
+        await this.teamRepository.getOrganizationMembersByUserIds(ids);
+
+      if (members.length !== ids.length) {
+        throw new Error("Team member not found");
+      }
+
+      const invalidMembers = members.filter(
+        (member) => String(member.organizationId) !== orgId,
+      );
+
+      if (invalidMembers.length) {
+        throw new Error("Members do not belong to this organization");
+      }
+
+      const ownerExists = members.some(
+        (member: any) => member.roleId?.name === ROLES.OWNER,
+      );
+
+      if (ownerExists) {
+        throw new Error("Owner cannot be deleted");
+      }
+
+      // await Promise.all([
+      //   this.teamRepository.deleteOrganizationMembers(ids, session),
+      //   this.userAccountRepository.deleteByUserIds(ids, session),
+      //   this.userprofileRepository.deleteByUserIds(ids, session),
+      //   this.userRepository.deleteMany(ids, session),
+      // ]);
+
+      await this.teamRepository.deleteOrganizationMembers(ids, session);
+      await this.userAccountRepository.deleteByUserIds(ids, session);
+      await this.userprofileRepository.deleteByUserIds(ids, session);
+      await this.userRepository.deleteMany(ids, session);
+
+      await session.commitTransaction();
+
+      return {
+        doc: {
+          ids: ids,
+        },
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
   }
+  // async deleteTeamMember(ids: string[]): Promise<any> {
+  //   try {
+  //     if (!ids || !ids.length) throw new Error("Ids are required");
+  //     const deletedTeamMember =
+  //       await this.teamRepository.deleteTeamMembers(ids);
+  //     return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
+  //   } catch (error) {}
+  // }
   async assignAccountToMember(
     userId: string,
     orgId: string,
@@ -240,8 +318,31 @@ export class TeamService {
     }[],
     session?: ClientSession,
   ): Promise<any> {
+    console.log("org Id", orgId);
     if (!Array.isArray(accounts)) {
       throw new Error("accountIds must be a non-empty array");
+    }
+
+    for (const account of accounts) {
+      const role = await rbacService.getRoleById(account.roleId);
+
+      if (!role) {
+        throw new Error(`Invalid role for account ${account.accountId}`);
+      }
+
+      console.log("role to hai", role);
+
+      if (role.organizationId.toString() !== orgId.toString()) {
+        throw new Error(
+          `Role not belongs to this organization for account ${account.accountId}`,
+        );
+      }
+
+      if (role.name === ROLES.OWNER) {
+        throw new Error(
+          `${role.name} role cannot be assigned to account ${account.accountId}`,
+        );
+      }
     }
 
     await this.userAccountRepository.deleteByUserAndOrg(userId, orgId);

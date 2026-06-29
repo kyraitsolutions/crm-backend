@@ -11,6 +11,7 @@ import { TActivityLog } from "../types/activityLog.type.js";
 import { AUTOMATION_TRIGGERS } from "../constants/automation.constant.js";
 import { RequestContext } from "../types/common.js";
 import { leadSummaryPrompt } from "../ai/ai.prompts.js";
+import { TApiResponse } from "../types/api-response.type.js";
 
 export class LeadService {
   private ai: GeminiAIUtil;
@@ -27,21 +28,122 @@ export class LeadService {
     this.activityLogService = new ActivityLogService();
   }
 
-  /**
-   * Get leads for an account, verifying both userId and accountId.
-   * Only fetch leads where userId and accountId match.
-   * Further query filters (search, sort, pagination, etc) can be added to this method if needed.
-   *
-   * @param userId - The user's ID (from authentication context)
-   * @param accountId - The account's ID (from req.params)
-   * @returns Promise<Lead[]>
-   */
-  async getLeads(_userId: string, accountId: string, payload: Record<string, any>, skip: number): Promise<any | null> {
+  async createLeadWs(lead: Lead): Promise<Lead> {
+    return await this.leadRepository.create(lead);
+  }
+  async createLead(
+    context: RequestContext,
+    lead: LeadDto,
+  ): Promise<TApiResponse<Lead>> {
+    const result = await this.leadRepository.create(lead);
+
+    // Activity Log
+    const activityLogDataPayload: Partial<TActivityLog> = {
+      accountId: String(lead.accountId),
+      organizationId: String(context?.organizationId),
+
+      entityType: "lead",
+      entityId: String(result._id),
+
+      actor: {
+        type: "user",
+        id: context.userId,
+        name: context.userName,
+      },
+
+      metadata: {
+        leadName: result?.name,
+        source: result?.source?.name,
+      },
+    };
+
+    await this.activityLogService.logCreate(activityLogDataPayload);
+
+    // Trigger automation
+    const automationDataPayload = {
+      ...result?.toJSON(),
+      organizationId: context?.organizationId,
+      entityType: "lead",
+      entityId: result._id,
+    };
+
+    await this.automationEngine.process({
+      accountId: result?.accountId,
+      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+      payload: automationDataPayload,
+    });
+
+    return {
+      doc: result,
+    };
+  }
+  async createBulkLead(
+    context: RequestContext,
+    lead: LeadDto,
+    uniqueKey: string,
+    mode: any,
+  ): Promise<Lead> {
+    const result = await this.leadRepository.create(lead);
+
+    // Activity Log
+    const activityLogDataPayload: Partial<TActivityLog> = {
+      accountId: String(lead.accountId),
+      organizationId: String(context?.organizationId),
+
+      entityType: "lead",
+      entityId: String(result._id),
+
+      actor: {
+        type: "user",
+        id: context.userId,
+        name: context.userName,
+      },
+
+      metadata: {
+        leadName: result?.name,
+      },
+    };
+
+    await this.activityLogService.logCreate(activityLogDataPayload);
+
+    // Trigger automation
+    const automationDataPayload = {
+      ...result?.toJSON(),
+      organizationId: context?.organizationId,
+      entityType: "lead",
+      entityId: result._id,
+    };
+
+    await this.automationEngine.process({
+      accountId: result?.accountId,
+      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+      payload: automationDataPayload,
+    });
+
+    return result;
+  }
+
+  async getLeads(
+    _userId: string,
+    accountId: string,
+    payload: Record<string, any>,
+    skip: number,
+  ): Promise<any | null> {
     if (!accountId) {
       return null;
     }
-    const { page = 1, limit = 10, search, filters = {}, assignedTo, form, dateRange, read, sort = {}, } = payload;
-    console.log(page,read);
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      filters = {},
+      assignedTo,
+      form,
+      dateRange,
+      read,
+      sort = {},
+    } = payload;
+    console.log(page, read);
     const criteria: any = {
       // userId,
       accountId,
@@ -110,10 +212,14 @@ export class LeadService {
     // DATE RANGE
     // -------------------------
     if (dateRange?.startDate && dateRange?.endDate) {
-
       const start = new Date(dateRange.startDate);
       const end = new Date(dateRange.endDate);
-      if (end.getUTCHours() === 0 && end.getUTCMinutes() === 0 && end.getUTCSeconds() === 0 && end.getUTCMilliseconds() === 0) {
+      if (
+        end.getUTCHours() === 0 &&
+        end.getUTCMinutes() === 0 &&
+        end.getUTCSeconds() === 0 &&
+        end.getUTCMilliseconds() === 0
+      ) {
         end.setUTCHours(23, 59, 59, 999);
       }
       criteria.createdAt = {
@@ -144,89 +250,31 @@ export class LeadService {
     //   totalDocs: count,
     // };
   }
-  async createLeadWs(lead: Lead): Promise<Lead> {
-    return await this.leadRepository.create(lead);
+  async getLead(accountId: string, leadId: string): Promise<any | null> {
+    return await this.leadRepository.getLeadById(accountId, leadId);
   }
-  async createLead(context: RequestContext, lead: LeadDto): Promise<Lead> {
-    const result = await this.leadRepository.create(lead);
+  async getLeadSummary(accountId: string, leadId: string): Promise<any> {
+    const lead = await this.leadRepository.getLeadById(accountId, leadId);
 
-    // Activity Log
-    const activityLogDataPayload: Partial<TActivityLog> = {
-      accountId: String(lead.accountId),
-      organizationId: String(context?.organizationId),
+    // For Gemini
+    const prompt = leadSummaryPrompt(lead);
+    const rawResponse = await this.ai.runGoogleAI({ prompt });
 
-      entityType: "lead",
-      entityId: String(result._id),
+    // For Open AI
+    // const prompt = JSON.stringify(lead);
+    // const rawResponse = await this.ai.runOpenAI(
+    //   prompt,
+    //   "one parameter expected here",
+    // );
+    console.log(rawResponse);
 
-      actor: {
-        type: "user",
-        id: context.userId,
-        name: context.userName,
-      },
-
-      metadata: {
-        leadName: result?.name,
-      },
-    };
-
-    await this.activityLogService.logCreate(activityLogDataPayload);
-
-    // Trigger automation
-    const automationDataPayload = {
-      ...result?.toJSON(),
-      organizationId: context?.organizationId,
-      entityType: "lead",
-      entityId: result._id,
-    };
-
-    await this.automationEngine.process({
-      accountId: result?.accountId,
-      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
-      payload: automationDataPayload,
-    });
-
+    if (!rawResponse) {
+      return null;
+    }
+    const result = safeJsonParse(rawResponse);
     return result;
   }
-  async createBulkLead(context: RequestContext, lead: LeadDto, uniqueKey:string,mode:any): Promise<Lead> {
-    const result = await this.leadRepository.create(lead);
 
-    // Activity Log
-    const activityLogDataPayload: Partial<TActivityLog> = {
-      accountId: String(lead.accountId),
-      organizationId: String(context?.organizationId),
-
-      entityType: "lead",
-      entityId: String(result._id),
-
-      actor: {
-        type: "user",
-        id: context.userId,
-        name: context.userName,
-      },
-
-      metadata: {
-        leadName: result?.name,
-      },
-    };
-
-    await this.activityLogService.logCreate(activityLogDataPayload);
-
-    // Trigger automation
-    const automationDataPayload = {
-      ...result?.toJSON(),
-      organizationId: context?.organizationId,
-      entityType: "lead",
-      entityId: result._id,
-    };
-
-    await this.automationEngine.process({
-      accountId: result?.accountId,
-      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
-      payload: automationDataPayload,
-    });
-
-    return result;
-  }
   // async updateLead(
   //   _accountId: string,
   //   leadId: string,
@@ -301,11 +349,13 @@ export class LeadService {
 
       actor: {
         type: "user",
+        name: currentUser.name,
         id: currentUser.id,
       },
 
       metadata: {
         leadName: updatedLead?.name,
+        source: updatedLead?.source?.name,
       },
 
       oldDoc: existingLead,
@@ -316,30 +366,6 @@ export class LeadService {
   }
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
-  }
-  async getLead(accountId: string, leadId: string): Promise<any | null> {
-    return await this.leadRepository.getLeadById(accountId, leadId);
-  }
-  async getLeadSummary(accountId: string, leadId: string): Promise<any> {
-    const lead = await this.leadRepository.getLeadById(accountId, leadId);
-
-    // For Gemini
-    const prompt=leadSummaryPrompt(lead);
-    const rawResponse = await this.ai.runGoogleAI({ prompt });
-
-    // For Open AI
-    // const prompt = JSON.stringify(lead);
-    // const rawResponse = await this.ai.runOpenAI(
-    //   prompt,
-    //   "one parameter expected here",
-    // );
-    console.log(rawResponse);
-
-    if (!rawResponse) {
-      return null;
-    }
-    const result = safeJsonParse(rawResponse);
-    return result;
   }
 }
 

@@ -14,11 +14,12 @@ export class ActivityLogRepository {
       sort: Record<string, 1 | -1>;
     },
   ) {
-    return ActivityLog.find(filter)
+    const activityLogs = ActivityLog.find(filter)
       .sort(options?.sort ?? { createdAt: -1 })
       .skip(options?.skip ?? 0)
-      .limit(Number(options?.limit))
-      .lean();
+      .limit(Number(options?.limit));
+
+    return (await activityLogs).map((log) => log.toJSON());
   }
 
   async create(data: Partial<TActivityLog>): Promise<TActivityLog | null> {

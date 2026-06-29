@@ -51,7 +51,7 @@ export class App {
   public async listen(port: number): Promise<void> {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-    await seedPermissions();
+    // await seedPermissions();
     server.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import {Redis, RedisOptions } from "ioredis";
+import { Redis, RedisOptions } from "ioredis";
 import logger from "../utils/logger.js";
 
 dotenv.config();
@@ -25,7 +25,9 @@ class RedisClient {
   private isConnected: boolean = false;
 
   constructor() {
-    const redisHost = process.env.REDIS_HOST || "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
+    const redisHost =
+      process.env.REDIS_HOST ||
+      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
 
     const redisOptions: RedisClientConfig = {
       enableReadyCheck: false,
@@ -35,10 +37,7 @@ class RedisClient {
         return Math.min(times * 100, 2000);
       },
     };
-    this.client = new Redis(
-      redisHost,
-      redisOptions
-    );
+    this.client = new Redis(redisHost, redisOptions);
 
     this.setupEventHandlers();
   }
@@ -144,7 +143,7 @@ class RedisClient {
   async setSession(
     sessionId: string,
     sessionData: JsonValue,
-    ttl: number = 3600
+    ttl: number = 3600,
   ): Promise<void> {
     await this.set(`session:${sessionId}`, sessionData, ttl);
   }
@@ -183,7 +182,7 @@ class RedisClient {
 
   async subscribe(
     channel: string,
-    callback: RedisMessageCallback
+    callback: RedisMessageCallback,
   ): Promise<void> {
     try {
       await this.client.subscribe(channel);

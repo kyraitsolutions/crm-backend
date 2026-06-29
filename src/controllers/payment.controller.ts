@@ -16,7 +16,6 @@ export class PaymentController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-
       console.log("Request", req.body);
       const options = {
         amount: req.body.amount * 100, // amount in paise
@@ -25,7 +24,7 @@ export class PaymentController {
       };
 
       console.log("hjkl");
-      const  order = await razorpay.orders.create(options);
+      const order = await razorpay.orders.create(options);
       console.log(order);
 
       // res.json({
@@ -37,7 +36,7 @@ export class PaymentController {
       // console.log("Body", req.body)
 
       // const data = await this.paymentService.createOrder();
-      httpResponse(req, res, 200, "Order created successfully",{
+      httpResponse(req, res, 200, "Order created successfully", {
         docs: order,
       });
     } catch (error) {

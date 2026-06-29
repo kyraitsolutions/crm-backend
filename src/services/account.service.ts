@@ -1,13 +1,23 @@
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { ClientSession } from "mongoose";
 import { ROLES } from "../config/permissions.js";
-import { AccountDto } from "../dtos/account.dto.js";
+import {
+  AccountAccessDto,
+  AccountDto,
+  CreateAccountDto,
+  CreateAccountResponseDto,
+} from "../dtos/account.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 // import { TeamRepository } from "../repositories/team.repository.js";
 import { UserAccountRepository } from "../repositories/user-account.repository.js";
+import {
+  TApiResponse,
+  TPaginatedResponse,
+} from "../types/api-response.type.js";
 import { TUser } from "../types/user.type.js";
 import { TAccount, TCreateAccount } from "./../types/account.type.js";
 import { RbacService } from "./rbac.service.js";
+import { TRole } from "../types/roles-permissions.type.js";
 
 export class AccountService {
   constructor(
@@ -19,38 +29,76 @@ export class AccountService {
     // private emailService: EmailService,
   ) {}
 
-  async getAccountById(accountId: string): Promise<{} | null> {
-    const account = this.accountRepository.findOne(accountId);
+  async getAccountById(accountId: string): Promise<TApiResponse<AccountDto>> {
+    if (!accountId) throw new Error("Account id is required");
+
+    const account = await this.accountRepository.findOne(accountId);
+
     if (!account) {
       throw new Error("Account not found");
     }
-    return account;
+    console.log("account", new AccountDto(account));
+    return {
+      doc: new AccountDto(account),
+    };
   }
 
-  async getAllAccounts(user: TUser): Promise<AccountDto[] | []> {
-    const role = await this.rbacService.getRoleById(user.role?.id as string);
+  async getAllAccounts(
+    user: TUser,
+    role: TRole,
+  ): Promise<TPaginatedResponse<AccountDto>> {
+    // const role = await this.rbacService.getRoleById(user.role?.id as string);
     let accounts: TAccount[] | null = [];
+    // let totalDocs = null;
 
     if (role?.name === ROLES.OWNER) {
-      accounts = await this.accountRepository.findAll(user.id as string);
+      const [fetchedAccounts] = await Promise.all([
+        this.accountRepository.findAll(user.id as string),
+        // this.accountRepository.countDocuments({
+        //   createdBy: user.id as string,
+        // }),
+      ]);
+
+      accounts = fetchedAccounts ?? [];
+      // totalDocs = docsCount;
+
+      // accounts = await this.accountRepository.findAll(user.id as string);
+      // docsCount = await this.accountRepository.countDocuments({
+      //   createdBy: user.id as string,
+      // });
     } else {
       const teamMember =
         await this.userAccountRepository.getUserAccontsByUserId(
           user.id as string,
         );
       const accountIds = teamMember.map((acc: any) => acc.accountId);
-
       accounts = await this.accountRepository.findAccountsByIds(accountIds);
     }
 
-    return accounts?.length ? accounts?.map((account) => account) : [];
+    return {
+      docs: accounts?.length ? accounts?.map((account) => account) : [],
+    };
   }
 
-  async getAccountAccess(userId: string, accountId: string, role?: string) {
+  async getAccountAccess(
+    userId: string,
+    accountId: string,
+    role?: string,
+  ): Promise<TApiResponse<AccountAccessDto>> {
+    if (!accountId) throw new Error("Account id is required");
+
+    const account = await this.accountRepository.findOne(accountId);
+
+    if (!account) {
+      throw new Error("Account not found");
+    }
+
     if (role === ROLES.OWNER) {
       return {
-        accountId,
-        permissions: ["*"],
+        doc: {
+          accountId: accountId,
+          permissions: ["*"],
+        },
       };
     }
 
@@ -71,26 +119,30 @@ export class AccountService {
 
     let permissions: string[] = [];
 
-    permissions = await this.rbacService.getPermissionsByRole(
+    const { docs } = await this.rbacService.getPermissionsByRole(
       accountRole?.id as string,
     );
 
+    permissions = docs;
+
     return {
-      accountId,
-      // role: {
-      //   id: role?.id,
-      //   name: role.name,
-      // },
-      permissions,
+      doc: {
+        accountId,
+        // role: {
+        //   id: role?.id,
+        //   name: role.name,
+        // },
+        permissions,
+      },
     };
   }
 
   async createAccount(
     id: string,
     orgId: string,
-    dto: Partial<TCreateAccount>,
+    dto: CreateAccountDto,
     session?: ClientSession,
-  ): Promise<TAccount | any> {
+  ): Promise<TApiResponse<CreateAccountResponseDto>> {
     let existingAccount = await this.accountRepository.findAccountByEmail(
       dto?.email as string,
     );
@@ -114,10 +166,21 @@ export class AccountService {
     //   account?.accountName,
     // );
 
-    return account;
+    return {
+      doc: new CreateAccountResponseDto(account),
+    };
   }
 
-  async deleteAccount(id: string, user: any): Promise<boolean | null> {
-    return this.accountRepository.delete(id);
+  async deleteAccount(id: string): Promise<TApiResponse<{ id: string }>> {
+    const account = await this.accountRepository.findOne(id);
+    if (!account) {
+      throw new Error("Account not found");
+    }
+
+    const result = await this.accountRepository.delete(id);
+
+    return {
+      doc: { id: String(result?.id) },
+    };
   }
 }

@@ -32,7 +32,13 @@ export class EmailService {
       year,
     });
   }
-  async startCampaign({accountId,leadIds,subject,html,fromEmail}: {
+  async startCampaign({
+    accountId,
+    leadIds,
+    subject,
+    html,
+    fromEmail,
+  }: {
     accountId: string;
     leadIds: { email: string; name?: string; id?: string }[];
     subject: string;
@@ -67,11 +73,20 @@ export class EmailService {
       `📨 Email campaign queued | account=${accountId} | emails=${leadIds.length}`,
     );
   }
-  async sendMultipleEmail({accountId,leadId,contactId,name,emails,subject,html,fromEmail}: {
+  async sendMultipleEmail({
+    accountId,
+    leadId,
+    contactId,
+    name,
+    emails,
+    subject,
+    html,
+    fromEmail,
+  }: {
     accountId: string;
-    leadId:string;
-    contactId:string;
-    name:string;
+    leadId: string;
+    contactId: string;
+    name: string;
     emails: string[];
     subject: string;
     html: string;
@@ -84,7 +99,7 @@ export class EmailService {
       const email = emails[i];
 
       // 1: Create entery in database
-      const emailActivity=await EmailActivity.create({
+      const emailActivity = await EmailActivity.create({
         accountId,
         leadId: leadId || null,
         contactId: contactId || null,
@@ -92,10 +107,10 @@ export class EmailService {
         subject,
         html,
         fromEmail,
-        name:name,
+        name: name,
         status: "queued",
         type: "follow_up",
-      })
+      });
 
       // Step 2: Queue email
       await emailQueue.add(
@@ -108,10 +123,10 @@ export class EmailService {
           fromEmail,
 
           accountId,
-          leadId: leadId||"",
-          contactId: contactId||"",
+          leadId: leadId || "",
+          contactId: contactId || "",
 
-          name:name||""
+          name: name || "",
         },
         {
           delay: i * 300, // ⏳ rate limit safety (VERY IMPORTANT)
@@ -120,7 +135,9 @@ export class EmailService {
       );
     }
 
-    logger.info(`📨 Email campaign queued | account=${accountId} | emails=${emails.length}`);
+    logger.info(
+      `📨 Email campaign queued | account=${accountId} | emails=${emails.length}`,
+    );
   }
 
   async getSubscribers(accountId: string): Promise<any[]> {

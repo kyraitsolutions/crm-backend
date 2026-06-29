@@ -34,4 +34,5 @@ userSchema.set("toObject", { virtuals: true });
 
 export const UserModel = model("User", userSchema);
 
-export const RoleModel = mongoose.models.Role||model("Role", new Schema({ name: String }));
+export const RoleModel =
+  mongoose.models.Role || model("Role", new Schema({ name: String }));
