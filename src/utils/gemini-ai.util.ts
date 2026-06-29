@@ -6,7 +6,7 @@ export class GeminiAIUtilsfd {
 
   constructor(apiKey?: string) {
     this.ai = new GoogleGenAI({
-      apiKey: apiKey || ENV.GOOGLE_GENAI_API_KEY,
+      apiKey: apiKey || ENV.AI.GOOGLE_GENAI_API_KEY,
     });
   }
 

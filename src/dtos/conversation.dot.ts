@@ -1,4 +1,4 @@
-import { TIdentifiers, TPlatform } from "../types";
+import { TIdentifiers, TPlatform } from "../types/share.type.js";
 
 export class InitConversationDto {
   accountId!: string;

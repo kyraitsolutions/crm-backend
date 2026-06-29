@@ -94,7 +94,7 @@ export class ChatFlowController {
         createChatbotFlowDto,
       );
 
-      return httpResponse(req, res, 200, "Chat flow updated successfully", {
+      httpResponse(req, res, 200, "Chat flow updated successfully", {
         doc: chatbotFlow,
       });
     } catch (error) {
@@ -108,7 +108,7 @@ export class ChatFlowController {
 
       const chatbotFlow = await chatflowService.deleteChatFlow(chatflowId);
 
-      return httpResponse(req, res, 200, "Chat flow deleted successfully", {
+      httpResponse(req, res, 200, "Chat flow deleted successfully", {
         doc: chatbotFlow,
       });
     } catch (error) {

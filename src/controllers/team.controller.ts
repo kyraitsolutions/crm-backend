@@ -18,15 +18,11 @@ export class TeamController {
   ): Promise<void> => {
     try {
       const user = req.user;
-      const teamMembers = await this.teamService.getTeamMembers(
-        user?.organizationId as string,
+      const result = await this.teamService.getTeamMembers(
+        String(user?.organizationId),
       );
 
-      httpResponse(req, res, 200, "Team members fetched successfully", {
-        docs: teamMembers,
-        limit: 10,
-        skip: 0,
-      });
+      httpResponse(req, res, 200, "Team members fetched successfully", result);
     } catch (error) {
       logger.error(`Error fetching team members: ${error}`);
       next(error as Error);
@@ -63,17 +59,13 @@ export class TeamController {
 
       const createTeamMemberDto = new CreateTeamMemberDto(req.body);
 
-      const teamMember = await this.teamService.createTeamMember(
+      const result = await this.teamService.createTeamMember(
         user?.id as string,
         user?.organizationId as string,
         createTeamMemberDto,
       );
 
-      httpResponse(req, res, 200, "Team member created successfully", {
-        doc: teamMember,
-        limit: 10,
-        skip: 0,
-      });
+      httpResponse(req, res, 200, "Team member created successfully", result);
     } catch (error) {
       logger.error(`Error creating team member: ${error}`);
       next(error as Error);
@@ -134,17 +126,16 @@ export class TeamController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const ids = req.query["teamMembersIds[]"];
+      // const ids = req.query["teamMembersIds[]"];
+      const { teamMemberIds: ids } = req.body;
+      const orgId = req.user?.organizationId;
 
-      const teamMember = await this.teamService.deleteTeamMember(
+      const result = await this.teamService.deleteTeamMembers(
+        String(orgId),
         ids as string[],
       );
 
-      httpResponse(req, res, 200, "Team member deleted successfully", {
-        docs: teamMember,
-        limit: 10,
-        skip: 0,
-      });
+      httpResponse(req, res, 200, "Team member deleted successfully", result);
     } catch (error) {
       logger.error(`Error deleting team member: ${error}`);
       next(error as Error);

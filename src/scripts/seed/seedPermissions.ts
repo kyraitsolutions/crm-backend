@@ -1,5 +1,5 @@
-import { PERMISSIONS } from "../../config/permissions";
-import { PermissionModel } from "../../models/permissions.model";
+import { PERMISSIONS } from "../../config/permissions.js";
+import { PermissionModel } from "../../models/permissions.model.js";
 
 export const seedPermissions = async () => {
   try {

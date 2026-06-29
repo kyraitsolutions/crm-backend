@@ -1,4 +1,4 @@
-import { TIdentifiers } from "../types";
+import { TIdentifiers } from "../types/share.type.js";
 
 export class InitVisitorDto {
   accountId!: string;

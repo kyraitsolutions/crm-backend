@@ -1,8 +1,8 @@
 import { ClientSession } from "mongoose";
 
-import { DEFAULT_CONFIGS } from "../constants";
-import { ConfigurationItemDto } from "../dtos/configuration.dto";
-import { ConfigRepository } from "../repositories/config.repository";
+import { ConfigurationItemDto } from "../dtos/configuration.dto.js";
+import { ConfigRepository } from "../repositories/config.repository.js";
+import { DEFAULT_CONFIGS } from "../constants/defaultConfigs.constant.js";
 
 export class ConfigBootstrapService {
   constructor(private configRepository: ConfigRepository) {}

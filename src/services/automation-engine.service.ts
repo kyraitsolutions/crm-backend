@@ -1,6 +1,6 @@
-import AutomationRepository from "../repositories/automation.repository";
-import ActionExecutor from "./action-executor.service";
-import ConditionEvaluator from "./condition-evaluator.service";
+import AutomationRepository from "../repositories/automation.repository.js";
+import ActionExecutor from "./action-executor.service.js";
+import ConditionEvaluator from "./condition-evaluator.service.js";
 
 export class AutomationEngine {
   private repository = new AutomationRepository();

@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   organizationOnboardingService,
   organizationService,
-} from "../container";
-import { CreateOrganizationDto } from "../dtos/organization.dto";
-import { generateSlug } from "../utils";
-import httpResponse from "../utils/http.response";
+} from "../container.js";
+import { CreateOrganizationDto } from "../dtos/organization.dto.js";
+import httpResponse from "../utils/http.response.js";
+import { generateSlug } from "../utils/typography.js";
 
 export class OrganizationController {
   createOrganizationOnboarding = async (
@@ -15,6 +15,7 @@ export class OrganizationController {
   ): Promise<void> => {
     try {
       const user = req.user;
+
       const organizationDataPayload = {
         ...req.body,
         slug: generateSlug(req.body.name as string),
@@ -25,14 +26,11 @@ export class OrganizationController {
         organizationDataPayload,
       );
 
-      const organization =
-        await organizationOnboardingService.createOrganization(
-          createOrganizationPayloadDto,
-        );
+      const result = await organizationOnboardingService.createOrganization(
+        createOrganizationPayloadDto,
+      );
 
-      httpResponse(req, res, 201, "Client onbaorded successfully", {
-        docs: organization,
-      });
+      httpResponse(req, res, 201, "Client onbaorded successfully", result);
     } catch (error) {
       next(error);
     }
@@ -44,15 +42,13 @@ export class OrganizationController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
-      const { organizationId } = req.query;
+      // const user = req.user as any;
+      const { organizationId } = req.params;
 
-      const orgId =
-        (organizationId as string) || (user?.organizationId as string);
+      const orgId = organizationId as string;
 
       const result =
         await organizationService.getOrganizationDetailsByOrganizationId(orgId);
-
       httpResponse(
         req,
         res,

@@ -1,4 +1,4 @@
-import { MediaType } from "../utils/s3-key.builder..utils";
+import { MediaType } from "../utils/s3-key.builder..utils.js";
 
 export class CreateMediaUploadUrlDto {
   userId?: string;

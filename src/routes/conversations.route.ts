@@ -1,7 +1,7 @@
 // routes/conversation.route.ts
 
 import { Router } from "express";
-import { ConversationController } from "../controllers/conversations.controller";
+import { ConversationController } from "../controllers/conversations.controller.js";
 
 export class ConversationRouter {
   private router: Router;

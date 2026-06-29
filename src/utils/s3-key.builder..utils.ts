@@ -1,4 +1,4 @@
-import { CreateMediaUploadUrlDto } from "../dtos/media.dto";
+import { CreateMediaUploadUrlDto } from "../dtos/media.dto.js";
 
 // shared/utils/s3-key.builder.ts
 export enum MediaType {

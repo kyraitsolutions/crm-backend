@@ -1,5 +1,16 @@
 import { Schema, model } from "mongoose";
 
+const changeSchema = new Schema(
+  {
+    from: Schema.Types.Mixed,
+    to: Schema.Types.Mixed,
+  },
+  {
+    _id: false,
+    id: false,
+  },
+);
+
 const activityLogSchema = new Schema(
   {
     organizationId: {
@@ -54,10 +65,7 @@ const activityLogSchema = new Schema(
     // Audit details
     changes: {
       type: Map,
-      of: {
-        from: Schema.Types.Mixed,
-        to: Schema.Types.Mixed,
-      },
+      of: changeSchema,
       default: {},
     },
 
@@ -82,6 +90,13 @@ const activityLogSchema = new Schema(
   },
   {
     versionKey: false,
+    toJSON: {
+      transform(_, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        return ret;
+      },
+    },
   },
 );
 

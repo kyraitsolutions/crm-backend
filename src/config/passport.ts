@@ -32,7 +32,7 @@ passport.use(
       callbackURL: config.google.callbackUrl,
       scope: ["profile", "email"],
     },
-    async (_accessToken, _refreshToken, profile, done) => {
+    async (_accessToken:string, _refreshToken:string, profile:any, done:any) => {
       try {
         const user = await userService.findOrCreateGoogleUser(
           profile as TGoogleUser,

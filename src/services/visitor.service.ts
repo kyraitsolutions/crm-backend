@@ -1,7 +1,7 @@
 // services/visitor.service.ts
 
-import { InitVisitorDto } from "../dtos/visitor.dto";
-import { VisitorRepository } from "../repositories/visitor.repository";
+import { InitVisitorDto } from "../dtos/visitor.dto.js";
+import { VisitorRepository } from "../repositories/visitor.repository.js";
 
 export class VisitorService {
   constructor(private visitorRepository: VisitorRepository) {}

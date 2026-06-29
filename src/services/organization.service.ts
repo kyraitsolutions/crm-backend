@@ -1,11 +1,13 @@
 import { ClientSession } from "mongoose";
 import {
   CreateOrganizationDto,
+  CreateOrganizationResponseDto,
   OrganizationResponseDto,
-} from "../dtos/organization.dto";
-import { OrganizationRepository } from "../repositories/organization.repository";
-import { TOrganizationMember } from "../types/organization.type";
-import { TeamRepository } from "../repositories/team.repository";
+} from "../dtos/organization.dto.js";
+import { OrganizationRepository } from "../repositories/organization.repository.js";
+import { TOrganizationMember } from "../types/organization.type.js";
+import { TeamRepository } from "../repositories/team.repository.js";
+import { TApiResponse } from "../types/api-response.type.js";
 
 export class OrganizationService {
   constructor(
@@ -19,8 +21,13 @@ export class OrganizationService {
   async create(
     data: CreateOrganizationDto,
     session: ClientSession,
-  ): Promise<any> {
-    return this.organizationRepository.create(data, session);
+  ): Promise<CreateOrganizationResponseDto | null> {
+    const organization = await this.organizationRepository.create(
+      data,
+      session,
+    );
+
+    return organization ? organization : null;
   }
   // ORGANIZATION DETAILS GET BY ORGANIZATION ID SERVICE
   async getOrganizationDetailsByOrganizationId(

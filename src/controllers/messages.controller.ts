@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import { MessageService } from "../services/messages.service";
-import httpResponse from "../utils/http.response";
+import { MessageService } from "../services/messages.service.js";
+import httpResponse from "../utils/http.response.js";
 
 export class MessageController {
   private messageService: MessageService;
@@ -34,11 +34,7 @@ export class MessageController {
         doc: result,
       });
     } catch (error: any) {
-      return res.status(500).json({
-        success: false,
-
-        message: error.message,
-      });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 }

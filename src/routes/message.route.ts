@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { MessageController } from "../controllers/messages.controller";
+import { MessageController } from "../controllers/messages.controller.js";
 
 export class MessageRouter {
   private router: Router;

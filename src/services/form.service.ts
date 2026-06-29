@@ -17,7 +17,7 @@ export class FormService {
     createFormDto: CreateFormDto,
   ): Promise<FormDto | null> {
     const isAccountExist = await this.accountRepository.findOne(
-      userId,
+      // userId,
       accountId,
     );
     if (!isAccountExist) {

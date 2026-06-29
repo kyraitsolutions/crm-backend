@@ -1,6 +1,6 @@
 import { ClientSession } from "mongoose";
-import { MessageModel } from "../models/messages.model";
-import { TMessage } from "../types/message.type";
+import { MessageModel } from "../models/messages.model.js";
+import { TMessage } from "../types/message.type.js";
 
 export class MessageRepository {
   public async getMessagesByConversationId(

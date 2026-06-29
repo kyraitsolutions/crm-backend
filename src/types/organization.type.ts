@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ZBaseEntity } from "./base.type";
+import { ZBaseEntity } from "./base.type.js";
 
 export const organizationSchema = ZBaseEntity.extend({
   name: z.string().min(1),

@@ -1,6 +1,9 @@
 import { ClientSession } from "mongoose";
-import ConfigDefinition from "../models/configDefinition.model";
-import { TConfigDefinition, TConfigValue } from "../types/configuration.type";
+import ConfigDefinition from "../models/configDefinition.model.js";
+import {
+  TConfigDefinition,
+  TConfigValue,
+} from "../types/configuration.type.js";
 
 export class ConfigRepository {
   async insertMany(

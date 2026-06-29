@@ -26,6 +26,7 @@ export class AccountRouter {
 
   // constructor
   constructor() {
+    // INITIALIZATION
     this.router = Router();
     this.accountController = new AccountController();
     this.chatBotController = new ChatBotController();

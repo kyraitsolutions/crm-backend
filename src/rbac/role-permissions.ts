@@ -1,4 +1,4 @@
-import { USERROLE } from "./roles";
+import { USERROLE } from "./roles.js";
 
 export const ROLE_PERMISSIONS: Record<USERROLE, string[]> = {
   [USERROLE.ADMIN]: ["*"],

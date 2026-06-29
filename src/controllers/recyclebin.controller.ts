@@ -1,7 +1,6 @@
-import {Request,Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response";
-import { recyclebinService } from "../container";
-
+import { Request, Response, NextFunction } from "express";
+import httpResponse from "../utils/http.response.js";
+import { recyclebinService } from "../container.js";
 
 export class RecyclebinController {
   list = async (
@@ -10,7 +9,7 @@ export class RecyclebinController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-    //   const user = req.user;
+      //   const user = req.user;
       const { accountId } = req.params;
       const recyclebins = await recyclebinService.list(accountId);
 
@@ -23,5 +22,4 @@ export class RecyclebinController {
       next(error);
     }
   };
-
 }

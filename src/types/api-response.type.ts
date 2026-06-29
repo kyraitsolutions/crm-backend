@@ -17,9 +17,13 @@ export type TQueryParams<TFilters = Record<string, any>> = {
   filters?: TFilters;
 };
 
+export type TApiResponse<T> = {
+  doc: T;
+};
+
 export type TPaginatedResponse<T> = {
   docs: T[];
-  pagination: TPaginationMeta;
+  pagination?: TPaginationMeta;
 };
 
 type TConversationFilters = {

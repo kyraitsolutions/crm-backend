@@ -1,20 +1,17 @@
 import { Router } from "express";
-import { RoleController } from "../controllers/rbac.controller";
-import { rbacService } from "../container";
-import { AuthMiddleware } from "../middleware";
-import { requirePermission } from "../middleware/authorization.middleware";
+import { RoleController } from "../controllers/rbac.controller.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
+import { rbacService } from "../container.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class RBACRouter {
   public router: Router;
-
   private roleController: RoleController;
 
   constructor() {
+    // INITIALIZATION
     this.router = Router();
-
-    // ✅ Dependency Injection
     this.roleController = new RoleController(rbacService);
-
     this.initializeRoutes();
   }
 

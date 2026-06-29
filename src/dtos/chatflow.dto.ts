@@ -1,4 +1,4 @@
-import { TChatFlowEdge, TChatFlowNode } from "../types/chatflow.type";
+import { TChatFlowEdge, TChatFlowNode } from "../types/chatflow.type.js";
 export class CreateChatFlowDto {
   name!: string;
   description: string = "";
@@ -21,7 +21,7 @@ export class CreateChatFlowDto {
 }
 
 export class ResponseChatFlowDto {
-  id!: string;
+  id?: string;
   name!: string;
   description: string = "";
   accountId!: string;

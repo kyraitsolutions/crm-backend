@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { Plan } from "../../models/subscription.model";
-import { ENV } from "../../constants";
+import { Plan } from "../../models/subscription.model.js";
+import { ENV } from "../../constants/env.constants.js";
 
 const commonFeatures = [
   "Analytics",
@@ -61,7 +61,7 @@ const dummyPlans = [
 
 export const seedPlans = async () => {
   try {
-    await mongoose.connect(ENV.DATABASE_URL!);
+    await mongoose.connect(ENV.DB.DATABASE_URL!);
 
     for (const plan of dummyPlans) {
       await Plan.findOneAndUpdate({ name: plan.name }, plan, {

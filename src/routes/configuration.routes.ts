@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { ConfigurationController } from "../controllers/configuration.controller";
-import { AuthMiddleware } from "../middleware";
+import { ConfigurationController } from "../controllers/configuration.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class ConfigurationRouter {
   public router: Router;

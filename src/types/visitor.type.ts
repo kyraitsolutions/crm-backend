@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdentifiersSchema, PlatformSchema } from "./share.type";
+import { IdentifiersSchema, PlatformSchema } from "./share.type.js";
 export const VisitorSchema = z.object({
   accountId: z.string(),
   visitorId: z.string(),

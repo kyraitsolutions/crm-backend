@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { RbacService } from "../services/rbac.service";
-import httpResponse from "../utils/http.response";
-import { UpdateRoleDto } from "../dtos/rbac.dto";
+import { RbacService } from "../services/rbac.service.js";
+import httpResponse from "../utils/http.response.js";
+import { CreateRoleDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
+import { TRole } from "../types/roles-permissions.type.js";
 
 export class RoleController {
   constructor(private rbacService: RbacService) {}
@@ -9,25 +10,20 @@ export class RoleController {
   // ROLES RELATED CONTROLLERS
   createCustomRole = async (req: Request, res: Response) => {
     try {
-      const { roleName, permissions } = req.body;
+      const bodyPayload = new CreateRoleDto(req.body);
       const organizationId = req.user?.organizationId; // from auth middleware
 
-      if (!roleName && !permissions?.length) {
-        return res.status(400).json({
-          success: false,
-          message: "roleName and permissions are required",
-        });
-      }
-
-      const role = await this.rbacService.createCustomRole({
-        roleName,
-        permissions,
+      const createCustomRolePayload = {
+        roleName: bodyPayload.roleName,
+        permissions: bodyPayload.permissions,
         organizationId: organizationId as string,
-      });
+      };
 
-      return httpResponse(req, res, 201, "Role created successfully", {
-        doc: role,
-      });
+      const result = await this.rbacService.createCustomRole(
+        createCustomRolePayload,
+      );
+
+      return httpResponse(req, res, 201, "Role created successfully", result);
     } catch (error) {
       throw error;
     }
@@ -36,19 +32,16 @@ export class RoleController {
   getRoles = async (req: Request, res: Response) => {
     try {
       const user = req.user;
-      const { organization_id } = req.query;
-      const currentRole = user?.role;
 
-      const orgId = organization_id ? organization_id : user?.organizationId;
+      const currentRole = user?.role as TRole;
+      const orgId = user?.organizationId;
 
-      const roles = await this.rbacService.getRolesByOrganization(
+      const result = await this.rbacService.getRolesByOrganization(
         orgId as string,
         currentRole,
       );
 
-      return httpResponse(req, res, 200, "Roles fetched successfully", {
-        docs: roles,
-      });
+      return httpResponse(req, res, 200, "Roles fetched successfully", result);
     } catch (error) {
       throw error;
     }
@@ -57,25 +50,23 @@ export class RoleController {
   updateRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { roleId } = req.params;
-      const { roleName, permissions } = req.body;
+      // const { roleName, permissions } = req.body;
+      const { name, permissions } = new UpdateRoleDto(req.body);
       const organizationId = req.user?.organizationId; // from auth middleware
+
       const updateRoleDataPayload = {
         roleId,
-        name: roleName,
+        name,
         permissions,
         organizationId: organizationId as string,
       };
 
-      const updateRoleDataPayloadDto = new UpdateRoleDto(updateRoleDataPayload);
-
-      const role = await this.rbacService.updateRole(
+      const result = await this.rbacService.updateRole(
         roleId,
-        updateRoleDataPayloadDto,
+        updateRoleDataPayload,
       );
 
-      return httpResponse(req, res, 200, "Role updated successfully", {
-        docs: role,
-      });
+      httpResponse(req, res, 200, "Role updated successfully", result);
     } catch (error) {
       next(error);
     }
@@ -84,12 +75,8 @@ export class RoleController {
   deleteRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { roleId } = req.params;
-      await this.rbacService.deleteRole(roleId);
-      return httpResponse(req, res, 200, "Role deleted successfully", {
-        docs: {
-          roleId,
-        },
-      });
+      const result = await this.rbacService.deleteRole(roleId);
+      httpResponse(req, res, 200, "Role deleted successfully", result);
     } catch (error) {
       next(error);
     }
@@ -99,11 +86,15 @@ export class RoleController {
   getRolePermissions = async (req: Request, res: Response) => {
     try {
       const { roleId } = req.params;
-      const permissions = await this.rbacService.getPermissionsByRole(roleId);
+      const results = await this.rbacService.getPermissionsByRole(roleId);
 
-      return httpResponse(req, res, 200, "Permissions fetched successfully", {
-        docs: permissions,
-      });
+      return httpResponse(
+        req,
+        res,
+        200,
+        "Permissions fetched successfully",
+        results,
+      );
     } catch (error) {
       throw error;
     }

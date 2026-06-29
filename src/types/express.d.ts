@@ -1,4 +1,4 @@
-import { AuthUser } from "./common";
+import { AuthUser } from "./common.ts";
 
 declare global {
   namespace Express {

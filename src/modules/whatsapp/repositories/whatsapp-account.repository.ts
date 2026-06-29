@@ -1,8 +1,9 @@
 import { ClientSession, Types } from "mongoose";
-import { WhatsAppAccountModel } from "../../../models/whatsapp-account.model";
+import { WhatsAppAccountModel } from "../../../models/whatsapp-account.model.js";
 
 export class WhatsAppAccountRepository {
   async createAndUpdate(data: any, session?: ClientSession) {
+    console.log("Data", data);
     return WhatsAppAccountModel.findOneAndUpdate(
       {
         integrationId: new Types.ObjectId(data.integrationId),

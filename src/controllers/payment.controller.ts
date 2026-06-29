@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import httpResponse from "../utils/http.response.js";
-import { PaymentService } from "../services/payment.service.js";
+// import { PaymentService } from "../services/payment.service.js";
 import { razorpay } from "../config/razorpay.js";
 
 export class PaymentController {
-  private paymentService: PaymentService;
+  // private paymentService: PaymentService;
 
   constructor() {
-    this.paymentService = new PaymentService();
+    // this.paymentService = new PaymentService();
   }
 
   createOrder = async (
@@ -16,7 +16,6 @@ export class PaymentController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-
       console.log("Request", req.body);
       const options = {
         amount: req.body.amount * 100, // amount in paise
@@ -25,7 +24,7 @@ export class PaymentController {
       };
 
       console.log("hjkl");
-      const  order = await razorpay.orders.create(options);
+      const order = await razorpay.orders.create(options);
       console.log(order);
 
       // res.json({
@@ -37,7 +36,7 @@ export class PaymentController {
       // console.log("Body", req.body)
 
       // const data = await this.paymentService.createOrder();
-      httpResponse(req, res, 200, "Order created successfully",{
+      httpResponse(req, res, 200, "Order created successfully", {
         docs: order,
       });
     } catch (error) {

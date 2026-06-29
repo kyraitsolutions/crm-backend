@@ -29,4 +29,13 @@ export class UserProfileRepository {
   async delete(id: string): Promise<boolean> {
     return await UserProfileModel.deleteOne({ userId: id }).lean();
   }
+
+  async deleteByUserIds(
+    userIds: string[],
+    session?: ClientSession,
+  ): Promise<void> {
+    await UserProfileModel.deleteMany({
+      userId: { $in: userIds },
+    }).session(session || null);
+  }
 }

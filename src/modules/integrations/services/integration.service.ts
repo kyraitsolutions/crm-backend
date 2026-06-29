@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import { IntegrationProvider } from "../../../models/integration.model";
-import { WhatsAppClient } from "../../../providers/whatsapp/whatsapp.client";
-import { WhatsAppAccountRepository } from "../../whatsapp/repositories/whatsapp-account.repository";
-import { IntegrationCredentialRepository } from "../repositories/integration-credential.repository";
-import { IntegrationRepository } from "../repositories/integration.repository";
+import { IntegrationProvider } from "../../../models/integration.model.js";
+import { WhatsAppClient } from "../../../providers/whatsapp/whatsapp.client.js";
+import { WhatsAppAccountRepository } from "../../whatsapp/repositories/whatsapp-account.repository.js";
+import { IntegrationCredentialRepository } from "../repositories/integration-credential.repository.js";
+import { IntegrationRepository } from "../repositories/integration.repository.js";
 
 export class IntegrationService {
   constructor(
@@ -92,6 +92,7 @@ export class IntegrationService {
       const business =
         await this.whatsappClient.getEmbeddedSignupDetails(accessToken);
 
+      console.log("Business", business);
       // 2. Create Integration for Whats'App
       const integration = await this.integrationRepo.createAndUpdate(
         {

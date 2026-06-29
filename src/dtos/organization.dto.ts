@@ -44,6 +44,8 @@ export class CreateOrganizationDto {
       throw new Error(`Unknown fields: ${unknownFields.join(", ")}`);
     }
 
+    if (!data.firstName) throw new Error("firstName is required");
+    if (!data.slug) throw new Error("Organization slug is required");
     if (!data.name) throw new Error("Organization name is required");
     if (!data.email) throw new Error("Organization email is required");
 
@@ -53,6 +55,17 @@ export class CreateOrganizationDto {
     this.createdBy = data.createdBy;
 
     Object.assign(this, data);
+  }
+}
+
+export class CreateOrganizationResponseDto {
+  id: string;
+  name: string;
+  createdAt?: Date;
+  constructor(data: CreateOrganizationResponseDto) {
+    this.id = data.id;
+    this.name = data.name;
+    this.createdAt = data.createdAt;
   }
 }
 
@@ -74,11 +87,12 @@ export class OrganizationResponseDto {
     line2?: string;
   };
   createdBy: string;
+  terms?: string;
+  privacyPolicy?: string;
 
   createdAt: Date;
   updatedAt: Date;
   constructor(data: OrganizationResponseDto) {
-    console.log("data ha kya bhai", data.address);
     this.id = data.id;
     this.name = data.name;
     this.email = data.email;
@@ -90,6 +104,8 @@ export class OrganizationResponseDto {
     this.size = data.size;
     this.phone = data.phone;
     this.createdBy = data.createdBy;
+    this.terms = data.terms;
+    this.privacyPolicy = data.privacyPolicy;
 
     if (data?.address && Object.keys(data.address).length > 0) {
       this.address = data.address;

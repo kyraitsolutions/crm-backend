@@ -1,17 +1,19 @@
 import mongoose from "mongoose";
-import { ROLES } from "../config/permissions";
-import { DASHBOARD_URL_PATH } from "../constants";
+import { ROLES } from "../config/permissions.js";
+import { DASHBOARD_URL_PATH } from "../constants/path.js";
 import {
   CreateOrganizationDto,
-  OrganizationResponseDto,
-} from "../dtos/organization.dto";
-import { AccountService } from "./account.service";
-import { ConfigBootstrapService } from "./configBootstrap.service";
-import { EmailService } from "./email.service";
-import { OrganizationService } from "./organization.service";
-import { RbacService } from "./rbac.service";
-import { UserService } from "./user.service";
-import { UserProfileService } from "./userprofile.service";
+  CreateOrganizationResponseDto,
+} from "../dtos/organization.dto.js";
+import { AccountService } from "./account.service.js";
+import { ConfigBootstrapService } from "./configBootstrap.service.js";
+import { EmailService } from "./email.service.js";
+import { OrganizationService } from "./organization.service.js";
+import { RbacService } from "./rbac.service.js";
+import { UserService } from "./user.service.js";
+import { UserProfileService } from "./userprofile.service.js";
+import { TApiResponse } from "../types/api-response.type.js";
+import { CreateAccountDto } from "../dtos/account.dto.js";
 
 export class OrganizationOnboardingService {
   constructor(
@@ -26,34 +28,34 @@ export class OrganizationOnboardingService {
 
   async createOrganization(
     data: CreateOrganizationDto,
-  ): Promise<OrganizationResponseDto> {
+  ): Promise<TApiResponse<CreateOrganizationResponseDto>> {
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
 
-      // check organization exists
+      // check if organization already exists
       const organizationExists =
-        await this.organizationService.isOrganizationExists(data?.createdBy);
+        await this.organizationService.isOrganizationExists(data.createdBy);
 
-      if (organizationExists) {
-        throw new Error("Organization already exists");
-      }
+      if (organizationExists) throw new Error("Organization already exists");
 
       // create organization
       const organization = await this.organizationService.create(data, session);
 
       // create default roles
       const roles = await this.rbacService.createDefaultRolesAndPermissions(
-        organization.id,
+        String(organization?.id),
         session,
       );
 
       // create organization member
-      const adminRoleId = roles.find((r) => r.name === ROLES.OWNER);
+      const adminRoleId = roles.find(
+        (r: { name: string }) => r.name === ROLES.OWNER,
+      );
       await this.organizationService.createOrganizationMember(
         {
           userId: data.createdBy,
-          organizationId: organization.id,
+          organizationId: organization?.id,
           roleId: adminRoleId?.id,
         },
         session,
@@ -62,7 +64,7 @@ export class OrganizationOnboardingService {
       // create account
       await this.accountService.createAccount(
         data.createdBy,
-        organization.id,
+        String(organization?.id),
         { accountName: data.name, email: data.email },
         session,
       );
@@ -87,26 +89,31 @@ export class OrganizationOnboardingService {
 
       // create default configs
       await this.configBootstrapService.seedDefaultConfigs({
-        organizationId: organization.id,
+        organizationId: String(organization?.id),
         userId: data.createdBy,
         session,
       });
 
       // send success onboarding email
       await this.emailService.onboardingEmail({
-        organizationName: organization.name,
+        organizationName: organization?.name,
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         dashboardUrl: DASHBOARD_URL_PATH,
-        createdAt: organization.createdAt,
+        createdAt: organization?.createdAt,
         year: new Date().getFullYear(),
       });
 
       await session.commitTransaction();
       session.endSession();
 
-      return new OrganizationResponseDto(organization);
+      return {
+        doc: {
+          id: String(organization?.id),
+          name: String(organization?.name),
+        },
+      };
     } catch (error) {
       await session.abortTransaction();
       session.endSession();

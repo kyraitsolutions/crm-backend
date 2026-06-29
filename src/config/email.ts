@@ -1,7 +1,7 @@
 // config/email.js
 import nodemailer from "nodemailer";
-import { ENV } from "../constants";
-import logger from "../utils/logger";
+import logger from "../utils/logger.js";
+import { ENV } from "../constants/env.constants.js";
 
 console.log("ENV", ENV);
 export class Transporter {

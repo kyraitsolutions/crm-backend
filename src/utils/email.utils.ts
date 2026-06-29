@@ -1,9 +1,9 @@
-import logger from "./logger";
-import { Transporter } from "../config/email";
+import logger from "./logger.js";
+import { Transporter } from "../config/email.js";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
-import { EMAIL_TEMPLATES_PATH } from "../constants";
+import { EMAIL_TEMPLATES_PATH } from "../constants/path.js";
 
 export class EmailUtils {
   private transporter: Transporter;
@@ -57,7 +57,7 @@ export class EmailUtils {
     html: string,
     text?: string,
     from?: string,
-  ): Promise<{status:boolean,messageId:string|null}> {
+  ): Promise<{ status: boolean; messageId: string | null }> {
     try {
       const mailOptions = {
         from: from || process.env.FROM_EMAIL,
@@ -69,14 +69,13 @@ export class EmailUtils {
 
       const result = await this.transporter.sendMail(mailOptions);
       logger.info(`Email sent successfully to ${to}:`, result.messageId);
-      return {status:true,messageId:result.messageId};
+      return { status: true, messageId: result.messageId };
     } catch (error) {
       logger.error(`Failed to send email to ${to}:`, error);
-      return {status:false,messageId:null};;
+      return { status: false, messageId: null };
     }
   }
 
-  
   async sendWelcomeEmail(email: string, url: string): Promise<boolean> {
     const subject = "Welcome to Kyra CRM";
     const html = `
@@ -98,7 +97,8 @@ export class EmailUtils {
             </div>
         `;
 
-    return await this.sendEmail(email, subject, html);
+    const result = await this.sendEmail(email, subject, html);
+    return result.status;
   }
 
   async sendAccountCreationEmail(
@@ -150,7 +150,8 @@ export class EmailUtils {
             </div>
         `;
 
-    return await this.sendEmail(accountEmail, subject, html);
+    const result = await this.sendEmail(accountEmail, subject, html);
+    return result.status;
   }
 
   async sendLeadAcknowledgementEmail(

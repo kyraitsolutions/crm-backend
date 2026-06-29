@@ -1,4 +1,4 @@
-import { Task } from "../models/tasks.model";
+import { Task } from "../models/tasks.model.js";
 
 export class TaskRepository {
   async create(data: any) {

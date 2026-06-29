@@ -5,6 +5,7 @@ import { OrganizationMember } from "../models/organizationMember.model.js";
 
 import { userAggregateService, userService } from "../container.js";
 import httpResponse from "../utils/http.response.js";
+import { TRole } from "../types/roles-permissions.type.js";
 
 export class UserController {
   register = async (
@@ -60,17 +61,26 @@ export class UserController {
     try {
       const userId = req?.user?.id;
       const includes = req.query.includes as string;
+      const role = req.user?.role as Pick<TRole, "id" | "name" | "level">;
+      let includesArray = null;
 
-      const includesArray = includes.split(",").map((i) => i.trim());
+      if (includes) {
+        includesArray = includes?.split(",").map((i) => i.trim());
+      }
 
       const result = await userAggregateService.getMe(
         userId as string,
-        includesArray,
+        role,
+        includesArray || [],
       );
 
-      httpResponse(req, res, 200, "User information fetched successfully", {
-        docs: result,
-      });
+      httpResponse(
+        req,
+        res,
+        200,
+        "User information fetched successfully",
+        result,
+      );
     } catch (error) {
       next(error);
     }

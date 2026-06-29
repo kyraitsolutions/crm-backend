@@ -1,28 +1,43 @@
 import dotenv from "dotenv";
-import Redis, { RedisOptions } from "ioredis";
+import { Redis, RedisOptions } from "ioredis";
 import logger from "../utils/logger.js";
 
 dotenv.config();
+
+export type JsonValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+export interface RedisClientConfig extends RedisOptions {
+  retryStrategy(times: number): number;
+}
+
+export interface RedisMessageCallback {
+  (message: JsonValue): void;
+}
 
 class RedisClient {
   private client: Redis;
   private isConnected: boolean = false;
 
   constructor() {
-    const redisHost = process.env.REDIS_HOST || "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
+    const redisHost =
+      process.env.REDIS_HOST ||
+      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
 
-    const redisOptions: RedisOptions = {
+    const redisOptions: RedisClientConfig = {
       enableReadyCheck: false,
       maxRetriesPerRequest: null,
       lazyConnect: true,
-      retryStrategy(times) {
+      retryStrategy(times: number) {
         return Math.min(times * 100, 2000);
       },
-    }
-    this.client = new Redis(
-      redisHost,
-      redisOptions
-    );
+    };
+    this.client = new Redis(redisHost, redisOptions);
 
     this.setupEventHandlers();
   }
@@ -37,7 +52,7 @@ class RedisClient {
       logger.info("Redis client ready");
     });
 
-    this.client.on("error", (error) => {
+    this.client.on("error", (error: Error) => {
       this.isConnected = false;
       logger.error("Redis client error:", error);
     });
@@ -81,7 +96,7 @@ class RedisClient {
   }
 
   // Cache methods
-  async set(key: string, value: any, ttl?: number): Promise<void> {
+  async set(key: string, value: JsonValue, ttl?: number): Promise<void> {
     try {
       const serializedValue = JSON.stringify(value);
       if (ttl) {
@@ -95,7 +110,7 @@ class RedisClient {
     }
   }
 
-  async get(key: string): Promise<any> {
+  async get(key: string): Promise<JsonValue | null> {
     try {
       const value = await this.client.get(key);
       return value ? JSON.parse(value) : null;
@@ -127,13 +142,13 @@ class RedisClient {
   // Session methods
   async setSession(
     sessionId: string,
-    sessionData: any,
-    ttl: number = 3600
+    sessionData: JsonValue,
+    ttl: number = 3600,
   ): Promise<void> {
     await this.set(`session:${sessionId}`, sessionData, ttl);
   }
 
-  async getSession(sessionId: string): Promise<any> {
+  async getSession(sessionId: string): Promise<JsonValue | null> {
     return await this.get(`session:${sessionId}`);
   }
 
@@ -156,7 +171,7 @@ class RedisClient {
   }
 
   // Pub/Sub methods
-  async publish(channel: string, message: any): Promise<void> {
+  async publish(channel: string, message: JsonValue): Promise<void> {
     try {
       await this.client.publish(channel, JSON.stringify(message));
     } catch (error) {
@@ -167,11 +182,11 @@ class RedisClient {
 
   async subscribe(
     channel: string,
-    callback: (message: any) => void
+    callback: RedisMessageCallback,
   ): Promise<void> {
     try {
       await this.client.subscribe(channel);
-      this.client.on("message", (receivedChannel, message) => {
+      this.client.on("message", (receivedChannel: string, message: string) => {
         if (receivedChannel === channel) {
           callback(JSON.parse(message));
         }

@@ -1,5 +1,5 @@
 import { ClientSession } from "mongoose";
-import { IntegrationCredentialModel } from "../../../models/integration-credential.model";
+import { IntegrationCredentialModel } from "../../../models/integration-credential.model.js";
 
 export class IntegrationCredentialRepository {
   async createAndUpdate(

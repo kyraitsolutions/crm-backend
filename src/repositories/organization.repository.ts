@@ -1,6 +1,6 @@
 import { ClientSession } from "mongoose";
-import { Organization } from "../models/organization.model";
-import { TOrganization } from "../types/organization.type";
+import { Organization } from "../models/organization.model.js";
+import { TOrganization } from "../types/organization.type.js";
 
 export class OrganizationRepository {
   // ORGANIZATIONS

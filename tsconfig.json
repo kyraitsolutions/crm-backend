@@ -2,7 +2,7 @@
   "compilerOptions": {
     "ignoreDeprecations": "5.0",
     "target": "ES2022",
-    "module": "ES2022",
+    // "module": "ES2022",
     "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
@@ -11,14 +11,12 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "bundler",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    // "moduleResolution": "bundler",
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
   "include": ["src/**/*", "../../chatbot-script/utils/leadFieldMapper.ts", "../../crm-frontend/src/constants/permissions.ts"],
   "exclude": ["node_modules", "dist"]

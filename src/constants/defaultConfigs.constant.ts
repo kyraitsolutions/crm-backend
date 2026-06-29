@@ -64,6 +64,16 @@ export const DEFAULT_CONFIGS = [
         isDefault: true,
         order: 6,
       },
+      {
+        key: "converted",
+        label: "Converted",
+        color: "#22C55E",
+        system: true,
+        editable: true,
+        deletable: false,
+        isDefault: true,
+        order: 6,
+      },
     ],
   },
 
@@ -78,6 +88,7 @@ export const DEFAULT_CONFIGS = [
         label: "Open",
         system: true,
         deletable: false,
+        color: "#28a745",
         order: 1,
       },
 
@@ -86,6 +97,7 @@ export const DEFAULT_CONFIGS = [
         label: "Pending",
         system: true,
         deletable: false,
+        color: "#ffc107",
         order: 2,
       },
 
@@ -94,6 +106,7 @@ export const DEFAULT_CONFIGS = [
         label: "Closed",
         system: true,
         deletable: false,
+        color: "#dc3545",
         order: 3,
       },
     ],

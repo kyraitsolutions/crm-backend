@@ -1,10 +1,15 @@
 import mongoose, { ClientSession } from "mongoose";
+import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
+import { RbacRepository } from "../repositories/rbac.repository.js";
 import {
   NOT_ALLOWED_PERMISSIONS_ACCOUNT_MANGER,
   ROLES,
-} from "../config/permissions";
-import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto";
-import { RbacRepository } from "../repositories/rbac.repository";
+} from "../config/permissions.js";
+import { TRole } from "../types/roles-permissions.type.js";
+import {
+  TApiResponse,
+  TPaginatedResponse,
+} from "../types/api-response.type.js";
 
 export class RbacService {
   constructor(private rbacRepo: RbacRepository) {}
@@ -74,7 +79,9 @@ export class RbacService {
     roleName: string;
     permissions: string[];
     organizationId: string;
-  }) {
+  }): Promise<
+    TApiResponse<Pick<RoleResponseDto, "id" | "name" | "isSystemRole">>
+  > {
     const session = await mongoose.startSession();
 
     try {
@@ -105,7 +112,7 @@ export class RbacService {
       const permissionDocs =
         await this.rbacRepo.getPermissionsByKeys(permissions);
 
-      if (!permissionDocs.length) {
+      if (permissionDocs.length !== permissions.length) {
         throw new Error("Invalid permissions");
       }
 
@@ -120,9 +127,11 @@ export class RbacService {
       await session.commitTransaction();
 
       return {
-        id: role._id,
-        name: role.name,
-        isSystemRole: role.isSystemRole,
+        doc: {
+          id: role._id,
+          name: role.name,
+          isSystemRole: role.isSystemRole,
+        },
       };
     } catch (error) {
       console.log(error);
@@ -150,16 +159,24 @@ export class RbacService {
     return new RoleResponseDto(role);
   }
   // get all roles of organization
-  async getRolesByOrganization(orgId: string, currentRole?: { level: number }) {
+  async getRolesByOrganization(
+    orgId: string,
+    currentRole?: TRole,
+  ): Promise<TPaginatedResponse<RoleResponseDto>> {
     const roles = await this.rbacRepo.getRolesByOrganization(
       orgId,
       currentRole?.level,
     );
-    if (!roles) return [];
-    return roles.map((r) => new RoleResponseDto(r));
+
+    return {
+      docs: roles.map((r) => new RoleResponseDto(r)),
+    };
   }
 
-  async updateRole(roleId: string, data: UpdateRoleDto) {
+  async updateRole(
+    roleId: string,
+    data: UpdateRoleDto,
+  ): Promise<TApiResponse<{ id: string }>> {
     const session = await mongoose.startSession();
 
     try {
@@ -192,6 +209,10 @@ export class RbacService {
         const permissionDocs =
           await this.rbacRepo.getPermissionsByKeys(permissions);
 
+        if (permissionDocs.length !== permissions.length) {
+          throw new Error("Invalid permissions");
+        }
+
         await this.rbacRepo.deleteRolePermissions(roleId, session);
 
         const rolePermissions = permissionDocs.map((p) => ({
@@ -203,7 +224,11 @@ export class RbacService {
       }
 
       await session.commitTransaction();
-      return await this.getRoleById(roleId); // return updated role with permissions
+      return {
+        doc: {
+          id: roleId,
+        },
+      }; // return updated role with permissions
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -213,20 +238,41 @@ export class RbacService {
   }
 
   // delete role by id
-  async deleteRole(roleId: string) {
+  async deleteRole(roleId: string): Promise<TApiResponse<{ id: string }>> {
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
-      await this.rbacRepo.deleteRoleById(roleId, session);
+
+      const role = await this.rbacRepo.getRoleById(roleId);
+      if (!role) throw new Error("Role not found");
+
+      const deletedRole = await this.rbacRepo.deleteRoleById(roleId, session);
       await this.rbacRepo.deleteRolePermissions(roleId, session);
+
+      console.log(deletedRole);
       await session.commitTransaction();
+
+      return {
+        doc: {
+          id: deletedRole.id,
+        },
+      };
     } catch (error) {
       await session.abortTransaction();
       throw error;
     }
   }
   // PERMISSIONS RELATED METHODS
-  async getPermissionsByRole(roleId: string) {
-    return this.rbacRepo.getPermissionsByRole(roleId);
+  async getPermissionsByRole(
+    roleId: string,
+  ): Promise<TPaginatedResponse<string>> {
+    const role = await this.rbacRepo.getRoleById(roleId);
+    if (!role) throw new Error("Role not found");
+
+    const permissions = await this.rbacRepo.getPermissionsByRole(roleId);
+
+    return {
+      docs: permissions,
+    };
   }
 }

@@ -1,21 +1,21 @@
 // repositories/conversation.repository.ts
 
 import { ClientSession } from "mongoose";
-import { ConversationModel } from "../models/conversations.model";
-import { TConversation } from "../types/conversation.type";
+import { ConversationModel } from "../models/conversations.model.js";
+import { TConversation } from "../types/conversation.type.js";
 
-type CreateConversationPayload = {
-  accountId: string;
-  visitorId: string;
-  chatbotId?: string | null;
-  platform:
-    | "chatbot"
-    | "whatsapp"
-    | "instagram"
-    | "messenger"
-    | "telegram"
-    | "email";
-};
+// type CreateConversationPayload = {
+//   accountId: string;
+//   visitorId: string;
+//   chatbotId?: string | null;
+//   platform:
+//     | "chatbot"
+//     | "whatsapp"
+//     | "instagram"
+//     | "messenger"
+//     | "telegram"
+//     | "email";
+// };
 
 export class ConversationRepository {
   async countConversations(filter: any) {

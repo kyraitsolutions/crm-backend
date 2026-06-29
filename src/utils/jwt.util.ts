@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
-import { ENV } from "../constants/index.js";
+import { ENV } from "../constants/env.constants.js";
 
 dotenv.config();
 
