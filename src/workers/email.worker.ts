@@ -63,10 +63,11 @@ emailQueue.process("send-email-activity",async (job) => {
 
       // send email
       const result = await emailUtils.sendEmail(to, subject, personalizedHtml, undefined, fromEmail);
-      console.log("jkhj",result)
+      console.log("send email result",result)
       // update DB success
-      console.log(emailActivityId);
+      console.log("email activity id",emailActivityId);
       const messageId=result?.messageId??"";
+      console.log("Messageid",messageId)
       await emailRepository.updateEmailStatus(emailActivityId,"sent",messageId,null);
 
     } catch (error: any) {
