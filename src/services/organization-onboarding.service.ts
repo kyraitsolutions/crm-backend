@@ -13,7 +13,6 @@ import { RbacService } from "./rbac.service.js";
 import { UserService } from "./user.service.js";
 import { UserProfileService } from "./userprofile.service.js";
 import { TApiResponse } from "../types/api-response.type.js";
-import { CreateAccountDto } from "../dtos/account.dto.js";
 
 export class OrganizationOnboardingService {
   constructor(

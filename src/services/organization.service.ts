@@ -7,7 +7,6 @@ import {
 import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { TOrganizationMember } from "../types/organization.type.js";
 import { TeamRepository } from "../repositories/team.repository.js";
-import { TApiResponse } from "../types/api-response.type.js";
 
 export class OrganizationService {
   constructor(

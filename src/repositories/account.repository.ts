@@ -1,7 +1,6 @@
 import { ClientSession, FilterQuery } from "mongoose";
 import { AccountModel } from "../models/accounts.model.js";
 import { TAccount, TCreateAccount } from "../types/account.type.js";
-import { TApiResponse } from "../types/api-response.type.js";
 
 export class AccountRepository {
   async countDocuments(filter: FilterQuery<TAccount>): Promise<number> {

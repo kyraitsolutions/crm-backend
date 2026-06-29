@@ -88,6 +88,8 @@ export class LeadRespository {
       { upsert: true, new: true },
     );
 
+    console.log(contact)
+
     return savedLead;
   }
 

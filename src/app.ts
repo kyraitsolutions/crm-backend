@@ -6,8 +6,8 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
-import { seedPermissions } from "./scripts/seed/seedPermissions.js";
-import { config } from "./config/index.js";
+// import { seedPermissions } from "./scripts/seed/seedPermissions.js";
+// import { config } from "./config/index.js";
 
 export class App {
   public app: Application;
