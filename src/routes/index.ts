@@ -21,6 +21,7 @@ import { AutomationRouter } from "./automation.routes.js";
 import { ActivityLogRouter } from "./activityLog.route.js";
 import { IntegrationRouter } from "../modules/integrations/routes/integration.routes.js";
 import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
+import { WebhookRouter } from "../modules/webhook/routes/webhook.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -47,6 +48,7 @@ export class AppRoutes {
   private activityLogRouter: ActivityLogRouter;
   private integrationRouter: IntegrationRouter;
   private whatsappRouter: WhatsappRouter;
+  private webhookRouter:WebhookRouter;
 
   private router: Router;
 
@@ -78,6 +80,7 @@ export class AppRoutes {
     this.activityLogRouter = new ActivityLogRouter();
     this.integrationRouter = new IntegrationRouter();
     this.whatsappRouter = new WhatsappRouter();
+    this.webhookRouter=new WebhookRouter();
     this.router = Router();
     this.initializeRoutes();
   }
@@ -109,6 +112,7 @@ export class AppRoutes {
     this.router.use("/activity-logs", this.activityLogRouter.getRouter());
     this.router.use("/integration", this.integrationRouter.getRouter());
     this.router.use("/whatsapp", this.whatsappRouter.getRouter());
+    this.router.use("/webhook",this.webhookRouter.getRouter())
   }
 
   public getRouter(): Router {
