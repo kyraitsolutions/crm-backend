@@ -1,5 +1,5 @@
-import { WebhookTokenModel } from "../../../models/webhookToken.model.js";
 import { Types } from 'mongoose';
+import { WebhookTokenModel } from '../models/webhookToken.model.js';
 
 
 export class WebhookRepository {

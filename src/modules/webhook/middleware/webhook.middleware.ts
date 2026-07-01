@@ -1,6 +1,6 @@
 import { createHash } from "crypto";
 import { NextFunction, Request, Response } from "express";
-import { WebhookTokenModel } from "../../../models/webhookToken.model.js";
+import { WebhookTokenModel } from "../models/webhookToken.model.js";
 
 export class WebhookMiddleware {
     static async authenticate(req: Request, res: Response, next: NextFunction): Promise<any> {
