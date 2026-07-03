@@ -751,3 +751,5 @@
 {"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-06-21 22:13:18"}
 {"level":"error","message":"Error creating team member: Error: Accounts are required wiht accountId and roleId","timestamp":"2026-06-22 21:23:24"}
 {"level":"error","message":"Error creating team member: Error: Accounts are required wiht accountId and roleId","timestamp":"2026-06-22 21:23:35"}
+{"level":"error","message":"Error creating team member: Error: User already assigned","timestamp":"2026-07-03 16:37:11"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-07-03 16:44:27"}

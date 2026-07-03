@@ -725,3 +725,11 @@
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 21:07:39"}
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 21:15:25"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-07-01 21:52:51"}
+{"level":"error","message":"Error creating team member: Error: User already assigned","timestamp":"2026-07-03 16:37:11"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh200223@gmail.com","timestamp":"2026-07-03 16:37:26"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-07-03 16:44:27"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh200222@gmail.com","timestamp":"2026-07-03 16:50:57"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh@gmail.com","timestamp":"2026-07-03 16:54:49"}
+{"level":"info","message":"Welcome email queued for solutions@gmail.com","timestamp":"2026-07-03 16:55:53"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh200222@gmail.com","timestamp":"2026-07-03 17:53:28"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-03 17:56:48"}
