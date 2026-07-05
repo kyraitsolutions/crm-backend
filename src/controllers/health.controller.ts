@@ -20,7 +20,7 @@ export class HealthController {
 
             let redisStatus = "down";
             try {
-                const pong = await redisClient.ping();
+                const pong = await (redisClient as any)?.ping?.();
                 redisStatus= pong==="PONG"?"up":"down";
             } catch (error) {
                 redisStatus = "down";
