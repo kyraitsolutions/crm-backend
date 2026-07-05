@@ -14,6 +14,7 @@ dotenv.config();
 
 export const ENV = {
   APP: {
+    APP_VERSION:process.env.APP_VERSION||"v1.0.0",
     PORT: process.env.PORT || "3000",
     NODE_ENV: process.env.NODE_ENV || "development",
   },
