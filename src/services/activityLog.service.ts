@@ -9,6 +9,7 @@ export class ActivityLogService {
   private repository = new ActivityLogRepository();
 
   async getActivityLogs(accountId: string, query: TActivityLogQuery) {
+    console.log("query", query);
     const { page = 1, limit = 50, filters } = query;
 
     const mongoFilter: FilterQuery<TActivityLog> = {
@@ -82,11 +83,7 @@ export class ActivityLogService {
     accountId,
     organizationId,
   }: Partial<TActivityLog & { oldDoc: any; newDoc: any }>) {
-    console.log("oldDoc", oldDoc, "newDoc", newDoc);
-
     const changes = getObjectChanges(oldDoc, newDoc);
-
-    console.log("changes", changes);
 
     if (Object.keys(changes).length === 0) {
       return;

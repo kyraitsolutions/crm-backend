@@ -9,7 +9,9 @@ export default class ActivityLogController {
   getActivityLogs = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId } = req.params;
-      const query = parseQueryParams(req.query);
+      const query = parseQueryParams(req.query, {
+        allowedFilters: ["entityType", "entityId", "action"],
+      });
 
       const result = await this.service.getActivityLogs(String(accountId), {
         ...query,
