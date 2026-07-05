@@ -151,7 +151,7 @@ export class AccountRouter {
       this.formController.deleteFormId.bind(this.formController),
     );
 
-    //Leads
+    //TODO: Leads
     this.router.post(
       "/:accountId/leads",
       AuthMiddleware.authenticate,
@@ -174,15 +174,7 @@ export class AccountRouter {
       "/:accountId/lead",
       AuthMiddleware.authenticate,
       requirePermission("leads.create"),
-      this.leadController.createWebhookLead.bind(this.leadController),
-    );
-
-    // TODO: Lead Webhook
-    this.router.post(
-      "/:accountId/lead/webhook/create",
-      AuthMiddleware.authenticate,
-      // requirePermission("leads.create"),
-      this.leadController.createWebhookLead.bind(this.leadController),
+      this.leadController.createLead.bind(this.leadController),
     );
 
     this.router.get(

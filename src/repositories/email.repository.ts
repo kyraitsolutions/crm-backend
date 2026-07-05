@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import { ContactModel } from "../models/contact.model.js";
+import { EmailActivity } from "../models/emailActivity.model.js";
 import { EmailTemplateModel } from "../models/emailTemplate.js";
 
 export class EmailRepository {
@@ -6,6 +8,31 @@ export class EmailRepository {
     return await ContactModel.find({ accountId })
       .sort({ createdAt: -1 })
       .lean();
+  }
+
+  async updateEmailStatus(emailActivityId: string, status: string, messageId: string, error: any): Promise<any> {
+    console.log("Mongo state:", mongoose.connection.readyState);
+    console.log("EmailActivityId:", emailActivityId);
+    if (status === "sent"&&messageId) {
+      return await EmailActivity.findByIdAndUpdate(
+        emailActivityId,
+        {
+          status: status,
+          sentAt: new Date(),
+          messageId: messageId,
+        }
+      );
+    }
+    else {
+      return await EmailActivity.findByIdAndUpdate(
+        emailActivityId,
+        {
+          status: "failed",
+          error: error.message,
+        }
+      );
+    }
+
   }
 
   async deleteSubscriber(

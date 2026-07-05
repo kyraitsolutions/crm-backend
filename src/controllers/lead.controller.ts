@@ -75,25 +75,6 @@ export class LeadController {
     }
   };
 
-  // createLead = async (req: Request, res: Response, next: NextFunction) => {
-  //   try {
-  //     const { accountId, formId } = req.params;
-  //     const leadData = req.body;
-
-  //     const lead = await this.leadService.createLead({
-  //       ...leadData,
-  //       accountId: accountId,
-  //       source: {
-  //         name: "webform",
-  //         url: "https://www.google.com",
-  //         formId: formId,
-  //       },
-  //     });
-  //     httpResponse(req, res, 200, "Lead create successfully", lead);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // };
   createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId } = req.params;
@@ -121,11 +102,7 @@ export class LeadController {
     }
   };
 
-  createWebhookLead = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
+  createLead = async (req: Request,res: Response,next: NextFunction) => {
     try {
       console.log(req.user);
       const { accountId } = req.params;
@@ -139,8 +116,8 @@ export class LeadController {
         accountId: String(accountId),
         source: {
           ...leadDto.source,
-          name: leadDto.source.name || "webhook",
-          url: leadDto.source.url || "https://www.google.com",
+          name: leadDto.source.name,
+          url: leadDto.source.url,
         },
         meta: {
           ...meta,

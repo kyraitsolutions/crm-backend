@@ -240,13 +240,7 @@
 {"level":"info","message":"Welcome email queued for devhem2611@gmail.com","timestamp":"2026-05-30 10:25:27"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-30 11:20:55"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-05-31 12:39:40"}
-<<<<<<< HEAD
-<<<<<<< HEAD
 {"level":"info","message":"Welcome email queued for sushilkc2611@gmail.com","timestamp":"2026-05-31 18:10:06"}
-=======
-=======
-{"level":"info","message":"Welcome email queued for sushilkc2611@gmail.com","timestamp":"2026-05-31 18:10:06"}
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 12:55:41"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 13:02:58"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 13:03:40"}
@@ -265,14 +259,7 @@
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 14:30:22"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 15:39:38"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 18:07:36"}
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> 1f065b037e3b98a554a74be35ac3eb6156041a3d
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 21:35:08"}
-=======
-=======
-{"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-05-31 21:35:08"}
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-01 01:56:04"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-03 00:57:02"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-03 00:57:05"}
@@ -289,10 +276,6 @@
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-06 17:57:19"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-06 20:16:25"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-06 21:14:33"}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-07 11:01:31"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-07 14:18:01"}
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-07 14:19:09"}
@@ -376,11 +359,6 @@
 {"level":"info","message":"Welcome email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-10 06:18:19"}
 {"level":"info","message":"📨 Email campaign queued | account=6a28993ff6e8220710629945 | emails=1","timestamp":"2026-06-10 06:24:59"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-10 06:32:51"}
-<<<<<<< HEAD
-=======
->>>>>>> a8f410d6900df94b60edeb4425ca851250398150
-=======
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
 {"level":"info","message":"Task assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-08 23:26:38"}
 {"level":"info","message":"Task assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-08 23:31:00"}
 {"code":"EAUTH","command":"AUTH PLAIN","level":"error","message":"Email service connection failed: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-8428706fa9asm18326464b3a.45 - gsmtp","response":"535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-8428706fa9asm18326464b3a.45 - gsmtp","responseCode":535,"stack":"Error: Invalid login: 535-5.7.8 Username and Password not accepted. For more information, go to\n535 5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-8428706fa9asm18326464b3a.45 - gsmtp\n    at SMTPConnection._formatError (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:809:19)\n    at SMTPConnection._actionAUTHComplete (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:1595:34)\n    at SMTPConnection.<anonymous> (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:556:26)\n    at SMTPConnection._processResponse (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:993:20)\n    at SMTPConnection._onData (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:774:14)\n    at SMTPConnection._onSocketData (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:195:44)\n    at TLSSocket.emit (node:events:519:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)\n    at Readable.push (node:internal/streams/readable:392:5)","timestamp":"2026-06-08 23:33:08"}
@@ -545,16 +523,10 @@
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-09 23:24:56"}
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-09 23:29:20"}
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-09 23:48:14"}
-<<<<<<< HEAD
-<<<<<<< HEAD
 {"level":"info","message":"Welcome email queued for kyraitsolutions@gmail.com","timestamp":"2026-06-13 11:33:30"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-14 14:26:29"}
-=======
->>>>>>> 34d66f1fc040608cfbcf321a989449f7ba90c013
-=======
 {"level":"info","message":"Welcome email queued for kyraitsolutions@gmail.com","timestamp":"2026-06-13 11:33:30"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-14 14:26:29"}
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
 {"level":"info","message":"📨 Email campaign queued | account=6a28993ff6e8220710629945 | emails=1","timestamp":"2026-06-11 09:50:17"}
 {"level":"error","message":"Email job 573 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-11 09:50:33"}
 {"level":"error","message":"Email job 581 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-11 09:50:38"}
@@ -578,10 +550,7 @@
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-13 20:28:46"}
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-13 20:31:05"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-13 20:38:11"}
-<<<<<<< HEAD
->>>>>>> e2ce7731fdb5de03c3e89bcff0944a114d0defae
 {"level":"info","message":"Welcome email queued for devhem2611@gmail.com","timestamp":"2026-06-19 21:10:06"}
-=======
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-14 12:06:50"}
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-14 12:07:21"}
 {"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-14 12:09:50"}
@@ -610,7 +579,46 @@
 {"level":"error","message":"Email job 613 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-17 16:03:16"}
 {"level":"error","message":"Email job 613 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-17 16:03:42"}
 {"level":"error","message":"Email job 613 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-17 16:04:12"}
->>>>>>> 281f1785b98d7acea7d6eade85d3cba47e32c523
+{"code":"ESOCKET","command":"CONN","level":"error","library":"SSL routines","message":"Email service connection failed: A8530000:error:0A00010B:SSL routines:tls_validate_record_header:wrong version number:openssl\\ssl\\record\\methods\\tlsany_meth.c:85:\n","reason":"wrong version number","stack":"Error: A8530000:error:0A00010B:SSL routines:tls_validate_record_header:wrong version number:openssl\\ssl\\record\\methods\\tlsany_meth.c:85:\n","timestamp":"2026-06-27 10:23:07"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 10:26:03"}
+{"level":"error","message":"Email job 648 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:28:50"}
+{"level":"error","message":"Email job 648 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:29:19"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 10:32:38"}
+{"level":"error","message":"Email job 649 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:35:25"}
+{"level":"error","message":"Email job 649 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:37:07"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 10:47:04"}
+{"level":"error","message":"Email job 650 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:47:29"}
+{"level":"error","message":"Email job 650 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:47:56"}
+{"level":"error","message":"Email job 650 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 10:48:26"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 22:38:52"}
+{"level":"error","message":"Email job 655 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:39:18"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 22:39:22"}
+{"level":"error","message":"Email job 655 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:39:45"}
+{"level":"error","message":"Email job 656 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:39:46"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 22:40:07"}
+{"level":"error","message":"Email job 656 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:40:12"}
+{"level":"error","message":"Email job 655 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:40:15"}
+{"level":"error","message":"Email job 657 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:40:32"}
+{"level":"error","message":"Email job 656 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:40:43"}
+{"level":"error","message":"Email job 657 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:41:00"}
+{"level":"error","message":"Email job 657 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 22:41:30"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 23:04:04"}
+{"level":"error","message":"Email job 658 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:04:29"}
+{"level":"error","message":"Email job 658 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:04:55"}
+{"level":"error","message":"Email job 658 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:05:26"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 23:07:28"}
+{"level":"error","message":"Email job 659 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:07:53"}
+{"level":"error","message":"Email job 659 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:08:22"}
+{"level":"error","message":"Email job 659 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:08:53"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 23:19:13"}
+{"level":"error","message":"Email job 660 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:19:38"}
+{"level":"error","message":"Email job 660 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:20:05"}
+{"level":"error","message":"Email job 660 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:20:36"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 23:21:06"}
+{"level":"error","message":"Email job 661 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:21:30"}
+{"level":"error","message":"Email job 661 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:21:57"}
+{"level":"error","message":"Email job 661 failed: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms","stack":"MongooseError: Operation `emailactivities.findOneAndUpdate()` buffering timed out after 10000ms\n    at Timeout.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\collection.js:185:23)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)","timestamp":"2026-06-27 23:22:27"}
+{"level":"info","message":"📨 Email campaign queued | account=6a3795592aa62a7de316ce48 | emails=1","timestamp":"2026-06-27 23:35:40"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-06-20 16:34:25"}
 {"level":"error","message":"Error creating team member: ValidationError: roleId: Cast to ObjectId failed for value \"\" (type string) at path \"roleId\" because of \"BSONError\"","timestamp":"2026-06-21 10:34:54"}
 {"level":"error","message":"Error creating team member: Error: Email is required","timestamp":"2026-06-21 10:37:17"}
@@ -702,3 +710,28 @@
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-27 11:06:21"}
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-27 12:32:30"}
 {"level":"info","message":"Lead assignment email queued for sushilkc2611@gmail.com","timestamp":"2026-06-27 12:32:31"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-06-29 23:34:10"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 21:07:10"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 21:08:31"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 21:12:30"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 21:19:35"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 23:15:06"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-06-30 23:15:53"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 00:41:30"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 09:52:40"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 09:56:32"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 10:10:43"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 10:11:02"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 21:07:39"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-01 21:15:25"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-01 21:52:51"}
+{"level":"error","message":"Error creating team member: Error: User already assigned","timestamp":"2026-07-03 16:37:11"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh200223@gmail.com","timestamp":"2026-07-03 16:37:26"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-07-03 16:44:27"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh200222@gmail.com","timestamp":"2026-07-03 16:50:57"}
+{"level":"info","message":"Welcome email queued for abhijeetsingh@gmail.com","timestamp":"2026-07-03 16:54:49"}
+{"level":"info","message":"Welcome email queued for solutions@gmail.com","timestamp":"2026-07-03 16:55:53"}
+{"level":"info","message":"Lead assignment email queued for abhijeetsingh200222@gmail.com","timestamp":"2026-07-03 17:53:28"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-03 17:56:48"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-04 18:58:13"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-05 13:39:06"}

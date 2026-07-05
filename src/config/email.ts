@@ -11,7 +11,7 @@ export class Transporter {
     this.transporter = nodemailer.createTransport({
       host: ENV.SMTP.SMTP_HOST,
       port: parseInt(ENV.SMTP.SMTP_PORT || "587"),
-      secure: true, // true for 465, false for other ports
+      secure: false, // true for 465, false for other ports
       auth: {
         user: ENV.SMTP.SMTP_USER,
         pass: ENV.SMTP.SMTP_PASS,
@@ -24,6 +24,7 @@ export class Transporter {
   private async verifyConnection(): Promise<void> {
     try {
       await this.transporter.verify();
+      console.log("SMTP Verified");
       logger.info("Email service connection verified successfully");
     } catch (error) {
       logger.error("Email service connection failed:", error);

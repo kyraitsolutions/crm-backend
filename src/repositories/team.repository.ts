@@ -1,9 +1,6 @@
 import mongoose, { ClientSession } from "mongoose";
 // import { ROLES } from "../config/permissions.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
-import { UserAccount } from "../models/user.accounts.model.js";
-import { UserModel } from "../models/user.model.js";
-import { UserProfileModel } from "../models/userProfile.model.js";
 import { TOrganizationMember } from "../types/organization.type.js";
 
 export class TeamRepository {

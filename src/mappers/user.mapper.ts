@@ -4,7 +4,7 @@ import { TUser } from "../types/user.type.js";
 export class UserMapper {
   static toDto(user: TUser): UserDto {
     return new UserDto({
-      _id: user.id,
+      id: user.id,
       email: user.email,
       profilePicture: (user as TUser & { profilePicture?: string })
         .profilePicture,

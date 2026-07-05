@@ -14,6 +14,7 @@ dotenv.config();
 
 export const ENV = {
   APP: {
+    APP_VERSION:process.env.APP_VERSION||"v1.0.0",
     PORT: process.env.PORT || "3000",
     NODE_ENV: process.env.NODE_ENV || "development",
   },
@@ -21,6 +22,7 @@ export const ENV = {
   AUTH: {
     JWT_SECRET: process.env.JWT_SECRET!,
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN!,
+    JWT_ALGORITHM: process.env.JWT_ALGORITHM!,
   },
 
   DB: {
@@ -77,6 +79,15 @@ export const ENV = {
     SMTP_USER: process.env.SMTP_USER!,
     SMTP_PASS: process.env.SMTP_PASS!,
   },
+
+  REDIS:{
+    REDIS_HOST:process.env.REDIS_HOST!,
+    REDIS_PORT:process.env.REDIS_PORT!,
+    REDIS_PASS:process.env.REDIS_PASS!
+  },
+  QUEUE:{
+    QUEUE_CONCURRENCY:process.env.QUEUE_CONCURRENCY!
+  }
 };
 
 // import * as dotenv from "dotenv";

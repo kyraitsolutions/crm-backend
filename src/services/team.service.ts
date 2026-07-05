@@ -5,7 +5,7 @@ import {
   CreateOrganizationMemberDto,
   OrganizationMemberResponseDto,
 } from "../dtos/organization.dto.js";
-import { CreateTeamMemberDto, TeamMemberDto } from "../dtos/team.dto.js";
+import { CreateTeamMemberDto } from "../dtos/team.dto.js";
 // import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { TeamRepository } from "../repositories/team.repository.js";
 import { UserAccountRepository } from "../repositories/user-account.repository.js";

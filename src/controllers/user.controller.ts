@@ -8,41 +8,38 @@ import httpResponse from "../utils/http.response.js";
 import { TRole } from "../types/roles-permissions.type.js";
 
 export class UserController {
-  register = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  register = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
+      console.log("Register request body:", req.body); // Log the request body for debugging
       const registerDto = new RegisterDto(req.body);
       const result = await userService.register(registerDto);
-      res.status(201).json(result);
+      httpResponse(req, res, 201, "User registered successfully", {
+        doc: result
+      });
+      // res.status(201).json(result);
     } catch (error) {
       next(error);
     }
   };
 
-  login = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  login = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const loginDto = new LoginDto(req.body);
       const result = await userService.login(loginDto);
-      res.status(200).json(result);
+      httpResponse(req, res, 200, "User logged in successfully", {
+        doc: result
+      });
+      // res.status(200).json(result);
     } catch (error) {
       next(error);
     }
   };
 
-  googleCallback = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  googleCallback = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const user = req.user as any;
+
+      console.log("Google callback user:", user); // Log the user object for debugging
       const token = await userService.generateToken(user.id, user.email);
 
       const platform = req.query.state;
