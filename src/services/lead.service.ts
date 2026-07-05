@@ -307,7 +307,7 @@ export class LeadService {
     leadId: string,
     lead: Lead,
     currentUser: any,
-  ): Promise<Lead | null> {
+  ): Promise<TApiResponse<Lead | null>> {
     const existingLead = await this.leadRepository.getLeadById(
       accountId,
       leadId,
@@ -362,7 +362,9 @@ export class LeadService {
       newDoc: updatedLead,
     });
 
-    return updatedLead;
+    return {
+      doc: updatedLead,
+    };
   }
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);

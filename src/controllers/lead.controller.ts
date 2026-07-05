@@ -62,27 +62,6 @@ export class LeadController {
     }
   };
 
-  updateLead = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const { accountId, leadId } = req.params;
-      const leadData = req.body;
-
-      const currentUser = {
-        ...req.user,
-      };
-
-      const lead = await this.leadService.updateLead(
-        accountId,
-        leadId,
-        leadData,
-        currentUser,
-      );
-      httpResponse(req, res, 200, "Lead updated successfully", lead);
-    } catch (error) {
-      next(error);
-    }
-  };
-
   getLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId, leadId } = req.params;
@@ -228,6 +207,27 @@ export class LeadController {
       }
     }
     return null;
+  };
+
+  updateLead = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { accountId, leadId } = req.params;
+      const leadData = req.body;
+
+      const currentUser = {
+        ...req.user,
+      };
+
+      const result = await this.leadService.updateLead(
+        accountId,
+        leadId,
+        leadData,
+        currentUser,
+      );
+      httpResponse(req, res, 200, "Lead updated successfully", result);
+    } catch (error) {
+      next(error);
+    }
   };
 
   updateLeadWs = async (
