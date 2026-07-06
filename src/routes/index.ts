@@ -81,7 +81,6 @@ export class AppRoutes {
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();
     this.integrationRouter = new IntegrationRouter();
-    this.whatsappRouter = new WhatsappRouter();
     this.webhookRouter=new WebhookRouter();
     this.healthRouter = new HealthRouter();
     this.router = Router();
@@ -107,7 +106,6 @@ export class AppRoutes {
 
     this.router.use("/notifications", this.notificationRouter.getRouter());
     this.router.use("/contacts", this.contactRouter.getRouter());
-    this.router.use("/whatsapp", this.whatsappRouter.getRouter());
     this.router.use("/configuration", this.configurationRouter.getRouter());
     this.router.use("/notification", this.notificationRouter.getRouter());
     this.router.use("/contact", this.contactRouter.getRouter());

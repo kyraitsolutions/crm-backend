@@ -115,12 +115,16 @@ export class UpdateUserDto {
 }
 
 export class RegisterDto {
+  firstName?:string
+  lastName?:string
   email: string;
   password: string;
 
-  constructor(data: { email: string; password: string }) {
+  constructor(data: { firstName:string,lastName:string, email: string; password: string }) {
     if (!data.email) throw new Error("Email is required");
     if (!data.password) throw new Error("Password is required");
+    this.firstName=data.firstName;
+    this.lastName=data.lastName;
     this.email = data.email;
     this.password = data.password;
   }

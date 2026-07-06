@@ -13,12 +13,15 @@ export class CreateOrganizationDto {
     "phone",
     "privacyPolicy",
     "terms",
+    "taxId",
+    "companySize",
+    "currency"
   ];
 
   firstName?: string;
   lastName?: string;
   name: string;
-  email: string;
+  email?: string;
   slug: string;
   createdBy: string;
   website?: string;
@@ -30,6 +33,9 @@ export class CreateOrganizationDto {
     line1: string;
     line2: string;
   };
+  taxId?:string;
+  companySize?:string;
+  currency?:string;
   industry?: string;
   phone?: string;
   privacyPolicy?: string;
@@ -44,13 +50,13 @@ export class CreateOrganizationDto {
       throw new Error(`Unknown fields: ${unknownFields.join(", ")}`);
     }
 
-    if (!data.firstName) throw new Error("firstName is required");
+    // if (!data.firstName) throw new Error("firstName is required");
     if (!data.slug) throw new Error("Organization slug is required");
     if (!data.name) throw new Error("Organization name is required");
-    if (!data.email) throw new Error("Organization email is required");
+    // if (!data.email) throw new Error("Organization email is required");
 
     this.name = data.name;
-    this.email = data.email;
+    // this.email = data.email;
     this.slug = data.slug;
     this.createdBy = data.createdBy;
 
@@ -86,6 +92,9 @@ export class OrganizationResponseDto {
     line1?: string;
     line2?: string;
   };
+  taxId?:string;
+  companySize?:string;
+  currency?:string;
   createdBy: string;
   terms?: string;
   privacyPolicy?: string;
@@ -105,7 +114,11 @@ export class OrganizationResponseDto {
     this.phone = data.phone;
     this.createdBy = data.createdBy;
     this.terms = data.terms;
+    this.companySize = data.companySize;
+    this.currency = data.currency;
+    this.taxId = data.taxId;
     this.privacyPolicy = data.privacyPolicy;
+    
 
     if (data?.address && Object.keys(data.address).length > 0) {
       this.address = data.address;

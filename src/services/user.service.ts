@@ -31,18 +31,43 @@ export class UserService {
 
     const hashedPassword = await PasswordUtil.hash(dto?.password as string);
 
+     // find role of Admin
+    const role = await this.userRepository.findRole("ADMIN");
+
+    // 3. New user → create user
     const userData = {
-      email: dto.email,
+      email:dto.email,
+      googleId:"",
       password: hashedPassword,
+      role: role?._id,
     };
 
-    const user = await this.userRepository.create(userData);
+    // 4. Create user
+    const userDataPayloadDto = new CreateUserDto(userData);
+    const newUser = await this.userRepository.create(userDataPayloadDto);
 
-    const userDto = user;
+    console.log("New users",newUser)
+
+    // 5. Create user profile
+    const userProfileDto = new CreateUserProfileDto({
+      userId: newUser?.id as string,
+      firstName:dto.firstName,
+      lastName:dto.lastName,
+    });
+
+    await this.userProfileRepository.create(userProfileDto);
+
+    await this.subscriptionRepository.create(
+      newUser.id as string,
+      SubscriptionPlan.FREE,
+    );
+
+
+    const userDto = newUser;
 
     const token = JwtUtil.sign({
-      userId: user?.id as string,
-      email: user?.email as string,
+      userId: newUser?.id as string,
+      email: newUser?.email as string,
     });
 
     return {
