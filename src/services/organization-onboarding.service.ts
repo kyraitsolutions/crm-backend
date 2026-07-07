@@ -64,7 +64,7 @@ export class OrganizationOnboardingService {
       await this.accountService.createAccount(
         data.createdBy,
         String(organization?.id),
-        { accountName: data.name, email: data.email },
+        { accountName: data.name, email: data.email??"" },
         session,
       );
 
