@@ -17,7 +17,7 @@ export class SubscriptionRepository {
     const expiresAt = new Date(startedAt);
     expiresAt.setDate(expiresAt.getDate() + plan.durationDays);
 
-    console.log("dsfs",userId,planId,startedAt,expiresAt,);
+    console.log("Log",userId,planId,startedAt,expiresAt,);
 
     const subscription = new UserSubscription({
       userId,
