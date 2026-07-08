@@ -1,4 +1,4 @@
-import { ClientSession } from "mongoose";
+import mongoose, { ClientSession } from "mongoose";
 import {
   CreateUserDto,
   RegisterDto,
@@ -20,60 +20,74 @@ export class UserService {
     private userProfileRepository: UserProfileRepository,
     private subscriptionRepository: SubscriptionRepository,
     private emailService: EmailService,
-  ) {}
+  ) { }
 
   async register(dto: RegisterDto): Promise<TUser> {
-    const existingUser = await this.userRepository.findByEmail(dto.email);
+    const session = await mongoose.startSession();
 
-    if (existingUser) {
-      throw new Error("User with this email already exists");
+    try {
+      session.startTransaction();
+      const existingUser = await this.userRepository.findByEmail(dto.email);
+
+      console.log("dto", dto)
+
+      if (existingUser) {
+        throw new Error("User with this email already exists");
+      }
+
+      const hashedPassword = await PasswordUtil.hash(dto?.password as string);
+
+      // find role of Admin
+      const role = await this.userRepository.findRole("ADMIN");
+
+      // 3. New user → create user
+      const userData = {
+        email: dto.email,
+        password: hashedPassword,
+        role: role?._id,
+      };
+
+      // 4. Create user
+      const userDataPayloadDto = new CreateUserDto(userData);
+      const newUser = await this.userRepository.create(userDataPayloadDto, session);
+
+      console.log("New users", newUser)
+
+      // 5. Create user profile
+      const userProfileDto = new CreateUserProfileDto({
+        userId: newUser?.id as string,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+      });
+
+      await this.userProfileRepository.create(userProfileDto, session);
+
+      await this.subscriptionRepository.create(
+        newUser.id as string,
+        SubscriptionPlan.FREE,
+        session
+      );
+
+      await session.commitTransaction();
+
+      const userDto = newUser;
+
+      const token = JwtUtil.sign({
+        userId: newUser?.id as string,
+        email: newUser?.email as string,
+      });
+
+      return {
+        ...userDto,
+        token,
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    }finally{
+      session.endSession();
     }
 
-    const hashedPassword = await PasswordUtil.hash(dto?.password as string);
-
-     // find role of Admin
-    const role = await this.userRepository.findRole("ADMIN");
-
-    // 3. New user → create user
-    const userData = {
-      email:dto.email,
-      googleId:"",
-      password: hashedPassword,
-      role: role?._id,
-    };
-
-    // 4. Create user
-    const userDataPayloadDto = new CreateUserDto(userData);
-    const newUser = await this.userRepository.create(userDataPayloadDto);
-
-    console.log("New users",newUser)
-
-    // 5. Create user profile
-    const userProfileDto = new CreateUserProfileDto({
-      userId: newUser?.id as string,
-      firstName:dto.firstName,
-      lastName:dto.lastName,
-    });
-
-    await this.userProfileRepository.create(userProfileDto);
-
-    await this.subscriptionRepository.create(
-      newUser.id as string,
-      SubscriptionPlan.FREE,
-    );
-
-
-    const userDto = newUser;
-
-    const token = JwtUtil.sign({
-      userId: newUser?.id as string,
-      email: newUser?.email as string,
-    });
-
-    return {
-      ...userDto,
-      token,
-    };
   }
   async login(dto: TUserLogin): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);

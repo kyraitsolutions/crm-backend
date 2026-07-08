@@ -12,12 +12,15 @@ export class UserController {
     try {
       console.log("Register request body:", req.body); // Log the request body for debugging
       const registerDto = new RegisterDto(req.body);
+      console.log("register Dto",registerDto);
       const result = await userService.register(registerDto);
+
       httpResponse(req, res, 201, "User registered successfully", {
         doc: result
       });
       // res.status(201).json(result);
     } catch (error) {
+      console.log(error)
       next(error);
     }
   };

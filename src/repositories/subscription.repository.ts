@@ -1,3 +1,4 @@
+import { ClientSession } from "mongoose";
 import { Plan, UserSubscription } from "../models/subscription.model.js";
 
 export class SubscriptionRepository {
@@ -5,7 +6,7 @@ export class SubscriptionRepository {
     return await Plan.find();
   }
 
-  async create(userId: string, planId: string): Promise<any> {
+  async create(userId: string, planId: string, session?: ClientSession): Promise<any> {
     const plan = await Plan.findById(planId).select("durationDays");
 
     if (!plan) {
@@ -16,12 +17,15 @@ export class SubscriptionRepository {
     const expiresAt = new Date(startedAt);
     expiresAt.setDate(expiresAt.getDate() + plan.durationDays);
 
-    return await UserSubscription.create({
+    console.log("dsfs",userId,planId,startedAt,expiresAt,);
+
+    const subscription = new UserSubscription({
       userId,
       planId,
       startedAt,
       expiresAt,
       status: "active",
     });
+    return session? await subscription.save({session}):await subscription.save();
   }
 }
