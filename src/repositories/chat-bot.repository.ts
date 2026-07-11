@@ -134,7 +134,6 @@ export class ChatbotRepository {
   // }
 
   async findChatbotWithFlow(accountId: string, chatbotId: string) {
-    console.log("aaya hai bhai ke baat hogaye");
     const chatbotWithFlow = await ChatbotModel.aggregate([
       {
         $match: {
@@ -193,8 +192,6 @@ export class ChatbotRepository {
         },
       },
     ]);
-
-    console.log("chatbotWithFlow", chatbotWithFlow);
 
     return chatbotWithFlow[0];
   }

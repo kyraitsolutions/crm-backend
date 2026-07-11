@@ -64,6 +64,7 @@ export class ChatBotService {
       accountId,
       chatbotId,
     );
+    // return chatbotWithFlow;
     return new ChatbotWithFlowDto(chatbotWithFlow);
   }
 

@@ -26,13 +26,9 @@ export class AuthMiddleware {
           }).populate("roleId", "name level")
         )?.toJSON();
 
-        console.log("organizationMember", organizationMember);
-
         const userProfile = await UserProfileModel.findOne({
           userId: user.id,
         }).populate("userId", "email");
-
-        console.log("userProfile", userProfile);
 
         req.user = {
           id: user.id as string,
