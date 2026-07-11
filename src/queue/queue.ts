@@ -6,9 +6,7 @@ dotenv.config();
 // Create queues
 const emailQueue = new Queue("email processing", {
   redis: {
-    host:
-      process.env.REDIS_HOST ||
-      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
+    host:process.env.REDIS_HOST ||"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
     port: parseInt(process.env.REDIS_PORT || "14482"),
     password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH", // this must be correct
   },

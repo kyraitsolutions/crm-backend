@@ -190,7 +190,4 @@ const WhatsAppAccountSchema = new Schema(
   },
 );
 
-export const WhatsAppAccountModel = model(
-  "WhatsAppAccount",
-  WhatsAppAccountSchema,
-);
+export const WhatsAppAccountModel = model("WhatsAppAccount",WhatsAppAccountSchema);

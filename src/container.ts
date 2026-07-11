@@ -26,13 +26,13 @@ import { ContactService } from "./services/contact.service.js";
 import { ContactRepository } from "./repositories/contact.repository.js";
 import { ChatFlowService } from "./services/chatflow.service.js";
 import { ChatFlowRepository } from "./repositories/chatflow.repository.js";
-import { WhatsappService } from "./services/whatsapp.service.js";
 import { WhatsappRepository } from "./repositories/whatsapp.respository.js";
 import { ConfigRepository } from "./repositories/config.repository.js";
 import { ConfigBootstrapService } from "./services/configBootstrap.service.js";
 import { SubscriptionService } from "./services/subscription.service.js";
 import { UserRepository } from "./repositories/user.repository.js";
 import { UserService } from "./services/user.service.js";
+import { OTPService } from "./services/otp.service.js";
 
 // REPOSITORIES
 export const userRepository = new UserRepository();
@@ -54,13 +54,14 @@ export const whatsappRepository = new WhatsappRepository();
 
 // SERVICES (INJECT DEPENDECIES)
 export const emailService = new EmailService();
+export const otpService = new OTPService();
 export const subscriptionService = new SubscriptionService();
 
 export const userService = new UserService(
   userRepository,
   userProfileRepository,
   subscriptionRepository,
-  emailService,
+  emailService
 );
 export const userProfileService = new UserProfileService(userProfileRepository);
 export const organizationService = new OrganizationService(
@@ -126,4 +127,4 @@ export const notificationService = new NotificationService(
 export const contactService = new ContactService(contactRepository);
 
 // Whatsapp service
-export const whatsppService = new WhatsappService(whatsappRepository);
+// export const whatsppService = new WhatsappService(whatsappRepository);

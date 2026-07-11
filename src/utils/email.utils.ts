@@ -76,6 +76,57 @@ export class EmailUtils {
     }
   }
 
+  async sendOTPEmail(email: string, otp: string): Promise<boolean> {
+    const subject = "Your Kyra CRM verification code";
+
+    const otpDigits = otp.split("");
+
+    const html = `
+    <div style="background-color: #f4f4f5; padding: 40px 16px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 440px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #e4e4e7;">
+        <tr>
+          <td style="padding: 32px 32px 24px 32px;">
+            <p style="margin: 0 0 4px 0; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: #6366f1; text-transform: uppercase;">
+              Kyra CRM
+            </p>
+            <h1 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 600; color: #18181b;">
+              Verification code
+            </h1>
+            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #71717a;">
+              Use this code to continue. It expires in 5 minutes.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 0 32px 32px 32px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="width: 100%;">
+              <tr>
+                <td style="background-color: #fafafa; border: 1px solid #e4e4e7; border-radius: 10px; padding: 20px; text-align: center;">
+                  <span style="font-family: 'SF Mono', 'Courier New', monospace; font-size: 32px; font-weight: 700; letter-spacing: 10px; color: #18181b;">
+                    ${otpDigits.join("")}
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 0 32px 32px 32px; border-top: 1px solid #f4f4f5; padding-top: 20px;">
+            <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #a1a1aa;">
+              Didn't request this? You can safely ignore this email — your account is still secure.
+            </p>
+          </td>
+        </tr>
+      </table>
+      <p style="max-width: 440px; margin: 20px auto 0 auto; text-align: center; font-size: 12px; color: #a1a1aa;">
+        Kyra CRM · sent to ${email}
+      </p>
+    </div>
+  `;
+
+    const result = await this.sendEmail(email, subject, html);
+    return result.status;
+  }
   async sendWelcomeEmail(email: string, url: string): Promise<boolean> {
     const subject = "Welcome to Kyra CRM";
     const html = `

@@ -23,6 +23,9 @@ export const ENV = {
     JWT_SECRET: process.env.JWT_SECRET!,
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN!,
     JWT_ALGORITHM: process.env.JWT_ALGORITHM!,
+    OTP_TTL_SECONDS:process.env.OTP_TTL_SECONDS!,
+    MAX_ATTEMPTS:process.env.MAX_ATTEMPTS!,
+    OTP_LENGTH:process.env.OTP_LENGTH!
   },
 
   DB: {
@@ -88,6 +91,8 @@ export const ENV = {
   QUEUE:{
     QUEUE_CONCURRENCY:process.env.QUEUE_CONCURRENCY!
   }
+
+
 };
 
 // import * as dotenv from "dotenv";

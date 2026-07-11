@@ -13,6 +13,7 @@ import { TGoogleUser, TUser, TUserLogin } from "../types/index.js";
 import { JwtUtil, PasswordUtil } from "../utils/index.js";
 import { SubscriptionRepository } from "./../repositories/subscription.repository.js";
 import { EmailService } from "./email.service.js";
+import { otpService } from "../container.js";
 
 export class UserService {
   constructor(
@@ -111,6 +112,86 @@ export class UserService {
 
     return { ...userDto, token };
   }
+
+
+  async forgotPassword(email:string):Promise<any>{
+    try{
+      console.log(email)
+      const existingUser = await this.userRepository.findByEmail(email);
+
+      if(!existingUser){
+        throw new Error("This email is not registered with us");
+      }
+
+      const otp=await otpService.issueOTP(email)
+      // tested with welcome mail, send otp here on mail for now , later on whatsapp
+      this.emailService.queueOTPEmail(
+        email,
+        otp,
+      )
+      return {};
+    }catch(error){
+      throw error;
+    }
+  }
+
+  async verifyOTP(email:string,otp:string):Promise<string>{
+    try {
+      const isValid=await otpService.verifyOTP(email,otp);
+      console.log("isvalid",isValid)
+
+      if (!isValid) {
+        throw new Error("Invalid OTP");
+      }
+
+      const payload={
+        email:email,
+        purpose:"password_reset"
+      }
+
+      const expiresIn="10m"
+      const resetToken= JwtUtil.shortLivedToken(payload,expiresIn)
+      return resetToken;
+    } catch (error) {
+      throw error
+    }
+  }
+
+  async resetPassword(resetToken:string, newPassword:string):Promise<any>{
+     const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      let payload: any;
+      try {
+        payload = JwtUtil.verify(resetToken);
+      } catch {
+        throw new Error("Reset link expired or invalid. Please start over.");
+      }
+
+      if (payload.purpose !== "password_reset") {
+        throw new Error("Invalid reset token");
+      }
+
+      const existingUser = await this.userRepository.findByEmail(payload.email);
+      if (!existingUser) {
+        throw new Error("User not found");
+      }
+
+      const hashedPassword = await PasswordUtil.hash(newPassword); // your existing bcrypt helper
+      console.log(hashedPassword)
+      await this.userRepository.update(existingUser.id, {password:hashedPassword},session);
+      await session.commitTransaction();
+      return { email: payload.email };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    }
+    finally{
+      session.endSession();
+    }
+
+  }
+
   async findOrCreateGoogleUser(
     authUser: TGoogleUser,
   ): Promise<UserResponseDto> {

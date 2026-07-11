@@ -25,19 +25,39 @@ class RedisClient {
   private isConnected: boolean = false;
 
   constructor() {
-    const redisHost =
-      process.env.REDIS_HOST ||
-      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com";
 
-    const redisOptions: RedisClientConfig = {
-      enableReadyCheck: false,
-      maxRetriesPerRequest: null,
-      lazyConnect: true,
-      retryStrategy(times: number) {
-        return Math.min(times * 100, 2000);
-      },
-    };
-    this.client = new Redis(redisHost, redisOptions);
+    // const redisHost ={
+    //   host:process.env.REDIS_HOST ||"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
+    //   port: parseInt(process.env.REDIS_PORT || "14482"),
+    //   password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH",
+    // }
+
+    // const redisOptions: RedisClientConfig = {
+    //   enableReadyCheck: false,
+    //   maxRetriesPerRequest: null,
+    //   lazyConnect: true,
+    //   retryStrategy(times: number) {
+    //     return Math.min(times * 100, 2000);
+    //   },
+    // };
+    // this.client = new Redis(redisHost, redisOptions);
+    this.client = new Redis({
+      host: process.env.REDIS_HOST || "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
+      port: parseInt(process.env.REDIS_PORT || "14482"),
+      password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH",
+      // username: process.env.REDIS_USERNAME || "default",
+
+      // Add only if your Redis Cloud uses TLS
+      // tls: {},
+
+      // lazyConnect: true,
+      // maxRetriesPerRequest: null,
+      // enableReadyCheck: true,
+
+      // retryStrategy(times) {
+      //   return Math.min(times * 100, 2000);
+      // },
+    });
 
     this.setupEventHandlers();
   }

@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import httpResponse from "../utils/http.response.js";
-import { whatsppService } from "../container.js";
 import axios from "axios";
-import { ENV } from "../constants/env.constants.js";
+import httpResponse from "../../../../utils/http.response.js";
+import { ENV } from "../../../../constants/env.constants.js";
 
-export class WhatsappController {
+export class WhatsappAuthController {
   connectWhatsapp = async (
     req: Request,
     res: Response,
@@ -96,42 +95,6 @@ export class WhatsappController {
 
       // const accessToken = longLivedTokenResponse.data.access_token;
       // const expiresIn = longLivedTokenResponse.data.expires_in;
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  getList = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
-    try {
-      const { accountId, rowPerPage, pageIndex } = req.body;
-
-      const limit = rowPerPage ? parseInt(String(rowPerPage), 10) : 10;
-
-      const page = Math.max(Number(pageIndex), 1);
-      const skip = (Math.max(Number(pageIndex), 1) - 1) * limit;
-
-      const contacts = await whatsppService.getList(String(accountId || ""), {
-        limit,
-        skip,
-      });
-
-      const totalPages = Math.ceil(contacts.totalDocs / limit) || 1;
-      httpResponse(req, res, 200, "contacts fetched successfully", {
-        docs: contacts.docs,
-        pagination: {
-          page,
-          limit,
-          skip,
-          totalDocs: contacts?.totalDocs,
-          totalPages: totalPages,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1,
-        },
-      });
     } catch (error) {
       next(error);
     }

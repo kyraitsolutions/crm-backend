@@ -181,6 +181,13 @@ export class EmailService {
     });
     logger.info(`Welcome email queued for ${email}`);
   }
+  async queueOTPEmail(email: string, otp: string): Promise<void> {
+    await emailQueue.add("otp-email", {
+      email,
+      otp,
+    });
+    logger.info(`OTP email queued for ${email}`);
+  }
   // Account Creation Mail
   async queueAccountCreationEmail(
     accountEmail: string,

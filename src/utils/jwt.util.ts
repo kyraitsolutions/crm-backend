@@ -8,6 +8,10 @@ export interface JwtPayload {
   userId: string;
   email: string;
 }
+export interface ShortJwtPayload {
+  email: string;
+  purpose:string;
+}
 
 export class JwtUtil {
   private static readonly SECRET = ENV.AUTH.JWT_SECRET || "default-secret";
@@ -22,6 +26,10 @@ export class JwtUtil {
 
   static verify(token: string): JwtPayload {
     return jwt.verify(token, this.SECRET) as JwtPayload;
+  }
+
+  static shortLivedToken(payload: ShortJwtPayload, ttl: string){
+    return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRES_IN });
   }
 
   static decode(token: string): JwtPayload | null {

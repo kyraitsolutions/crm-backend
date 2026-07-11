@@ -38,6 +38,43 @@ export class UserController {
     }
   };
 
+  forgotPassword=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+    try {
+      const {email}=req.body;
+      console.log("Body",req.body)
+      const result=await userService.forgotPassword(email)
+      httpResponse(req, res, 201, "Password sent successfully", {
+        doc: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  verifyOTP=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+    try {
+      const {email,otp}=req.body;
+      console.log("Body",req.body)
+      const result=await userService.verifyOTP(email,otp)
+      httpResponse(req, res, 201, "Password sent successfully", {
+        doc: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  resetPassword=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
+    try {
+      const {resetToken,newPassword}=req.body;
+      console.log(resetToken,newPassword)
+      const result=await userService.resetPassword(resetToken,newPassword);
+      httpResponse(req, res, 201, "Password sent successfully", {
+        doc: result
+      });
+    } catch (error) {
+      next(error)
+    }
+  }
+
   googleCallback = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
       const user = req.user as any;

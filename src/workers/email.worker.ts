@@ -34,6 +34,11 @@ emailQueue.process("welcome-email", async (job) => {
   logger.info(`Processing welcome email for ${email}`);
   await emailUtils.sendWelcomeEmail(email, url);
 });
+emailQueue.process("otp-email", async (job) => {
+  const { email, otp } = job.data;
+  logger.info(`Processing otp email for ${email}`);
+  await emailUtils.sendOTPEmail(email, otp);
+});
 
 emailQueue.process("account-creation-email", async (job) => {
   const { accountEmail, accountName } = job.data;

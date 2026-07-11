@@ -20,9 +20,9 @@ import { ConfigurationRouter } from "./configuration.routes.js";
 import { AutomationRouter } from "./automation.routes.js";
 import { ActivityLogRouter } from "./activityLog.route.js";
 import { IntegrationRouter } from "../modules/integrations/routes/integration.routes.js";
-import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
 import { WebhookRouter } from "../modules/webhook/routes/webhook.route.js";
 import { HealthRouter } from "./health.routes.js";
+import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
