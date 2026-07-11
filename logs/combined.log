@@ -1148,3 +1148,6 @@
 {"level":"info","message":"Redis client ready","timestamp":"2026-07-11 23:33:45"}
 {"level":"info","message":"OTP email queued for kyraitsolutions@gmail.com","timestamp":"2026-07-11 23:35:07"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-07-11 23:36:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-11 23:43:20"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-11 23:43:21"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-12 01:16:24"}
