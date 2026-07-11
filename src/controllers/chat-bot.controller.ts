@@ -104,6 +104,7 @@ export class ChatBotController {
   async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId, chatbotId } = req.params;
+
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
         chatbotId,

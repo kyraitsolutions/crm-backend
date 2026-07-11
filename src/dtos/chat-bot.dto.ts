@@ -255,11 +255,11 @@ export class ChatBotListDto {
 
   constructor(data: ChatBotListDto) {
     this.id = data.id;
-    this.name = data.name;
-    this.description = data.description;
-    this.createdAt = data.createdAt;
-    this.status = data.status;
-    this.flowId = data.flowId;
+    this.name = data?.name;
+    this.description = data?.description;
+    this.createdAt = data?.createdAt;
+    this.status = data?.status;
+    this.flowId = data?.flowId;
   }
 }
 
