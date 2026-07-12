@@ -176,6 +176,12 @@ export class AccountRouter {
       requirePermission("leads.create"),
       this.leadController.createLead.bind(this.leadController),
     );
+    this.router.post(
+      "/:accountId/lead/bulk-write",
+      AuthMiddleware.authenticate,
+      requirePermission("leads.create"),
+      this.leadController.createBulkLead.bind(this.leadController),
+    );
 
     this.router.get(
       "/:accountId/lead/:leadId/ai-summary",

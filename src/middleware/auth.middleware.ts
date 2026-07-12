@@ -6,6 +6,7 @@ import { UserProfileModel } from "../models/userProfile.model.js";
 import mongoose from "mongoose";
 import { MongoServerError } from "mongodb";
 import { TRole } from "../types/roles-permissions.type.js";
+import { UserModel } from "../models/user.model.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
@@ -46,6 +47,15 @@ export class AuthMiddleware {
             role: organizationMember?.roleId as TRole,
           }),
         };
+
+        await UserModel.updateOne(
+          { _id: user.id },
+          {
+            $set: {
+              lastUsedAt: new Date(),
+            },
+          }
+        );
         next();
       },
     )(req, res, next);

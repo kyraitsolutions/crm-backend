@@ -78,25 +78,24 @@ export class LeadController {
   createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId } = req.params;
-      const meta = await getMetaData(req);
-      console.log(meta);
-
       const { leads, uniqueKey, mode } = req.body;
 
-      const context = {
-        accountId: String(accountId),
-        organizationId: String(req?.user?.organizationId),
-        userId: String(req?.user?.organizationId),
-        userName: String(req?.user?.name),
-      };
+      console.log("BODY:", JSON.stringify(req.body).slice(0, 500));
+      console.log(leads,uniqueKey,mode)
+      // const context = {
+      //   accountId: String(accountId),
+      //   organizationId: String(req?.user?.organizationId),
+      //   userId: String(req?.user?.organizationId),
+      //   userName: String(req?.user?.name),
+      // };
 
-      const lead = await this.leadService.createBulkLead(
-        context,
-        leads,
-        uniqueKey,
-        mode,
-      );
-      httpResponse(req, res, 200, "Lead create successfully", lead);
+      // const lead = await this.leadService.createBulkLead(
+      //   context,
+      //   leads,
+      //   uniqueKey,
+      //   mode,
+      // );
+      httpResponse(req, res, 200, "Lead create successfully", "");
     } catch (error) {
       next(error);
     }

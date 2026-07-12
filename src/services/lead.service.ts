@@ -12,6 +12,9 @@ import { AUTOMATION_TRIGGERS } from "../constants/automation.constant.js";
 import { RequestContext } from "../types/common.js";
 import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { TApiResponse } from "../types/api-response.type.js";
+import { ChunkUtil } from "../utils/chunks.util.js";
+
+const BATCH_SIZE = 1000;
 
 export class LeadService {
   private ai: GeminiAIUtil;
@@ -77,58 +80,77 @@ export class LeadService {
       doc: result,
     };
   }
-  async createBulkLead(
+
+  private buildBulkOps(
     context: RequestContext,
-    lead: LeadDto,
+    leads: LeadDto[],
     uniqueKey: string,
-    mode: any,
-  ): Promise<Lead> {
-    const result = await this.leadRepository.create(lead);
+    mode: "upsert" | "insert" | "skip",
+  ) {
+    return leads.map((lead) => {
+      const doc = {
+        ...lead,
+        accountId: context.accountId,
+        organizationId: context.organizationId,
+      };
 
-    // Activity Log
-    const activityLogDataPayload: Partial<TActivityLog> = {
-      accountId: String(lead.accountId),
-      organizationId: String(context?.organizationId),
+      if (mode === "upsert" && uniqueKey) {
+        return {
+          updateOne: {
+            filter: {
+              accountId: context.accountId,
+              [uniqueKey]: (lead as any)[uniqueKey],
+            },
+            update: { $set: doc },
+            upsert: true,
+          },
+        };
+      }
 
-      entityType: "lead",
-      entityId: String(result._id),
-
-      actor: {
-        type: "user",
-        id: context.userId,
-        name: context.userName,
-      },
-
-      metadata: {
-        leadName: result?.name,
-      },
-    };
-
-    await this.activityLogService.logCreate(activityLogDataPayload);
-
-    // Trigger automation
-    const automationDataPayload = {
-      ...result?.toJSON(),
-      organizationId: context?.organizationId,
-      entityType: "lead",
-      entityId: result._id,
-    };
-
-    await this.automationEngine.process({
-      accountId: result?.accountId,
-      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
-      payload: automationDataPayload,
+      return { insertOne: { document: doc } };
     });
-
-    return result;
   }
 
-  async getLeads(
-    _userId: string,
-    accountId: string,
-    payload: Record<string, any>,
-    skip: number,
-  ): Promise<any | null> {
+  async createBulkLead(
+    context: RequestContext,
+    leads: LeadDto[],
+    uniqueKey: string,
+    mode: any,
+  ): Promise<any> {
+    
+    if (!Array.isArray(leads) || leads.length === 0) {
+      throw new Error("leads must be a non-empty array");
+    }
+
+    const results = { inserted: 0, updated: 0, failed: 0, errors: [] as any[] };
+    const batches = ChunkUtil.chunkArray(leads, BATCH_SIZE);
+
+    console.log("Batch Size", batches,uniqueKey)
+    for (let i = 0; i < batches.length; i++) {
+      const ops = this.buildBulkOps(context, batches[i], uniqueKey, mode);
+      const offset = i * BATCH_SIZE;
+
+      try {
+        const res = await this.leadRepository.bulkWrite(ops);
+        results.inserted += res.insertedCount + res.upsertedCount;
+        results.updated += res.modifiedCount;
+      } catch (err: any) {
+        const writeErrors = err?.writeErrors || [];
+        results.failed += writeErrors.length;
+        results.inserted += (err?.result?.insertedCount || 0) + (err?.result?.upsertedCount || 0);
+        results.updated += err?.result?.modifiedCount || 0;
+        results.errors.push(
+          ...writeErrors.map((e: any) => ({
+            index: offset + e.index,
+            message: e.errmsg,
+          })),
+        );
+      }
+    }
+    return results;
+  }
+
+  async getLeads(_userId: string,accountId: string,payload: Record<string, any>,skip: number): Promise<any | null> {
     if (!accountId) {
       return null;
     }

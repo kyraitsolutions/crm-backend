@@ -3,8 +3,6 @@ import { ContactModel } from "../models/contact.model.js";
 import { Lead, LeadModel } from "../models/lead.model.js";
 import { Router, Request, Response } from "express";
 
-// "dev": "tsx watch src/server.ts && tsx src/workers/email.worker.ts",
-
 export class LeadRespository {
   async find(criteria: any, limit?: number, skip?: number, sort?: Record<string, 1 | -1>) {
     // we can get these fields in api query params
@@ -24,6 +22,10 @@ export class LeadRespository {
 
   async create(lead: any) {
     return await LeadModel.create(lead);
+  }
+
+  async bulkWrite(ops: any[]) {
+    return await LeadModel.bulkWrite(ops, { ordered: false });
   }
 
   async updateLeadById(id: string, lead: any) {
