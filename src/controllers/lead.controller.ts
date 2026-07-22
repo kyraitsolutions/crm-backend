@@ -77,7 +77,7 @@ export class LeadController {
 
   createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      // const { accountId } = req.params;
       const { leads, uniqueKey, mode } = req.body;
 
       console.log("BODY:", JSON.stringify(req.body).slice(0, 500));

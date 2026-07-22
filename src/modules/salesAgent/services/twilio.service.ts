@@ -3,7 +3,7 @@ import twilio from "twilio"
 import { MakeCallDto } from "../types/twilio.type.js";
 import { ENV } from "../../../constants/env.constants.js";
 import { twilioClient } from "../config/twilio.js";
-import {Call,CallRecording} from "../models/calldetails.model.js"
+import {Call} from "../models/calldetails.model.js"
 export class TwilioService {
 
     private async resolveAccountId(toNumber:string):Promise<string|null>{
@@ -12,7 +12,11 @@ export class TwilioService {
     }
     async incomingCall(payload:any): Promise<any> {
 
-        const {CallSid,From,To,CallStatus, CallerCity, CallerState, CallerCountry } = payload;
+        const {
+            // CallSid,From,
+            To,
+            // CallStatus, CallerCity, CallerState, CallerCountry
+         } = payload;
 
         const accountId=await this.resolveAccountId(To);
 
@@ -38,15 +42,16 @@ export class TwilioService {
         // // fallback if no input received
         // response.say('Sorry, I didn\'t catch that. Goodbye.');
 
-        const dial = response.dial({
-            callerId: ENV.TWILIO.TWILIO_PHONE_NUMBER,
-            answerOnBridge: true,
-        });
+        // const dial = response.dial({
+        //     callerId: ENV.TWILIO.TWILIO_PHONE_NUMBER,
+        //     answerOnBridge: true,
+        // });
 
-        console.log("whatsapp happing")
-        console.log("dial", dial);
-        dial.number("+919759349941");
-        return response.toString();
+        // console.log("whatsapp happing")
+        // console.log("dial", dial);
+        // dial.number("+919759349941");
+        // return response.toString();
+        return "no";
     }
 
     async gatherCallInformation(speechResult: string): Promise<string> {

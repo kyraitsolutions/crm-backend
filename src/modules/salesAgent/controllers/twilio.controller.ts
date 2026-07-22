@@ -22,7 +22,7 @@ export class TwilioController {
 
     makeCall = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const {accountId, customerPhone, guestId, hotelName } = req.body;
+            const {accountId, customerPhone } = req.body;
 
             const result = await this.twilioService.makeCall({
                 accountId,
@@ -49,7 +49,7 @@ export class TwilioController {
             res.setHeader("Content-Type", "text/xml");
             // return res.status(200).send(response);
             httpResponse(req, res, 201, "Twilio is calling now", {
-                doc: "result",
+                doc: response,
             });
         } catch (error) {
             console.log(error)
@@ -64,7 +64,10 @@ export class TwilioController {
             const speechResult = req.body.SpeechResult;
             const response = await this.twilioService.gatherCallInformation(speechResult);
             res.setHeader("Content-Type", "text/xml");
-            return res.status(200).send(response);
+            // return res.status(200).send(response);
+            httpResponse(req, res, 201, "Twilio is calling now", {
+                doc: response,
+            });
         } catch (error) {
             console.log(error);
             next(error);
