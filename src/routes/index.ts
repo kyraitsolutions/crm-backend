@@ -118,7 +118,7 @@ export class AppRoutes {
     this.router.use("/integration", this.integrationRouter.getRouter());
     this.router.use("/whatsapp", this.whatsappRouter.getRouter());
     this.router.use("/webhook",this.webhookRouter.getRouter());
-    this.router.use("/twilio",this.twilioRouter.getRouter());
+    // this.router.use("/twilio",this.twilioRouter.getRouter());
     this.router.use("/health", this.healthRouter.getRouter());
 
   }
