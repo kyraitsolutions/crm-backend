@@ -14,7 +14,7 @@ dotenv.config();
 
 export const ENV = {
   APP: {
-    APP_VERSION:process.env.APP_VERSION||"v1.0.0",
+    APP_VERSION: process.env.APP_VERSION || "v1.0.0",
     PORT: process.env.PORT || "3000",
     NODE_ENV: process.env.NODE_ENV || "development",
   },
@@ -23,9 +23,9 @@ export const ENV = {
     JWT_SECRET: process.env.JWT_SECRET!,
     JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN!,
     JWT_ALGORITHM: process.env.JWT_ALGORITHM!,
-    OTP_TTL_SECONDS:process.env.OTP_TTL_SECONDS!,
-    MAX_ATTEMPTS:process.env.MAX_ATTEMPTS!,
-    OTP_LENGTH:process.env.OTP_LENGTH!
+    OTP_TTL_SECONDS: process.env.OTP_TTL_SECONDS!,
+    MAX_ATTEMPTS: process.env.MAX_ATTEMPTS!,
+    OTP_LENGTH: process.env.OTP_LENGTH!,
   },
 
   DB: {
@@ -70,6 +70,7 @@ export const ENV = {
   META: {
     APP_ID: process.env.META_APP_ID!,
     APP_SECRET: process.env.META_APP_SECRET!,
+    GRAPH_BASE_URL: process.env.META_GRAPH_BASE_URL!,
     GRAPH_VERSION: process.env.META_GRAPH_VERSION!,
     REDIRECT_URI: process.env.META_REDIRECT_URI,
     VERIFY_WEBHOOK_TOKEN: process.env.WEBHOOK_VERIFY_TOKEN!,
@@ -83,16 +84,14 @@ export const ENV = {
     SMTP_PASS: process.env.SMTP_PASS!,
   },
 
-  REDIS:{
-    REDIS_HOST:process.env.REDIS_HOST!,
-    REDIS_PORT:process.env.REDIS_PORT!,
-    REDIS_PASS:process.env.REDIS_PASS!
+  REDIS: {
+    REDIS_HOST: process.env.REDIS_HOST!,
+    REDIS_PORT: process.env.REDIS_PORT!,
+    REDIS_PASS: process.env.REDIS_PASS!,
   },
-  QUEUE:{
-    QUEUE_CONCURRENCY:process.env.QUEUE_CONCURRENCY!
-  }
-
-
+  QUEUE: {
+    QUEUE_CONCURRENCY: process.env.QUEUE_CONCURRENCY!,
+  },
 };
 
 // import * as dotenv from "dotenv";

@@ -23,16 +23,18 @@ export class WhatsappAuthController {
       const redirectUri = `${ENV.URL.BACKEND_URL}/api/whatsapp/callback`;
 
       const signupUrl =
-        `https://www.facebook.com/v19.0/dialog/oauth` +
+        `https://www.facebook.com/v24.0/dialog/oauth` +
         `?client_id=${ENV.META.APP_ID}` +
+        `&config_id=${887392707164005}` +
         `&redirect_uri=${encodeURIComponent(redirectUri)}` +
         `&response_type=code` +
         `&state=${state}` +
         `&scope=${encodeURIComponent("business_management, whatsapp_business_management,whatsapp_business_messaging")}` +
         `&extras=${encodeURIComponent(
           JSON.stringify({
-            feature: "whatsapp_embedded_signup",
-            setup: { business: { isWebsiteRequired: false } },
+            setup: {},
+            featureType: "whatsapp_business_app_onboarding", // set to 'whatsapp_business_app_onboarding'
+            sessionInfoVersion: "3",
           }),
         )}`;
 
