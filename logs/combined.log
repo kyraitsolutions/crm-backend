@@ -2070,3 +2070,6 @@
 {"level":"info","message":"Redis client ready","timestamp":"2026-07-22 21:25:03"}
 {"level":"info","message":"Redis client connected","timestamp":"2026-07-22 21:34:43"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-07-22 21:34:44"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-23 20:25:06"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-23 20:25:06"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-23 20:31:54"}
