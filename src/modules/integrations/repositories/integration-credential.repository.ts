@@ -33,7 +33,7 @@ export class IntegrationCredentialRepository {
   async findByIntegrationId(integrationId: string) {
     return IntegrationCredentialModel.findOne({
       integrationId,
-    });
+    }).populate("integrationId");
   }
 
   async updateAccessToken(integrationId: string, accessToken: string) {

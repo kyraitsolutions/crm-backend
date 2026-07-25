@@ -54,7 +54,10 @@ export class ConversationController {
   ) {
     try {
       const { accountId } = req.params;
-      const query = parseQueryParams(req.query);
+      console.log(req.query);
+      const query = parseQueryParams(req.query, {
+        allowedFilters: ["platform"],
+      });
 
       const result = await this.service.getConversationsByAccountId(accountId, {
         ...query,
