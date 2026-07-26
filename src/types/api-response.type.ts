@@ -37,5 +37,12 @@ type TActivityLogFilters = {
   action?: string;
 };
 
+type TTemplateFilters = {
+  category?: string;
+  language?: string;
+  status?: string;
+};
+
 export type TConversationQuery = TQueryParams<TConversationFilters>;
 export type TActivityLogQuery = TQueryParams<TActivityLogFilters>;
+export type TTemplateQuery = TQueryParams<TTemplateFilters>;

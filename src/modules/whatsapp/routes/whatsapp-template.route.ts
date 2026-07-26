@@ -13,6 +13,14 @@ export class WhatsappTemplateRouter {
   }
 
   private initializeRoutes() {
+    // GET ALL TEMPLATES ROUTE
+    this.router.get(
+      "/",
+      AuthMiddleware.authenticate,
+      this.controller.getTemplates.bind(this.controller),
+    );
+
+    // POST CREATE TEMPLATES ROUTE
     this.router.post(
       "/",
       AuthMiddleware.authenticate,

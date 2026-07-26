@@ -103,9 +103,19 @@ const WhatsappTemplateSchema = new Schema(
     approvedAt: Date,
 
     rejectedReason: String,
+    lastUsedAt:Date,
+    isFavourite:Boolean
   },
   {
     timestamps: true,
+    versionKey: false,
+    toJSON: {
+      transform(_, ret: any) {
+        ret.id = ret._id;
+        delete ret._id;
+        return ret;
+      },
+    },
   },
 );
 
