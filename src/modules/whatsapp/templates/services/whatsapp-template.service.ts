@@ -1,9 +1,15 @@
 import { IntegrationProvider } from "../../../../models/integration.model.js";
+import {
+  TPaginatedResponse,
+  TQueryParams,
+} from "../../../../types/api-response.type.js";
+import { buildPagination } from "../../../../utils/paginationBuilder.js";
 import { IntegrationCredentialRepository } from "../../../integrations/repositories/integration-credential.repository.js";
 import { IntegrationRepository } from "../../../integrations/repositories/integration.repository.js";
 import { WhatsAppAccountRepository } from "../../account/repositories/whatsapp-account.repository.js";
 import { metaTemplateClient } from "../client/whatsapp-template.client.js";
 import { WhatsappTemplateRepository } from "../repositories/whatsapp-template.repository.js";
+import { TTemplate } from "../types/template.types.js";
 
 export class WhatsAppTemplateService {
   private templateRepository = new WhatsappTemplateRepository();
@@ -12,45 +18,27 @@ export class WhatsAppTemplateService {
   private integrationCredentialRepository =
     new IntegrationCredentialRepository();
 
-  // async create(data: any) {
-  //   // Check duplicate template name
-  //   const exists = await this.templateRepository.findByName(
-  //     data.accountId,
-  //     data.name,
-  //   );
+  async getTemplates(
+    accountId: string,
+    query: TQueryParams = {},
+  ): Promise<TPaginatedResponse<{ docs: TTemplate }>> {
+    if (!accountId) throw new Error("AccountId is required");
 
-  //   if (exists) {
-  //     throw new Error("Template with this name already exists.");
-  //   }
+    const res = await this.templateRepository.findAll(accountId, query);
 
-  //   const integration =
-  //     await this.integrationRepository.findByAccountAndProvider(
-  //       data.accountId,
-  //       IntegrationProvider.WHATSAPP,
-  //     );
+    // console.log(res.docs[0]?.id)
 
-  //   if (!integration) {
-  //     throw new Error("WhatsApp integration not found.");
-  //   }
+    return {
+      docs: res.docs as any[],
 
-  //   const whatsappAccount =
-  //     await this.whatsappAccountRepository.findByIntegrationId(
-  //       String(integration?._id),
-  //     );
-
-  //   if (!whatsappAccount) {
-  //     throw new Error("WhatsApp account not found.");
-  //   }
-
-  //   const credential =
-  //     await this.integrationCredentialRepository.findByIntegrationId(
-  //       String(integration?._id),
-  //     );
-
-  //   const template = await this.templateRepository.create(data);
-
-  //   return template;
-  // }
+      pagination: buildPagination({
+        page: 1,
+        limit: query.limit,
+        docsCount: res.docs.length,
+        totalDocs: res.total,
+      }),
+    };
+  }
 
   async create(data: any) {
     // 1. Duplicate check
@@ -94,8 +82,6 @@ export class WhatsAppTemplateService {
       throw new Error("WhatsApp access token not found.");
     }
 
-    console.log("Credential tak to aaaya", credential);
-
     // 5. Create Template in Meta
     const metaTemplate = await metaTemplateClient.createTemplate({
       wabaId: whatsappAccount.wabaInfo.id,
@@ -110,8 +96,6 @@ export class WhatsAppTemplateService {
     });
 
     console.log("metaTemplate", metaTemplate);
-
-    console.log("data", data);
 
     // 6. Save in MongoDB
     const template = await this.templateRepository.create({

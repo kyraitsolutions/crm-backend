@@ -54,7 +54,6 @@ export class ConversationController {
   ) {
     try {
       const { accountId } = req.params;
-      console.log(req.query);
       const query = parseQueryParams(req.query, {
         allowedFilters: ["platform"],
       });

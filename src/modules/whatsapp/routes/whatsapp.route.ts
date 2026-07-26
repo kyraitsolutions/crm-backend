@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { WhatsappAuthRouter } from "./whatsapp-auth.route.js";
 import { WhatsappTemplateRouter } from "./whatsapp-template.route.js";
+import { WhatsappWebhookRouter } from "./whatsapp-webhook.route.js";
 
 export class WhatsappRouter {
   public router: Router;
 
   private whatsappAuthRouter: WhatsappAuthRouter;
   private whatsappTemplateRouter: WhatsappTemplateRouter;
+  private whatsappWebhookRouter = new WhatsappWebhookRouter();
   // private whatsappAccountRouter: whatsappAccountRouter;
   // private whatsappMarketingRouter: whatsappMarketingRouter;
   // private whatsappChatbotRouter: whatsappChatbotRouter;
@@ -25,11 +27,17 @@ export class WhatsappRouter {
   }
 
   private initializeRoutes(): void {
+    // Auth endpoint
     this.router.use("/auth", this.whatsappAuthRouter.getRouter());
+
+    // Templates endpoint
     this.router.use(
       "/accounts/:accountId/templates",
       this.whatsappTemplateRouter.getRouter(),
     );
+
+    // Webhook endpoint
+    this.router.use("/webhook", this.whatsappWebhookRouter.getRouter());
     // this.router.use("/account", this.whatsappAccountRouter.getRouter());
     // this.router.use("/marketing", this.whatsappMarketingRouter.getRouter());
     // this.router.use("/chatbot", this.whatsappChatbotRouter.getRouter());
