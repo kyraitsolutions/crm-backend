@@ -10,13 +10,12 @@ export class TemplateHandler {
       event,
       message_template_name,
       message_template_category,
+      reason,
     } = payload;
 
     const isTemplateExist = await WhatsappTemplateModel.findOne({
       metaTemplateId: message_template_id,
     });
-
-    console.log("isTemplateExist", isTemplateExist);
 
     if (!isTemplateExist) {
       throw new Error("Template not found");
@@ -27,6 +26,7 @@ export class TemplateHandler {
       name: message_template_name,
       category: message_template_category,
       metaTemplateId: message_template_id,
+      rejectedReason: reason,
     };
 
     await WhatsappTemplateModel.updateOne(
