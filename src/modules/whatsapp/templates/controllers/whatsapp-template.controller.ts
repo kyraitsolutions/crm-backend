@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { WhatsAppTemplateService } from "../services/whatsapp-template.service.js";
 import httpResponse from "../../../../utils/http.response.js";
 import { parseQueryParams } from "../../../../utils/query.utils.js";
+import { CreateTemplateDto } from "../dtos/template.dto.js";
 export class WhatsappTemplateController {
   private whatsappTemplateService = new WhatsAppTemplateService();
 
@@ -26,9 +27,11 @@ export class WhatsappTemplateController {
   async createTemplate(req: Request, res: Response, next: NextFunction) {
     try {
       const { accountId } = req.params;
+      console.log(accountId)
+      const createTemplateDto = new CreateTemplateDto(req.body);
 
       const result = await this.whatsappTemplateService.create({
-        ...req.body,
+        ...createTemplateDto,
         accountId,
       });
 

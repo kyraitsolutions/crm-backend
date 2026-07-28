@@ -1,43 +1,24 @@
 import { z } from "zod";
+
+import { TemplateSchema } from "../schemas/template.schema.js";
+import { MediaSchema } from "../schemas/media.schema.js";
+import { VariableMappingSchema } from "../schemas/variable.schema.js";
+
 import {
-  TemplateCategory,
-  TemplateComponentType,
-  TemplateParameterFormat,
-  TemplateStatus,
-} from "./template.enums.js";
-import { ZBaseEntity } from "../../../../types/base.type.js";
-
-export const TemplateVariableMappingSchema = z.object({
-  variable: z.string(),
-  value: z.string(),
-});
-
-export const TemplateComponentSchema = z.object({
-  type: z.nativeEnum(TemplateComponentType),
-  text: z.string().optional(),
-  format: z.string().optional(),
-  variableMappings: z.array(TemplateVariableMappingSchema).default([]),
-});
-
-export const TemplateSchema = ZBaseEntity.extend({
-  accountId: z.string(),
-  integrationId: z.string().optional(),
-  whatsappAccountId: z.string().optional(),
-
-  wabaId: z.string(),
-  phoneNumberId: z.string(),
-
-  metaTemplateId: z.string(),
-
-  name: z.string(),
-
-  language: z.string(),
-
-  category: z.nativeEnum(TemplateCategory),
-
-  parameterFormat: z.nativeEnum(TemplateParameterFormat),
-  status: z.nativeEnum(TemplateStatus),
-  components: z.array(TemplateComponentSchema),
-});
+  HeaderComponentSchema,
+  BodyComponentSchema,
+  FooterComponentSchema,
+  ButtonsComponentSchema,
+  TemplateComponentSchema,
+} from "../schemas/components/index.js";
 
 export type TTemplate = z.infer<typeof TemplateSchema>;
+
+export type TTemplateComponent = z.infer<typeof TemplateComponentSchema>;
+export type THeaderComponent = z.infer<typeof HeaderComponentSchema>;
+export type TBodyComponent = z.infer<typeof BodyComponentSchema>;
+export type TFooterComponent = z.infer<typeof FooterComponentSchema>;
+export type TButtonsComponent = z.infer<typeof ButtonsComponentSchema>;
+
+export type TMedia = z.infer<typeof MediaSchema>;
+export type TVariableMapping = z.infer<typeof VariableMappingSchema>;

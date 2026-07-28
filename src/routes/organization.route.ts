@@ -26,6 +26,13 @@ export class OrganizationRouter {
         this.organizationController,
       ),
     );
+    this.router.post(
+      "/:organizationId",
+      AuthMiddleware.authenticate,
+      this.organizationController.updateOrganizationDetails.bind(
+        this.organizationController,
+      ),
+    );
   }
   public getRouter(): Router {
     return this.router;

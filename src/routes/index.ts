@@ -2,7 +2,7 @@ import { AccountRouter } from "./account.routes.js";
 import { ChatBotRouter } from "./chat-bot.routes.js";
 import { UserRouter } from "./user.routes.js";
 import { Router } from "express";
-// import { UserProfileRouter } from "./userprofile.routes.js";
+import { UserProfileRouter } from "./userprofile.routes.js";
 import { EmailRouter } from "./email.routes.js";
 import { TeamRouter } from "./team.routes.js";
 import { SubscriptionRouter } from "./subscription.routes.js";
@@ -31,7 +31,7 @@ export class AppRoutes {
   private chatBotRouter: ChatBotRouter;
   private chatFlowRouter: ChatFlowRouter;
   private userRouter: UserRouter;
-  // private userProfileRouter: UserProfileRouter;
+  private userProfileRouter: UserProfileRouter;
 
   private emailRouter: EmailRouter;
   private teamRouter: TeamRouter;
@@ -63,7 +63,7 @@ export class AppRoutes {
     this.chatFlowRouter = new ChatFlowRouter();
     this.userRouter = new UserRouter();
 
-    // this.userProfileRouter = new UserProfileRouter();
+    this.userProfileRouter = new UserProfileRouter();
     this.visitorRouter = new VisitorRouter();
     this.conversationRouter = new ConversationRouter();
     this.messageRouter = new MessageRouter();
@@ -92,7 +92,7 @@ export class AppRoutes {
   }
   private initializeRoutes(): void {
     this.router.use("/auth", this.userRouter.getRouter());
-    // this.router.use("/user/profile", this.userProfileRouter.getRouter());
+    this.router.use("/user/profile", this.userProfileRouter.getRouter());
     this.router.use("/organization", this.organizationRouter.getRouter());
     this.router.use("/account", this.accountRouter.getRouter());
     this.router.use("/visitor", this.visitorRouter.getRouter());

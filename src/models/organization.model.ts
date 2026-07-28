@@ -29,7 +29,7 @@ const organizationSchema = new Schema(
       required: true,
     },
 
-    logo: {
+    logoUrl: {
       type: String,
     },
 

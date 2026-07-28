@@ -60,4 +60,32 @@ export class OrganizationController {
       next(error);
     }
   };
+  updateOrganizationDetails = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      // const user = req.user as any;
+      const { organizationId } = req.params;
+      const payload = req.body;
+      console.log(payload)
+      
+      const updateDto=new CreateOrganizationDto(payload)
+      console.log("sdfsdfs",updateDto)
+
+      const orgId = organizationId as string;
+      console.log(orgId)
+
+      const result =await organizationService.update(orgId,updateDto);
+      httpResponse(req,res,200,"Organization details fetched successfully",{
+        doc:result,
+      }
+      );
+    } catch (error) {
+      next(error);
+    }
+  };
 }
+
+

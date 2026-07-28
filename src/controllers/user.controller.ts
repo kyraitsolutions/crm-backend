@@ -3,9 +3,10 @@ import { ENV } from "../constants/index.js";
 import { LoginDto, RegisterDto } from "../dtos/index.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
 
-import { userAggregateService, userService } from "../container.js";
+import { userAggregateService, userProfileService, userService } from "../container.js";
 import httpResponse from "../utils/http.response.js";
 import { TRole } from "../types/roles-permissions.type.js";
+import { UpdateUserProfileDto } from "../dtos/userprofile.dto.js";
 
 export class UserController {
   register = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
@@ -111,11 +112,7 @@ export class UserController {
         includesArray || [],
       );
 
-      httpResponse(
-        req,
-        res,
-        200,
-        "User information fetched successfully",
+      httpResponse(req,res,200,"User information fetched successfully",
         result,
       );
     } catch (error) {
@@ -157,6 +154,34 @@ export class UserController {
           ...(organization && { organization }),
         },
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  
+  updateProfile = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
+    try {
+      console.log(req.body)
+      const userId = (req.user as any).id;
+      const payload={
+        ...req.body,
+        userId:userId,
+        address:{
+          city:req.body?.city,
+          state:req.body?.state,
+          country:req.body?.country,
+          pincode:req.body?.pincode,
+          addressLine1:req.body?.addressLine1,
+          addressLine2:req.body?.addressLine2,
+        },
+        profilePicture:req.body?.avatar
+      }
+      const updateDto = new UpdateUserProfileDto(payload);
+      console.log(updateDto);
+      const updatedUser = await userProfileService.update(userId, updateDto);
+      // const updatedUser = {};
+      res.status(200).json(updatedUser);
     } catch (error) {
       next(error);
     }

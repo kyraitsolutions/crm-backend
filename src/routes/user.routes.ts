@@ -48,6 +48,12 @@ export class UserRouter {
       AuthMiddleware.authenticate,
       this.userController.getMe.bind(this.userController),
     );
+
+    this.router.post(
+      "/profile/update",
+       AuthMiddleware.authenticate,
+      this.userController.updateProfile.bind(this.userController),
+    )
   }
 
   public getRouter(): Router {

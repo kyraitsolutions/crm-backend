@@ -28,6 +28,21 @@ export class OrganizationService {
 
     return organization ? organization : null;
   }
+  async update(
+    orgId:string,
+    data: CreateOrganizationDto,
+    session?: ClientSession,
+  ): Promise<OrganizationResponseDto | null> {
+    const organization = await this.organizationRepository.update(
+      orgId,
+      data,
+      session,
+    );
+
+    console.log("Org Data",organization)
+
+    return organization ? organization : null;
+  }
   // ORGANIZATION DETAILS GET BY ORGANIZATION ID SERVICE
   async getOrganizationDetailsByOrganizationId(
     id: string,

@@ -15,7 +15,8 @@ export class CreateOrganizationDto {
     "terms",
     "taxId",
     "companySize",
-    "currency"
+    "currency",
+    "logoUrl"
   ];
 
   firstName?: string;
@@ -39,6 +40,7 @@ export class CreateOrganizationDto {
   industry?: string;
   phone?: string;
   privacyPolicy?: string;
+  logoUrl?:string;
   terms?: string;
 
   constructor(data: CreateOrganizationDto) {
@@ -79,7 +81,7 @@ export class OrganizationResponseDto {
   id: string;
   name: string;
   email: string;
-  logo?: string;
+  logoUrl?: string;
   website?: string;
   industry?: string;
   size?: string;
@@ -97,6 +99,7 @@ export class OrganizationResponseDto {
   currency?:string;
   createdBy: string;
   terms?: string;
+  slug?:string;
   privacyPolicy?: string;
 
   createdAt: Date;
@@ -107,7 +110,7 @@ export class OrganizationResponseDto {
     this.email = data.email;
     this.createdAt = data.createdAt;
     this.updatedAt = data.updatedAt;
-    this.logo = data.logo;
+    this.logoUrl = data.logoUrl;
     this.website = data.website;
     this.industry = data.industry;
     this.size = data.size;
@@ -118,6 +121,7 @@ export class OrganizationResponseDto {
     this.currency = data.currency;
     this.taxId = data.taxId;
     this.privacyPolicy = data.privacyPolicy;
+    this.slug = data.slug;
     
 
     if (data?.address && Object.keys(data.address).length > 0) {

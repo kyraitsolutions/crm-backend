@@ -11,6 +11,18 @@ export class OrganizationRepository {
     const organization = await Organization.create([data], { session });
     return organization[0].toJSON();
   }
+
+  async update(
+    orgId: string,
+    data: Partial<TOrganization>,
+    session?: ClientSession,
+  ): Promise<TOrganization | null> {
+    return await Organization.updateOne(
+      { _id: orgId },
+      { $set: data },
+      { new: true, session },
+    ).lean();
+  }
   async findAll(): Promise<any> {
     return await Organization.find({});
   }
