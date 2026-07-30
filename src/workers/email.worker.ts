@@ -13,7 +13,7 @@ dotenv.config();
 const emailUtils = new EmailUtils();
 const emailRepository= new EmailRepository();
 
-async function startWorker() {
+export async function startWorker() {
   try {
     await initDB();
 
@@ -132,4 +132,4 @@ emailQueue.process(QUEUE_JOBS.SEND_LEAD_ASSIGNED_EMAIL, async (job) => {
 
 }
 
-startWorker();
+// startWorker();

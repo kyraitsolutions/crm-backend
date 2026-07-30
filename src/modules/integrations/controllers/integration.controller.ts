@@ -42,4 +42,23 @@ export class IntegrationController {
 
     return res.redirect(`${process.env.FRONTEND_URL}/settings/whatsapp`);
   };
+  postWhatsappCallback = async (req: Request, res: Response) => {
+    // const code = req.query.code;
+    // const state = req.query.state;
+
+    const{code,accountId,organizationId}=req.body;
+    // const decodedState = JSON.parse(
+    //   Buffer.from(state as string, "base64").toString("utf-8"),
+    // );
+
+    const result = await this.service.completeWhatsAppSignup({
+      code: String(code),
+      accountId: accountId,
+      organizationId: organizationId,
+    });
+
+    console.log(result);
+
+    return res.redirect(`${process.env.FRONTEND_URL}/settings/whatsapp`);
+  };
 }

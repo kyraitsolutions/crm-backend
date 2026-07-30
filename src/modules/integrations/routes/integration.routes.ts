@@ -26,6 +26,12 @@ export class IntegrationRouter {
         this.integrationController,
       ),
     );
+    this.router.post(
+      "/whatsapp/callback",
+      this.integrationController.postWhatsappCallback.bind(
+        this.integrationController,
+      ),
+    );
 
     this.router.get(
       "/:accountId/:provider",

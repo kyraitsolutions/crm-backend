@@ -101,4 +101,61 @@ export class WhatsappAuthController {
       next(error);
     }
   };
+
+
+  postCallback = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { code, state,accountId } = req.query;
+
+      if (!code || !state||!accountId) {
+        res.status(400).send("Missing code or state");
+      }
+
+      const decodedState = JSON.parse(
+        Buffer.from(state as string, "base64").toString("utf-8"),
+      );
+      console.log("Decoded state", decodedState);
+
+      const redirectUri = `${ENV.URL.BACKEND_URL}/api/whatsapp/callback`;
+
+      // Exchange code for token
+      const tokenResponse = await axios.get(
+        "https://graph.facebook.com/v19.0/oauth/access_token",
+        {
+          params: {
+            client_id: ENV.META.APP_ID,
+            client_secret: ENV.META.APP_SECRET,
+            redirect_uri: redirectUri,
+            code,
+          },
+        },
+      );
+
+      console.log("token response", tokenResponse);
+
+      const shortLivedToken = tokenResponse.data.access_token;
+
+      const longLivedTokenResponse = await axios.get(
+        "https://graph.facebook.com/v19.0/oauth/access_token",
+        {
+          params: {
+            grant_type: "fb_exchange_token",
+            client_id: ENV.META.APP_ID,
+            client_secret: ENV.META.APP_SECRET,
+            fb_exchange_token: shortLivedToken,
+          },
+        },
+      );
+      console.log(longLivedTokenResponse);
+
+      // const accessToken = longLivedTokenResponse.data.access_token;
+      // const expiresIn = longLivedTokenResponse.data.expires_in;
+    } catch (error) {
+      next(error);
+    }
+  };
 }
