@@ -6,7 +6,7 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
-// import { startWorker } from "./workers/email.worker.js";
+import { startWorker } from "./workers/email.worker.js";
 // import { configureNumber } from "./modules/salesAgent/config/twilio.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { config } from "./config/index.js";
@@ -53,7 +53,7 @@ export class App {
   public async listen(port: number): Promise<void> {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-    // startWorker()
+    startWorker()
     // configureNumber()
     // await seedPermissions();
     server.listen(port, () => {
