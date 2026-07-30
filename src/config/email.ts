@@ -16,6 +16,9 @@ export class Transporter {
         user: ENV.SMTP.SMTP_USER,
         pass: ENV.SMTP.SMTP_PASS,
       },
+      tls: {
+          rejectUnauthorized: false
+      },
       debug: false,
       logger: false,
       connectionTimeout: 30000,
