@@ -56,7 +56,8 @@ export class App {
     startWorker()
     // configureNumber()
     // await seedPermissions();
-    server.listen("5000", () => {
+    server.listen(port, () => {
+      console.log(port)
       console.log(`Server is running on port ${port}`);
     });
   }

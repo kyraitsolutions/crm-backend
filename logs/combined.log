@@ -3512,3 +3512,41 @@
 {"level":"info","message":"Redis client connected","timestamp":"2026-07-29 22:59:15"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-07-29 23:01:03"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-07-30 09:29:51"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 13:52:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 13:52:17"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 13:52:18"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 13:54:18"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 13:54:19"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 13:54:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 13:56:11"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 13:56:12"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 13:56:13"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 13:59:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 13:59:16"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 13:59:18"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 13:59:44"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 13:59:44"}
+{"code":"EAUTH","command":"AUTH PLAIN","level":"error","message":"Email service connection failed: Invalid login: 535 Authentication Credentials Invalid","response":"535 Authentication Credentials Invalid","responseCode":535,"stack":"Error: Invalid login: 535 Authentication Credentials Invalid\n    at SMTPConnection._formatError (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:809:19)\n    at SMTPConnection._actionAUTHComplete (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:1595:34)\n    at SMTPConnection.<anonymous> (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:556:26)\n    at SMTPConnection._processResponse (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:993:20)\n    at SMTPConnection._onData (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:774:14)\n    at SMTPConnection._onSocketData (D:\\Kyra\\chat-base-api\\node_modules\\nodemailer\\lib\\smtp-connection\\index.js:195:44)\n    at TLSSocket.emit (node:events:519:28)\n    at addChunk (node:internal/streams/readable:561:12)\n    at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)\n    at Readable.push (node:internal/streams/readable:392:5)","timestamp":"2026-07-30 13:59:45"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-07-30 14:04:37"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:04:46"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:04:48"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:04:53"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:10:03"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:10:04"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:10:05"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:10:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:10:30"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:10:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:11:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:11:28"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:11:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:12:24"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:12:25"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:12:25"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-07-30 14:12:40"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-07-30 14:12:41"}
+{"level":"info","message":"Email service connection verified successfully","timestamp":"2026-07-30 14:12:41"}
+{"level":"info","message":"OTP email queued for abhijeetsingh5631@gmail.com","timestamp":"2026-07-30 14:12:45"}
+{"level":"info","message":"Processing otp email for abhijeetsingh5631@gmail.com","timestamp":"2026-07-30 14:12:46"}
+{"level":"info","message":"Email sent successfully to abhijeetsingh5631@gmail.com:","timestamp":"2026-07-30 14:12:48"}
+{"level":"info","message":"Email job 1225 completed","timestamp":"2026-07-30 14:12:48"}
