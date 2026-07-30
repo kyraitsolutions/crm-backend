@@ -11,7 +11,7 @@ export class Transporter {
     this.transporter = nodemailer.createTransport({
       host: ENV.SMTP.SMTP_HOST,
       port: parseInt(ENV.SMTP.SMTP_PORT || "587"),
-      secure: false, // true for 465, false for other ports
+      secure: true, // true for 465, false for other ports
       auth: {
         user: ENV.SMTP.SMTP_USER,
         pass: ENV.SMTP.SMTP_PASS,
