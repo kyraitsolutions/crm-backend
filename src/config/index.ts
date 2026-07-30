@@ -2,7 +2,7 @@ import { ENV } from "../constants/index.js";
 
 export const config = {
   app: {
-    port: Number(ENV.APP.PORT) || 3000,
+    port: 5000,
   },
 
   auth: {
