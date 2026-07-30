@@ -78,10 +78,16 @@ export const ENV = {
   },
 
   SMTP: {
+    AWS_EMAIL_REGION:process.env.AWS_EMAIL_REGION,
+    AWS_FROM_EMAIL:process.env.AWS_FROM_EMAIL,
+    EMAIl_AWS_ACCESS_KEY_ID:process.env.EMAIl_AWS_ACCESS_KEY_ID,
+    EMAIL_AWS_SECRET_KEY:process.env.EMAIL_AWS_SECRET_KEY,
     SMTP_HOST: process.env.SMTP_HOST!,
     SMTP_PORT: process.env.SMTP_PORT!,
     SMTP_USER: process.env.SMTP_USER!,
     SMTP_PASS: process.env.SMTP_PASS!,
+    FROM_EMAIL: process.env.FROM_EMAIL!,
+
   },
 
   REDIS: {

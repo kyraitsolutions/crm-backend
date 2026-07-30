@@ -1,15 +1,18 @@
 import logger from "./logger.js";
-import { Transporter } from "../config/email.js";
+// import { Transporter } from "../config/email.js";
 import Handlebars from "handlebars";
 import path from "path";
 import fs from "fs";
 import { EMAIL_TEMPLATES_PATH } from "../constants/path.js";
+import { SendEmailCommand } from "@aws-sdk/client-ses";
+import { sesClient } from "../config/email.js";
+import { ENV } from "../constants/env.constants.js";
 
 export class EmailUtils {
-  private transporter: Transporter;
+  // private transporter: Transporter;
 
   constructor() {
-    this.transporter = new Transporter();
+    // this.transporter = new Transporter();
   }
 
   async sendOnboardingSuccessEmail({
@@ -51,6 +54,32 @@ export class EmailUtils {
       return false;
     }
   }
+  // async sendEmail(
+  //   to: string,
+  //   subject: string,
+  //   html: string,
+  //   text?: string,
+  //   from?: string,
+  // ): Promise<{ status: boolean; messageId: string | null }> {
+  //   try {
+  //     const mailOptions = {
+  //       from: from || process.env.FROM_EMAIL,
+  //       to,
+  //       subject,
+  //       html,
+  //       text: text || html.replace(/<[^>]*>/g, ""), // Strip HTML tags for text version
+  //     };
+
+  //     // const result = await this.transporter.sendMail(mailOptions);
+  //     const result={}
+  //     logger.info(`Email sent successfully to ${to}:`, result.messageId);
+  //     return { status: true, messageId: result.messageId };
+  //   } catch (error) {
+  //     logger.error(`Failed to send email to ${to}:`, error);
+  //     return { status: false, messageId: null };
+  //   }
+  // }
+
   async sendEmail(
     to: string,
     subject: string,
@@ -59,20 +88,48 @@ export class EmailUtils {
     from?: string,
   ): Promise<{ status: boolean; messageId: string | null }> {
     try {
-      const mailOptions = {
-        from: from || process.env.FROM_EMAIL,
-        to,
-        subject,
-        html,
-        text: text || html.replace(/<[^>]*>/g, ""), // Strip HTML tags for text version
-      };
+      logger.info(`Email is aliged for send`)
+      const command = new SendEmailCommand({
+        Source: from || ENV.SMTP.AWS_FROM_EMAIL!,
+        Destination: {
+          ToAddresses: [to],
+        },
+        Message: {
+          Subject: {
+            Data: subject,
+            Charset: "UTF-8",
+          },
+          Body: {
+            Html: {
+              Data: html,
+              Charset: "UTF-8",
+            },
+            Text: {
+              Data: text || html.replace(/<[^>]*>/g, ""),
+              Charset: "UTF-8",
+            },
+          },
+        },
+      });
 
-      const result = await this.transporter.sendMail(mailOptions);
-      logger.info(`Email sent successfully to ${to}:`, result.messageId);
-      return { status: true, messageId: result.messageId };
+      const result = await sesClient.send(command);
+      console.log("Result",result)
+
+      logger.info(
+        `Email sent successfully to ${to}: ${result.MessageId}`,
+      );
+
+      return {
+        status: true,
+        messageId: result.MessageId ?? null,
+      };
     } catch (error) {
       logger.error(`Failed to send email to ${to}:`, error);
-      return { status: false, messageId: null };
+
+      return {
+        status: false,
+        messageId: null,
+      };
     }
   }
 
