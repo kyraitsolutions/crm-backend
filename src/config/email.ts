@@ -18,6 +18,9 @@ export class Transporter {
       },
       debug: false,
       logger: false,
+      connectionTimeout: 30000,
+      greetingTimeout: 30000,
+      socketTimeout: 30000,
     });
     this.verifyConnection();
   }
