@@ -23,7 +23,7 @@ export const MEDIA: Record<string, MediaConfig> = {
   },
 
   document: {
-    maxSize: 20 * 1024 * 1024,
+    maxSize: 5 * 1024 * 1024,
     mimeTypes: [
       "pdf",
       "doc",
@@ -35,7 +35,7 @@ export const MEDIA: Record<string, MediaConfig> = {
   },
 
   audio: {
-    maxSize: 20 * 1024 * 1024,
+    maxSize: 10 * 1024 * 1024,
     mimeTypes: ["audio/mpeg", "audio/wav"],
   },
 };

@@ -11,7 +11,7 @@ const conversationSchema = new Schema(
 
     visitorId: {
       type: String,
-      required: true,
+      // required: true,
       index: true,
     },
 
@@ -29,6 +29,12 @@ const conversationSchema = new Schema(
       instagramUserId: {
         type: String,
       },
+    },
+
+    contact: {
+      name: String,
+      phoneNumber: String,
+      profilePicture: String,
     },
 
     platform: {
@@ -130,15 +136,10 @@ const conversationSchema = new Schema(
   },
 );
 
-conversationSchema.index(
-  {
-    visitorId: 1,
-    platform: 1,
-  },
-  {
-    unique: true,
-  },
-);
+conversationSchema.index({
+  visitorId: 1,
+  platform: 1,
+});
 
 conversationSchema.index({
   accountId: 1,

@@ -150,7 +150,18 @@ export class ConversationService {
             $options: "i",
           },
         },
-
+        {
+          "contact.name": {
+            $regex: search,
+            $options: "i",
+          },
+        },
+        {
+          "contact.phoneNumber": {
+            $regex: search,
+            $options: "i",
+          },
+        },
         {
           "lastMessage.text": {
             $regex: search,
@@ -203,4 +214,24 @@ export class ConversationService {
   async getConversationByVisitor(visitorId: string) {
     return this.repository.getConversationByVisitor(visitorId);
   }
+
+  async getOrCreateConversation({
+    filter,
+    create,
+  }: {
+    filter: any;
+    create: Partial<TConversation>;
+  }) {
+    let conversation = await this.repository.findOne(filter);
+
+    if (conversation) {
+      return conversation;
+    }
+
+    conversation = await this.repository.createConversation(create);
+
+    return conversation;
+  }
 }
+
+export const conversationService = new ConversationService();

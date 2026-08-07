@@ -12,21 +12,6 @@ export class IntegrationRouter {
   }
 
   private initializeRoutes() {
-    this.router.post(
-      "/whatsapp/connect",
-      AuthMiddleware.authenticate,
-      this.integrationController.connectWhatsApp.bind(
-        this.integrationController,
-      ),
-    );
-
-    this.router.get(
-      "/whatsapp/callback",
-      this.integrationController.whatsappCallback.bind(
-        this.integrationController,
-      ),
-    );
-
     this.router.get(
       "/:accountId/:provider",
       AuthMiddleware.authenticate,

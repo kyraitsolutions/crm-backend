@@ -91,6 +91,8 @@ export class ErrorMiddleware {
     let message = err?.message || "Internal server error";
     let errors: any[] = [];
 
+    console.log(err?.response?.data);
+
     // Custom Error
     if (err.statusCode) {
       statusCode = err.statusCode;
@@ -167,7 +169,9 @@ export class ErrorMiddleware {
     // Meta API Error
     else if (err.response?.data?.error) {
       statusCode = err.response.status || 400;
-      message = err.response.data.error.message;
+      message =
+        err.response.data.error.error_data?.details ||
+        err.response.data.error.message;
     }
 
     res.status(statusCode).json({

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { config } from "../../../../config/index.js";
+import FormData from "form-data";
 
 export class WhatsappApiClient {
   protected async post(endpoint: string, accessToken: string, payload: any) {
@@ -8,6 +9,8 @@ export class WhatsappApiClient {
         `${config.meta.GRAPH_BASE_URL}` +
         `/${config.meta.GRAPH_VERSION}` +
         endpoint;
+
+      console.log("url", url);
 
       const { data } = await axios.post(url, payload, {
         headers: {
@@ -98,5 +101,57 @@ export class WhatsappApiClient {
 
       throw error;
     }
+  }
+
+  protected async postFormData(
+    endpoint: string,
+    accessToken: string,
+    form: FormData,
+  ) {
+    try {
+      const url =
+        `${config.meta.GRAPH_BASE_URL}` +
+        `/${config.meta.GRAPH_VERSION}` +
+        endpoint;
+
+      const { data } = await axios.post(url, form, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          ...form.getHeaders(),
+        },
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+      });
+
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Meta API Error:", error.response?.data);
+
+        throw new Error(
+          error?.response?.data?.error?.error_user_msg ||
+            error?.response?.data?.error?.error_msg ||
+            error?.response?.data?.error?.message ||
+            "Failed to communicate with Meta.",
+        );
+      }
+
+      throw error;
+    }
+  }
+
+  protected async download(url: string, accessToken: string) {
+    const { data, headers } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: "arraybuffer",
+    });
+
+    return {
+      buffer: Buffer.from(data),
+      contentType: headers["content-type"],
+      contentLength: headers["content-length"],
+    };
   }
 }

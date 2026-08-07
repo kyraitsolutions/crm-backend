@@ -3,10 +3,10 @@ import { WhatsAppAccountModel } from "../models/whatsapp-account.model.js";
 
 export class WhatsAppAccountRepository {
   async createAndUpdate(data: any, session?: ClientSession) {
-    console.log("Data", data);
     return WhatsAppAccountModel.findOneAndUpdate(
       {
         integrationId: new Types.ObjectId(data.integrationId),
+        "phoneNumberInfo.id": data.phoneNumberInfo.id,
       },
       {
         $set: data,
@@ -27,6 +27,12 @@ export class WhatsAppAccountRepository {
   async findByIntegrationId(integrationId: string) {
     return WhatsAppAccountModel.findOne({
       integrationId,
+    });
+  }
+
+  async findByPhoneNumberId(phoneNumberId: string) {
+    return WhatsAppAccountModel.findOne({
+      "phoneNumberInfo.id": phoneNumberId,
     });
   }
 

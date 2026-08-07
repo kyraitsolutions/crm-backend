@@ -37,7 +37,7 @@ export class AccountService {
     if (!account) {
       throw new Error("Account not found");
     }
-    console.log("account", new AccountDto(account));
+
     return {
       doc: new AccountDto(account),
     };

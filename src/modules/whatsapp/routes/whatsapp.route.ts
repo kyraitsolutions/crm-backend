@@ -1,46 +1,38 @@
 import { Router } from "express";
-import { WhatsappAuthRouter } from "./whatsapp-auth.route.js";
 import { WhatsappTemplateRouter } from "./whatsapp-template.route.js";
 import { WhatsappWebhookRouter } from "./whatsapp-webhook.route.js";
+import { WhatsAppMessageRouter } from "./whatsapp-message.route.js";
 
 export class WhatsappRouter {
   public router: Router;
 
-  private whatsappAuthRouter: WhatsappAuthRouter;
   private whatsappTemplateRouter: WhatsappTemplateRouter;
   private whatsappWebhookRouter = new WhatsappWebhookRouter();
-  // private whatsappAccountRouter: whatsappAccountRouter;
-  // private whatsappMarketingRouter: whatsappMarketingRouter;
-  // private whatsappChatbotRouter: whatsappChatbotRouter;
+  private whatsappMessageRouter = new WhatsAppMessageRouter();
 
   constructor() {
     this.router = Router();
-
-    this.whatsappAuthRouter = new WhatsappAuthRouter();
     this.whatsappTemplateRouter = new WhatsappTemplateRouter();
-
-    // this.whatsappAccountRouter = new whatsappAccountRouter();
-    // this.whatsappMarketingRouter = new whatsappMarketingRouter();
-    // this.whatsappChatbotRouter = new whatsappChatbotRouter();
+    this.whatsappMessageRouter = new WhatsAppMessageRouter();
 
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
-    // Auth endpoint
-    this.router.use("/auth", this.whatsappAuthRouter.getRouter());
-
     // Templates endpoint
     this.router.use(
-      "/accounts/:accountId/templates",
+      "/account/:accountId/templates",
       this.whatsappTemplateRouter.getRouter(),
+    );
+
+    // Messages endpoint
+    this.router.use(
+      "/account/:accountId/message",
+      this.whatsappMessageRouter.getRouter(),
     );
 
     // Webhook endpoint
     this.router.use("/webhook", this.whatsappWebhookRouter.getRouter());
-    // this.router.use("/account", this.whatsappAccountRouter.getRouter());
-    // this.router.use("/marketing", this.whatsappMarketingRouter.getRouter());
-    // this.router.use("/chatbot", this.whatsappChatbotRouter.getRouter());
   }
 
   public getRouter(): Router {

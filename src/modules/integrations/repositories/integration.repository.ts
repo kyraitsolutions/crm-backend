@@ -11,6 +11,7 @@ export class IntegrationRepository {
     data: {
       organizationId: string;
       accountId: string;
+      providerResourceId: string;
       provider: IntegrationProvider;
     },
     session?: ClientSession,
