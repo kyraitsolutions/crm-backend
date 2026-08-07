@@ -88,9 +88,10 @@ export class EmailUtils {
     from?: string,
   ): Promise<{ status: boolean; messageId: string | null }> {
     try {
-      logger.info(`Email is aliged for send`)
+      logger.info(`Email is aliged for send ${from}`)
       const command = new SendEmailCommand({
-        Source: from || ENV.SMTP.AWS_FROM_EMAIL!,
+        Source: ENV.SMTP.AWS_FROM_EMAIL!,
+        ReplyToAddresses: [String(from)],
         Destination: {
           ToAddresses: [to],
         },
@@ -116,7 +117,7 @@ export class EmailUtils {
       console.log("Result",result)
 
       logger.info(
-        `Email sent successfully to ${to}: ${result.MessageId}`,
+        `Email sent successfully to ${to}: ${result?.MessageId}`,
       );
 
       return {

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger.js";
 import httpResponse from "../utils/http.response.js";
 import { EmailService } from "../services/email.service.js";
+import { accountService } from "../container.js";
 
 // TBD
 
@@ -100,7 +101,8 @@ export class EmailController {
             const { accountId } = req.params;
             console.log(accountId)
             const {leadId,contactId, name , emails, subject, html} = req.body;
-
+            const result = await accountService.getAccountById(accountId);
+            console.log("jkhgfd",result.doc.email)
             await this.emailService.sendMultipleEmail({
                 accountId,
                 leadId,
@@ -109,7 +111,7 @@ export class EmailController {
                 emails,
                 subject,
                 html,
-                fromEmail:"kyraitsolutions"
+                fromEmail:result.doc.email
             });
 
             httpResponse(req, res, 200, "Campaign setup successfully", {

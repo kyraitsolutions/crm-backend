@@ -61,6 +61,7 @@ function registerProcessors() {
   });
 
   emailQueue.process("send-email-activity",async (job) => {
+    console.log("Job data",job.data)
       const { emailActivityId, to, name, subject, html, fromEmail, } = job.data;
 
     try {

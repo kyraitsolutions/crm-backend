@@ -95,6 +95,8 @@ export class EmailService {
     if (!emails.length) {
       throw new Error("No leads provided for campaign");
     }
+
+    console.log("Yes working", fromEmail,emails,name);
     for (let i = 0; i < emails.length; i++) {
       const email = emails[i];
 
@@ -113,7 +115,7 @@ export class EmailService {
       });
 
       // Step 2: Queue email
-      await emailQueue.add(
+      const response=await emailQueue.add(
         "send-email-activity",
         {
           emailActivityId: emailActivity._id,
@@ -133,6 +135,8 @@ export class EmailService {
           attempts: 3,
         },
       );
+
+      console.log(response)
     }
 
     logger.info(
