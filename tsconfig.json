@@ -18,6 +18,6 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext"
   },
-  "include": ["src/**/*", "../../chatbot-script/utils/leadFieldMapper.ts", "../../crm-frontend/src/constants/permissions.ts"],
+  "include": ["src/**/*",],
   "exclude": ["node_modules", "dist"]
 }

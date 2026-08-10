@@ -24,7 +24,7 @@ export class MessageController {
 
     const payload = new SendMessageDto({
       ...body,
-      file: req.file,
+      file: req.file || null,
     }).validate();
 
     console.log(payload);

@@ -75,13 +75,13 @@ export class WhatsAppIntegrationService {
         lastErrorMessage: null,
       };
 
-      let historySync: SyncState = account?.historySync ?? {
-        status: SyncStatus.NOT_REQUESTED,
-        requestId: null,
-        lastAttemptAt: null,
-        lastErrorCode: null,
-        lastErrorMessage: null,
-      };
+      // let historySync: SyncState = account?.historySync ?? {
+      //   status: SyncStatus.NOT_REQUESTED,
+      //   requestId: null,
+      //   lastAttemptAt: null,
+      //   lastErrorCode: null,
+      //   lastErrorMessage: null,
+      // };
 
       if (
         contactSync.status !== SyncStatus.COMPLETED &&
@@ -126,48 +126,48 @@ export class WhatsAppIntegrationService {
         }
       }
 
-      if (
-        historySync.status !== SyncStatus.COMPLETED &&
-        historySync.status !== SyncStatus.NOT_SUPPORTED
-      ) {
-        try {
-          const response = await this.whatsappClient.startHistorySync(
-            business.phoneNumberInfo.id,
-            accessToken,
-          );
+      // if (
+      //   historySync.status !== SyncStatus.COMPLETED &&
+      //   historySync.status !== SyncStatus.NOT_SUPPORTED
+      // ) {
+      //   try {
+      //     const response = await this.whatsappClient.startHistorySync(
+      //       business.phoneNumberInfo.id,
+      //       accessToken,
+      //     );
 
-          historySync = {
-            status: SyncStatus.COMPLETED,
-            requestId: response.request_id,
-            lastAttemptAt: new Date(),
-            lastErrorCode: null,
-            lastErrorMessage: null,
-          };
-        } catch (error) {
-          const err = error as AxiosError<MetaApiErrorResponse>;
-          const metaError = err.response?.data?.error;
+      //     historySync = {
+      //       status: SyncStatus.COMPLETED,
+      //       requestId: response.request_id,
+      //       lastAttemptAt: new Date(),
+      //       lastErrorCode: null,
+      //       lastErrorMessage: null,
+      //     };
+      //   } catch (error) {
+      //     const err = error as AxiosError<MetaApiErrorResponse>;
+      //     const metaError = err.response?.data?.error;
 
-          if (metaError?.code === 131000) {
-            historySync = {
-              status: SyncStatus.NOT_SUPPORTED,
-              requestId: null,
-              lastAttemptAt: new Date(),
-              lastErrorCode: metaError.code,
-              lastErrorMessage: metaError.message,
-            };
-          } else {
-            historySync = {
-              status: SyncStatus.FAILED,
-              requestId: null,
-              lastAttemptAt: new Date(),
-              lastErrorCode: metaError?.code ?? null,
-              lastErrorMessage: metaError?.message ?? "Unknown Error",
-            };
+      //     if (metaError?.code === 131000) {
+      //       historySync = {
+      //         status: SyncStatus.NOT_SUPPORTED,
+      //         requestId: null,
+      //         lastAttemptAt: new Date(),
+      //         lastErrorCode: metaError.code,
+      //         lastErrorMessage: metaError.message,
+      //       };
+      //     } else {
+      //       historySync = {
+      //         status: SyncStatus.FAILED,
+      //         requestId: null,
+      //         lastAttemptAt: new Date(),
+      //         lastErrorCode: metaError?.code ?? null,
+      //         lastErrorMessage: metaError?.message ?? "Unknown Error",
+      //       };
 
-            throw error;
-          }
-        }
-      }
+      //       throw error;
+      //     }
+      //   }
+      // }
 
       // 6. Create Integration for Whats'App
       const integration = await this.integrationRepo.createAndUpdate(
@@ -201,7 +201,7 @@ export class WhatsAppIntegrationService {
           profile: business.businessProfile,
           webhookSubscribed: subscribedApps.success,
           contactSync: contactSync,
-          historySync: historySync,
+          // historySync: historySync,
         },
         session,
       );

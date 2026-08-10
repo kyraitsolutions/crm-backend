@@ -5606,3 +5606,6 @@
 {"level":"info","message":"Redis client reconnecting...","timestamp":"2026-08-09 12:03:33"}
 {"level":"info","message":"Redis client connected","timestamp":"2026-08-09 12:03:33"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-08-09 12:03:33"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-10 23:27:43"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-10 23:27:43"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-08-10 23:48:37"}

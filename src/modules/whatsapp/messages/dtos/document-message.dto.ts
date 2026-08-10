@@ -7,7 +7,7 @@ export class DocumentMessageDto {
     caption?: string;
   };
 
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | null;
 
   constructor(data: DocumentMessageDto) {
     this.document = data.document;

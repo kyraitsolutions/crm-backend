@@ -26,6 +26,9 @@ export const ConversationSchema = z.object({
   visitorId: z.string(),
   platform: PlatformSchema,
   identifiers: IdentifiersSchema,
+  contact: z.object({
+    phoneNumber: z.string(),
+  }),
   status: ConversationStatusSchema.default("open"),
   lastMessage: LastMessageSchema.optional(),
   unreadCount: z.number().default(0),

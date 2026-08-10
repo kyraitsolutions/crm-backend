@@ -1,4 +1,9 @@
 // whatsapp/messages/constants/media.constant.ts
+interface WhatsAppMediaConfig {
+  maxSize: number;
+  mimeTypes: readonly string[];
+}
+
 export const WHATSAPP_MEDIA = {
   image: {
     maxSize: 5 * 1024 * 1024, // 5 MB
@@ -41,6 +46,6 @@ export const WHATSAPP_MEDIA = {
       "application/zip",
     ],
   },
-} as const;
+} satisfies Record<string, WhatsAppMediaConfig>;
 
 export type WhatsAppMediaType = keyof typeof WHATSAPP_MEDIA;

@@ -7,7 +7,7 @@ export class VideoMessageDto {
     caption?: string;
   };
 
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | null;
 
   constructor(data: VideoMessageDto) {
     this.video = data.video;
