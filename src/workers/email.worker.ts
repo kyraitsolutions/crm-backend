@@ -5,29 +5,26 @@ import logger from "../utils/logger.js";
 import { EmailUtils } from "../utils/email.utils.js";
 import { QUEUE_JOBS } from "../constants/queue-jobs.constant.js";
 import { EmailRepository } from "../repositories/email.repository.js";
-import { initDB } from "../db/index.js";
-import mongoose from "mongoose";
+// import { initDB } from "../db/index.js";
+// import mongoose from "mongoose";
 
 dotenv.config();
 
 const emailUtils = new EmailUtils();
-const emailRepository= new EmailRepository();
+const emailRepository = new EmailRepository();
 
-export async function startWorker() {
-  try {
-    await initDB();
+// export async function startWorker() {
+//   try {
+//     await initDB();
 
-    console.log(
-      "Worker Mongo State:",
-      mongoose.connection.readyState
-    );
+//     console.log("Worker Mongo State:", mongoose.connection.readyState);
 
-    registerProcessors();
-  } catch (error) {
-    console.error("Worker startup failed", error);
-    process.exit(1);
-  }
-}
+//     registerProcessors();
+//   } catch (error) {
+//     console.error("Worker startup failed", error);
+//     process.exit(1);
+//   }
+// }
 function registerProcessors() {
   emailQueue.process("welcome-email", async (job) => {
     const { email, url } = job.data;
@@ -131,6 +128,43 @@ function registerProcessors() {
     await emailUtils.sendLeadAssignedEmail(email, lead);
   });
 
+  emailQueue.process(QUEUE_JOBS.SEND_ONBOARDING_EMAIL, async (job) => {
+    const {
+      organizationName,
+      firstName,
+      lastName,
+      email,
+      dashboardUrl,
+      supportEmail,
+      createdAt,
+      year,
+    } = job.data;
+    await emailUtils.sendOnboardingSuccessEmail({
+      organizationName,
+      firstName,
+      lastName,
+      email,
+      dashboardUrl,
+      supportEmail,
+      createdAt,
+      year,
+    });
+  });
+
+  emailQueue.process(QUEUE_JOBS.SEND_TASK_ASSIGNED_EMAIL, async (job) => {
+    const { email, task } = job.data;
+    await emailUtils.sendTaskAssignedEmail(email, task);
+    // await emailUtils.sendEmail(
+    //   email,
+    //   `New Task Assigned: ${task?.taskTitle}`,
+    //   `New Task Assigned: ${task?.taskTitle}`,
+    // );
+  });
+
+  emailQueue.process(QUEUE_JOBS.SEND_LEAD_ASSIGNED_EMAIL, async (job) => {
+    const { email, lead } = job.data;
+    await emailUtils.sendLeadAssignedEmail(email, lead);
+  });
 }
 
 // startWorker();

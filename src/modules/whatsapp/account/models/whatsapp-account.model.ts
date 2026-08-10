@@ -1,5 +1,13 @@
 import { Schema, model } from "mongoose";
 
+export enum SyncStatus {
+  NOT_REQUESTED = "NOT_REQUESTED",
+  REQUESTED = "REQUESTED",
+  NOT_SUPPORTED = "NOT_SUPPORTED",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
 const WhatsAppBusinessProfileSchema = new Schema(
   {
     about: String,
@@ -121,13 +129,45 @@ const PhoneNumberInfoSchema = new Schema(
   },
 );
 
+const SyncRequestSchema = new Schema(
+  {
+    status: {
+      type: String,
+      enum: Object.values(SyncStatus),
+      default: SyncStatus.NOT_REQUESTED,
+    },
+
+    requestId: {
+      type: String,
+      default: null,
+    },
+
+    lastAttemptAt: {
+      type: Date,
+      default: null,
+    },
+
+    lastErrorCode: {
+      type: Number,
+      default: null,
+    },
+
+    lastErrorMessage: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
 const WhatsAppAccountSchema = new Schema(
   {
     integrationId: {
       type: Schema.Types.ObjectId,
       ref: "Integration",
       required: true,
-      unique: true,
       index: true,
     },
 
@@ -175,6 +215,16 @@ const WhatsAppAccountSchema = new Schema(
       type: Date,
       default: null,
     },
+
+    historySync: {
+      type: SyncRequestSchema,
+      default: () => ({}),
+    },
+
+    contactSync: {
+      type: SyncRequestSchema,
+      default: () => ({}),
+    },
   },
   {
     timestamps: true,
@@ -190,4 +240,7 @@ const WhatsAppAccountSchema = new Schema(
   },
 );
 
-export const WhatsAppAccountModel = model("WhatsAppAccount",WhatsAppAccountSchema);
+export const WhatsAppAccountModel = model(
+  "WhatsAppAccount",
+  WhatsAppAccountSchema,
+);

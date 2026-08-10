@@ -18,6 +18,13 @@ import { TConversation } from "../types/conversation.type.js";
 // };
 
 export class ConversationRepository {
+  async findOne(filter: any): Promise<TConversation | null> {
+    return await ConversationModel.findOne({
+      ...filter,
+      isDeleted: false,
+    });
+  }
+
   async countConversations(filter: any) {
     return ConversationModel.countDocuments(filter);
   }

@@ -35,6 +35,13 @@ const IntegrationSchema = new Schema(
       index: true,
     },
 
+    providerResourceId: {
+      type: String,
+      required: true,
+      index: true,
+      unique: true,
+    },
+
     status: {
       type: String,
       enum: Object.values(IntegrationStatus),

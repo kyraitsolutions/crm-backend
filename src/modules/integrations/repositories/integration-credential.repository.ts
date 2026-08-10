@@ -7,7 +7,7 @@ export class IntegrationCredentialRepository {
       integrationId: string;
       accessToken: string;
       type: string;
-      tokenExpiresAt?: Date;
+      tokenExpiresAt?: Date | null;
     },
     session?: ClientSession,
   ) {

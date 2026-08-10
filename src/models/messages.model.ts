@@ -137,6 +137,12 @@ const MessageSchema = new Schema(
         size: Number,
         mimetype: String,
       },
+      audio: {
+        id: String,
+        link: String,
+        size: Number,
+        mimetype: String,
+      },
     },
 
     interactive: Schema.Types.Mixed,
@@ -207,6 +213,7 @@ const MessageSchema = new Schema(
     },
 
     analytics: {
+      sentAt: Date,
       deliveredAt: Date,
       readAt: Date,
       repliedAt: Date,
@@ -222,6 +229,10 @@ const MessageSchema = new Schema(
     error: {
       code: String,
       message: String,
+      title: String,
+      details: String,
+      href: String,
+      raw: Schema.Types.Mixed,
     },
 
     metadata: {

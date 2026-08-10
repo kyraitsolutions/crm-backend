@@ -19,7 +19,10 @@ const schema = new Schema(
       required: true,
     },
 
-    tokenExpiresAt: Date,
+    tokenExpiresAt: {
+      type: Date || null,
+      default: null,
+    },
   },
   {
     timestamps: true,

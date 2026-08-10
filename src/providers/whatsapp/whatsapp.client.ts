@@ -8,7 +8,7 @@ export class WhatsAppClient {
   private readonly appId = config.meta.APP_ID!;
   private readonly appSecret = config.meta.APP_SECRET;
   private readonly graphVersion = config.meta.GRAPH_VERSION;
-  private readonly redirectUri = config.meta.REDIRECT_URI;
+  // private readonly redirectUri = config.meta.REDIRECT_URI;
 
   constructor() {
     this.graphApi = axios.create({
@@ -17,52 +17,51 @@ export class WhatsAppClient {
     });
   }
 
-  generateConnectUrl(payload: { accountId: string; organizationId: string }) {
-    const state = Buffer.from(
-      JSON.stringify({
-        accountId: payload.accountId,
-        organizationId: payload.organizationId,
-      }),
-    ).toString("base64");
+  // generateConnectUrl(payload: { accountId: string; organizationId: string }) {
+  //   const state = Buffer.from(
+  //     JSON.stringify({
+  //       accountId: payload.accountId,
+  //       organizationId: payload.organizationId,
+  //     }),
+  //   ).toString("base64");
 
-    // const params = new URLSearchParams({
-    //   client_id: config.meta.APP_ID,
-    //   redirect_uri: config.meta.REDIRECT_URI as string,
-    //   response_type: "code",
-    //   scope: [
-    //     "whatsapp_business_management",
-    //     "whatsapp_business_messaging",
-    //     // "business_management",
-    //   ].join(","),
+  //   // const params = new URLSearchParams({
+  //   //   client_id: config.meta.APP_ID,
+  //   //   redirect_uri: config.meta.REDIRECT_URI as string,
+  //   //   response_type: "code",
+  //   //   scope: [
+  //   //     "whatsapp_business_management",
+  //   //     "whatsapp_business_messaging",
+  //   //     // "business_management",
+  //   //   ].join(","),
 
-    //   state,
-    // });
+  //   //   state,
+  //   // });
 
-    const signupUrl =
-      `https://www.facebook.com/${config.meta.GRAPH_VERSION}/dialog/oauth` +
-      `?client_id=${config.meta.APP_ID}` +
-      `&redirect_uri=${encodeURIComponent(config.meta.REDIRECT_URI as string)}` +
-      `&response_type=code` +
-      `&state=${state}` +
-      `&scope=${encodeURIComponent("business_management, whatsapp_business_management,whatsapp_business_messaging")}` +
-      `&extras=${encodeURIComponent(
-        JSON.stringify({
-          feature: "whatsapp_embedded_signup",
-          setup: { business: { isWebsiteRequired: false } },
-        }),
-      )}`;
+  //   const signupUrl =
+  //     `https://www.facebook.com/${config.meta.GRAPH_VERSION}/dialog/oauth` +
+  //     `?client_id=${config.meta.APP_ID}` +
+  //     `&redirect_uri=${encodeURIComponent(config.meta.REDIRECT_URI as string)}` +
+  //     `&response_type=code` +
+  //     `&state=${state}` +
+  //     `&scope=${encodeURIComponent("business_management, whatsapp_business_management,whatsapp_business_messaging")}` +
+  //     `&extras=${encodeURIComponent(
+  //       JSON.stringify({
+  //         feature: "whatsapp_embedded_signup",
+  //         setup: { business: { isWebsiteRequired: false } },
+  //       }),
+  //     )}`;
 
-    return signupUrl;
+  //   return signupUrl;
 
-    // return `https://www.facebook.com/${process.env.META_GRAPH_VERSION}/dialog/oauth?${params.toString()}`;
-  }
+  //   // return `https://www.facebook.com/${process.env.META_GRAPH_VERSION}/dialog/oauth?${params.toString()}`;
+  // }
 
   async exchangeCode(code: string) {
     const { data } = await this.graphApi.get("/oauth/access_token", {
       params: {
         client_id: this.appId,
         client_secret: this.appSecret,
-        redirect_uri: this.redirectUri,
         code,
       },
     });
@@ -166,8 +165,8 @@ export class WhatsAppClient {
       {
         params: {
           access_token: accessToken,
-
-          fields: "about,address,description,email,websites,vertical",
+          fields:
+            "about,address,profile_picture_url,description,email,websites,vertical",
         },
       },
     );
@@ -228,6 +227,50 @@ export class WhatsAppClient {
     const { data } = await this.graphApi.post(
       `/${wabaId}/subscribed_apps`,
       {},
+      {
+        params: {
+          access_token: accessToken,
+        },
+      },
+    );
+
+    return data;
+  }
+
+  async getSubscribedApps(wabaId: string, accessToken: string) {
+    const { data } = await this.graphApi.get(`/${wabaId}/subscribed_apps`, {
+      params: {
+        access_token: accessToken,
+      },
+    });
+
+    return data;
+  }
+
+  async startContactSync(phoneNumberId: string, accessToken: string) {
+    const { data } = await this.graphApi.post(
+      `/${phoneNumberId}/smb_app_data`,
+      {
+        messaging_product: "whatsapp",
+        sync_type: "smb_app_state_sync",
+      },
+      {
+        params: {
+          access_token: accessToken,
+        },
+      },
+    );
+
+    return data;
+  }
+
+  async startHistorySync(phoneNumberId: string, accessToken: string) {
+    const { data } = await this.graphApi.post(
+      `/${phoneNumberId}/smb_app_data`,
+      {
+        messaging_product: "whatsapp",
+        sync_type: "history",
+      },
       {
         params: {
           access_token: accessToken,

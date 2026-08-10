@@ -1,4 +1,4 @@
-import { ClientSession } from "mongoose";
+import { ClientSession, FilterQuery, UpdateQuery } from "mongoose";
 import { MessageModel } from "../models/messages.model.js";
 import { TMessage } from "../types/message.type.js";
 
@@ -32,5 +32,22 @@ export class MessageRepository {
       .lean();
 
     return messages;
+  }
+
+  public async updateMessage(
+    filter: FilterQuery<any>,
+    update: UpdateQuery<any>,
+  ) {
+    return MessageModel.findOneAndUpdate(
+      filter,
+      { $set: update },
+      {
+        new: true,
+      },
+    );
+  }
+
+  public async deleteMessagesByConversationId(conversationId: string) {
+    return MessageModel.deleteMany({ conversationId });
   }
 }
