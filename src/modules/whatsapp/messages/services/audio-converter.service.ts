@@ -4,7 +4,9 @@ import fs from "fs/promises";
 import os from "os";
 import path from "path";
 
-ffmpeg.setFfmpegPath(ffmpegPath as string);
+// const ffmpegPath = require("ffmpeg-static")
+
+ffmpeg.setFfmpegPath(ffmpegPath as unknown as string);
 
 export class AudioConverterService {
   async convertWavToOgg(

@@ -1,6 +1,6 @@
 import { accountUpdateHandler } from "../handlers/accountUpdate.handler.js";
 import { contactSyncHandler } from "../handlers/contactSync.handler.js";
-import { historySyncHandler } from "../handlers/history.handler.js";
+// import { historySyncHandler } from "../handlers/history.handler.js";
 import { messagesHandler } from "../handlers/messages.handler.js";
 import { templateHandler } from "../handlers/template.handler.js";
 

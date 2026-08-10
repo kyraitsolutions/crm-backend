@@ -7,11 +7,11 @@ import { VideoMessageDto } from "./video-message.dto.js";
 export class SendMessageDto {
   to!: string;
   type!: string;
-  file!: Express.Multer.File;
+  file!: Express.Multer.File | null;
   text!: any;
   image!: any;
 
-  constructor(data: SendMessageDto) {
+  constructor(data: Partial<SendMessageDto>) {
     // this.to = data.to;
     // this.type = data.type;
     // this.text = data.text;

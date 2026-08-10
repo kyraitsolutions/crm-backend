@@ -6,7 +6,6 @@ import {
 export class MediaValidator {
   validate(file: Express.Multer.File, type: WhatsAppMediaType) {
     const config = WHATSAPP_MEDIA[type];
-    console.log("config", config);
 
     if (!config) {
       throw new Error(`Unsupported media type: ${type}`);

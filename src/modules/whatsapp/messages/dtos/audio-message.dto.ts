@@ -7,10 +7,10 @@ export class AudioMessageDto {
     caption?: string;
   };
 
-  file?: Express.Multer.File;
+  file?: Express.Multer.File | null;
 
-  constructor(data: DocumentMessageDto) {
-    this.document = data.document;
+  constructor(data: AudioMessageDto) {
+    this.audio = data.audio;
     this.file = data.file;
   }
 

@@ -3,7 +3,7 @@ import {
   IntegrationProvider,
 } from "../../../../models/integration.model.js";
 import { contactSyncQueue } from "../../../../queue/index.js";
-import { WhatsAppAccountModel } from "../../account/models/whatsapp-account.model.js";
+// import { WhatsAppAccountModel } from "../../account/models/whatsapp-account.model.js";
 
 export class ContactSyncHandler {
   public async handle(payload: any): Promise<void> {
