@@ -55,13 +55,18 @@ export class TeamController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user;
-
+      // const user = req.user;
       const createTeamMemberDto = new CreateTeamMemberDto(req.body);
 
+      const context = {
+        // accountId: String(accountId),
+        organizationId: String(req?.user?.organizationId),
+        userId: String(req?.user?.id),
+        userName: String(req?.user?.name),
+      };
+
       const result = await this.teamService.createTeamMember(
-        user?.id as string,
-        user?.organizationId as string,
+        context,
         createTeamMemberDto,
       );
 
@@ -126,13 +131,14 @@ export class TeamController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      // const ids = req.query["teamMembersIds[]"];
-      const { teamMemberIds: ids } = req.body;
+      const ids = req.query["teamMembersIds[]"];
       const orgId = req.user?.organizationId;
+
+      const allIds = Array.isArray(ids) ? ids : [ids];
 
       const result = await this.teamService.deleteTeamMembers(
         String(orgId),
-        ids as string[],
+        allIds as string[],
       );
 
       httpResponse(req, res, 200, "Team member deleted successfully", result);

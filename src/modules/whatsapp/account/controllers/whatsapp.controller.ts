@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { WhatsAppService } from "../services/whatsapp.service.js";
-import { RegisterPhoneNumberDto } from "../dtos/whatsapp.dto.js";
 import httpResponse from "../../../../utils/http.response.js";
+import { RegisterPhoneNumberDto } from "../dtos/whatsapp.dto.js";
+import { WhatsAppService } from "../services/whatsapp.service.js";
 
 export class WhatsappAccountController {
   constructor(private service = new WhatsAppService()) {}
@@ -15,9 +15,18 @@ export class WhatsappAccountController {
 
     httpResponse(req, res, 200, "Phone number registered", result);
   };
+
+  async syncContacts(req: Request, res: Response) {
+    const { accountId } = req.params;
+    // const orgId = req?.user?.organizationId;
+
+    console.log(this);
+
+    const result = await this.service.syncContacts(accountId);
+
+    httpResponse(req, res, 200, "Contacts synced successfully", result);
+  }
 }
-
-
 
 // onUserMessage(convId):
 //   cancelPendingJobs(convId)   // remove existing 20s/4m/10m jobs from BullMQ

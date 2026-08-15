@@ -49,7 +49,7 @@ export interface AccountDtoShape {
 }
 
 export interface RequestContext {
-  accountId: string;
+  accountId?: string;
   organizationId: string;
   userId: string;
   userName: string;

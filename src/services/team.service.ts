@@ -19,6 +19,10 @@ import {
   TApiResponse,
   TPaginatedResponse,
 } from "../types/api-response.type.js";
+// import { ActivityLogRepository } from "../repositories/activityLog.repository.js";
+import { ActivityLogService } from "./activityLog.service.js";
+import { TActivityLog } from "../types/activityLog.type.js";
+import { RequestContext } from "../types/common.js";
 
 export class TeamService {
   private teamRepository: TeamRepository;
@@ -27,6 +31,7 @@ export class TeamService {
   private userprofileRepository: UserProfileRepository;
   private organizationRepository: OrganizationRepository;
   private userAccountRepository: UserAccountRepository;
+  private activityLogService: ActivityLogService;
   constructor() {
     this.userRepository = new UserRepository();
     this.emailService = new EmailService();
@@ -34,6 +39,7 @@ export class TeamService {
     this.userprofileRepository = new UserProfileRepository();
     this.organizationRepository = new OrganizationRepository();
     this.userAccountRepository = new UserAccountRepository();
+    this.activityLogService = new ActivityLogService();
   }
   async getTeamMembers(orgId: string): Promise<TPaginatedResponse<any>> {
     const organization = await this.organizationRepository.findById(orgId);
@@ -71,12 +77,14 @@ export class TeamService {
     return newUser;
   }
   async createTeamMember(
-    userId: string,
-    orgId: string,
+    context: RequestContext,
     teamMember: CreateTeamMemberDto,
-  ): Promise<OrganizationMemberResponseDto> {
+  ): Promise<TApiResponse<OrganizationMemberResponseDto>> {
     const session = await mongoose.startSession();
     try {
+      const orgId = context.organizationId;
+      const userId = context.userId;
+
       session.startTransaction();
       const accountMangerRole = await rbacService.getRoleByOrgIdAndName(
         orgId,
@@ -102,6 +110,7 @@ export class TeamService {
         session,
       );
 
+      // find role
       const role = await rbacService.getRoleById(String(roleId));
 
       if (!role) {
@@ -139,6 +148,28 @@ export class TeamService {
         session,
       );
 
+      // Activity Log
+      const activityLogDataPayload: Partial<TActivityLog> = {
+        // accountId: String(),
+        organizationId: String(orgId),
+
+        entityType: "teamMember",
+        entityId: String(organizationMember.id),
+
+        actor: {
+          type: "user",
+          id: context.userId,
+          name: context.userName,
+        },
+
+        metadata: {
+          teamMemberName: teamMember?.firstName,
+          teamMemberEmail: teamMember?.email,
+        },
+      };
+
+      await this.activityLogService.logCreate(activityLogDataPayload);
+
       // call email service to send invitation email
       const url = `${process.env.FRONTEND_URL}/login`;
       this.emailService.queueWelcomeEmail(teamMember.email, url);
@@ -146,21 +177,23 @@ export class TeamService {
       await session.commitTransaction();
 
       return {
-        id: organizationMember.id as string,
-        userId: newTeamMember.id as string,
-        accounts: teamMember?.accounts || [],
-        email: teamMember.email,
-        userProfile: {
-          firstName: teamMember.firstName,
-          lastName: teamMember.lastName,
+        doc: {
+          id: organizationMember.id as string,
+          userId: newTeamMember.id as string,
+          accounts: teamMember?.accounts || [],
+          email: teamMember.email,
+          userProfile: {
+            firstName: teamMember.firstName,
+            lastName: teamMember.lastName,
+          },
+          role: {
+            id: roleId as string,
+            name: accountMangerRole?.name as string,
+          },
+          status: organizationMember.isActive as boolean,
+          createdAt: organizationMember.createdAt as Date,
+          updatedAt: organizationMember.updatedAt as Date,
         },
-        role: {
-          id: roleId as string,
-          name: accountMangerRole?.name as string,
-        },
-        status: organizationMember.isActive as boolean,
-        createdAt: organizationMember.createdAt as Date,
-        updatedAt: organizationMember.updatedAt as Date,
       };
     } catch (error) {
       session.abortTransaction();
@@ -275,17 +308,20 @@ export class TeamService {
         throw new Error("Owner cannot be deleted");
       }
 
-      // await Promise.all([
-      //   this.teamRepository.deleteOrganizationMembers(ids, session),
-      //   this.userAccountRepository.deleteByUserIds(ids, session),
-      //   this.userprofileRepository.deleteByUserIds(ids, session),
-      //   this.userRepository.deleteMany(ids, session),
-      // ]);
-
       await this.teamRepository.deleteOrganizationMembers(ids, session);
       await this.userAccountRepository.deleteByUserIds(ids, session);
       await this.userprofileRepository.deleteByUserIds(ids, session);
       await this.userRepository.deleteMany(ids, session);
+
+      // Activity log
+      // const activityLogDataPayload = {
+      //   organizationId: orgId,
+      //   metadata: {
+      //     teamMemberName: members[0]?.firstName,
+      //     teamMemberEmail: members[0]?.email,
+      //   },
+      // }
+      // await this.activityLogService.logDelete(ids, );
 
       await session.commitTransaction();
 

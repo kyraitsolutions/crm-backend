@@ -1,7 +1,9 @@
 import { IntegrationProvider } from "../../../../models/integration.model.js";
 import { WhatsAppClient } from "../../../../providers/whatsapp/whatsapp.client.js";
+import { TApiResponse } from "../../../../types/api-response.type.js";
 import { IntegrationCredentialRepository } from "../../../integrations/repositories/integration-credential.repository.js";
 import { IntegrationRepository } from "../../../integrations/repositories/integration.repository.js";
+import { SyncStatus } from "../models/whatsapp-account.model.js";
 import { WhatsAppAccountRepository } from "../repositories/whatsapp-account.repository.js";
 
 export class WhatsAppService {
@@ -51,6 +53,60 @@ export class WhatsAppService {
         success: result?.success,
         phoneNumberId: String(whatsappAccount?.phoneNumberInfo.id),
         platformType: String(whatsappAccount?.phoneNumberInfo.platformType),
+      },
+    };
+  }
+
+  async syncContacts(accountId: string): Promise<
+    TApiResponse<{
+      requestId: string;
+      status: SyncStatus;
+    }>
+  > {
+    const integration = await this.integrationRepo.findByAccountAndProvider(
+      accountId,
+      IntegrationProvider.WHATSAPP,
+    );
+
+    if (!integration) {
+      throw new Error("WhatsApp integration not found.");
+    }
+
+    const account = await this.whatsappRepo.findByIntegrationId(
+      String(integration._id),
+    );
+
+    if (!account) {
+      throw new Error("WhatsApp account not found.");
+    }
+
+    const credential = await this.credentialRepo.findByIntegrationId(
+      String(integration._id),
+    );
+
+    if (!credential) {
+      throw new Error("WhatsApp credential not found.");
+    }
+
+    const response = await this.whatsappClient.startContactSync(
+      String(account?.phoneNumberInfo.id),
+      String(credential?.accessToken),
+    );
+
+    await this.whatsappRepo.updateByIntegrationId(String(integration._id), {
+      contactSync: {
+        status: SyncStatus.REQUESTED,
+        requestId: response.request_id,
+        lastAttemptAt: new Date(),
+        lastErrorCode: null,
+        lastErrorMessage: null,
+      },
+    });
+
+    return {
+      doc: {
+        requestId: response.request_id,
+        status: SyncStatus.REQUESTED,
       },
     };
   }
