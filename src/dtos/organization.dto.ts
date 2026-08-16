@@ -16,7 +16,6 @@ export class CreateOrganizationDto {
     "taxId",
     "companySize",
     "currency",
-    "logoUrl"
   ];
 
   firstName?: string;
@@ -34,9 +33,9 @@ export class CreateOrganizationDto {
     line1: string;
     line2: string;
   };
-  taxId?:string;
-  companySize?:string;
-  currency?:string;
+  taxId?: string;
+  companySize?: string;
+  currency?: string;
   industry?: string;
   phone?: string;
   privacyPolicy?: string;
@@ -94,9 +93,9 @@ export class OrganizationResponseDto {
     line1?: string;
     line2?: string;
   };
-  taxId?:string;
-  companySize?:string;
-  currency?:string;
+  taxId?: string;
+  companySize?: string;
+  currency?: string;
   createdBy: string;
   terms?: string;
   slug?:string;
@@ -121,8 +120,6 @@ export class OrganizationResponseDto {
     this.currency = data.currency;
     this.taxId = data.taxId;
     this.privacyPolicy = data.privacyPolicy;
-    this.slug = data.slug;
-    
 
     if (data?.address && Object.keys(data.address).length > 0) {
       this.address = data.address;

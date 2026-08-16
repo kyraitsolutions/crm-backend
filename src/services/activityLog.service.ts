@@ -8,12 +8,15 @@ import { buildPagination } from "../utils/paginationBuilder.js";
 export class ActivityLogService {
   private repository = new ActivityLogRepository();
 
-  async getActivityLogs(accountId: string, query: TActivityLogQuery) {
-    console.log("query", query);
+  async getActivityLogs(
+    accountId: string,
+    organizationId: string,
+    query: TActivityLogQuery,
+  ) {
     const { page = 1, limit = 50, filters } = query;
 
     const mongoFilter: FilterQuery<TActivityLog> = {
-      accountId,
+      $or: [{ accountId }, { organizationId }],
     };
 
     if (filters?.entityType) {

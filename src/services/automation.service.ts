@@ -20,7 +20,7 @@ export default class AutomationService {
   }
   async createAutomation(context: RequestContext, data: AutomationDto) {
     const isAutomationExists = await this.repository.findByName(
-      context.accountId,
+      String(context.accountId),
       data.name,
     );
 
@@ -70,7 +70,7 @@ export default class AutomationService {
 
     if (data.name) {
       const isAutomationExists = await this.repository.findByName(
-        context.accountId,
+        String(context.accountId),
         data.name,
       );
 
@@ -80,7 +80,7 @@ export default class AutomationService {
     }
 
     const automation = await this.repository.update(
-      context.accountId,
+      String(context.accountId),
       automationId,
       data,
     );

@@ -101,9 +101,8 @@ export class LeadController {
     }
   };
 
-  createLead = async (req: Request,res: Response,next: NextFunction) => {
+  createLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.user);
       const { accountId } = req.params;
       const meta = await getMetaData(req);
 

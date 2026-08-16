@@ -14,7 +14,6 @@ export class CreateUserProfileDto {
   profilePicture?: string;
   address?:Address
   phone?: string;
-
   constructor(data: {
     userId: string;
     profilePicture?: string;

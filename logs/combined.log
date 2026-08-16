@@ -5579,6 +5579,7 @@
 {"level":"info","message":"Redis client ready","timestamp":"2026-08-05 23:30:28"}
 {"level":"info","message":"Redis client connected","timestamp":"2026-08-07 16:35:39"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-08-07 16:35:40"}
+<<<<<<< HEAD
 {"level":"info","message":"Redis client connected","timestamp":"2026-08-08 00:28:39"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-08-08 00:28:40"}
 {"level":"info","message":"Redis client connected","timestamp":"2026-08-08 00:29:17"}
@@ -5609,3 +5610,193 @@
 {"level":"info","message":"Redis client connected","timestamp":"2026-08-10 23:27:43"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-08-10 23:27:43"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-08-10 23:48:37"}
+=======
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 11:00:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 11:00:17"}
+{"level":"info","message":"Welcome email queued for sushilkc2611@gmail.com","timestamp":"2026-08-15 11:10:49"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 11:40:46"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 11:40:47"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-08-15 11:43:46"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 11:45:11"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 11:45:12"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 11:57:52"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 11:57:52"}
+{"level":"info","message":"Welcome email queued for support@kyraitsolutions.com","timestamp":"2026-08-15 12:25:26"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:30:51"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:30:52"}
+{"level":"info","message":"Welcome email queued for support@kyraitsolutions.com","timestamp":"2026-08-15 12:32:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:37:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:37:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:39:10"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:39:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:39:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:39:41"}
+{"level":"info","message":"Welcome email queued for support@kyraitsolutions.com","timestamp":"2026-08-15 12:40:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:41:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:41:45"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:42:17"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:42:17"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:44:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:44:40"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:57:58"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:57:59"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 12:58:19"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 12:58:20"}
+{"level":"info","message":"Welcome email queued for bhola@gmail.com","timestamp":"2026-08-15 12:59:56"}
+{"level":"error","message":"Error creating team member: Error: Accounts are required wiht accountId and roleId","timestamp":"2026-08-15 13:02:23"}
+{"level":"info","message":"Welcome email queued for test@gmail.com","timestamp":"2026-08-15 13:02:42"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:04:15"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:04:16"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:04:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:04:22"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:05:06"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:05:07"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:05:11"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:05:12"}
+{"level":"info","message":"Welcome email queued for tests@gmail.com","timestamp":"2026-08-15 13:05:20"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-08-15 13:05:38"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-08-15 13:05:48"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-08-15 13:07:33"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:08:19"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:08:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:09:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:09:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:10:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:10:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:13:44"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:13:44"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:14:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:14:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:15:26"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:15:27"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:18:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:18:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:18:47"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:18:48"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:18:52"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:18:53"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:19:37"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:19:38"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:34:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:34:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:35:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:35:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:35:31"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:35:31"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:37:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:37:17"}
+{"level":"error","message":"Error deleting team member: TypeError: Cannot destructure property 'teamMemberIds' of 'req.body' as it is undefined.","timestamp":"2026-08-15 13:37:25"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:37:59"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:38:00"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:38:03"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:38:20"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:38:21"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:38:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:39:41"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:39:42"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:39:44"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:40:54"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:41:09"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:41:32"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:42:03"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:42:04"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:42:10"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:42:51"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:42:52"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:42:55"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:43:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:43:17"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:43:27"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:43:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:43:45"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:43:50"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:43:50"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 13:43:54"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:44:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:44:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:44:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:44:35"}
+{"level":"error","message":"Error creating team member: Error: Accounts are required wiht accountId and roleId","timestamp":"2026-08-15 13:44:59"}
+{"level":"error","message":"Error creating team member: ValidationError: accountId: Cast to ObjectId failed for value \"\" (type string) at path \"accountId\" because of \"BSONError\"","timestamp":"2026-08-15 13:45:02"}
+{"level":"error","message":"Error creating team member: ValidationError: accountId: Cast to ObjectId failed for value \"\" (type string) at path \"accountId\" because of \"BSONError\"","timestamp":"2026-08-15 13:45:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:45:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:45:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:45:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:45:40"}
+{"level":"error","message":"Error creating team member: ValidationError: accountId: Cast to ObjectId failed for value \"\" (type string) at path \"accountId\" because of \"BSONError\"","timestamp":"2026-08-15 13:46:03"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:47:30"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:47:30"}
+{"level":"info","message":"Welcome email queued for sing@gmail.com","timestamp":"2026-08-15 13:47:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:50:36"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:50:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:51:07"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:51:07"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 13:52:41"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 13:52:41"}
+{"level":"error","message":"Error deleting team member: Error: Team member not found","timestamp":"2026-08-15 14:14:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 14:18:07"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 14:18:08"}
+{"level":"info","message":"Welcome email queued for testx@gmail.com","timestamp":"2026-08-15 14:28:48"}
+{"code":"ECONNRESET","errno":-4077,"level":"error","message":"Redis client error: read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:216:20)","syscall":"read","timestamp":"2026-08-15 20:46:23"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-08-15 20:46:23"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-08-15 20:46:23"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-08-15 20:46:23"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-08-15 20:46:23"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-08-15 20:46:23"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-08-15 20:46:23"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-08-15 20:46:23"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-08-15 20:46:23"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-08-15 20:46:24"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-08-15 20:46:24"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-08-15 20:46:24"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 20:46:32"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 20:46:34"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-08-15 20:50:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 20:50:47"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 20:50:47"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:04:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:04:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:05:02"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:05:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:22:30"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:22:31"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:23:34"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:23:35"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:24:19"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:24:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:24:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:24:31"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:24:32"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:37:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:37:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:44:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:44:58"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:45:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:45:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:45:40"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:45:41"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:46:30"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:46:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:46:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:46:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:47:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:47:22"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:47:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:47:46"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:47:59"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:48:00"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:48:41"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:48:42"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:49:03"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:49:04"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:49:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:49:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:50:06"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:50:07"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:50:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:50:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:51:02"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:51:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-08-15 21:51:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-08-15 21:51:35"}
+>>>>>>> af116374ce34d16b006ee23986dea16543a4aef3

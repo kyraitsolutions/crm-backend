@@ -15,6 +15,11 @@ export const ZUserSchema = ZBaseEntity.extend({
 
 export const ZGoogleUserSchema = z.object({
   id: z.string(),
+  displayName: z.string(),
+  name: z.object({
+    givenName: z.string(),
+    familyName: z.string(),
+  }),
   emails: z.array(z.object({ value: z.string() })),
   photos: z.array(z.object({ value: z.string() })),
 });

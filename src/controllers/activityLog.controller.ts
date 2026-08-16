@@ -9,13 +9,18 @@ export default class ActivityLogController {
   getActivityLogs = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId } = req.params;
+      const organizationId = req.user?.organizationId;
       const query = parseQueryParams(req.query, {
         allowedFilters: ["entityType", "entityId", "action"],
       });
 
-      const result = await this.service.getActivityLogs(String(accountId), {
-        ...query,
-      });
+      const result = await this.service.getActivityLogs(
+        String(accountId),
+        String(organizationId),
+        {
+          ...query,
+        },
+      );
 
       httpResponse(req, res, 200, "Activity logs fetched successfully", result);
     } catch (error) {

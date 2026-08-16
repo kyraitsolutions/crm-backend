@@ -21,7 +21,7 @@ export class UserService {
     private userProfileRepository: UserProfileRepository,
     private subscriptionRepository: SubscriptionRepository,
     private emailService: EmailService,
-  ) { }
+  ) {}
 
   async register(dto: RegisterDto): Promise<TUser> {
     const session = await mongoose.startSession();
@@ -30,7 +30,7 @@ export class UserService {
       session.startTransaction();
       const existingUser = await this.userRepository.findByEmail(dto.email);
 
-      console.log("dto", dto)
+      console.log("dto", dto);
 
       if (existingUser) {
         throw new Error("User with this email already exists");
@@ -50,9 +50,12 @@ export class UserService {
 
       // 4. Create user
       const userDataPayloadDto = new CreateUserDto(userData);
-      const newUser = await this.userRepository.create(userDataPayloadDto, session);
+      const newUser = await this.userRepository.create(
+        userDataPayloadDto,
+        session,
+      );
 
-      console.log("New users", newUser)
+      console.log("New users", newUser);
 
       // 5. Create user profile
       const userProfileDto = new CreateUserProfileDto({
@@ -66,7 +69,7 @@ export class UserService {
       await this.subscriptionRepository.create(
         newUser.id as string,
         SubscriptionPlan.FREE,
-        session
+        session,
       );
 
       await session.commitTransaction();
@@ -85,10 +88,9 @@ export class UserService {
     } catch (error) {
       await session.abortTransaction();
       throw error;
-    }finally{
+    } finally {
       session.endSession();
     }
-
   }
   async login(dto: TUserLogin): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);
@@ -113,52 +115,48 @@ export class UserService {
     return { ...userDto, token };
   }
 
-
-  async forgotPassword(email:string):Promise<any>{
-    try{
-      console.log(email)
+  async forgotPassword(email: string): Promise<any> {
+    try {
+      console.log(email);
       const existingUser = await this.userRepository.findByEmail(email);
 
-      if(!existingUser){
+      if (!existingUser) {
         throw new Error("This email is not registered with us");
       }
 
-      const otp=await otpService.issueOTP(email)
+      const otp = await otpService.issueOTP(email);
       // tested with welcome mail, send otp here on mail for now , later on whatsapp
-      this.emailService.queueOTPEmail(
-        email,
-        otp,
-      )
+      this.emailService.queueOTPEmail(email, otp);
       return {};
-    }catch(error){
+    } catch (error) {
       throw error;
     }
   }
 
-  async verifyOTP(email:string,otp:string):Promise<string>{
+  async verifyOTP(email: string, otp: string): Promise<string> {
     try {
-      const isValid=await otpService.verifyOTP(email,otp);
-      console.log("isvalid",isValid)
+      const isValid = await otpService.verifyOTP(email, otp);
+      console.log("isvalid", isValid);
 
       if (!isValid) {
         throw new Error("Invalid OTP");
       }
 
-      const payload={
-        email:email,
-        purpose:"password_reset"
-      }
+      const payload = {
+        email: email,
+        purpose: "password_reset",
+      };
 
-      const expiresIn="10m"
-      const resetToken= JwtUtil.shortLivedToken(payload,expiresIn)
+      const expiresIn = "10m";
+      const resetToken = JwtUtil.shortLivedToken(payload, expiresIn);
       return resetToken;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 
-  async resetPassword(resetToken:string, newPassword:string):Promise<any>{
-     const session = await mongoose.startSession();
+  async resetPassword(resetToken: string, newPassword: string): Promise<any> {
+    const session = await mongoose.startSession();
     try {
       session.startTransaction();
       let payload: any;
@@ -178,18 +176,20 @@ export class UserService {
       }
 
       const hashedPassword = await PasswordUtil.hash(newPassword); // your existing bcrypt helper
-      console.log(hashedPassword)
-      await this.userRepository.update(existingUser.id, {password:hashedPassword},session);
+      console.log(hashedPassword);
+      await this.userRepository.update(
+        existingUser.id,
+        { password: hashedPassword },
+        session,
+      );
       await session.commitTransaction();
       return { email: payload.email };
     } catch (error) {
       await session.abortTransaction();
       throw error;
-    }
-    finally{
+    } finally {
       session.endSession();
     }
-
   }
 
   async findOrCreateGoogleUser(
@@ -198,6 +198,8 @@ export class UserService {
     const googleId = authUser.id;
     const email = authUser.emails?.[0]?.value;
     const profilePicture = authUser.photos?.[0]?.value;
+    const firstName = authUser.name?.givenName;
+    const lastName = authUser.name?.familyName;
 
     if (!email) throw new Error("Google profile does not contain email");
 
@@ -241,6 +243,8 @@ export class UserService {
     const userProfileDto = new CreateUserProfileDto({
       userId: newUser?.id as string,
       profilePicture,
+      firstName,
+      lastName,
     });
 
     await this.userProfileRepository.create(userProfileDto);
