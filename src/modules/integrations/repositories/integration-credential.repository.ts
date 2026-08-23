@@ -30,6 +30,10 @@ export class IntegrationCredentialRepository {
     );
   }
 
+  async findByFilter(filter: any, session?: ClientSession) {
+    return IntegrationCredentialModel.findOne(filter, null, { session });
+  }
+
   async findByIntegrationId(integrationId: string) {
     return IntegrationCredentialModel.findOne({
       integrationId,

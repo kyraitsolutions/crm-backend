@@ -5,8 +5,6 @@ import {
 
 export class AccountUpdateHandler {
   public async handle(payload: any): Promise<void> {
-    console.log("AccountUpdateHandler", payload);
-
     const { event, waba_info } = payload;
 
     if (event !== "PARTNER_APP_UNINSTALLED") {

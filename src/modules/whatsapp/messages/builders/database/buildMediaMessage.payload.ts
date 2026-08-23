@@ -1,6 +1,8 @@
 export class BuildMediaMessagePayload {
   static build(payload: any, context: any) {
     const media = context.media;
+    console.log("payload", payload);
+    console.log("media", media);
 
     return {
       media: {

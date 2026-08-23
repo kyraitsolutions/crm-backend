@@ -36,6 +36,10 @@ export class IntegrationRepository {
     );
   }
 
+  async findByFilter(filter: any, session?: ClientSession) {
+    return IntegrationModel.findOne(filter, null, { session });
+  }
+
   async findByAccountAndProvider(
     accountId: string,
     provider: IntegrationProvider,

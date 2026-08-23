@@ -222,7 +222,10 @@ export class ConversationService {
     filter: any;
     create: Partial<TConversation>;
   }) {
+    console.log("filter", filter);
     let conversation = await this.repository.findOne(filter);
+
+    console.log("conversation", conversation);
 
     if (conversation) {
       return conversation;

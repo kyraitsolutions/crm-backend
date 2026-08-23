@@ -10,12 +10,7 @@ contactSyncQueue.process(
       accountId: string;
     }>,
   ) => {
-    console.log("jobData", job.data);
     const { stateSync, accountId } = job.data;
-
-    console.log(`Processing Contact Sync Job ${job.id}`);
-
-    console.log("Contact Sync Job", accountId);
 
     for (const contactEvent of stateSync) {
       if (contactEvent.type !== "contact") {
