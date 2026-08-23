@@ -23,6 +23,7 @@ const TMessageStatus = z.enum([
   "read",
   "failed",
   "pending",
+  "received",
 ]);
 
 const MessageFromSchema = z.enum(["me", "user", "bot"]);
@@ -61,6 +62,7 @@ export const ImageMessageSchema = BaseMessageSchema.extend({
     image: z.object({
       link: z.string().optional(),
       id: z.string().optional(),
+      mime_type: z.string().optional(),
       caption: z.string().optional(),
     }),
   }),
@@ -73,6 +75,7 @@ export const VideoMessageSchema = BaseMessageSchema.extend({
     video: z.object({
       link: z.string().optional(),
       id: z.string().optional(),
+      mime_type: z.string().optional(),
       caption: z.string().optional(),
     }),
   }),
@@ -86,6 +89,7 @@ export const DocumentMessageSchema = BaseMessageSchema.extend({
       link: z.string().optional(),
       id: z.string().optional(),
       caption: z.string().optional(),
+      mime_type: z.string().optional(),
     }),
   }),
 });

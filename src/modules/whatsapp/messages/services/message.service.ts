@@ -94,11 +94,7 @@ export class WhatsappMessageService {
       });
     }
 
-    console.log("media", media);
-
     const metaPayload = metaPayloadService.build(payload, media);
-
-    console.log("metaPayload", metaPayload);
 
     const result = await this.whatsappMessageClient.sendMessage({
       accessToken: credential.accessToken,
@@ -159,7 +155,5 @@ export class WhatsappMessageService {
       accessToken: credential.accessToken,
       url: media.url,
     });
-
-    return media;
   }
 }

@@ -20,13 +20,9 @@ export class WhatsappAuthRouter {
       this.whatsappAuthController.connectWhatsapp.bind(this.whatsappAuthController)
     );
 
-    // this.router.get(
-    //   "/callback",
-    //   this.whatsappAuthController.callback.bind(this.whatsappAuthController)
-    // );
-    this.router.post(
+    this.router.get(
       "/callback",
-      this.whatsappAuthController.postCallback.bind(this.whatsappAuthController)
+      this.whatsappAuthController.callback.bind(this.whatsappAuthController)
     );
   }
 

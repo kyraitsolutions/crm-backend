@@ -6,13 +6,20 @@ import { getWssInstance } from "./wsStore.js";
 
 export const emitToAccount = (accountId: string, event: string, data: any) => {
   const wss = getWssInstance();
+  console.log("account id", accountId);
+  console.log("data kya hai ws ka", data);
 
-  // console.log("TOTAL CLIENTS", wss.clients.size);
+  console.log("TOTAL CLIENTS", wss.clients.size);
 
   wss.clients.forEach((client) => {
     const ws = client as AuthenticatedWebSocket;
 
-    if (ws.readyState === WebSocket.OPEN && ws.accountId === accountId) {
+    console.log("account id ws", ws.accountId);
+
+    if (
+      ws.readyState === WebSocket.OPEN &&
+      String(ws.accountId) === String(accountId)
+    ) {
       ws.send(
         JSON.stringify({
           event,

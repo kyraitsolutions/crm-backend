@@ -49,4 +49,8 @@ export class IntegrationService {
         };
     }
   }
+
+  async getIntegrationByFilter(filter: any) {
+    return this.integrationRepo.findByFilter(filter);
+  }
 }

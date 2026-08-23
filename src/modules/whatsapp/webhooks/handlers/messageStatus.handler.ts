@@ -1,7 +1,11 @@
-import { MessageRepository } from "../../../../repositories/messages.repository.js";
+import { MessageService } from "../../../../services/messages.service.js";
 
 export class MessageStatusHandler {
-  private messageRepository = new MessageRepository();
+  private messageService = new MessageService();
+
+  constructor() {
+    this.messageService = new MessageService();
+  }
 
   async handle(value: any) {
     for (const status of value.statuses) {
@@ -50,12 +54,9 @@ export class MessageStatusHandler {
         break;
     }
 
-    await this.messageRepository.updateMessage(
-      {
-        messageId: status.id,
-      },
-      update,
-    );
+    const messageId = status.id;
+
+    await this.messageService.updateMessage(messageId, update);
   }
 }
 

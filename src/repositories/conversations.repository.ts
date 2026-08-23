@@ -156,7 +156,9 @@ export class ConversationRepository {
       updateQuery.$inc = incQuery;
     }
 
-    return await ConversationModel.findByIdAndUpdate(
+    console.log("ider tak ka safr hai", updateQuery);
+
+    const conversation = await ConversationModel.findByIdAndUpdate(
       conversationId,
       updateQuery,
       {
@@ -164,6 +166,10 @@ export class ConversationRepository {
         session,
       },
     );
+
+    console.log("conversation kya hai bata de", conversation);
+
+    return conversation;
   }
 
   // async updateConversation(

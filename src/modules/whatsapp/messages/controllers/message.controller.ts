@@ -27,8 +27,6 @@ export class MessageController {
       file: req.file || null,
     }).validate();
 
-    console.log(payload);
-
     const result = await this.messageService.send(String(accountId), payload);
     httpResponse(req, res, 200, "Message sent successfully", result);
   }
@@ -36,6 +34,24 @@ export class MessageController {
   async getMedia(req: Request, res: Response) {
     const { accountId, mediaId } = req.params;
     const result = await this.messageService.getMedia(accountId, mediaId);
+
+    res.setHeader(
+      "Content-Type",
+      typeof result.contentType === "string"
+        ? result.contentType
+        : "application/octet-stream",
+    );
+
+    res.setHeader(
+      "Content-Length",
+      typeof result.contentLength === "string" ||
+        typeof result.contentLength === "number"
+        ? result.contentLength
+        : result.buffer.length,
+    );
+
+    res.setHeader("Content-Disposition", "inline");
+
     res.send(result?.buffer);
   }
 }
