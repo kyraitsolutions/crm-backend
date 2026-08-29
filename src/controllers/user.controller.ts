@@ -83,12 +83,16 @@ export class UserController {
       console.log("Google callback user:", user); // Log the user object for debugging
       const token = await userService.generateToken(user.id, user.email);
 
+      console.log("Generated token:", token); // Log the generated token for debugging
+
       const platform = req.query.state;
 
       const redirectUrl =
         platform === "mobile"
           ? "kyra://auth/callback"
           : ENV.FRONTEND.CALLBACK_URL;
+
+      console.log("Redirect URL:", redirectUrl); // Log the redirect URL for debugging
       res.redirect(`${redirectUrl}?token=${token}`);
     } catch (error) {
       next(error);

@@ -51,7 +51,7 @@ export class UserRouter {
 
     this.router.post(
       "/profile/update",
-       AuthMiddleware.authenticate,
+      AuthMiddleware.authenticate,
       this.userController.updateProfile.bind(this.userController),
     )
   }

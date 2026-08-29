@@ -22,7 +22,7 @@ import { ActivityLogRouter } from "./activityLog.route.js";
 import { WebhookRouter } from "../modules/webhook/routes/webhook.route.js";
 import { HealthRouter } from "./health.routes.js";
 import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
-// import { TwilioRouter } from "../modules/salesAgent/routes/twilio.route.js";
+import { TwilioRouter } from "../modules/salesAgent/routes/twilio.route.js";
 import { IntegrationsRouter } from "../modules/integrations/routes/index.js";
 
 export class AppRoutes {
@@ -51,7 +51,7 @@ export class AppRoutes {
   private integrationRouter: IntegrationsRouter;
   private whatsappRouter: WhatsappRouter;
   private webhookRouter:WebhookRouter;
-  // private twilioRouter:TwilioRouter;
+  private twilioRouter:TwilioRouter;
   private healthRouter: HealthRouter;
 
   private router: Router;
@@ -83,7 +83,7 @@ export class AppRoutes {
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();
     this.webhookRouter=new WebhookRouter();
-    // this.twilioRouter=new TwilioRouter();
+    this.twilioRouter=new TwilioRouter();
     this.integrationRouter = new IntegrationsRouter();
     this.healthRouter = new HealthRouter();
 
@@ -118,7 +118,7 @@ export class AppRoutes {
     this.router.use("/integration", this.integrationRouter.getRouter());
     this.router.use("/whatsapp", this.whatsappRouter.getRouter());
     this.router.use("/webhook",this.webhookRouter.getRouter());
-    // this.router.use("/twilio",this.twilioRouter.getRouter());
+    this.router.use("/twilio",this.twilioRouter.getRouter());
     this.router.use("/health", this.healthRouter.getRouter());
   }
 
