@@ -8,7 +8,7 @@ import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
 import "./workers/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
-import { config } from "./config/index.js";
+// import { config } from "./config/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { config } from "./config/index.js";
 
