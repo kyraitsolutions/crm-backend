@@ -57,7 +57,6 @@ export class App {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
     await import("./workers/index.js");
-    // startWorker()
     // configureNumber()
     // await seedPermissions();
     server.listen(port, () => {

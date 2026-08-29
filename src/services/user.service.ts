@@ -117,7 +117,7 @@ export class UserService {
 
   async forgotPassword(email: string): Promise<any> {
     try {
-      console.log(email);
+      console.log('Email in service:', email);
       const existingUser = await this.userRepository.findByEmail(email);
 
       if (!existingUser) {

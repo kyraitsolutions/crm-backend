@@ -6,7 +6,7 @@ import fs from "fs";
 import { EMAIL_TEMPLATES_PATH } from "../constants/path.js";
 import { SendEmailCommand } from "@aws-sdk/client-ses";
 import { sesClient } from "../config/email.js";
-import { ENV } from "../constants/env.constants.js";
+// import { ENV } from "../constants/env.constants.js";
 
 export class EmailUtils {
   // private transporter: Transporter;
@@ -88,10 +88,10 @@ export class EmailUtils {
     from?: string,
   ): Promise<{ status: boolean; messageId: string | null }> {
     try {
-      logger.info(`Email is aliged for send ${from}`)
+      logger.info(`Email is aliged for send ${from} and ${to}`);
       const command = new SendEmailCommand({
-        Source: ENV.SMTP.AWS_FROM_EMAIL!,
-        ReplyToAddresses: [String(from)],
+        Source:"support@kyraitsolutions.com",
+        // ReplyToAddresses: [String(from)],
         Destination: {
           ToAddresses: [to],
         },
@@ -135,6 +135,7 @@ export class EmailUtils {
   }
 
   async sendOTPEmail(email: string, otp: string): Promise<boolean> {
+    console.log("Sending OTP email to:", email, "with OTP:", otp);
     const subject = "Your Kyra CRM verification code";
 
     const otpDigits = otp.split("");

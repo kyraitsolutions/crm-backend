@@ -89,10 +89,12 @@ export class UserRepository {
   }
   async findByEmail(email: string): Promise<TUser | null> {
     const user = await UserModel.findOne({ email: email });
+    console.log("User found by email:", user);
     return user ? user.toJSON() : null;
   }
   async findByGoogleId(googleId: string): Promise<TUser | null> {
     const user = await UserModel.findOne({ googleId });
+    console.log("User found by Google ID:", user);
     return user ? user.toJSON() : null;
   }
   async create(data: Partial<TUser>, session?: ClientSession): Promise<TUser> {
