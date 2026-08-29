@@ -7,7 +7,7 @@
     "dev:server": "tsx watch src/server.ts",
     "dev:worker": "cross-env NODE_ENV=development tsx watch src/workers/email.worker.ts",
     "play": "tsx src/playground.ts",
-    "build": "tsc",
+    "build": "NODE_OPTIONS=--max-old-space-size=1536 tsc",
     "start": "node dist/server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
