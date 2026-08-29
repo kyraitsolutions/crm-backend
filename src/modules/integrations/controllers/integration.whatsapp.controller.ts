@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { WhatsAppIntegrationService } from "../services/integration.whatsapp.service.js";
 import httpResponse from "../../../utils/http.response.js";
+import { DisconnectIntegrationDto } from "../dto/disconnect-integration.dto.js";
 
 export class WhatsAppIntegrationController {
   constructor(private service = new WhatsAppIntegrationService()) {}
@@ -15,6 +16,17 @@ export class WhatsAppIntegrationController {
       organizationId,
     });
 
+    httpResponse(req, res, 200, "Integration details", result);
+  };
+
+  disconnect = async (req: Request, res: Response) => {
+    const { integrationId, accountId } = req.body;
+    const dtoDataPayload = new DisconnectIntegrationDto({
+      integrationId,
+      accountId,
+    });
+
+    const result = await this.service.disconnect(dtoDataPayload);
     httpResponse(req, res, 200, "Integration details", result);
   };
 }

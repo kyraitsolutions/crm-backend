@@ -18,6 +18,13 @@ export class WhatsAppIntegrationRouter {
       AuthMiddleware.authenticate,
       this.controller.connect.bind(this.controller),
     );
+
+    // POST DISCONNECT WHATSAPP
+    this.router.post(
+      "/disconnect",
+      AuthMiddleware.authenticate,
+      this.controller.disconnect.bind(this.controller),
+    );
   }
 
   public getRouter(): Router {

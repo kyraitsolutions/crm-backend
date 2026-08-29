@@ -49,4 +49,21 @@ export class WhatsAppAccountRepository {
       },
     );
   }
+
+  async disconnect(integrationId: string, session?: ClientSession) {
+    return WhatsAppAccountModel.findOneAndUpdate(
+      {
+        integrationId: new Types.ObjectId(integrationId),
+      },
+      {
+        $set: {
+          isConnected: false,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+  }
 }
