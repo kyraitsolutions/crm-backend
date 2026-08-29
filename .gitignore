@@ -3,3 +3,7 @@ node_modules
 .env.development
 .env.production
 dist
+dist1234
+1234.pub
+logs/
+dist/
