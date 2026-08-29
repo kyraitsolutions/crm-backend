@@ -9,7 +9,7 @@ export class IntegrationController {
   getIntegration = async (req: Request, res: Response) => {
     const result = await this.service.getIntegration({
       accountId: String(req.params.accountId),
-      provider: req.params.provider.toUpperCase() as IntegrationProvider,
+      provider: req.params.provider.toLowerCase() as IntegrationProvider,
     });
 
     httpResponse(req, res, 200, "Integration details", result);

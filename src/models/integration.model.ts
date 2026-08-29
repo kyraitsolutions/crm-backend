@@ -1,15 +1,15 @@
 import { Schema, model } from "mongoose";
 
 export enum IntegrationProvider {
-  WHATSAPP = "WHATSAPP",
-  FACEBOOK = "FACEBOOK",
-  INSTAGRAM = "INSTAGRAM",
-  EXOTEL = "EXOTEL",
+  WHATSAPP = "whatsapp",
+  FACEBOOK = "facebook",
+  INSTAGRAM = "instagram",
+  EXOTEL = "exotel",
 }
 
 export enum IntegrationStatus {
-  CONNECTED = "CONNECTED",
-  DISCONNECTED = "DISCONNECTED",
+  CONNECTED = "connected",
+  DISCONNECTED = "diconnected",
 }
 
 const IntegrationSchema = new Schema(

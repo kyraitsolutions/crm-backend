@@ -33,6 +33,7 @@ export class IntegrationService {
 
         return {
           doc: {
+            id: String(integration.id),
             connected: true,
             provider: IntegrationProvider.WHATSAPP,
             data: whatsapp,

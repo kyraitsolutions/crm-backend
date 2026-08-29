@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { IntegrationProvider } from "../../../models/integration.model.js";
 import { WhatsAppClient } from "../../../providers/whatsapp/whatsapp.client.js";
 import { TApiResponse } from "../../../types/api-response.type.js";
@@ -53,7 +53,7 @@ export class WhatsAppIntegrationService {
       const business =
         await this.whatsappClient.getEmbeddedSignupDetails(accessToken);
 
-      console.log("Business", business);
+      // console.log("Business", business);
 
       // 5. Subscribe Webhook
       const subscribedApps = await this.whatsappClient.subscribeWebhook(
@@ -176,13 +176,15 @@ export class WhatsAppIntegrationService {
         session,
       );
 
+      console.log("integration", integration);
+
       // 7. Store Credential for WhatsApp
       await this.credentialRepo.createAndUpdate(
         {
           integrationId: integration.id,
           accessToken,
           type: tokenType,
-          tokenExpiresAt: tokenExpiresAt ? new Date(tokenExpiresAt) : null,
+          tokenExpiresAt: tokenExpiresAt,
         },
         session,
       );
@@ -204,6 +206,61 @@ export class WhatsAppIntegrationService {
 
       return {
         doc: integration,
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
+  async disconnect({
+    integrationId,
+    accountId,
+  }: {
+    integrationId: string;
+    accountId: string;
+  }) {
+    const session = await mongoose.startSession();
+
+    try {
+      session.startTransaction();
+
+      // 1. Check integration exists
+      const integration = await this.integrationRepo.findByFilter(
+        {
+          _id: new Types.ObjectId(integrationId),
+          accountId: new Types.ObjectId(accountId),
+          provider: IntegrationProvider.WHATSAPP,
+        },
+        session,
+      );
+
+      if (!integration) {
+        throw new Error("WhatsApp integration not found");
+      }
+
+      // 2. Disconnect integration
+      const updatedIntegration = await this.integrationRepo.disconnect(
+        integrationId,
+        session,
+      );
+
+      // 3. Disconnect WhatsApp account
+      const updatedWhatsAppAccount = await this.whatsappRepo.disconnect(
+        integrationId,
+        session,
+      );
+
+      // 4. Commit transaction
+      await session.commitTransaction();
+
+      return {
+        doc: {
+          integration: updatedIntegration,
+          whatsappAccount: updatedWhatsAppAccount,
+        },
       };
     } catch (error) {
       await session.abortTransaction();

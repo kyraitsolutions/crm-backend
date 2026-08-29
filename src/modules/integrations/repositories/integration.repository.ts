@@ -20,6 +20,7 @@ export class IntegrationRepository {
       {
         organizationId: new Types.ObjectId(data.organizationId),
         accountId: new Types.ObjectId(data.accountId),
+        providerResourceId: data.providerResourceId,
         provider: data.provider,
       },
       {
@@ -51,9 +52,21 @@ export class IntegrationRepository {
     });
   }
 
-  async disconnect(integrationId: string) {
-    return IntegrationModel.findByIdAndUpdate(integrationId, {
-      status: IntegrationStatus.DISCONNECTED,
-    });
+  async disconnect(integrationId: string, session?: ClientSession) {
+    return IntegrationModel.findOneAndUpdate(
+      {
+        _id: integrationId,
+        provider: IntegrationProvider.WHATSAPP,
+      },
+      {
+        $set: {
+          status: IntegrationStatus.DISCONNECTED,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
   }
 }

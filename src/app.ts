@@ -8,7 +8,7 @@ import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
 import "./workers/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
-// import { config } from "./config/index.js";
+import { config } from "./config/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { config } from "./config/index.js";
 
@@ -34,8 +34,8 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(
       cors({
-        // origin: config.cross_domains?.origin || "*",
-        origin: "*",
+        origin: config.cross_domains?.origin || "*",
+        // origin: "*",
         credentials: true,
       }),
     );
