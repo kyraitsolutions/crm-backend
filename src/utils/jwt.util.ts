@@ -1,8 +1,5 @@
 import jwt from "jsonwebtoken";
-import * as dotenv from "dotenv";
 import { ENV } from "../constants/env.constants.js";
-
-dotenv.config();
 
 export interface JwtPayload {
   userId: string;
@@ -10,7 +7,7 @@ export interface JwtPayload {
 }
 export interface ShortJwtPayload {
   email: string;
-  purpose:string;
+  purpose: string;
 }
 
 export class JwtUtil {
@@ -28,7 +25,7 @@ export class JwtUtil {
     return jwt.verify(token, this.SECRET) as JwtPayload;
   }
 
-  static shortLivedToken(payload: ShortJwtPayload, ttl: string){
+  static shortLivedToken(payload: ShortJwtPayload, ttl: string) {
     return jwt.sign(payload, this.SECRET, { expiresIn: this.EXPIRES_IN });
   }
 

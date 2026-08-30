@@ -42,4 +42,10 @@ export const config = {
   cross_domains: {
     origin: ENV.CROSS_DOMAIN.ORIGIN?.split(",").map((o: string) => o.trim()),
   },
+
+  redis: {
+    host: ENV.REDIS.REDIS_HOST,
+    port: Number(ENV.REDIS.REDIS_PORT),
+    pass: ENV.REDIS.REDIS_PASS,
+  },
 };

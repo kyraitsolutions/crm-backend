@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 import logger from "../utils/logger.js";
 import { ENV } from "../constants/env.constants.js";
 
-console.log("ENV", ENV);
 export class Transporter {
   private transporter: nodemailer.Transporter;
 

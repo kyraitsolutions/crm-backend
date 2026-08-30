@@ -7,12 +7,13 @@ export class WhatsAppClient {
   private readonly graphApi: AxiosInstance;
   private readonly appId = config.meta.APP_ID!;
   private readonly appSecret = config.meta.APP_SECRET;
+  private readonly graphBaseUrl = config.meta.GRAPH_BASE_URL;
   private readonly graphVersion = config.meta.GRAPH_VERSION;
   // private readonly redirectUri = config.meta.REDIRECT_URI;
 
   constructor() {
     this.graphApi = axios.create({
-      baseURL: `https://graph.facebook.com/${this.graphVersion}`,
+      baseURL: `${this.graphBaseUrl}/${this.graphVersion}`,
       timeout: 30000,
     });
   }
