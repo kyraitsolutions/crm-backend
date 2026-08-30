@@ -44,13 +44,12 @@ import { SESClient } from "@aws-sdk/client-ses";
 import { ENV } from "../constants/env.constants.js";
 
 export const sesClient = new SESClient({
-  region:ENV.SMTP.AWS_EMAIL_REGION,
+  region: ENV.SMTP.AWS_EMAIL_REGION,
   credentials: {
-    accessKeyId:ENV.SMTP.EMAIl_AWS_ACCESS_KEY_ID||"",
-    secretAccessKey:ENV.SMTP.EMAIL_AWS_SECRET_KEY||""
+    accessKeyId: ENV.SMTP.EMAIl_AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: ENV.SMTP.EMAIL_AWS_SECRET_KEY || "",
   },
 });
-
 
 // test function
 // await sesClient.send(

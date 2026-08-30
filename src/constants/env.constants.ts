@@ -2,15 +2,11 @@
 import * as dotenv from "dotenv";
 
 const env = process.env.NODE_ENV || "development";
-console.log("env", env);
 
 // Load specific env file
 dotenv.config({
   path: `.env.${env}`,
 });
-
-// Optional fallback
-dotenv.config();
 
 export const ENV = {
   APP: {

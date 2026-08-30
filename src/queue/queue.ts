@@ -1,14 +1,15 @@
-import dotenv from "dotenv";
 import Queue from "bull";
 import logger from "../utils/logger.js";
+import { config } from "../config/index.js";
 
-dotenv.config();
 // Create queues
 const emailQueue = new Queue("email processing", {
   redis: {
-    host:process.env.REDIS_HOST ||"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
+    host:
+      config.redis.host ||
+      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
     port: parseInt(process.env.REDIS_PORT || "14482"),
-    password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH", // this must be correct
+    password: process.env.REDIS_PASS || "", // this must be correct
   },
   defaultJobOptions: {
     removeOnComplete: 10,
