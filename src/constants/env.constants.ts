@@ -99,4 +99,8 @@ export const ENV = {
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID!,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN!,
   },
+  RAZORPAY: {
+    KEY_ID: process.env.RAZORPAY_KEY_ID!,
+    KEY_SECRET: process.env.RAZORPAY_KEY_SECRET!,
+  },
 };

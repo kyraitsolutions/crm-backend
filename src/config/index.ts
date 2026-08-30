@@ -48,4 +48,9 @@ export const config = {
     port: Number(ENV.REDIS.REDIS_PORT),
     pass: ENV.REDIS.REDIS_PASS,
   },
+
+  razorpay: {
+    keyId: ENV.RAZORPAY.KEY_ID,
+    keySecret: ENV.RAZORPAY.KEY_SECRET,
+  },
 };
