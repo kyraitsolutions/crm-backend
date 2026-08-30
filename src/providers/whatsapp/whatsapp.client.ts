@@ -59,6 +59,7 @@ export class WhatsAppClient {
   // }
 
   async exchangeCode(code: string) {
+    console.log("graphApi", this.graphApi);
     const { data } = await this.graphApi.get("/oauth/access_token", {
       params: {
         client_id: this.appId,

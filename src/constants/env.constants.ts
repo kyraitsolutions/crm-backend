@@ -67,7 +67,7 @@ export const ENV = {
   META: {
     APP_ID: process.env.META_APP_ID!,
     APP_SECRET: process.env.META_APP_SECRET!,
-    GRAPH_BASE_URL: process.env.GRAPH_BASE_URL!,
+    GRAPH_BASE_URL: process.env.META_GRAPH_BASE_URL!,
     GRAPH_VERSION: process.env.GRAPH_VERSION!,
     REDIRECT_URI: process.env.META_REDIRECT_URI,
     VERIFY_WEBHOOK_TOKEN: process.env.WEBHOOK_VERIFY_TOKEN!,
