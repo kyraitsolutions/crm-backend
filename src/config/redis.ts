@@ -1,9 +1,6 @@
-import dotenv from "dotenv";
 import { Redis, RedisOptions } from "ioredis";
 import logger from "../utils/logger.js";
 import { redisConfig } from "./redis.config.js";
-
-dotenv.config();
 
 export type JsonValue =
   | string
