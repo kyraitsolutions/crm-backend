@@ -2,6 +2,7 @@
 import * as dotenv from "dotenv";
 
 const env = process.env.NODE_ENV || "development";
+console.log("env kya hai", env);
 
 // Load specific env file
 dotenv.config({
@@ -74,16 +75,15 @@ export const ENV = {
   },
 
   SMTP: {
-    AWS_EMAIL_REGION:process.env.AWS_EMAIL_REGION,
-    AWS_FROM_EMAIL:process.env.AWS_FROM_EMAIL,
-    EMAIl_AWS_ACCESS_KEY_ID:process.env.EMAIl_AWS_ACCESS_KEY_ID,
-    EMAIL_AWS_SECRET_KEY:process.env.EMAIL_AWS_SECRET_KEY,
+    AWS_EMAIL_REGION: process.env.AWS_EMAIL_REGION,
+    AWS_FROM_EMAIL: process.env.AWS_FROM_EMAIL,
+    EMAIl_AWS_ACCESS_KEY_ID: process.env.EMAIl_AWS_ACCESS_KEY_ID,
+    EMAIL_AWS_SECRET_KEY: process.env.EMAIL_AWS_SECRET_KEY,
     SMTP_HOST: process.env.SMTP_HOST!,
     SMTP_PORT: process.env.SMTP_PORT!,
     SMTP_USER: process.env.SMTP_USER!,
     SMTP_PASS: process.env.SMTP_PASS!,
     FROM_EMAIL: process.env.FROM_EMAIL!,
-
   },
 
   REDIS: {
@@ -91,35 +91,12 @@ export const ENV = {
     REDIS_PORT: process.env.REDIS_PORT!,
     REDIS_PASS: process.env.REDIS_PASS!,
   },
-  QUEUE:{
-    QUEUE_CONCURRENCY:process.env.QUEUE_CONCURRENCY!
+  QUEUE: {
+    QUEUE_CONCURRENCY: process.env.QUEUE_CONCURRENCY!,
   },
-  TWILIO:{
-    TWILIO_PHONE_NUMBER:process.env.TWILIO_PHONE_NUMBER!,
-    TWILIO_ACCOUNT_SID:process.env.TWILIO_ACCOUNT_SID!,
-    TWILIO_AUTH_TOKEN:process.env.TWILIO_AUTH_TOKEN!
-  }
-
-
+  TWILIO: {
+    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER!,
+    TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID!,
+    TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN!,
+  },
 };
-
-// import * as dotenv from "dotenv";
-
-// dotenv.config();
-
-// export const ENV = {
-//   JWT_SECRET: process.env.JWT_SECRET,
-//   GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY,
-//   GOOGLE_GENAI_MODEL:process.env.GOOGLE_GENAI_MODEL,
-//   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-//   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-//   GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
-//   GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL,
-//   FRONT_END_CALLBACK_URL: process.env.FRONT_END_CALLBACK_URL,
-//   PORT: process.env.PORT,
-//   DATABASE_URL: process.env.DATABASE_URL,
-//   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN,
-//   NODE_ENV: process.env.NODE_ENV ?? "development",
-//   OPENAI_API_KEY:process.env.OPENAI_API_KEY,
-//   OPENAI_MODEL:process.env.OPENAI_MODEL
-// };
