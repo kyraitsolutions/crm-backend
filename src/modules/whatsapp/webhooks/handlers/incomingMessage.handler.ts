@@ -64,7 +64,7 @@ export class IncomingMessageHandler {
             },
             create: {
               accountId: String(integration.accountId),
-              // platform: "whatsapp",
+              platform: "whatsapp",
               contact: {
                 phoneNumber: message.from,
               },
