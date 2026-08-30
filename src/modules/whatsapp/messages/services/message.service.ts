@@ -62,21 +62,18 @@ export class WhatsappMessageService {
       filter: {
         accountId,
         platform: "whatsapp",
-        "identifiers.whatsappUserId": payload.to,
+        "contact.phoneNumber": payload.to,
       },
 
       create: {
         accountId,
         platform: "whatsapp",
-
         identifiers: {
           whatsappUserId: payload.to,
         },
-
         contact: {
           phoneNumber: payload.to,
         },
-
         status: "open",
       },
     });
