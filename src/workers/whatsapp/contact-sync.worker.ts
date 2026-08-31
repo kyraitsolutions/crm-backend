@@ -20,15 +20,14 @@ contactSyncQueue.process(
       const { action, contact } = contactEvent;
       const { phone_number, full_name, user_id } = contact;
 
-      console.log("Contact Event", action, phone_number, full_name, user_id);
-      //   console.log("Contact Event", phone_number, full_name, user_id);
+      // console.log("Contact Event", action, phone_number, full_name, user_id);
 
       switch (action) {
         case "add":
         case "update": {
           await ConversationModel.findOneAndUpdate(
             {
-              "identifiers.whatsappUserId": phone_number,
+              "contact.phoneNumber": phone_number,
               platform: "whatsapp",
               accountId: new Types.ObjectId(accountId),
             },

@@ -19,7 +19,6 @@ export class IncomingMessageHandler {
     this.integrationService = new IntegrationService();
   }
   async handle(value: any) {
-    // console.log("value", value);
     const messages = value.messages ?? [];
     const { phone_number_id } = value?.metadata ?? {};
 

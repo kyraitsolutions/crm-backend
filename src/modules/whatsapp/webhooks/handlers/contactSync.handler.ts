@@ -7,7 +7,7 @@ import { contactSyncQueue } from "../../../../queue/index.js";
 
 export class ContactSyncHandler {
   public async handle(payload: any): Promise<void> {
-    console.log("ContactSyncHandler", JSON.stringify(payload, null, 2));
+    // console.log("ContactSyncHandler", JSON.stringify(payload, null, 2));
 
     const { state_sync, metadata } = payload;
     const { phone_number_id } = metadata;
