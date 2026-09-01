@@ -56,7 +56,7 @@ export class App {
   public async listen(port: number): Promise<void> {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-    await import("./workers/index.js");
+    // await import("./workers/index.js");
     // configureNumber()
     // await seedPermissions();
     server.listen(port, () => {
