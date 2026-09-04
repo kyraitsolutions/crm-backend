@@ -212,6 +212,19 @@ export class EmailService {
     });
     logger.info(`Lead Acknowledgement email queued for ${email}`);
   }
+  async queueLeadNotificationEmail({email, lead}: {email: string, lead: any}): Promise<void> {
+    console.log("Queueing lead notification email for:", email, lead);
+    const jobData = {
+      email,
+      lead,
+    };
+    console.log("Job Data for lead notification email:", jobData);
+    await emailQueue.add("lead-notification-email", {
+      email,
+      lead,
+    });
+    logger.info(`Lead Notification email queued for ${email}`);
+  }
 
   async queueTaskAssignedEmail(data: {
     email: string;

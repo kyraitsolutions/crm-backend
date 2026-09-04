@@ -102,7 +102,10 @@ export class LeadController {
   };
 
   createLead = async (req: Request, res: Response, next: NextFunction) => {
+
+    
     try {
+      console.log("Creating lead with request body:", JSON.stringify(req.body).slice(0, 500));
       const { accountId } = req.params;
       const meta = await getMetaData(req);
 

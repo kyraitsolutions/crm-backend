@@ -38,6 +38,7 @@ export class LeadService {
     context: RequestContext,
     lead: LeadDto,
   ): Promise<TApiResponse<Lead>> {
+    console.log("Creating lead with context:", context, "and lead data:", lead);
     const result = await this.leadRepository.create(lead);
 
     // Activity Log

@@ -16,11 +16,13 @@ export async function startWorker() {
   }
 }
 async function registerProcessors() {
+
   emailQueue.process("welcome-email", async (job) => {
     const { email, url } = job.data;
     logger.info(`Processing welcome email for ${email}`);
     await emailUtils.sendWelcomeEmail(email, url);
   });
+
   emailQueue.process("otp-email", async (job) => {
     const { email, otp } = job.data;
     console.log("otp email job data", job.data);
@@ -73,6 +75,14 @@ async function registerProcessors() {
         throw error;
       }
   });
+
+  emailQueue.process(QUEUE_JOBS.LEAD_NOTIFICATION_EMAIL, async (job) => {
+    const { email, lead } = job.data;
+
+    logger.info(`Processing lead notification email for ${email}`);
+    await emailUtils.sendLeadAcknowledgementEmail(email, lead);
+  });
+
 
   emailQueue.process(QUEUE_JOBS.LEAD_ACKNOWLEDGEMENT_EMAIL, async (job) => {
     const { email, lead } = job.data;

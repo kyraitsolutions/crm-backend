@@ -1,4 +1,5 @@
 import { AUTOMATION_ACTIONS } from "../constants/automation.constant.js";
+import { AccountRepository } from "../repositories/account.repository.js";
 import { LeadRespository } from "../repositories/lead.respository.js";
 import { TaskRepository } from "../repositories/task.repository.js";
 import { UserRepository } from "../repositories/user.repository.js";
@@ -12,14 +13,16 @@ export default class ActionExecutor {
   private activityLogService = new ActivityLogService();
   private userRepository = new UserRepository();
   private emailService = new EmailService();
-
+  private accountRepository = new AccountRepository();
   constructor() {
     this.leadRepository = new LeadRespository();
     this.taskRepository = new TaskRepository();
     this.activityLogService = new ActivityLogService();
     this.userRepository = new UserRepository();
+    this.accountRepository = new AccountRepository();
   }
   async execute(actions: any[], event: any) {
+    console.log("Executing actions for event:", event, "with actions:", actions);
     for (const action of actions) {
       switch (action.type) {
         case AUTOMATION_ACTIONS.ASSIGN_LEAD_TO_USER:
@@ -126,5 +129,20 @@ export default class ActionExecutor {
     });
   }
 
-  private async sendNotification(event: any, config: any) {}
+  private async sendNotification(event: any, config: any) {
+    // console.log("Sending notification for event:", event, "with config:", config);
+    // const user = await this.userRepository.findById(config.user);
+    // console.log("User found for notification:", user);
+
+    const oldDoc = await this.leadRepository.getLeadById(
+      event.accountId,
+      event.id,
+    );
+
+    const account = await this.accountRepository.findOne(event.accountId);
+    await this.emailService.queueLeadNotificationEmail({
+      email: account?.email as string,
+      lead:oldDoc
+    });
+  }
 }
