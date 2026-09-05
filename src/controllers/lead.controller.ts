@@ -130,22 +130,7 @@ export class LeadController {
     data: any,
   ) => {
     try {
-      const lead = await this.leadService.createLeadWs(data);
-
-      wss.clients.forEach((client) => {
-        if (client.readyState === ws.OPEN && ws.accountId === data?.accountId) {
-          client.send(
-            JSON.stringify({
-              event: WEBSOCKET_EVENTS["Chatbot Lead Created"],
-              data: {
-                lead: {
-                  ...lead.toObject(),
-                },
-              },
-            }),
-          );
-        }
-      });
+      await this.leadService.createLeadWs(data);
     } catch (error) {
       handleRouteError("LeadController.createLeadWs", error, () => {
         wss.clients.forEach((client) => {

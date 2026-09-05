@@ -11,6 +11,21 @@ export class NotificationRouter {
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
+    this.router.get(
+      "/",
+      AuthMiddleware.authenticate,
+      this.notificationController.getNotifications.bind(
+        this.notificationController,
+      ),
+    );
+
+    this.router.post(
+      "/read-all",
+      AuthMiddleware.authenticate,
+      this.notificationController.markAllAsRead.bind(
+        this.notificationController,
+      ),
+    );
 
     this.router.get(
       "/:organizationId",
@@ -18,6 +33,12 @@ export class NotificationRouter {
       this.notificationController.getNotifications.bind(
         this.notificationController,
       ),
+    );
+
+    this.router.patch(
+      "/:notificationId/read",
+      AuthMiddleware.authenticate,
+      this.notificationController.markAsRead.bind(this.notificationController),
     );
   }
   public getRouter(): Router {

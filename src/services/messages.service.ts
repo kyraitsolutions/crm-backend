@@ -4,10 +4,13 @@ import { emitToAccount } from "../config/wsServer/wsEmitter.js";
 import { ConversationRepository } from "../repositories/conversations.repository.js";
 import { MessageRepository } from "../repositories/messages.repository.js";
 import { buildMessageSearchText } from "../utils/buildMessageSearchTextPayload.js";
+import { notificationService } from "../container.js";
+import { AccountRepository } from "../repositories/account.repository.js";
 
 export class MessageService {
   private messageRepository: MessageRepository;
   private conversationRepository = new ConversationRepository();
+  private accountRepository = new AccountRepository();
 
   constructor() {
     this.messageRepository = new MessageRepository();
@@ -66,6 +69,31 @@ export class MessageService {
         message,
         conversation,
       });
+
+      if (payload.direction === "inbound") {
+        const accountId = String(payload.accountId || "");
+        const account = await this.accountRepository.findOne(accountId);
+        const convo = conversation as any;
+        const preview =
+          payload?.text?.body ||
+          payload?.searchText ||
+          convo?.lastMessage?.text ||
+          "";
+        if (account?.organizationId) {
+          await notificationService.notifyConversation({
+            organizationId: String(account.organizationId),
+            accountId,
+            conversationId: String(
+              payload.conversationId || convo?.id || "",
+            ),
+            platform: String(payload.platform || convo?.platform || "whatsapp"),
+            isNew: false,
+            phone: convo?.contact?.phoneNumber,
+            contactName: convo?.contact?.name,
+            preview: String(preview).slice(0, 140),
+          });
+        }
+      }
 
       await session.commitTransaction();
       return message;

@@ -72,7 +72,10 @@ const notificationSchema = new Schema(
       type: Boolean,
       default: false,
     },
-
+    unreadCount: {
+      type: Number,
+      default: 1,
+    },
     readAt: Date,
 
     meta: {

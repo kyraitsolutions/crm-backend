@@ -19,6 +19,10 @@ import { ContactService } from "./contact.service.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
 import { SubscriptionService } from "./subscription.service.js";
 import { USAGE_METRIC } from "../constants/subscription.constant.js";
+import { notificationService } from "../container.js";
+import { emitToAccount } from "../config/wsServer/wsEmitter.js";
+import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
+import { asEntityId } from "../utils/request-context.utils.js";
 
 const BATCH_SIZE = 1000;
 
@@ -82,6 +86,11 @@ export class LeadService {
     const created = await this.leadRepository.create(lead);
     await this.syncContactFromLead(created);
     await this.recordLeadUsage(account?.organizationId && String(account.organizationId));
+    await this.notifyLeadCreated({
+      organizationId: asEntityId(account?.organizationId),
+      accountId: asEntityId(lead.accountId),
+      lead: created,
+    });
     return created;
   }
   async createLead(
@@ -135,6 +144,12 @@ export class LeadService {
       accountId: result?.accountId,
       trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
       payload: automationDataPayload,
+    });
+
+    await this.notifyLeadCreated({
+      organizationId: asEntityId(context.organizationId),
+      accountId: asEntityId(lead.accountId || result?.accountId),
+      lead: result,
     });
 
     return {
@@ -471,6 +486,38 @@ export class LeadService {
       await this.syncContactFromLead(updated);
     }
     return updated;
+  }
+
+  private async notifyLeadCreated({
+    organizationId,
+    accountId,
+    lead,
+  }: {
+    organizationId: string;
+    accountId: string;
+    lead: any;
+  }) {
+    try {
+      const data = typeof lead?.toJSON === "function" ? lead.toJSON() : lead;
+      const leadId = asEntityId(data?.id || data?._id || lead?._id);
+      await notificationService.notifyNewLead({
+        organizationId: asEntityId(organizationId),
+        accountId: asEntityId(accountId),
+        leadId,
+        name: data?.name,
+        phone: data?.phone || data?.mobile,
+        email: data?.email,
+        source: data?.source?.name || data?.source,
+      });
+      emitToAccount(asEntityId(accountId), WEBSOCKET_EVENTS["Chatbot Lead Created"], {
+        lead: data,
+      });
+    } catch (error) {
+      logger.warn("Failed to emit lead notification", {
+        accountId,
+        error: (error as Error).message,
+      });
+    }
   }
 
   async notifyLeadUpdated(lead: Lead | null): Promise<void> {

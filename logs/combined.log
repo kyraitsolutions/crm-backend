@@ -8876,3 +8876,536 @@
 {"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 276ms","timestamp":"2026-09-05 17:25:54"}
 {"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 363ms","timestamp":"2026-09-05 17:25:55"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-05 17:26:12"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:26:52"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:26:52"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:26:53"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:26:54"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:35:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:35:37"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:35:40"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:35:40"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:35:41"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:35:42"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:35:55"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:35:56"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:35:56"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:35:58"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:36:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:36:09"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:36:10"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:36:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:36:13"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:36:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:36:14"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:36:15"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:36:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:36:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:36:39"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:36:40"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:36:52"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:36:53"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:36:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:36:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:36:58"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:37:01"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:37:01"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:37:02"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:37:04"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:38:12"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:38:13"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:38:13"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:38:14"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:38:50"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:38:50"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:38:51"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:38:52"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 278ms","timestamp":"2026-09-05 17:41:26"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 200 307ms","timestamp":"2026-09-05 17:41:26"}
+{"level":"http","message":"GET /api/account 304 380ms","timestamp":"2026-09-05 17:41:26"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 1501ms","timestamp":"2026-09-05 17:41:27"}
+{"level":"http","message":"GET /api/subscription 304 1952ms","timestamp":"2026-09-05 17:41:27"}
+{"level":"http","message":"GET /api/subscription 304 1800ms","timestamp":"2026-09-05 17:41:29"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1987ms","timestamp":"2026-09-05 17:41:57"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 202ms","timestamp":"2026-09-05 17:41:57"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 245ms","timestamp":"2026-09-05 17:41:57"}
+{"level":"http","message":"GET /api/account 304 344ms","timestamp":"2026-09-05 17:41:57"}
+{"level":"http","message":"GET /api/subscription 304 2030ms","timestamp":"2026-09-05 17:41:59"}
+{"level":"http","message":"GET /api/subscription 304 2171ms","timestamp":"2026-09-05 17:42:01"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 316ms","timestamp":"2026-09-05 17:42:04"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 310ms","timestamp":"2026-09-05 17:42:17"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 327ms","timestamp":"2026-09-05 17:42:17"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 388ms","timestamp":"2026-09-05 17:42:17"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 394ms","timestamp":"2026-09-05 17:42:17"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 194ms","timestamp":"2026-09-05 17:42:19"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:42:28"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c072d35179a8240f1fc28","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:42:29"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/lead 200 1343ms","timestamp":"2026-09-05 17:42:29"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 252ms","timestamp":"2026-09-05 17:43:03"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 303ms","timestamp":"2026-09-05 17:43:03"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 327ms","timestamp":"2026-09-05 17:43:03"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 331ms","timestamp":"2026-09-05 17:43:03"}
+{"level":"http","message":"GET /api/conversation/6a9bfc32452e815bd6e7ddcf?page=1&limit=50 304 65ms","timestamp":"2026-09-05 17:43:03"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 353ms","timestamp":"2026-09-05 17:43:05"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 416ms","timestamp":"2026-09-05 17:43:05"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 434ms","timestamp":"2026-09-05 17:43:05"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 437ms","timestamp":"2026-09-05 17:43:05"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1856ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 200 221ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 229ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"GET /api/account 304 298ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 235ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 294ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 308ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 300ms","timestamp":"2026-09-05 17:43:12"}
+{"level":"http","message":"GET /api/subscription 200 2227ms","timestamp":"2026-09-05 17:43:14"}
+{"level":"http","message":"GET /api/subscription 304 2101ms","timestamp":"2026-09-05 17:43:16"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1890ms","timestamp":"2026-09-05 17:43:36"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 223ms","timestamp":"2026-09-05 17:43:36"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 229ms","timestamp":"2026-09-05 17:43:36"}
+{"level":"http","message":"GET /api/account 304 275ms","timestamp":"2026-09-05 17:43:36"}
+{"level":"http","message":"GET /api/subscription 304 1652ms","timestamp":"2026-09-05 17:43:37"}
+{"level":"http","message":"GET /api/subscription 304 1657ms","timestamp":"2026-09-05 17:43:39"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 211ms","timestamp":"2026-09-05 17:44:11"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 270ms","timestamp":"2026-09-05 17:44:11"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 278ms","timestamp":"2026-09-05 17:44:11"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 286ms","timestamp":"2026-09-05 17:44:11"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 215ms","timestamp":"2026-09-05 17:44:13"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:44:22"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c079e35179a8240f1fe97","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:44:23"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/lead 200 1418ms","timestamp":"2026-09-05 17:44:23"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 200 297ms","timestamp":"2026-09-05 17:44:34"}
+{"level":"http","message":"GET /api/conversation/6a9bfc32452e815bd6e7ddcf?page=1&limit=50 304 59ms","timestamp":"2026-09-05 17:44:39"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 234ms","timestamp":"2026-09-05 17:44:40"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 303ms","timestamp":"2026-09-05 17:44:40"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 302ms","timestamp":"2026-09-05 17:44:40"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 301ms","timestamp":"2026-09-05 17:44:40"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:44:44"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c07b535179a8240f1ff03","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:44:45"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/lead 200 1432ms","timestamp":"2026-09-05 17:44:45"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2197ms","timestamp":"2026-09-05 17:46:41"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 200 259ms","timestamp":"2026-09-05 17:46:41"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 258ms","timestamp":"2026-09-05 17:46:41"}
+{"level":"http","message":"GET /api/account 304 319ms","timestamp":"2026-09-05 17:46:41"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 201ms","timestamp":"2026-09-05 17:46:41"}
+{"level":"http","message":"GET /api/subscription 200 1863ms","timestamp":"2026-09-05 17:46:42"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 229ms","timestamp":"2026-09-05 17:46:44"}
+{"level":"http","message":"PATCH /api/notification/6a9c07b545cffc2a2ea3b368/read 200 248ms","timestamp":"2026-09-05 17:46:44"}
+{"level":"http","message":"GET /api/team 200 276ms","timestamp":"2026-09-05 17:46:44"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/lead/6a9c07b535179a8240f1ff03/details 200 295ms","timestamp":"2026-09-05 17:46:44"}
+{"level":"http","message":"GET /api/subscription 304 1924ms","timestamp":"2026-09-05 17:46:44"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 246ms","timestamp":"2026-09-05 17:46:46"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 296ms","timestamp":"2026-09-05 17:46:46"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 300ms","timestamp":"2026-09-05 17:46:46"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 299ms","timestamp":"2026-09-05 17:46:46"}
+{"level":"http","message":"PATCH /api/notification/6a9c079f45cffc2a2ea3b32a/read 200 233ms","timestamp":"2026-09-05 17:46:49"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 224ms","timestamp":"2026-09-05 17:46:49"}
+{"level":"http","message":"GET /api/team 304 271ms","timestamp":"2026-09-05 17:46:49"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/lead/6a9c079e35179a8240f1fe97/details 200 314ms","timestamp":"2026-09-05 17:46:49"}
+{"level":"http","message":"PATCH /api/notification/6a9c072d45cffc2a2ea3aea0/read 200 241ms","timestamp":"2026-09-05 17:46:52"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 229ms","timestamp":"2026-09-05 17:46:52"}
+{"level":"http","message":"GET /api/team 304 265ms","timestamp":"2026-09-05 17:46:52"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/lead/6a9c072d35179a8240f1fc28/details 200 310ms","timestamp":"2026-09-05 17:46:52"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 233ms","timestamp":"2026-09-05 17:46:54"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 317ms","timestamp":"2026-09-05 17:46:54"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 321ms","timestamp":"2026-09-05 17:46:54"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 322ms","timestamp":"2026-09-05 17:46:54"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 200 331ms","timestamp":"2026-09-05 17:46:56"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 237ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/team 304 269ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/lead/6a9c079e35179a8240f1fe97/details 304 293ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1875ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 200 263ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 265ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/account 304 332ms","timestamp":"2026-09-05 17:47:02"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 490ms","timestamp":"2026-09-05 17:47:03"}
+{"level":"http","message":"GET /api/subscription 304 1865ms","timestamp":"2026-09-05 17:47:04"}
+{"level":"http","message":"GET /api/subscription 304 1732ms","timestamp":"2026-09-05 17:47:06"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2047ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 224ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 238ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/account 304 290ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 212ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/team 304 261ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/lead/6a9c079e35179a8240f1fe97/details 304 298ms","timestamp":"2026-09-05 17:47:08"}
+{"level":"http","message":"GET /api/subscription 304 1606ms","timestamp":"2026-09-05 17:47:09"}
+{"level":"http","message":"GET /api/subscription 304 1722ms","timestamp":"2026-09-05 17:47:11"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 291ms","timestamp":"2026-09-05 17:47:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:49:13"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:49:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:49:14"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:49:20"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:49:27"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:49:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:49:28"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-05 17:49:33"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 17:49:33"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 17:49:34"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-05 17:49:34"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 255ms","timestamp":"2026-09-05 17:49:48"}
+{"level":"http","message":"GET /api/account 304 318ms","timestamp":"2026-09-05 17:49:48"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 451ms","timestamp":"2026-09-05 17:49:49"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 237ms","timestamp":"2026-09-05 17:49:49"}
+{"level":"http","message":"GET /api/account 304 239ms","timestamp":"2026-09-05 17:49:49"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 707ms","timestamp":"2026-09-05 17:49:49"}
+{"level":"http","message":"GET /api/subscription 304 2166ms","timestamp":"2026-09-05 17:49:50"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2244ms","timestamp":"2026-09-05 17:49:50"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 229ms","timestamp":"2026-09-05 17:49:51"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 242ms","timestamp":"2026-09-05 17:49:51"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 302ms","timestamp":"2026-09-05 17:49:51"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 292ms","timestamp":"2026-09-05 17:49:52"}
+{"level":"http","message":"GET /api/subscription 304 2029ms","timestamp":"2026-09-05 17:49:52"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2212ms","timestamp":"2026-09-05 17:49:53"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 217ms","timestamp":"2026-09-05 17:49:53"}
+{"level":"http","message":"GET /api/subscription 304 1625ms","timestamp":"2026-09-05 17:49:54"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 231ms","timestamp":"2026-09-05 17:49:54"}
+{"level":"http","message":"GET /api/account 304 276ms","timestamp":"2026-09-05 17:49:54"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 214ms","timestamp":"2026-09-05 17:49:54"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 492ms","timestamp":"2026-09-05 17:49:55"}
+{"level":"http","message":"GET /api/account 304 266ms","timestamp":"2026-09-05 17:49:55"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 657ms","timestamp":"2026-09-05 17:49:55"}
+{"level":"http","message":"GET /api/subscription 304 1983ms","timestamp":"2026-09-05 17:49:56"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2150ms","timestamp":"2026-09-05 17:49:56"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 288ms","timestamp":"2026-09-05 17:49:56"}
+{"level":"http","message":"GET /api/subscription 304 1685ms","timestamp":"2026-09-05 17:49:58"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1915ms","timestamp":"2026-09-05 17:49:58"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 229ms","timestamp":"2026-09-05 17:49:58"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2118ms","timestamp":"2026-09-05 17:50:25"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 223ms","timestamp":"2026-09-05 17:50:25"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 230ms","timestamp":"2026-09-05 17:50:25"}
+{"level":"http","message":"GET /api/account 304 338ms","timestamp":"2026-09-05 17:50:26"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 510ms","timestamp":"2026-09-05 17:50:26"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2178ms","timestamp":"2026-09-05 17:50:27"}
+{"level":"http","message":"GET /api/subscription 200 2118ms","timestamp":"2026-09-05 17:50:27"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 284ms","timestamp":"2026-09-05 17:50:28"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 291ms","timestamp":"2026-09-05 17:50:28"}
+{"level":"http","message":"GET /api/account 304 334ms","timestamp":"2026-09-05 17:50:28"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 378ms","timestamp":"2026-09-05 17:50:28"}
+{"level":"http","message":"GET /api/subscription 304 2115ms","timestamp":"2026-09-05 17:50:29"}
+{"level":"http","message":"GET /api/subscription 304 1651ms","timestamp":"2026-09-05 17:50:31"}
+{"level":"http","message":"GET /api/subscription 304 2043ms","timestamp":"2026-09-05 17:50:33"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 228ms","timestamp":"2026-09-05 17:50:33"}
+{"level":"http","message":"GET /api/account 304 294ms","timestamp":"2026-09-05 17:50:33"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 239ms","timestamp":"2026-09-05 17:50:34"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 569ms","timestamp":"2026-09-05 17:50:34"}
+{"level":"http","message":"GET /api/account 304 297ms","timestamp":"2026-09-05 17:50:34"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 666ms","timestamp":"2026-09-05 17:50:34"}
+{"level":"http","message":"GET /api/subscription 304 2100ms","timestamp":"2026-09-05 17:50:35"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2287ms","timestamp":"2026-09-05 17:50:35"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 197ms","timestamp":"2026-09-05 17:50:36"}
+{"level":"http","message":"GET /api/subscription 304 1595ms","timestamp":"2026-09-05 17:50:37"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1815ms","timestamp":"2026-09-05 17:50:37"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 194ms","timestamp":"2026-09-05 17:50:37"}
+{"level":"http","message":"GET /api/subscription 304 2050ms","timestamp":"2026-09-05 17:50:39"}
+{"level":"http","message":"GET /api/subscription 304 1697ms","timestamp":"2026-09-05 17:50:41"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2684ms","timestamp":"2026-09-05 17:52:38"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 213ms","timestamp":"2026-09-05 17:52:39"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 218ms","timestamp":"2026-09-05 17:52:39"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 303ms","timestamp":"2026-09-05 17:52:39"}
+{"level":"http","message":"GET /api/account 304 301ms","timestamp":"2026-09-05 17:52:39"}
+{"level":"http","message":"GET /api/subscription 304 1759ms","timestamp":"2026-09-05 17:52:40"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1830ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/subscription 304 1619ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 224ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 304 230ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/account 304 292ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 304 296ms","timestamp":"2026-09-05 17:52:42"}
+{"level":"http","message":"GET /api/subscription 304 1684ms","timestamp":"2026-09-05 17:52:44"}
+{"level":"http","message":"GET /api/subscription 304 1726ms","timestamp":"2026-09-05 17:52:45"}
+{"level":"http","message":"GET /api/webhook/6a9bfc32452e815bd6e7ddcf/token 201 274ms","timestamp":"2026-09-05 17:52:51"}
+{"level":"http","message":"POST /api/webhook/6a9bfc32452e815bd6e7ddcf/token 201 1040ms","timestamp":"2026-09-05 17:52:58"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:53:07"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c09ab01a71c58d7ebc0bf","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:53:08"}
+{"level":"http","message":"POST /api/webhook/6a9bfc32452e815bd6e7ddcf/lead 200 1258ms","timestamp":"2026-09-05 17:53:08"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 223ms","timestamp":"2026-09-05 17:53:13"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 289ms","timestamp":"2026-09-05 17:53:13"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 291ms","timestamp":"2026-09-05 17:53:13"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 298ms","timestamp":"2026-09-05 17:53:13"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:53:17"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c09b601a71c58d7ebc10a","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:53:18"}
+{"level":"http","message":"POST /api/webhook/6a9bfc32452e815bd6e7ddcf/lead 200 1172ms","timestamp":"2026-09-05 17:53:18"}
+{"level":"http","message":"GET /api/conversation/6a9bfc32452e815bd6e7ddcf?page=1&limit=50 304 60ms","timestamp":"2026-09-05 17:53:26"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 231ms","timestamp":"2026-09-05 17:53:27"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 289ms","timestamp":"2026-09-05 17:53:27"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 299ms","timestamp":"2026-09-05 17:53:27"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 303ms","timestamp":"2026-09-05 17:53:27"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 213ms","timestamp":"2026-09-05 17:53:29"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","level":"info","message":"Creating lead","organizationId":"6a9bfc32452e815bd6e7dd8a","timestamp":"2026-09-05 17:53:40"}
+{"accountId":"6a9bfc32452e815bd6e7ddcf","leadId":"6a9c09cc01a71c58d7ebc16a","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/lead 200 1689ms","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 314ms","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 388ms","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 399ms","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 389ms","timestamp":"2026-09-05 17:53:41"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview? 200 286ms","timestamp":"2026-09-05 17:53:55"}
+{"level":"http","message":"POST /api/auth/login 200 124ms","timestamp":"2026-09-05 17:59:00"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1889ms","timestamp":"2026-09-05 17:59:02"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 200 203ms","timestamp":"2026-09-05 17:59:02"}
+{"level":"http","message":"GET /api/account 304 298ms","timestamp":"2026-09-05 17:59:02"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 264ms","timestamp":"2026-09-05 17:59:03"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 348ms","timestamp":"2026-09-05 17:59:03"}
+{"level":"http","message":"GET /api/subscription 304 1750ms","timestamp":"2026-09-05 17:59:04"}
+{"level":"http","message":"GET /api/subscription 304 1716ms","timestamp":"2026-09-05 17:59:05"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 107ms","timestamp":"2026-09-05 17:59:16"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 358ms","timestamp":"2026-09-05 17:59:18"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 442ms","timestamp":"2026-09-05 17:59:18"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 446ms","timestamp":"2026-09-05 17:59:18"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 451ms","timestamp":"2026-09-05 17:59:18"}
+{"level":"http","message":"GET /api/message/6a9594a65ed28dde87115ccb? 200 106ms","timestamp":"2026-09-05 17:59:28"}
+{"level":"http","message":"PATCH /api/notification/6a9594a671f57a1ccdf454d6/read 200 243ms","timestamp":"2026-09-05 17:59:28"}
+{"level":"http","message":"GET /api/message/6a93080d4d1ca915dadacb07? 200 113ms","timestamp":"2026-09-05 17:59:31"}
+{"level":"http","message":"PATCH /api/notification/6a93080d71f57a1ccded65af/read 200 267ms","timestamp":"2026-09-05 17:59:31"}
+{"level":"http","message":"GET /api/message/6a9307014d1ca915dadacae2? 200 104ms","timestamp":"2026-09-05 17:59:34"}
+{"level":"http","message":"PATCH /api/notification/6a93070271f57a1ccded6286/read 200 223ms","timestamp":"2026-09-05 17:59:34"}
+{"level":"http","message":"GET /api/message/6a9306614d1ca915dadacac0? 200 96ms","timestamp":"2026-09-05 17:59:36"}
+{"level":"http","message":"PATCH /api/notification/6a93066171f57a1ccded6285/read 200 213ms","timestamp":"2026-09-05 17:59:36"}
+{"level":"http","message":"GET /api/message/6a9305144d1ca915dadacaab? 200 125ms","timestamp":"2026-09-05 17:59:39"}
+{"level":"http","message":"PATCH /api/notification/6a93051471f57a1ccded61c9/read 200 226ms","timestamp":"2026-09-05 17:59:39"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 200 87ms","timestamp":"2026-09-05 17:59:43"}
+{"level":"http","message":"PATCH /api/notification/6a93048271f57a1ccded6142/read 200 249ms","timestamp":"2026-09-05 17:59:43"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 218ms","timestamp":"2026-09-05 17:59:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 275ms","timestamp":"2026-09-05 17:59:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 280ms","timestamp":"2026-09-05 17:59:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 299ms","timestamp":"2026-09-05 17:59:53"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 102ms","timestamp":"2026-09-05 17:59:54"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 107ms","timestamp":"2026-09-05 17:59:54"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 109ms","timestamp":"2026-09-05 17:59:54"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 213ms","timestamp":"2026-09-05 17:59:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 266ms","timestamp":"2026-09-05 17:59:59"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 282ms","timestamp":"2026-09-05 17:59:59"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 284ms","timestamp":"2026-09-05 17:59:59"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 208ms","timestamp":"2026-09-05 18:00:01"}
+{"accountId":"6a7c854242116e6531df0bcb","level":"info","message":"Creating lead","organizationId":"6a7c854042116e6531df0b8c","timestamp":"2026-09-05 18:00:07"}
+{"accountId":"6a7c854242116e6531df0bcb","leadId":"6a9c0b4f01a71c58d7ebc386","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 18:00:08"}
+{"level":"info","message":"Lead Notification email queued for support@kyraitsolutions.com","timestamp":"2026-09-05 18:00:08"}
+{"level":"info","message":"Lead assignment email queued for undefined","timestamp":"2026-09-05 18:00:09"}
+{"level":"info","message":"Task assignment email queued for undefined","timestamp":"2026-09-05 18:00:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/lead 200 2760ms","timestamp":"2026-09-05 18:00:09"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 313ms","timestamp":"2026-09-05 18:00:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 380ms","timestamp":"2026-09-05 18:00:10"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 394ms","timestamp":"2026-09-05 18:00:10"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 421ms","timestamp":"2026-09-05 18:00:10"}
+{"level":"http","message":"PATCH /api/notification/6a9c0b5145cffc2a2ea3bf8b/read 200 251ms","timestamp":"2026-09-05 18:00:17"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 262ms","timestamp":"2026-09-05 18:00:17"}
+{"level":"http","message":"GET /api/team 304 296ms","timestamp":"2026-09-05 18:00:17"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/lead/6a9c0b4f01a71c58d7ebc386/details 200 349ms","timestamp":"2026-09-05 18:00:17"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 229ms","timestamp":"2026-09-05 18:00:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 303ms","timestamp":"2026-09-05 18:00:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 314ms","timestamp":"2026-09-05 18:00:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 313ms","timestamp":"2026-09-05 18:00:20"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 200 319ms","timestamp":"2026-09-05 18:00:21"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 131ms","timestamp":"2026-09-05 18:00:27"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 133ms","timestamp":"2026-09-05 18:00:27"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 102ms","timestamp":"2026-09-05 18:00:27"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 421ms","timestamp":"2026-09-05 18:00:31"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 247ms","timestamp":"2026-09-05 18:00:42"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 402ms","timestamp":"2026-09-05 18:00:44"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 98ms","timestamp":"2026-09-05 18:00:47"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 209ms","timestamp":"2026-09-05 18:00:49"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 258ms","timestamp":"2026-09-05 18:00:49"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 262ms","timestamp":"2026-09-05 18:00:49"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 281ms","timestamp":"2026-09-05 18:00:49"}
+{"level":"http","message":"POST /api/contacts 200 228ms","timestamp":"2026-09-05 18:00:50"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 337ms","timestamp":"2026-09-05 18:01:51"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 234ms","timestamp":"2026-09-05 18:02:08"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 296ms","timestamp":"2026-09-05 18:02:08"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 483ms","timestamp":"2026-09-05 18:02:08"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 482ms","timestamp":"2026-09-05 18:02:08"}
+{"level":"http","message":"PUT /api/account/6a7c854242116e6531df0bcb/lead/6a9c0b4f01a71c58d7ebc386/update 200 414ms","timestamp":"2026-09-05 18:02:13"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 217ms","timestamp":"2026-09-05 18:02:30"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 301ms","timestamp":"2026-09-05 18:02:30"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 293ms","timestamp":"2026-09-05 18:02:30"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 329ms","timestamp":"2026-09-05 18:02:30"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 200 341ms","timestamp":"2026-09-05 18:02:31"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 112ms","timestamp":"2026-09-05 18:02:31"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 113ms","timestamp":"2026-09-05 18:02:31"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 107ms","timestamp":"2026-09-05 18:02:31"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 194ms","timestamp":"2026-09-05 18:02:33"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 285ms","timestamp":"2026-09-05 18:02:33"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 288ms","timestamp":"2026-09-05 18:02:33"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 288ms","timestamp":"2026-09-05 18:02:33"}
+{"level":"http","message":"POST /api/contacts 200 564ms","timestamp":"2026-09-05 18:02:34"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 313ms","timestamp":"2026-09-05 18:02:55"}
+{"level":"http","message":"GET /api/subscription/payments 200 286ms","timestamp":"2026-09-05 18:10:51"}
+{"level":"http","message":"GET /api/subscription 200 1582ms","timestamp":"2026-09-05 18:10:52"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 316ms","timestamp":"2026-09-05 18:11:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 342ms","timestamp":"2026-09-05 18:11:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 378ms","timestamp":"2026-09-05 18:11:20"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 379ms","timestamp":"2026-09-05 18:11:20"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 648ms","timestamp":"2026-09-05 18:11:24"}
+{"accountId":"6a7c854242116e6531df0bcb","level":"info","message":"Creating lead","organizationId":"6a7c854042116e6531df0b8c","timestamp":"2026-09-05 18:11:29"}
+{"accountId":"6a7c854242116e6531df0bcb","leadId":"6a9c0df901a71c58d7ebc638","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-05 18:11:29"}
+{"level":"info","message":"Lead Notification email queued for support@kyraitsolutions.com","timestamp":"2026-09-05 18:11:30"}
+{"level":"info","message":"Lead assignment email queued for undefined","timestamp":"2026-09-05 18:11:30"}
+{"level":"info","message":"Task assignment email queued for undefined","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/lead 200 2695ms","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 314ms","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 343ms","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 388ms","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 383ms","timestamp":"2026-09-05 18:11:31"}
+{"level":"http","message":"GET /api/subscription/payments 304 324ms","timestamp":"2026-09-05 18:11:37"}
+{"level":"http","message":"GET /api/subscription 200 2112ms","timestamp":"2026-09-05 18:11:39"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 124ms","timestamp":"2026-09-05 18:11:54"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 125ms","timestamp":"2026-09-05 18:11:54"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 138ms","timestamp":"2026-09-05 18:11:54"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 508ms","timestamp":"2026-09-05 18:11:57"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 556ms","timestamp":"2026-09-05 18:11:57"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 564ms","timestamp":"2026-09-05 18:11:57"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 591ms","timestamp":"2026-09-05 18:11:57"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 301ms","timestamp":"2026-09-05 18:11:58"}
+{"level":"http","message":"GET /api/team 304 330ms","timestamp":"2026-09-05 18:11:58"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/lead/6a9c0df901a71c58d7ebc638/details 200 338ms","timestamp":"2026-09-05 18:11:58"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?entityType=lead&entityId=6a9c0df901a71c58d7ebc638 200 233ms","timestamp":"2026-09-05 18:12:02"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?entityType=lead&entityId=6a9c0df901a71c58d7ebc638 304 229ms","timestamp":"2026-09-05 18:14:36"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 200 310ms","timestamp":"2026-09-05 18:16:16"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 188ms","timestamp":"2026-09-05 18:16:46"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 188ms","timestamp":"2026-09-05 18:16:46"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 152ms","timestamp":"2026-09-05 18:16:46"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 226ms","timestamp":"2026-09-05 18:16:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 274ms","timestamp":"2026-09-05 18:16:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 302ms","timestamp":"2026-09-05 18:16:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 298ms","timestamp":"2026-09-05 18:16:48"}
+{"level":"http","message":"POST /api/contacts 200 239ms","timestamp":"2026-09-05 18:16:50"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 543ms","timestamp":"2026-09-05 18:19:57"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 167ms","timestamp":"2026-09-05 18:20:05"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 166ms","timestamp":"2026-09-05 18:20:05"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 119ms","timestamp":"2026-09-05 18:20:05"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 318ms","timestamp":"2026-09-05 18:20:06"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 478ms","timestamp":"2026-09-05 18:20:07"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 506ms","timestamp":"2026-09-05 18:20:07"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 505ms","timestamp":"2026-09-05 18:20:07"}
+{"level":"http","message":"POST /api/contacts 200 259ms","timestamp":"2026-09-05 18:20:08"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 333ms","timestamp":"2026-09-05 18:20:10"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 117ms","timestamp":"2026-09-05 18:20:52"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 117ms","timestamp":"2026-09-05 18:20:52"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 106ms","timestamp":"2026-09-05 18:20:52"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 239ms","timestamp":"2026-09-05 18:20:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 301ms","timestamp":"2026-09-05 18:20:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 307ms","timestamp":"2026-09-05 18:20:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 308ms","timestamp":"2026-09-05 18:20:53"}
+{"level":"http","message":"POST /api/contacts 200 268ms","timestamp":"2026-09-05 18:20:55"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 301ms","timestamp":"2026-09-05 18:20:57"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 142ms","timestamp":"2026-09-05 18:21:30"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 135ms","timestamp":"2026-09-05 18:21:30"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 184ms","timestamp":"2026-09-05 18:21:30"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 217ms","timestamp":"2026-09-05 18:21:32"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 271ms","timestamp":"2026-09-05 18:21:32"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 283ms","timestamp":"2026-09-05 18:21:32"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 288ms","timestamp":"2026-09-05 18:21:32"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 307ms","timestamp":"2026-09-05 18:21:36"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 233ms","timestamp":"2026-09-05 18:21:39"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 270ms","timestamp":"2026-09-05 18:21:39"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 291ms","timestamp":"2026-09-05 18:21:39"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 306ms","timestamp":"2026-09-05 18:21:39"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 297ms","timestamp":"2026-09-05 18:21:40"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 111ms","timestamp":"2026-09-05 18:27:08"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 112ms","timestamp":"2026-09-05 18:27:08"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 106ms","timestamp":"2026-09-05 18:27:08"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 220ms","timestamp":"2026-09-05 18:27:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 281ms","timestamp":"2026-09-05 18:27:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 287ms","timestamp":"2026-09-05 18:27:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 288ms","timestamp":"2026-09-05 18:27:09"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 282ms","timestamp":"2026-09-05 18:27:11"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 224ms","timestamp":"2026-09-05 18:27:14"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 251ms","timestamp":"2026-09-05 18:27:14"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 282ms","timestamp":"2026-09-05 18:27:14"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 284ms","timestamp":"2026-09-05 18:27:14"}
+{"level":"http","message":"POST /api/contacts 200 215ms","timestamp":"2026-09-05 18:27:15"}
+{"level":"http","message":"POST /api/notification/read-all 200 270ms","timestamp":"2026-09-05 18:27:50"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 294ms","timestamp":"2026-09-05 18:27:54"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 110ms","timestamp":"2026-09-05 18:27:56"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 114ms","timestamp":"2026-09-05 18:27:56"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 118ms","timestamp":"2026-09-05 18:27:56"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 240ms","timestamp":"2026-09-05 18:27:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 320ms","timestamp":"2026-09-05 18:27:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 326ms","timestamp":"2026-09-05 18:27:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 325ms","timestamp":"2026-09-05 18:27:58"}
+{"level":"http","message":"POST /api/contacts 200 239ms","timestamp":"2026-09-05 18:27:59"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 218ms","timestamp":"2026-09-05 18:32:03"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 283ms","timestamp":"2026-09-05 18:32:08"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 99ms","timestamp":"2026-09-05 18:32:09"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 98ms","timestamp":"2026-09-05 18:32:09"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 110ms","timestamp":"2026-09-05 18:32:09"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 209ms","timestamp":"2026-09-05 18:32:11"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 278ms","timestamp":"2026-09-05 18:32:11"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 301ms","timestamp":"2026-09-05 18:32:11"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 301ms","timestamp":"2026-09-05 18:32:11"}
+{"level":"http","message":"POST /api/contacts 200 399ms","timestamp":"2026-09-05 18:32:13"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 233ms","timestamp":"2026-09-05 18:32:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 304ms","timestamp":"2026-09-05 18:32:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 308ms","timestamp":"2026-09-05 18:32:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 312ms","timestamp":"2026-09-05 18:32:19"}
+{"level":"http","message":"POST /api/contacts 200 221ms","timestamp":"2026-09-05 18:32:20"}
+{"level":"http","message":"GET /api/subscription/payments 304 261ms","timestamp":"2026-09-05 18:32:52"}
+{"level":"http","message":"GET /api/subscription 304 1770ms","timestamp":"2026-09-05 18:32:54"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb 200 274ms","timestamp":"2026-09-05 18:33:12"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 222ms","timestamp":"2026-09-05 18:33:30"}
+{"level":"http","message":"GET /api/automation/6a7c854242116e6531df0bcb 200 225ms","timestamp":"2026-09-05 18:33:31"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 414ms","timestamp":"2026-09-05 18:33:38"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 104ms","timestamp":"2026-09-05 18:33:40"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 104ms","timestamp":"2026-09-05 18:33:40"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 109ms","timestamp":"2026-09-05 18:33:40"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 296ms","timestamp":"2026-09-05 18:33:42"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 215ms","timestamp":"2026-09-05 18:33:45"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 252ms","timestamp":"2026-09-05 18:33:45"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 268ms","timestamp":"2026-09-05 18:33:45"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 293ms","timestamp":"2026-09-05 18:33:45"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 288ms","timestamp":"2026-09-05 18:34:04"}
+{"level":"http","message":"GET /api/team 304 290ms","timestamp":"2026-09-05 18:34:04"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/lead/6a9bed3241242b28a1d6be90/details 200 326ms","timestamp":"2026-09-05 18:34:04"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?entityType=lead&entityId=6a9bed3241242b28a1d6be90 200 209ms","timestamp":"2026-09-05 18:34:07"}
+{"level":"http","message":"PUT /api/account/6a7c854242116e6531df0bcb/lead/6a9bed3241242b28a1d6be90/update 200 413ms","timestamp":"2026-09-05 18:34:28"}
+{"level":"http","message":"PUT /api/account/6a7c854242116e6531df0bcb/lead/6a9bed3241242b28a1d6be90/update 200 492ms","timestamp":"2026-09-05 18:34:36"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 244ms","timestamp":"2026-09-05 18:34:38"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 315ms","timestamp":"2026-09-05 18:34:38"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 322ms","timestamp":"2026-09-05 18:34:38"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 327ms","timestamp":"2026-09-05 18:34:38"}
+{"level":"http","message":"POST /api/contacts 200 226ms","timestamp":"2026-09-05 18:34:41"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 106ms","timestamp":"2026-09-05 18:34:54"}
+{"level":"http","message":"GET /api/message/6a9304814d1ca915dadaca92? 304 104ms","timestamp":"2026-09-05 18:34:54"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 93ms","timestamp":"2026-09-05 18:34:54"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 220ms","timestamp":"2026-09-05 18:34:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 286ms","timestamp":"2026-09-05 18:34:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 291ms","timestamp":"2026-09-05 18:34:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 320ms","timestamp":"2026-09-05 18:34:55"}
+{"level":"http","message":"GET /api/message/6a999e2698020143ab216a14? 200 178ms","timestamp":"2026-09-05 18:35:00"}
+{"level":"http","message":"GET /api/message/6a9594a65ed28dde87115ccb? 304 110ms","timestamp":"2026-09-05 18:35:01"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb 200 952ms","timestamp":"2026-09-05 18:35:33"}
+{"level":"http","message":"GET /api/subscription/payments 304 248ms","timestamp":"2026-09-05 18:35:37"}
+{"level":"http","message":"GET /api/subscription 304 1587ms","timestamp":"2026-09-05 18:35:38"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 284ms","timestamp":"2026-09-05 18:35:42"}
+{"level":"http","message":"GET /api/account 304 322ms","timestamp":"2026-09-05 18:36:01"}
+{"level":"http","message":"GET /api/subscription/payments 304 326ms","timestamp":"2026-09-05 18:40:17"}
+{"level":"http","message":"GET /api/subscription 304 1652ms","timestamp":"2026-09-05 18:40:18"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 215ms","timestamp":"2026-09-05 18:43:08"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 200 242ms","timestamp":"2026-09-05 18:43:08"}
+{"level":"http","message":"GET /api/account 304 291ms","timestamp":"2026-09-05 18:43:08"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 304 208ms","timestamp":"2026-09-05 18:43:45"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 206ms","timestamp":"2026-09-05 18:43:45"}
+{"level":"http","message":"GET /api/account 304 236ms","timestamp":"2026-09-05 18:43:45"}
+{"level":"http","message":"GET /api/subscription 304 1630ms","timestamp":"2026-09-05 18:43:47"}
+{"level":"http","message":"GET /api/subscription 304 1883ms","timestamp":"2026-09-05 18:43:49"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 208ms","timestamp":"2026-09-05 18:44:15"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 304 222ms","timestamp":"2026-09-05 18:44:15"}
+{"level":"http","message":"GET /api/account 304 269ms","timestamp":"2026-09-05 18:44:15"}
+{"level":"http","message":"GET /api/subscription 304 1443ms","timestamp":"2026-09-05 18:44:16"}
+{"level":"http","message":"GET /api/subscription 304 1664ms","timestamp":"2026-09-05 18:44:18"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 1664ms","timestamp":"2026-09-05 18:44:46"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2000ms","timestamp":"2026-09-05 18:45:03"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 232ms","timestamp":"2026-09-05 18:45:03"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 304 237ms","timestamp":"2026-09-05 18:45:03"}
+{"level":"http","message":"GET /api/account 304 300ms","timestamp":"2026-09-05 18:45:03"}
+{"level":"http","message":"GET /api/account 304 263ms","timestamp":"2026-09-05 18:45:03"}
+{"level":"http","message":"GET /api/subscription 304 2197ms","timestamp":"2026-09-05 18:45:05"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 363ms","timestamp":"2026-09-05 18:45:06"}
+{"level":"http","message":"GET /api/subscription 304 1839ms","timestamp":"2026-09-05 18:45:07"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 283ms","timestamp":"2026-09-05 18:45:13"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 311ms","timestamp":"2026-09-05 18:45:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 354ms","timestamp":"2026-09-05 18:45:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 376ms","timestamp":"2026-09-05 18:45:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 386ms","timestamp":"2026-09-05 18:45:15"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 106ms","timestamp":"2026-09-05 18:45:22"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&platform=whatsapp 200 120ms","timestamp":"2026-09-05 18:45:23"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&platform=whatsapp 304 85ms","timestamp":"2026-09-05 18:45:23"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&platform=chatbot 200 66ms","timestamp":"2026-09-05 18:45:27"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview? 304 301ms","timestamp":"2026-09-05 18:45:42"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-05 18:46:06"}
