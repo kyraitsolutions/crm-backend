@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import passport from "./config/passport.js";
 import { ErrorMiddleware } from "./middleware/auth.middleware.js";
 import cors from "cors";
@@ -6,13 +6,7 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
-// import "./workers/index.js";
-// import { seedPermissions } from "./scripts/seed/seedPermissions.js";
-// import { config } from "./config/index.js";
-// import { seedPermissions } from "./scripts/seed/seedPermissions.js";
-// import { config } from "./config/index.js";
-
-// console.log(config);
+import logger from "./utils/logger.js";
 
 export class App {
   public app: Application;
@@ -34,14 +28,22 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(
       cors({
-        // origin: config.cross_domains?.origin || "*",
         origin: "*",
         credentials: true,
       }),
     );
-    this.app.use(express.json({limit:"10mb"}));
-    this.app.use(express.urlencoded({ extended: true,limit:"10mb" }));
+    this.app.use(express.json({ limit: "10mb" }));
+    this.app.use(express.urlencoded({ extended: true, limit: "10mb" }));
     this.app.use(passport.initialize());
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
+      const startedAt = Date.now();
+      res.on("finish", () => {
+        logger.http(
+          `${req.method} ${req.originalUrl} ${res.statusCode} ${Date.now() - startedAt}ms`,
+        );
+      });
+      next();
+    });
   }
 
   private initializeRoutes(): void {
@@ -60,7 +62,7 @@ export class App {
     // configureNumber()
     // await seedPermissions();
     server.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
+      logger.info(`Server is running on port ${port}`);
     });
   }
 }

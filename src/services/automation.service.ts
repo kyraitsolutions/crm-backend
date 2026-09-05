@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { AutomationDto, updateAutomationDto } from "../dtos/automation.dto.js";
 import AutomationRepository from "../repositories/automation.repository.js";
 import {
@@ -25,7 +26,7 @@ export default class AutomationService {
     );
 
     if (isAutomationExists) {
-      throw new Error("Automation already exists for this trigger");
+      throw HttpError.conflict("Automation already exists for this trigger");
     }
 
     const automation = await this.repository.create({
@@ -65,7 +66,7 @@ export default class AutomationService {
     const isAutomationExists = await this.repository.findById(automationId);
 
     if (!isAutomationExists) {
-      throw new Error("Automation not found");
+      throw HttpError.notFound("Automation not found");
     }
 
     if (data.name) {
@@ -75,7 +76,7 @@ export default class AutomationService {
       );
 
       if (isAutomationExists) {
-        throw new Error("Automation already exists for this trigger");
+        throw HttpError.conflict("Automation already exists for this trigger");
       }
     }
 
@@ -118,7 +119,7 @@ export default class AutomationService {
     const automation = await this.repository.findById(automationId);
 
     if (!automation) {
-      throw new Error("Automation not found");
+      throw HttpError.notFound("Automation not found");
     }
 
     const result = await this.repository.delete(automationId);

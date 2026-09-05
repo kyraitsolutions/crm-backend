@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 // services/media.service.ts
 
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
@@ -35,11 +36,11 @@ export class MediaService {
     const config = this.getMediaConfig(dto.mimeType);
 
     if (!config) {
-      throw new Error("Unsupported media type");
+      throw HttpError.badRequest("Unsupported media type");
     }
 
     if (dto.fileSize > config.maxSize) {
-      throw new Error("File too large");
+      throw HttpError.badRequest("File too large");
     }
   }
 

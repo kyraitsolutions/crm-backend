@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose from "mongoose";
 import { emitToAccount } from "../config/wsServer/wsEmitter.js";
 import { ConversationRepository } from "../repositories/conversations.repository.js";
@@ -82,7 +83,7 @@ export class MessageService {
       payload,
     );
 
-    if (!message) throw new Error("Message not found");
+    if (!message) throw HttpError.notFound("Message not found");
 
     const conversation = await this.conversationRepository.updateConversation(
       String(message.conversationId),

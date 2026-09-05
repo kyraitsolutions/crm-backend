@@ -1,6 +1,7 @@
 // controllers/conversation.controller.ts
 
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { ConversationService } from "../services/conversations.service.js";
 import httpResponse from "../utils/http.response.js";
 import { InitConversationDto } from "../dtos/conversation.dot.js";
@@ -25,7 +26,7 @@ export class ConversationController {
         doc: result,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ConversationController", error, next, req);
     }
   }
 
@@ -64,7 +65,7 @@ export class ConversationController {
 
       httpResponse(req, res, 200, "Conversations fetched successfully", result);
     } catch (error: any) {
-      next(error);
+      handleRouteError("ConversationController", error, next, req);
     }
   }
 

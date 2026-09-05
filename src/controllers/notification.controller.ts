@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { notificationService } from "../container.js";
 import httpResponse from "../utils/http.response.js";
 
@@ -21,7 +22,7 @@ export class NotificationController {
         skip: 0,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("NotificationController", error, next, req);
     }
   };
 }

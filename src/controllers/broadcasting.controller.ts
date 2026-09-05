@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { BroadcastService } from "../services/broadcast.service.js";
 
@@ -31,7 +32,7 @@ export class BroadcastController {
         totalLeads: leadIds.length,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("BroadcastController", error, next, req);
     }
   };
 }

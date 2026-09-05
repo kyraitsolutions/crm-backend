@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import {
   organizationOnboardingService,
   organizationService,
@@ -32,7 +33,7 @@ export class OrganizationController {
 
       httpResponse(req, res, 201, "Client onbaorded successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("OrganizationController", error, next, req);
     }
   };
 
@@ -57,7 +58,7 @@ export class OrganizationController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("OrganizationController", error, next, req);
     }
   };
   updateOrganizationDetails = async (
@@ -83,7 +84,7 @@ export class OrganizationController {
       }
       );
     } catch (error) {
-      next(error);
+      handleRouteError("OrganizationController", error, next, req);
     }
   };
 }

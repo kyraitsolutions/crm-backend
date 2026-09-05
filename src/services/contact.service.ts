@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
 import { TContact, TCreateContact } from "../types/contact.type.js";
 
@@ -98,7 +99,7 @@ export class ContactService {
       payload.phone,
     );
     if (existingContact) {
-      throw new Error("Contact already exists");
+      throw HttpError.conflict("Contact already exists");
     }
 
     console.log("Contact payload", payload);

@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose, { ClientSession } from "mongoose";
 import { ROLES } from "../config/permissions.js";
 import { rbacService } from "../container.js";
@@ -44,7 +45,7 @@ export class TeamService {
   async getTeamMembers(orgId: string): Promise<TPaginatedResponse<any>> {
     const organization = await this.organizationRepository.findById(orgId);
     if (!organization) {
-      throw new Error("Organization not found");
+      throw HttpError.notFound("Organization not found");
     }
 
     const teamMembers = await this.teamRepository.getTeamMembers(orgId);
@@ -63,7 +64,7 @@ export class TeamService {
     const isUserExist = await this.userRepository.findByEmail(email);
 
     if (isUserExist) {
-      throw new Error("User already assigned");
+      throw HttpError.conflict("User already assigned");
     }
 
     const newUser = await this.userRepository.create(
@@ -114,15 +115,15 @@ export class TeamService {
       const role = await rbacService.getRoleById(String(roleId));
 
       if (!role) {
-        throw new Error("Role not found");
+        throw HttpError.notFound("Role not found");
       }
 
       if (role.organizationId.toString() !== orgId.toString()) {
-        throw new Error("Role not belongs to this organization");
+        throw HttpError.forbidden("Role not belongs to this organization");
       }
 
       if (role.isSystemRole && role.name === ROLES.OWNER) {
-        throw new Error("This role cannot be assigned");
+        throw HttpError.forbidden("This role cannot be assigned");
       }
 
       // create organization member
@@ -224,7 +225,7 @@ export class TeamService {
         await this.teamRepository.getOrganizationMembersByUserId(id);
 
       if (!existingMember) {
-        throw new Error("Team member not found");
+        throw HttpError.notFound("Team member not found");
       }
 
       const userId = existingMember.userId;
@@ -289,7 +290,7 @@ export class TeamService {
         await this.teamRepository.getOrganizationMembersByUserIds(ids);
 
       if (members.length !== ids.length) {
-        throw new Error("Team member not found");
+        throw HttpError.notFound("Team member not found");
       }
 
       const invalidMembers = members.filter(
@@ -297,7 +298,7 @@ export class TeamService {
       );
 
       if (invalidMembers.length) {
-        throw new Error("Members do not belong to this organization");
+        throw HttpError.forbidden("Members do not belong to this organization");
       }
 
       const ownerExists = members.some(
@@ -305,7 +306,7 @@ export class TeamService {
       );
 
       if (ownerExists) {
-        throw new Error("Owner cannot be deleted");
+        throw HttpError.forbidden("Owner cannot be deleted");
       }
 
       await this.teamRepository.deleteOrganizationMembers(ids, session);
@@ -339,7 +340,7 @@ export class TeamService {
   }
   // async deleteTeamMember(ids: string[]): Promise<any> {
   //   try {
-  //     if (!ids || !ids.length) throw new Error("Ids are required");
+  //     if (!ids || !ids.length) throw HttpError.badRequest("Ids are required");
   //     const deletedTeamMember =
   //       await this.teamRepository.deleteTeamMembers(ids);
   //     return deletedTeamMember ? new TeamMemberDto(deletedTeamMember) : null;
@@ -356,14 +357,14 @@ export class TeamService {
   ): Promise<any> {
     console.log("org Id", orgId);
     if (!Array.isArray(accounts)) {
-      throw new Error("accountIds must be a non-empty array");
+      throw HttpError.badRequest("accountIds must be a non-empty array");
     }
 
     for (const account of accounts) {
       const role = await rbacService.getRoleById(account.roleId);
 
       if (!role) {
-        throw new Error(`Invalid role for account ${account.accountId}`);
+        throw HttpError.badRequest(`Invalid role for account ${account.accountId}`);
       }
 
       console.log("role to hai", role);

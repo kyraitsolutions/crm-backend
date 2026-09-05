@@ -37,7 +37,6 @@ export class AccountRouter {
     this.aiController = new AIController();
     this.broadcastController = new BroadcastController();
     this.recyclebinController = new RecyclebinController();
-    this;
     this.initializeRoutes();
   }
 
@@ -188,16 +187,7 @@ export class AccountRouter {
       AuthMiddleware.authenticate,
       this.leadController.getLeadSummary.bind(this.leadController),
     );
-    // this.router.post(
-    //   "/:accountId/lead/:formId/create",
-    //   AuthMiddleware.authenticate,
-    //   requirePermission("leads.create"),
-    //   this.leadController.createWebhookLead.bind(this.leadController),
-    // );
 
-    // TODO: =============================================================================================
-
-    // TODO: Analytics Overview
     this.router.get(
       "/:accountId/overview",
       AuthMiddleware.authenticate,
@@ -240,12 +230,6 @@ export class AccountRouter {
     // TODO: =============================================================================================
 
     // TODO: AI Operations
-
-    this.router.get(
-      "/:accountId/lead/:leadId/ai-summary",
-      AuthMiddleware.authenticate,
-      this.aiController.getLeadSummary.bind(this.aiController),
-    );
 
     this.router.post(
       "/:accountId/ai-template",

@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { ClientSession } from "mongoose";
 import {
   CreateOrganizationDto,
@@ -49,7 +50,7 @@ export class OrganizationService {
   ): Promise<{ doc: OrganizationResponseDto }> {
     const organization = await this.organizationRepository.findById(id);
 
-    if (!organization) throw new Error("Organization not found");
+    if (!organization) throw HttpError.notFound("Organization not found");
 
     return {
       doc: new OrganizationResponseDto(organization),

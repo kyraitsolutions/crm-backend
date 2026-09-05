@@ -77,8 +77,6 @@ export class AppRoutes {
     this.notificationRouter = new NotificationRouter();
     this.contactRouter = new ContactRouter();
     this.whatsappRouter = new WhatsappRouter();
-    this.notificationRouter = new NotificationRouter();
-    this.contactRouter = new ContactRouter();
     this.configurationRouter = new ConfigurationRouter();
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();

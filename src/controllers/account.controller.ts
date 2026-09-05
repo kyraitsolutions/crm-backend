@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { accountService } from "../container.js";
 import { CreateAccountDto } from "../dtos/account.dto.js";
 import { TUser } from "../types/user.type.js";
@@ -14,7 +15,7 @@ export class AccountController {
 
       httpResponse(req, res, 200, "Accounts fetched successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AccountController", error, next, req);
     }
   };
 
@@ -29,7 +30,7 @@ export class AccountController {
 
       httpResponse(req, res, 200, "Account fetched successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AccountController", error, next, req);
     }
   };
 
@@ -57,7 +58,7 @@ export class AccountController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("AccountController", error, next, req);
     }
   };
 
@@ -78,7 +79,7 @@ export class AccountController {
 
       httpResponse(req, res, 201, "Account created successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AccountController", error, next, req);
     }
   };
 
@@ -88,7 +89,7 @@ export class AccountController {
       const result = await accountService.deleteAccount(id);
       httpResponse(req, res, 200, "Account deleted successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AccountController", error, next, req);
     }
   };
 

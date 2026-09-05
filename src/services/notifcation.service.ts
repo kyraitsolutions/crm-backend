@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { TNotification } from "../types/notification.type.js";
@@ -12,7 +13,7 @@ export class NotificationService {
   async getNotificationByAccountId(accountId: string): Promise<{} | null> {
     const account = this.accountRepository.findOne(accountId);
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
     return account;
   }

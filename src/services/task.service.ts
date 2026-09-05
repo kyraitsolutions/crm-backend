@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { TaskRepository } from "../repositories/task.repository.js";
 import { ActivityLogService } from "./activityLog.service.js";
 
@@ -37,13 +38,13 @@ export class TaskService {
     const existingTask = await this.repository.findById(taskId);
 
     if (!existingTask) {
-      throw new Error("Task not found");
+      throw HttpError.notFound("Task not found");
     }
 
     const updatedTask = await this.repository.update(taskId, updateData);
 
     if (!updatedTask) {
-      throw new Error("Task update failed");
+      throw HttpError.badRequest("Task update failed");
     }
 
     const changes = this.getChanges(
@@ -78,7 +79,7 @@ export class TaskService {
     const task = await this.repository.findById(taskId);
 
     if (!task) {
-      throw new Error("Task not found");
+      throw HttpError.notFound("Task not found");
     }
 
     const updatedTask = await this.repository.update(taskId, {
@@ -109,7 +110,7 @@ export class TaskService {
     const task = await this.repository.findById(taskId);
 
     if (!task) {
-      throw new Error("Task not found");
+      throw HttpError.notFound("Task not found");
     }
 
     await this.repository.delete(taskId);

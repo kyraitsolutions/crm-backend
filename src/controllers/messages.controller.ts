@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { MessageService } from "../services/messages.service.js";
 import httpResponse from "../utils/http.response.js";
 
@@ -22,11 +23,15 @@ export class MessageController {
         doc: result,
       });
     } catch (error: any) {
-      next(error);
+      handleRouteError("MessageController", error, next, req);
     }
   }
 
-  public async saveMessage(req: Request, res: Response) {
+  public async saveMessage(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
     try {
       const result = await this.messageService.saveMessage(req.body);
 
@@ -34,7 +39,7 @@ export class MessageController {
         doc: result,
       });
     } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+      handleRouteError("MessageController", error, next, req);
     }
   }
 }

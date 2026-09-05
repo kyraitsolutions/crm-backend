@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import os from "os";
 import redisClient from "../config/redis.js";
@@ -56,7 +57,7 @@ export class HealthController {
 
             httpResponse(req, res, 200, "Health check passed", response);
         } catch (error) {
-            next(error);
+            handleRouteError("HealthController", error, next, req);
         }
     }
 

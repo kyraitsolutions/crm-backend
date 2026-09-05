@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { ClientSession } from "mongoose";
 import { ROLES } from "../config/permissions.js";
@@ -30,12 +31,12 @@ export class AccountService {
   ) {}
 
   async getAccountById(accountId: string): Promise<TApiResponse<AccountDto>> {
-    if (!accountId) throw new Error("Account id is required");
+    if (!accountId) throw HttpError.badRequest("Account id is required");
 
     const account = await this.accountRepository.findOne(accountId);
 
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     return {
@@ -85,12 +86,12 @@ export class AccountService {
     accountId: string,
     role?: string,
   ): Promise<TApiResponse<AccountAccessDto>> {
-    if (!accountId) throw new Error("Account id is required");
+    if (!accountId) throw HttpError.badRequest("Account id is required");
 
     const account = await this.accountRepository.findOne(accountId);
 
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     if (role === ROLES.OWNER) {
@@ -109,7 +110,7 @@ export class AccountService {
     );
 
     if (!member) {
-      throw new Error("Access denied to this account");
+      throw HttpError.forbidden("Access denied to this account");
     }
 
     // 2. Get role
@@ -148,7 +149,7 @@ export class AccountService {
     );
 
     if (existingAccount) {
-      throw new Error("Account is already exists");
+      throw HttpError.conflict("Account is already exists");
     }
 
     const accountData: TCreateAccount = {
@@ -174,7 +175,7 @@ export class AccountService {
   async deleteAccount(id: string): Promise<TApiResponse<{ id: string }>> {
     const account = await this.accountRepository.findOne(id);
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     const result = await this.accountRepository.delete(id);

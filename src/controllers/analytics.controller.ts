@@ -1,5 +1,6 @@
 // analytics.controller.ts
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import AnalyticsService from "../services/analytics.service.js";
 import httpResponse from "../utils/http.response.js";
 
@@ -33,7 +34,7 @@ export default class AnalyticsController {
         doc: analytics,
       });
     } catch (err) {
-      next(err);
+      handleRouteError("AnalyticsController", err, next, req);
     }
   };
 
@@ -58,7 +59,7 @@ export default class AnalyticsController {
   //       doc: result,
   //     });
   //   } catch (err) {
-  //     next(err);
+  //     handleRouteError("AnalyticsController", err, next, req);
   //   }
   // };
 
@@ -69,7 +70,7 @@ export default class AnalyticsController {
             const result = await this.analyticsService.getSearch(accountId, query);
             httpResponse(req, res, 200, "Global search result fetched", { docs: result });
         } catch (err) {
-            next(err);
+            handleRouteError("AnalyticsController", err, next, req);
         }
     };
 }

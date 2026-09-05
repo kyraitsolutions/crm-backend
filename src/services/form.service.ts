@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { TCreateForm } from "./../types/form.type.js";
 import { CreateFormDto, FormDto } from "../dtos/form.dto.js";
 import { FormRepository } from "../repositories/form.repository.js";
@@ -21,7 +22,7 @@ export class FormService {
       accountId,
     );
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
     const formData: TCreateForm = {
       userId: userId,

@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { SubscriptionRepository } from './../repositories/subscription.repository.js';
 import { ObjectId } from "mongodb";
 import { Plan, UserSubscription } from "../models/subscription.model.js";
@@ -70,7 +71,7 @@ export class SubscriptionService {
    */
   async assignPlan(userId: string, planName: PlanName): Promise<IUserSubscription> {
     const plan = await Plan.findOne({ name: planName });
-    if (!plan) throw new Error(`Plan ${planName} not found`);
+    if (!plan) throw HttpError.notFound(`Plan ${planName} not found`);
 
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + plan.durationDays);

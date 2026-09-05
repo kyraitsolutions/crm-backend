@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import logger from "../utils/logger.js";
 import { emailQueue } from "../queue/queue.js";
 import { EmailRepository } from "../repositories/email.repository.js";
@@ -46,7 +47,7 @@ export class EmailService {
     fromEmail: string;
   }): Promise<void> {
     if (!leadIds.length) {
-      throw new Error("No leads provided for campaign");
+      throw HttpError.badRequest("No leads provided for campaign");
     }
     for (let i = 0; i < leadIds.length; i++) {
       const lead = leadIds[i];
@@ -93,7 +94,7 @@ export class EmailService {
     fromEmail: string;
   }): Promise<void> {
     if (!emails.length) {
-      throw new Error("No leads provided for campaign");
+      throw HttpError.badRequest("No leads provided for campaign");
     }
 
     console.log("Yes working", fromEmail,emails,name);

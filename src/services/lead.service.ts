@@ -1,9 +1,8 @@
 import { LeadRespository } from "../repositories/lead.respository.js";
 import { Lead, LeadModel } from "../models/lead.model.js";
-// import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { GeminiAIUtil } from "../ai/ai.service.js";
 import { safeJsonParse } from "../ai/ai.parsers.js";
-// import { EmailService } from "./email.service.js";
+import { EmailService } from "./email.service.js";
 import { LeadDto } from "../dtos/lead.dto.js";
 import { ActivityLogService } from "./activityLog.service.js";
 import { AutomationEngine } from "./automation-engine.service.js";
@@ -13,22 +12,27 @@ import { RequestContext } from "../types/common.js";
 import { leadSummaryPrompt } from "../ai/ai.prompts.js";
 import { TApiResponse } from "../types/api-response.type.js";
 import { ChunkUtil } from "../utils/chunks.util.js";
+import { AccountRepository } from "../repositories/account.repository.js";
+import { HttpError } from "../utils/http.error.js";
+import logger from "../utils/logger.js";
 
 const BATCH_SIZE = 1000;
 
 export class LeadService {
   private ai: GeminiAIUtil;
-  // private emailService: EmailService;
+  private emailService: EmailService;
   private leadRepository: LeadRespository;
   private automationEngine = new AutomationEngine();
   private activityLogService = new ActivityLogService();
+  private accountRepository: AccountRepository;
 
   constructor() {
     this.ai = new GeminiAIUtil();
-    // this.emailService = new EmailService();
+    this.emailService = new EmailService();
     this.leadRepository = new LeadRespository();
     this.automationEngine = new AutomationEngine();
     this.activityLogService = new ActivityLogService();
+    this.accountRepository = new AccountRepository();
   }
 
   async createLeadWs(lead: Lead): Promise<Lead> {
@@ -38,7 +42,10 @@ export class LeadService {
     context: RequestContext,
     lead: LeadDto,
   ): Promise<TApiResponse<Lead>> {
-    console.log("Creating lead with context:", context, "and lead data:", lead);
+    logger.info("Creating lead", {
+      accountId: context.accountId,
+      organizationId: context.organizationId,
+    });
     const result = await this.leadRepository.create(lead);
 
     // Activity Log
@@ -71,6 +78,10 @@ export class LeadService {
       entityId: result._id,
     };
 
+    logger.debug("Lead created, running automations", {
+      leadId: String(result._id),
+      accountId: result?.accountId,
+    });
     await this.automationEngine.process({
       accountId: result?.accountId,
       trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
@@ -120,13 +131,17 @@ export class LeadService {
   ): Promise<any> {
     
     if (!Array.isArray(leads) || leads.length === 0) {
-      throw new Error("leads must be a non-empty array");
+      throw HttpError.badRequest("leads must be a non-empty array");
     }
 
     const results = { inserted: 0, updated: 0, failed: 0, errors: [] as any[] };
     const batches = ChunkUtil.chunkArray(leads, BATCH_SIZE);
 
-    console.log("Batch Size", batches,uniqueKey)
+    logger.info("Bulk lead write started", {
+      batches: batches.length,
+      uniqueKey,
+      mode,
+    });
     for (let i = 0; i < batches.length; i++) {
       const ops = this.buildBulkOps(context, batches[i], uniqueKey, mode);
       const offset = i * BATCH_SIZE;
@@ -153,7 +168,7 @@ export class LeadService {
 
   async getLeads(_userId: string,accountId: string,payload: Record<string, any>,skip: number): Promise<any | null> {
     if (!accountId) {
-      return null;
+      throw HttpError.badRequest("Account id is required");
     }
     const {
       page = 1,
@@ -255,7 +270,6 @@ export class LeadService {
     // -------------------------
     const sortQuery: any = {};
 
-    console.log(sort);
     if (sort?.field) {
       sortQuery[sort.field] = sort.order === "asc" ? 1 : -1;
     } else {
@@ -289,7 +303,7 @@ export class LeadService {
     //   prompt,
     //   "one parameter expected here",
     // );
-    console.log(rawResponse);
+    logger.debug("Lead summary generated", { accountId, leadId });
 
     if (!rawResponse) {
       return null;
@@ -309,7 +323,7 @@ export class LeadService {
   //   );
 
   //   if (!existingLead) {
-  //     throw new Error("Lead not found");
+  //     throw HttpError.notFound("Lead not found");
   //   }
 
   //   const updatedLead = await this.leadRepository.updateLeadById(leadId, lead);
@@ -337,7 +351,7 @@ export class LeadService {
     );
 
     if (!existingLead) {
-      throw new Error("Lead not found");
+      throw HttpError.notFound("Lead not found");
     }
 
     const updateData: Record<string, any> = {};
@@ -392,6 +406,32 @@ export class LeadService {
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
     return await this.leadRepository.update(lead);
   }
+
+  async notifyLeadUpdated(lead: Lead | null): Promise<void> {
+    if (!lead?.name || !lead.phone || !lead.email) {
+      return;
+    }
+
+    const account = await this.accountRepository.findOne(
+      String(lead.accountId),
+    );
+
+    const leadPayload = {
+      ...lead,
+      accountName: account?.accountName,
+      supportEmail: account?.email,
+    };
+
+    logger.info("Queueing lead acknowledgement email", {
+      email: leadPayload.email,
+      accountId: lead.accountId,
+    });
+
+    await this.emailService.queueLeadAcknowledgementEmail(
+      leadPayload.email as string,
+      leadPayload,
+    );
+  }
 }
 
 //  async updateLead(
@@ -406,7 +446,7 @@ export class LeadService {
 //     );
 
 //     if (!existingLead) {
-//       throw new Error("Lead not found");
+//       throw HttpError.notFound("Lead not found");
 //     }
 
 //     const changes = {

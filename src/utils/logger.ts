@@ -62,4 +62,18 @@ const logger = winston.createLogger({
   },
 };
 
+export const logError = (
+  scope: string,
+  error: unknown,
+  meta?: Record<string, unknown>,
+): void => {
+  const err = error instanceof Error ? error : new Error(String(error));
+  logger.error(scope, {
+    message: err.message,
+    stack: err.stack,
+    ...meta,
+  });
+};
+
+export { logger };
 export default logger;

@@ -1,8 +1,8 @@
 import httpResponse from "../utils/http.response.js";
 import { NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { Request, Response } from "express";
 import { TeamService } from "../services/team.service.js";
-import logger from "../utils/logger.js";
 import { CreateTeamMemberDto } from "../dtos/team.dto.js";
 
 export class TeamController {
@@ -24,8 +24,7 @@ export class TeamController {
 
       httpResponse(req, res, 200, "Team members fetched successfully", result);
     } catch (error) {
-      logger.error(`Error fetching team members: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 
@@ -44,8 +43,7 @@ export class TeamController {
         skip: 0,
       });
     } catch (error) {
-      logger.error(`Error fetching team member by id: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 
@@ -72,8 +70,7 @@ export class TeamController {
 
       httpResponse(req, res, 200, "Team member created successfully", result);
     } catch (error) {
-      logger.error(`Error creating team member: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 
@@ -99,8 +96,7 @@ export class TeamController {
         skip: 0,
       });
     } catch (error) {
-      logger.error(`Error assigning task to member: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 
@@ -120,8 +116,7 @@ export class TeamController {
         skip: 0,
       });
     } catch (error) {
-      logger.error(`Error updating team member: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 
@@ -143,8 +138,7 @@ export class TeamController {
 
       httpResponse(req, res, 200, "Team member deleted successfully", result);
     } catch (error) {
-      logger.error(`Error deleting team member: ${error}`);
-      next(error as Error);
+      handleRouteError("TeamController", error, next, req);
     }
   };
 }

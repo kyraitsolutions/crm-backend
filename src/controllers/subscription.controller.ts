@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { SubscriptionService } from "../services/subscription.service.js";
 import httpResponse from "../utils/http.response.js";
 
@@ -16,7 +17,7 @@ export class SubscriptionController {
         docs: subscriptions,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("SubscriptionController", error, next, req);
     }
   }
   // async createSubscription(req: Request, res: Response, next: NextFunction) {
@@ -27,7 +28,7 @@ export class SubscriptionController {
 
   //     return res.status(201).json(chatBot);
   //   } catch (error) {
-  //     next(error);
+  //     handleRouteError("SubscriptionController", error, next, req);
   //   }
   // }
 }

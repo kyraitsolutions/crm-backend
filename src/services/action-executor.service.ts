@@ -34,6 +34,7 @@ export default class ActionExecutor {
           break;
 
         case AUTOMATION_ACTIONS.SEND_NOTIFICATION:
+          console.log("Sending notification for event:", event, "with config:", action.config);
           await this.sendNotification(event, action.config);
           break;
       }
@@ -73,8 +74,11 @@ export default class ActionExecutor {
     };
 
     await this.activityLogService.logUpdate(activityLogDataPayload);
+    // console.log("Lead assigned to user:", config.user);
 
     const user = await this.userRepository.findById(config.user);
+
+    console.log("User found for lead assignment:", user);
 
     await this.emailService.queueLeadAssignedEmail({
       email: user?.email,
@@ -140,6 +144,7 @@ export default class ActionExecutor {
     );
 
     const account = await this.accountRepository.findOne(event.accountId);
+    // console.log("Account found for notification:", account);
     await this.emailService.queueLeadNotificationEmail({
       email: account?.email as string,
       lead:oldDoc

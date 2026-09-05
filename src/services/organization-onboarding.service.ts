@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose from "mongoose";
 import { ROLES } from "../config/permissions.js";
 import { DASHBOARD_URL_PATH } from "../constants/path.js";
@@ -36,7 +37,7 @@ export class OrganizationOnboardingService {
       const organizationExists =
         await this.organizationService.isOrganizationExists(data.createdBy);
 
-      if (organizationExists) throw new Error("Organization already exists");
+      if (organizationExists) throw HttpError.conflict("Organization already exists");
 
       // create organization
       const organization = await this.organizationService.create(data, session);

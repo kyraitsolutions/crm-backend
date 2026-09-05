@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { AiService } from "../services/ai.service.js";
 
@@ -21,7 +22,7 @@ export class AIController {
         data: leadSummary,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("AIController", error, next, req);
     }
   };
 
@@ -43,7 +44,7 @@ export class AIController {
         data: templateContent,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("AIController", error, next, req);
     }
   };
 }

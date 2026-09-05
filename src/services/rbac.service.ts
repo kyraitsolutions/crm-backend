@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose, { ClientSession } from "mongoose";
 import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
 import { RbacRepository } from "../repositories/rbac.repository.js";
@@ -93,7 +94,7 @@ export class RbacService {
         roleName,
       );
 
-      if (isRoleNameExists) throw new Error("Role name already exists");
+      if (isRoleNameExists) throw HttpError.conflict("Role name already exists");
 
       // 1️⃣ Create Role
       const [role] = await this.rbacRepo.createRoles(
@@ -113,7 +114,7 @@ export class RbacService {
         await this.rbacRepo.getPermissionsByKeys(permissions);
 
       if (permissionDocs.length !== permissions.length) {
-        throw new Error("Invalid permissions");
+        throw HttpError.badRequest("Invalid permissions");
       }
 
       // 3️⃣ Create RolePermissions
@@ -191,7 +192,7 @@ export class RbacService {
         );
 
         if (existingRole && existingRole.id !== roleId) {
-          throw new Error("Role name already exists");
+          throw HttpError.conflict("Role name already exists");
         }
 
         await this.rbacRepo.updateRoleById(
@@ -204,13 +205,13 @@ export class RbacService {
       // 2️⃣ Update permissions (if provided)
       if (permissions) {
         // get permission docs
-        if (!permissions.length) throw new Error("Invalid permissions");
+        if (!permissions.length) throw HttpError.badRequest("Invalid permissions");
 
         const permissionDocs =
           await this.rbacRepo.getPermissionsByKeys(permissions);
 
         if (permissionDocs.length !== permissions.length) {
-          throw new Error("Invalid permissions");
+          throw HttpError.badRequest("Invalid permissions");
         }
 
         await this.rbacRepo.deleteRolePermissions(roleId, session);
@@ -244,7 +245,7 @@ export class RbacService {
       session.startTransaction();
 
       const role = await this.rbacRepo.getRoleById(roleId);
-      if (!role) throw new Error("Role not found");
+      if (!role) throw HttpError.notFound("Role not found");
 
       const deletedRole = await this.rbacRepo.deleteRoleById(roleId, session);
       await this.rbacRepo.deleteRolePermissions(roleId, session);
@@ -267,7 +268,7 @@ export class RbacService {
     roleId: string,
   ): Promise<TPaginatedResponse<string>> {
     const role = await this.rbacRepo.getRoleById(roleId);
-    if (!role) throw new Error("Role not found");
+    if (!role) throw HttpError.notFound("Role not found");
 
     const permissions = await this.rbacRepo.getPermissionsByRole(roleId);
 

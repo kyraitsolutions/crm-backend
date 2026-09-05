@@ -7,6 +7,9 @@ import mongoose from "mongoose";
 import { MongoServerError } from "mongodb";
 import { TRole } from "../types/roles-permissions.type.js";
 import { UserModel } from "../models/user.model.js";
+import logger from "../utils/logger.js";
+import { buildRequestMeta } from "../utils/http.response.js";
+import { HttpError } from "../utils/http.error.js";
 
 export class AuthMiddleware {
   static authenticate(req: Request, res: Response, next: NextFunction): void {
@@ -18,7 +21,12 @@ export class AuthMiddleware {
           return next(err);
         }
         if (!user) {
-          return res.status(401).json({ message: "Unauthorized" });
+          return res.status(401).json({
+            success: false,
+            responseStatusCode: 401,
+            responseMessage: "Unauthorized",
+            message: "Unauthorized",
+          });
         }
 
         const organizationMember = (
@@ -93,7 +101,7 @@ export class AuthMiddleware {
 export class ErrorMiddleware {
   static handle(
     err: any,
-    _req: Request,
+    req: Request,
     res: Response,
     _next: NextFunction,
   ): void {
@@ -101,16 +109,13 @@ export class ErrorMiddleware {
     let message = err?.message || "Internal server error";
     let errors: any[] = [];
 
-    console.log(err?.response?.data);
-
-    // Custom Error
-    if (err.statusCode) {
+    if (err instanceof HttpError || err.statusCode) {
       statusCode = err.statusCode;
       message = err.message;
-    }
-
-    // Mongoose Validation Error
-    else if (err instanceof mongoose.Error.ValidationError) {
+      if (err.details) {
+        errors = Array.isArray(err.details) ? err.details : [err.details];
+      }
+    } else if (err instanceof mongoose.Error.ValidationError) {
       statusCode = 400;
       message = "Validation failed";
 
@@ -129,10 +134,8 @@ export class ErrorMiddleware {
           value: e.value,
         };
       });
-    }
-
-    // Invalid ObjectId
-    else if (err instanceof mongoose.Error.CastError) {
+    } else if (err instanceof mongoose.Error.CastError) {
+      statusCode = 400;
       if (err.path === "_id") {
         message = "Validation failed";
         errors.push({
@@ -148,10 +151,7 @@ export class ErrorMiddleware {
           message: `Invalid ${err.path}`,
         });
       }
-    }
-
-    // Duplicate Key Error
-    else if (err instanceof MongoServerError && err.code === 11000) {
+    } else if (err instanceof MongoServerError && err.code === 11000) {
       statusCode = 409;
 
       const field = Object.keys(err.keyValue)[0];
@@ -162,61 +162,44 @@ export class ErrorMiddleware {
         field,
         message,
       });
-    }
-
-    // JWT Invalid
-    else if (err.name === "JsonWebTokenError") {
+    } else if (err.name === "JsonWebTokenError") {
       statusCode = 401;
       message = "Invalid token";
-    }
-
-    // JWT Expired
-    else if (err.name === "TokenExpiredError") {
+    } else if (err.name === "TokenExpiredError") {
       statusCode = 401;
       message = "Token expired";
-    }
-
-    // Meta API Error
-    else if (err.response?.data?.error) {
+    } else if (err.response?.data?.error) {
       statusCode = err.response.status || 400;
       message =
         err.response.data.error.error_data?.details ||
         err.response.data.error.message;
     }
 
+    logger.error("Unhandled request error", {
+      message,
+      statusCode,
+      method: req.method,
+      path: req.originalUrl,
+      stack: err?.stack,
+    });
+
     res.status(statusCode).json({
       success: false,
+      responseStatusCode: statusCode,
+      responseMessage: message,
       message,
+      request: buildRequestMeta(req),
       ...(errors.length && { errors }),
-      // ...(process.env.NODE_ENV === "development" && {
-      //   stack: err.stack,
-      // }),
     });
   }
-  // static handle(
-  //   err: any,
-  //   _req: Request,
-  //   res: Response,
-  //   _next: NextFunction,
-  // ): void {
-  //   const statusCode = err.statusCode || 500;
-  //   const message = err.message || "Internal server error";
 
-  //   console.error(err.st);
-
-  //   res.status(statusCode).json({
-  //     error: {
-  //       message,
-  //       ...(ENV.APP.NODE_ENV === "development" && { stack: err.stack }),
-  //     },
-  //   });
-  // }
-
-  static notFound(_req: Request, res: Response, _next: NextFunction): void {
+  static notFound(req: Request, res: Response, _next: NextFunction): void {
     res.status(404).json({
-      error: {
-        message: "Route not found",
-      },
+      success: false,
+      responseStatusCode: 404,
+      responseMessage: "Route not found",
+      message: "Route not found",
+      request: buildRequestMeta(req),
     });
   }
 }

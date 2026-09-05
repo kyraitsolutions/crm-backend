@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import AutomationService from "../services/automation.service.js";
 import httpResponse from "../utils/http.response.js";
 import { AutomationDto, updateAutomationDto } from "../dtos/automation.dto.js";
@@ -16,7 +17,7 @@ export default class AutomationController {
       const result = await this.service.getAutomations(accountId);
       httpResponse(req, res, 200, "Automation fetched successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AutomationController", error, next, req);
     }
   };
 
@@ -44,7 +45,7 @@ export default class AutomationController {
 
       httpResponse(req, res, 201, "Automation created successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AutomationController", error, next, req);
     }
   };
 
@@ -67,7 +68,7 @@ export default class AutomationController {
       );
       httpResponse(req, res, 200, "Automation updated successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AutomationController", error, next, req);
     }
   };
 
@@ -89,7 +90,7 @@ export default class AutomationController {
       const result = await this.service.deleteAutomation(automationId, context);
       httpResponse(req, res, 200, "Automation deleted successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("AutomationController", error, next, req);
     }
   };
 }

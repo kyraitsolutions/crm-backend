@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { configBootstrapService } from "../container.js";
 import { ConfigurationItemDto } from "../dtos/configuration.dto.js";
@@ -27,7 +28,7 @@ export class ConfigurationController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("ConfigurationController", error, next, req);
     }
   };
 
@@ -51,7 +52,7 @@ export class ConfigurationController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("ConfigurationController", error, next, req);
     }
   };
 
@@ -77,7 +78,7 @@ export class ConfigurationController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("ConfigurationController", error, next, req);
     }
   };
 
@@ -100,7 +101,7 @@ export class ConfigurationController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("ConfigurationController", error, next, req);
     }
   };
 
@@ -119,7 +120,7 @@ export class ConfigurationController {
         doc: result,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ConfigurationController", error, next, req);
     }
   };
 }

@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import logger from "../utils/logger.js";
 import httpResponse from "../utils/http.response.js";
 import { EmailService } from "../services/email.service.js";
@@ -30,7 +31,7 @@ export class EmailController {
                 status: true,
             });
         } catch (error) {
-            next(error);
+            handleRouteError("EmailController", error, next, req);
         }
     }
     startEmailCampaign = async (req: Request, res: Response, next: NextFunction) => {
@@ -52,7 +53,7 @@ export class EmailController {
                 totalLeads: leadIds.length,
             });
         } catch (error) {
-            next(error)
+            handleRouteError("EmailController", error, next, req);
         }
     };
     getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
@@ -66,7 +67,7 @@ export class EmailController {
             });
 
         } catch (error) {
-            next(error)
+            handleRouteError("EmailController", error, next, req);
         }
     };
     createTemplate=async(req:Request,res:Response,next:NextFunction)=>{
@@ -79,7 +80,7 @@ export class EmailController {
                 data:template
             });
         } catch (error) {
-            next(error)
+            handleRouteError("EmailController", error, next, req);
         }   
     };
     getTemplates=async(req:Request,res:Response,next:NextFunction)=>{
@@ -91,7 +92,7 @@ export class EmailController {
             //     data:templates
             // });
         } catch (error) {
-            next(error)
+            handleRouteError("EmailController", error, next, req);
         }   
     };
 
@@ -99,10 +100,9 @@ export class EmailController {
         try {
             // const user = req.user as any;
             const { accountId } = req.params;
-            console.log(accountId)
+            logger.info("Sending multiple emails", { accountId });
             const {leadId,contactId, name , emails, subject, html} = req.body;
             const result = await accountService.getAccountById(accountId);
-            console.log("jkhgfd",result.doc.email)
             await this.emailService.sendMultipleEmail({
                 accountId,
                 leadId,
@@ -119,7 +119,7 @@ export class EmailController {
                 totalLeads: emails.length,
             });
         } catch (error) {
-            next(error)
+            handleRouteError("EmailController", error, next, req);
         }
     }
 

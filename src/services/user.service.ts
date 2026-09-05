@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose, { ClientSession } from "mongoose";
 import {
   CreateUserDto,
@@ -14,6 +15,7 @@ import { JwtUtil, PasswordUtil } from "../utils/index.js";
 import { SubscriptionRepository } from "./../repositories/subscription.repository.js";
 import { EmailService } from "./email.service.js";
 import { otpService } from "../container.js";
+import logger from "../utils/logger.js";
 
 export class UserService {
   constructor(
@@ -30,10 +32,8 @@ export class UserService {
       session.startTransaction();
       const existingUser = await this.userRepository.findByEmail(dto.email);
 
-      console.log("dto", dto);
-
       if (existingUser) {
-        throw new Error("User with this email already exists");
+        throw HttpError.conflict("User with this email already exists");
       }
 
       const hashedPassword = await PasswordUtil.hash(dto?.password as string);
@@ -55,7 +55,7 @@ export class UserService {
         session,
       );
 
-      console.log("New users", newUser);
+      logger.info("User registered", { userId: newUser?.id });
 
       // 5. Create user profile
       const userProfileDto = new CreateUserProfileDto({
@@ -95,7 +95,7 @@ export class UserService {
   async login(dto: TUserLogin): Promise<UserDto> {
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user || !user.password) {
-      throw new Error("Invalid credentials");
+      throw HttpError.unauthorized("Invalid credentials");
     }
 
     const isPasswordValid = await PasswordUtil.compare(
@@ -103,7 +103,7 @@ export class UserService {
       user.password,
     );
     if (!isPasswordValid) {
-      throw new Error("Invalid credentials");
+      throw HttpError.unauthorized("Invalid credentials");
     }
 
     const userDto = new UserDto(user as any);
@@ -117,11 +117,10 @@ export class UserService {
 
   async forgotPassword(email: string): Promise<any> {
     try {
-      console.log('Email in service:', email);
       const existingUser = await this.userRepository.findByEmail(email);
 
       if (!existingUser) {
-        throw new Error("This email is not registered with us");
+        throw HttpError.badRequest("This email is not registered with us");
       }
 
       const otp = await otpService.issueOTP(email);
@@ -136,10 +135,9 @@ export class UserService {
   async verifyOTP(email: string, otp: string): Promise<string> {
     try {
       const isValid = await otpService.verifyOTP(email, otp);
-      console.log("isvalid", isValid);
 
       if (!isValid) {
-        throw new Error("Invalid OTP");
+        throw HttpError.unauthorized("Invalid OTP");
       }
 
       const payload = {
@@ -163,20 +161,19 @@ export class UserService {
       try {
         payload = JwtUtil.verify(resetToken);
       } catch {
-        throw new Error("Reset link expired or invalid. Please start over.");
+        throw HttpError.unauthorized("Reset link expired or invalid. Please start over.");
       }
 
       if (payload.purpose !== "password_reset") {
-        throw new Error("Invalid reset token");
+        throw HttpError.unauthorized("Invalid reset token");
       }
 
       const existingUser = await this.userRepository.findByEmail(payload.email);
       if (!existingUser) {
-        throw new Error("User not found");
+        throw HttpError.notFound("User not found");
       }
 
-      const hashedPassword = await PasswordUtil.hash(newPassword); // your existing bcrypt helper
-      console.log(hashedPassword);
+      const hashedPassword = await PasswordUtil.hash(newPassword);
       await this.userRepository.update(
         existingUser.id,
         { password: hashedPassword },
@@ -201,7 +198,7 @@ export class UserService {
     const firstName = authUser.name?.givenName;
     const lastName = authUser.name?.familyName;
 
-    if (!email) throw new Error("Google profile does not contain email");
+    if (!email) throw HttpError.badRequest("Google profile does not contain email");
 
     // 1. Check if user already registered with this googleId
     let user = await this.userRepository.findByGoogleId(googleId);
@@ -221,7 +218,7 @@ export class UserService {
         googleId,
       });
 
-      if (!user) throw new Error("User not found");
+      if (!user) throw HttpError.notFound("User not found");
       return new UserResponseDto(user);
     }
 
@@ -259,7 +256,7 @@ export class UserService {
       "https://crm.kyraitsolutions.com/login",
     );
 
-    if (!newUser) throw new Error("User not found");
+    if (!newUser) throw HttpError.notFound("User not found");
 
     return new UserResponseDto(newUser);
   }
@@ -275,7 +272,7 @@ export class UserService {
     const user = await this.userRepository.update(id, data, session);
 
     if (!user) {
-      throw new Error("User not found");
+      throw HttpError.notFound("User not found");
     }
     return new UserDto(user as any);
   }

@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import {
   CreateChatFlowDto,
   ResponseChatFlowDto,
@@ -20,7 +21,7 @@ export class ChatFlowService {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
 
     const chatFlowPayload = {
@@ -31,7 +32,7 @@ export class ChatFlowService {
     const chatFlow = await this.chatflowRepo.createChatFlow(chatFlowPayload);
 
     if (!chatFlow) {
-      throw new Error("Chat flow not Found");
+      throw HttpError.notFound("Chat flow not Found");
     }
 
     return new ResponseChatFlowDto(chatFlow);
@@ -41,7 +42,7 @@ export class ChatFlowService {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
 
     const countDocument = await this.chatflowRepo.countDocument(accountId);
@@ -65,7 +66,7 @@ export class ChatFlowService {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
 
     const chatbotFlow = await this.chatflowRepo.findChatFlowById(
@@ -74,7 +75,7 @@ export class ChatFlowService {
     );
 
     if (!chatbotFlow) {
-      throw new Error("Chat flow not Found");
+      throw HttpError.notFound("Chat flow not Found");
     }
 
     return chatbotFlow;

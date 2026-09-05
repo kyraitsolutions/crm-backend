@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import {
   ChatBotListDto,
   ChatbotWithFlowDto,
@@ -74,7 +75,7 @@ export class ChatBotService {
   ): Promise<ResponseChatBotDto | null> {
     const chatbot = await this.repo.findChatbotById(accountId, chatbotId);
     if (!chatbot) {
-      throw new Error("Chatbot not Found");
+      throw HttpError.notFound("Chatbot not Found");
     }
     return new ResponseChatBotDto(chatbot);
   }
@@ -87,7 +88,7 @@ export class ChatBotService {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
 
     const chatbot = await this.repo.createChatbot({
@@ -103,7 +104,7 @@ export class ChatBotService {
     const isAccountExist = await this.accountRepository.findOne(accountId);
 
     if (!isAccountExist) {
-      throw new Error("Account not found for this account id");
+      throw HttpError.notFound("Account not found for this account id");
     }
 
     const chatbotFlow = await this.repo.findChatbotFlowById(
@@ -112,7 +113,7 @@ export class ChatBotService {
     );
 
     if (!chatbotFlow) {
-      throw new Error("Chatbot flow not Found");
+      throw HttpError.notFound("Chatbot flow not Found");
     }
     return chatbotFlow;
   }
@@ -128,7 +129,7 @@ export class ChatBotService {
       updateDto,
     );
     if (!result) {
-      throw new Error("Chatbot not found");
+      throw HttpError.notFound("Chatbot not found");
     }
     return result;
   }
@@ -136,7 +137,7 @@ export class ChatBotService {
   async deleteChatBot(accountId: string, chatbotId: string): Promise<boolean> {
     const result = await this.repo.deleteChatbotById(accountId, chatbotId);
     if (!result) {
-      throw new Error("Chatbot not Found for this Chatbot Id");
+      throw HttpError.notFound("Chatbot not Found for this Chatbot Id");
     }
     return true;
   }

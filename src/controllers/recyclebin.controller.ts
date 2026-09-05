@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { recyclebinService } from "../container.js";
 
@@ -19,7 +20,7 @@ export class RecyclebinController {
         skip: 0,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("RecyclebinController", error, next, req);
     }
   };
 }
