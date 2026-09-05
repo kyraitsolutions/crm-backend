@@ -109,12 +109,18 @@ export class ErrorMiddleware {
     let message = err?.message || "Internal server error";
     let errors: any[] = [];
 
-    if (err instanceof HttpError || err.statusCode) {
+    if (err instanceof HttpError) {
       statusCode = err.statusCode;
       message = err.message;
       if (err.details) {
         errors = Array.isArray(err.details) ? err.details : [err.details];
       }
+    } else if (err?.error?.description || err?.error?.code) {
+      statusCode = 502;
+      message =
+        err.error.description ||
+        "Payment provider request failed. Check Razorpay configuration.";
+      errors = [err.error];
     } else if (err instanceof mongoose.Error.ValidationError) {
       statusCode = 400;
       message = "Validation failed";
@@ -189,6 +195,7 @@ export class ErrorMiddleware {
       responseMessage: message,
       message,
       request: buildRequestMeta(req),
+      ...(err?.code && { code: err.code }),
       ...(errors.length && { errors }),
     });
   }

@@ -32,7 +32,14 @@ export class App {
         credentials: true,
       }),
     );
-    this.app.use(express.json({ limit: "10mb" }));
+    this.app.use(
+      express.json({
+        limit: "10mb",
+        verify: (req, _res, buf) => {
+          (req as any).rawBody = buf;
+        },
+      }),
+    );
     this.app.use(express.urlencoded({ extended: true, limit: "10mb" }));
     this.app.use(passport.initialize());
     this.app.use((req: Request, res: Response, next: NextFunction) => {

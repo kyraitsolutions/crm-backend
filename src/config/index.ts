@@ -52,5 +52,6 @@ export const config = {
   razorpay: {
     keyId: ENV.RAZORPAY.KEY_ID,
     keySecret: ENV.RAZORPAY.KEY_SECRET,
+    webhookSecret: ENV.RAZORPAY.WEBHOOK_SECRET,
   },
 };

@@ -13,6 +13,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
+    "seed:plans": "tsx src/scripts/seed/seedPlan.ts",
+    "migrate:subscriptions": "tsx src/scripts/migrate/backfill-org-subscriptions.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "worker:email:prod": "node dist/workers/email.worker.js",
     "worker": "tsx --watch src/workers/index.ts"

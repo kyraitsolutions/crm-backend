@@ -17,6 +17,8 @@ import { HttpError } from "../utils/http.error.js";
 import logger from "../utils/logger.js";
 import { ContactService } from "./contact.service.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { USAGE_METRIC } from "../constants/subscription.constant.js";
 
 const BATCH_SIZE = 1000;
 
@@ -28,6 +30,7 @@ export class LeadService {
   private activityLogService = new ActivityLogService();
   private accountRepository: AccountRepository;
   private contactService: ContactService;
+  private subscriptionService: SubscriptionService;
 
   constructor() {
     this.ai = new GeminiAIUtil();
@@ -37,6 +40,23 @@ export class LeadService {
     this.activityLogService = new ActivityLogService();
     this.accountRepository = new AccountRepository();
     this.contactService = new ContactService(new ContactRepository());
+    this.subscriptionService = new SubscriptionService();
+  }
+
+  private async assertLeadCapacity(organizationId?: string) {
+    if (!organizationId) return;
+    await this.subscriptionService.checkLimit(
+      organizationId,
+      USAGE_METRIC.LEADS,
+    );
+  }
+
+  private async recordLeadUsage(organizationId?: string) {
+    if (!organizationId) return;
+    await this.subscriptionService.recordUsage(
+      organizationId,
+      USAGE_METRIC.LEADS,
+    );
   }
 
   private contactPayloadFromLead(lead: any) {
@@ -57,8 +77,11 @@ export class LeadService {
   }
 
   async createLeadWs(lead: Lead): Promise<Lead> {
+    const account = await this.accountRepository.findOne(String(lead.accountId));
+    await this.assertLeadCapacity(account?.organizationId && String(account.organizationId));
     const created = await this.leadRepository.create(lead);
     await this.syncContactFromLead(created);
+    await this.recordLeadUsage(account?.organizationId && String(account.organizationId));
     return created;
   }
   async createLead(
@@ -69,8 +92,10 @@ export class LeadService {
       accountId: context.accountId,
       organizationId: context.organizationId,
     });
+    await this.assertLeadCapacity(context.organizationId);
     const result = await this.leadRepository.create(lead);
     await this.syncContactFromLead(result);
+    await this.recordLeadUsage(context.organizationId);
 
     // Activity Log
     const activityLogDataPayload: Partial<TActivityLog> = {

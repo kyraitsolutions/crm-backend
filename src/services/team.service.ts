@@ -24,6 +24,8 @@ import {
 import { ActivityLogService } from "./activityLog.service.js";
 import { TActivityLog } from "../types/activityLog.type.js";
 import { RequestContext } from "../types/common.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { USAGE_METRIC } from "../constants/subscription.constant.js";
 
 export class TeamService {
   private teamRepository: TeamRepository;
@@ -85,6 +87,11 @@ export class TeamService {
     try {
       const orgId = context.organizationId;
       const userId = context.userId;
+
+      await new SubscriptionService().checkLimit(
+        orgId,
+        USAGE_METRIC.TEAM_MEMBERS,
+      );
 
       session.startTransaction();
       const accountMangerRole = await rbacService.getRoleByOrgIdAndName(

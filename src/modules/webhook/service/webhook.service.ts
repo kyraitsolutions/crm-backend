@@ -1,22 +1,21 @@
 import { createHash, randomBytes } from "crypto";
 import { WebhookRepository } from "../repository/webhook.repository.js";
-
-
+import { SubscriptionService } from "../../../services/subscription.service.js";
+import { USAGE_METRIC } from "../../../constants/subscription.constant.js";
 
 export class WebhookService {
     constructor(
         private webhookRepo = new WebhookRepository()
     ) { }
-
     async createToken({ accountId, organizationId, createdBy }: { accountId: string, organizationId: string, createdBy: string }) {
-        // Check if token already exists
-        // const existing = await this.webhookRepo.findOne({ accountId, organizationId });
-        // console.log(existing)
+        const existing = await this.webhookRepo.findOne({ accountId, organizationId });
+        if (!existing) {
+            await new SubscriptionService().checkLimit(
+                organizationId,
+                USAGE_METRIC.WEBHOOKS,
+            );
+        }
 
-        // if (existing) {
-        //     return { response: existing, msg: "Token exist already" };// Only returned once    
-        // }
-        // Generate token
         const token = `webhook_${randomBytes(32).toString("hex")}`;
 
         const tokenHash = createHash("sha256").update(token).digest("hex");
@@ -29,7 +28,6 @@ export class WebhookService {
             tokenPrefix: token.substring(0, 18),
             createdBy: createdBy,
         }
-        // const savedToken=await this.webhookRepo.create(payload)
         const savedToken = await this.webhookRepo.findOneAndUpdate(
             { accountId, organizationId },
             payload,

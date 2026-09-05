@@ -1,4 +1,6 @@
 import { HttpError } from "../utils/http.error.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { USAGE_METRIC } from "../constants/subscription.constant.js";
 import {
   ChatBotListDto,
   ChatbotWithFlowDto,
@@ -89,6 +91,14 @@ export class ChatBotService {
 
     if (!isAccountExist) {
       throw HttpError.notFound("Account not found for this account id");
+    }
+
+    const organizationId = String((isAccountExist as any).organizationId || "");
+    if (organizationId) {
+      await new SubscriptionService().checkLimit(
+        organizationId,
+        USAGE_METRIC.CHATBOTS,
+      );
     }
 
     const chatbot = await this.repo.createChatbot({

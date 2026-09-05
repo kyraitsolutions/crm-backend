@@ -67,10 +67,17 @@ export const logError = (
   error: unknown,
   meta?: Record<string, unknown>,
 ): void => {
-  const err = error instanceof Error ? error : new Error(String(error));
+  const err = error as any;
+  const message =
+    err instanceof Error
+      ? err.message
+      : err?.error?.description || err?.error?.message || JSON.stringify(err);
+
   logger.error(scope, {
-    message: err.message,
-    stack: err.stack,
+    message,
+    statusCode: err?.statusCode,
+    razorpay: err?.error,
+    stack: err instanceof Error ? err.stack : undefined,
     ...meta,
   });
 };

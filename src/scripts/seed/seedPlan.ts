@@ -1,61 +1,200 @@
 import mongoose from "mongoose";
 import { Plan } from "../../models/subscription.model.js";
 import { ENV } from "../../constants/env.constants.js";
+import { FEATURE, PLAN_CODE } from "../../constants/subscription.constant.js";
 
-const commonFeatures = [
-  "Analytics",
-  "Leads",
-  "Visitor Tracking",
-  "Chatbot",
-  "Web Forms",
-  "And many more",
-];
+const coreFeatures = {
+  [FEATURE.ACCOUNT_MANAGEMENT]: true,
+  [FEATURE.CHATBOTS]: true,
+  [FEATURE.WHATSAPP_MESSAGING]: true,
+  [FEATURE.LEAD_MANAGEMENT]: true,
+  [FEATURE.WEBHOOKS]: true,
+};
 
-const dummyPlans = [
+const plans = [
   {
-    name: "free",
-    price: 0,
-    durationDays: 30,
-    maxAccounts: 1,
-    maxChatbots: 1,
-    maxWebforms: 1,
-    features: ["Limited Dashboard Features"],
-  },
-  {
-    name: "silver",
-    price: 7000,
-    durationDays: 30,
-    maxAccounts: 1,
-    maxChatbots: 3,
-    maxWebforms: 3,
-    features: [...commonFeatures],
-  },
-  {
-    name: "gold",
-    price: 14000,
-    durationDays: 30,
-    maxAccounts: 2,
-    maxChatbots: 5,
-    maxWebforms: 5,
-    features: [...commonFeatures],
-  },
-  {
-    name: "platinum",
-    price: 20000,
-    durationDays: 30,
+    code: PLAN_CODE.TRIAL,
+    name: "trial",
+    description: "14-day free trial of Kyra AI CRM",
+    featured: false,
+    isActive: true,
+    isPublic: false,
+    isTrial: true,
+    trialDays: 14,
+    currency: "INR",
+    price: { monthly: 0, annually: 0 },
+    period: "trial",
+    durationDays: 14,
+    button: "Start trial",
     maxAccounts: 3,
-    maxChatbots: 10,
-    maxWebforms: 10,
-    features: [...commonFeatures],
+    maxChatbots: 3,
+    maxWebforms: 5,
+    features: [
+      "Accounts",
+      "Chatbots",
+      "WhatsApp Messaging",
+      "Lead Management",
+      "Webhooks",
+      "WhatsApp AI Agent (limited trial)",
+    ],
+    addons: [],
+    featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: true },
+    limits: {
+      teamMembers: 5,
+      accounts: 3,
+      chatbots: 3,
+      webhooks: 5,
+      leadsPerMonth: 500,
+      whatsappMessagesPerMonth: 2000,
+      aiConversationsPerMonth: 100,
+    },
   },
   {
-    name: "payg",
-    price: 7000,
+    code: PLAN_CODE.STARTER,
+    name: "starter",
+    description: "Core CRM for small teams",
+    featured: false,
+    isActive: true,
+    isPublic: true,
+    isTrial: false,
+    trialDays: 0,
+    currency: "INR",
+    price: { monthly: 1999, annually: 19990 },
+    period: "month",
     durationDays: 30,
-    maxAccounts: 1,
-    maxChatbots: 0, // controlled by credits
-    maxWebforms: 0, // controlled by credits
-    features: [...commonFeatures],
+    button: "Choose Starter",
+    maxAccounts: 3,
+    maxChatbots: 2,
+    maxWebforms: 5,
+    features: [
+      "Accounts",
+      "Chatbots",
+      "WhatsApp Messaging",
+      "Lead Management",
+      "Webhooks",
+    ],
+    addons: ["WhatsApp AI Agent"],
+    featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: false },
+    limits: {
+      teamMembers: 3,
+      accounts: 3,
+      chatbots: 2,
+      webhooks: 5,
+      leadsPerMonth: 1000,
+      whatsappMessagesPerMonth: 10000,
+      aiConversationsPerMonth: 0,
+    },
+  },
+  {
+    code: PLAN_CODE.PRO,
+    name: "pro",
+    description: "Advanced CRM with WhatsApp AI Agent",
+    featured: true,
+    isActive: true,
+    isPublic: true,
+    isTrial: false,
+    trialDays: 0,
+    currency: "INR",
+    price: { monthly: 4999, annually: 49990 },
+    period: "month",
+    durationDays: 30,
+    button: "Choose Pro",
+    maxAccounts: 10,
+    maxChatbots: 10,
+    maxWebforms: 20,
+    features: [
+      "Accounts",
+      "Chatbots",
+      "WhatsApp Messaging",
+      "Lead Management",
+      "Webhooks",
+      "WhatsApp AI Agent",
+    ],
+    addons: [],
+    featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: true },
+    limits: {
+      teamMembers: 10,
+      accounts: 10,
+      chatbots: 10,
+      webhooks: 20,
+      leadsPerMonth: 10000,
+      whatsappMessagesPerMonth: 50000,
+      aiConversationsPerMonth: 1000,
+    },
+  },
+  {
+    code: PLAN_CODE.BUSINESS,
+    name: "business",
+    description: "Scale Kyra across your organization",
+    featured: false,
+    isActive: true,
+    isPublic: true,
+    isTrial: false,
+    trialDays: 0,
+    currency: "INR",
+    price: { monthly: 9999, annually: 99990 },
+    period: "month",
+    durationDays: 30,
+    button: "Choose Business",
+    maxAccounts: 25,
+    maxChatbots: 50,
+    maxWebforms: 100,
+    features: [
+      "Accounts",
+      "Chatbots",
+      "WhatsApp Messaging",
+      "Lead Management",
+      "Webhooks",
+      "WhatsApp AI Agent",
+    ],
+    addons: [],
+    featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: true },
+    limits: {
+      teamMembers: 25,
+      accounts: 25,
+      chatbots: 50,
+      webhooks: 100,
+      leadsPerMonth: 50000,
+      whatsappMessagesPerMonth: 100000,
+      aiConversationsPerMonth: 5000,
+    },
+  },
+  {
+    code: PLAN_CODE.LEGACY,
+    name: "legacy",
+    description: "Grandfathered access for existing organizations",
+    featured: false,
+    isActive: true,
+    isPublic: false,
+    isTrial: false,
+    trialDays: 0,
+    currency: "INR",
+    price: { monthly: 0, annually: 0 },
+    period: "year",
+    durationDays: 365,
+    button: "Current",
+    maxAccounts: 25,
+    maxChatbots: 50,
+    maxWebforms: 100,
+    features: [
+      "Accounts",
+      "Chatbots",
+      "WhatsApp Messaging",
+      "Lead Management",
+      "Webhooks",
+      "WhatsApp AI Agent",
+    ],
+    addons: [],
+    featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: true },
+    limits: {
+      teamMembers: 25,
+      accounts: 25,
+      chatbots: 50,
+      webhooks: 100,
+      leadsPerMonth: 50000,
+      whatsappMessagesPerMonth: 100000,
+      aiConversationsPerMonth: 5000,
+    },
   },
 ];
 
@@ -63,17 +202,20 @@ export const seedPlans = async () => {
   try {
     await mongoose.connect(ENV.DB.DATABASE_URL!);
 
-    for (const plan of dummyPlans) {
-      await Plan.findOneAndUpdate({ name: plan.name }, plan, {
-        upsert: true,
-        new: true,
-      });
+    for (const plan of plans) {
+      await Plan.findOneAndUpdate(
+        { $or: [{ code: plan.code }, { name: plan.name }] },
+        plan,
+        { upsert: true, new: true },
+      );
     }
 
-    console.log("✅ Plans seeded successfully");
+    console.log("✅ Subscription plans seeded successfully");
     process.exit(0);
   } catch (error) {
     console.error("❌ Seeding failed", error);
     process.exit(1);
   }
 };
+
+seedPlans();

@@ -129,7 +129,9 @@ export class ContactService {
       phone,
     );
     if (existingContact) {
-      throw HttpError.conflict("Contact already exists");
+      throw HttpError.conflict(
+        "A contact with this email or phone number already exists.",
+      );
     }
 
     const contactPayload: Record<string, unknown> = {

@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { SubscriptionController } from "../controllers/subscription.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { requireBillingAccess } from "../middleware/subscription.middleware.js";
 
 export class SubscriptionRouter {
   public router: Router;
@@ -12,13 +14,57 @@ export class SubscriptionRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.post(
+      "/razorpay/webhook",
+      this.subscriptionController.razorpayWebhook.bind(this.subscriptionController),
+    );
+
+    this.router.get(
+      "/plans",
+      AuthMiddleware.authenticate,
+      this.subscriptionController.getPlans.bind(this.subscriptionController),
+    );
+
     this.router.get(
       "/",
-      this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
+      AuthMiddleware.authenticate,
+      this.subscriptionController.getCurrent.bind(this.subscriptionController),
     );
+
+    this.router.get(
+      "/payments",
+      AuthMiddleware.authenticate,
+      requireBillingAccess,
+      this.subscriptionController.getPayments.bind(this.subscriptionController),
+    );
+
     this.router.post(
-      "/susbcribe",
-      this.subscriptionController.getAllSubscription.bind(this.subscriptionController)
+      "/checkout",
+      AuthMiddleware.authenticate,
+      requireBillingAccess,
+      this.subscriptionController.checkout.bind(this.subscriptionController),
+    );
+
+    this.router.post(
+      "/payment/verify",
+      AuthMiddleware.authenticate,
+      requireBillingAccess,
+      this.subscriptionController.verifyPayment.bind(this.subscriptionController),
+    );
+
+    this.router.post(
+      "/cancel",
+      AuthMiddleware.authenticate,
+      requireBillingAccess,
+      this.subscriptionController.cancel.bind(this.subscriptionController),
+    );
+
+    this.router.post(
+      "/expiration-prompt/acknowledge",
+      AuthMiddleware.authenticate,
+      this.subscriptionController.acknowledgeExpiration.bind(
+        this.subscriptionController,
+      ),
     );
   }
 

@@ -99,6 +99,7 @@ export const organizationOnboardingService = new OrganizationOnboardingService(
   rbacService,
   configBootstrapService,
   emailService,
+  subscriptionService,
 );
 
 export const chatflowService = new ChatFlowService(

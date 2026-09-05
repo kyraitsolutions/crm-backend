@@ -7,7 +7,8 @@ import {
   UserResponseDto,
 } from "../dtos/index.js";
 import { CreateUserProfileDto } from "../dtos/userprofile.dto.js";
-import { SubscriptionPlan } from "../enums/subscription.enum.js";
+import { Plan } from "../models/subscription.model.js";
+import { PLAN_CODE } from "../constants/subscription.constant.js";
 import { UserRepository } from "../repositories/user.repository.js";
 import { UserProfileRepository } from "../repositories/userprofile.repository.js";
 import { TGoogleUser, TUser, TUserLogin } from "../types/index.js";
@@ -66,11 +67,14 @@ export class UserService {
 
       await this.userProfileRepository.create(userProfileDto, session);
 
-      await this.subscriptionRepository.create(
-        newUser.id as string,
-        SubscriptionPlan.FREE,
-        session,
-      );
+      const defaultPlan = await this.resolveDefaultUserPlan();
+      if (defaultPlan) {
+        await this.subscriptionRepository.create(
+          newUser.id as string,
+          defaultPlan,
+          session,
+        );
+      }
 
       await session.commitTransaction();
 
@@ -246,10 +250,10 @@ export class UserService {
 
     await this.userProfileRepository.create(userProfileDto);
 
-    await this.subscriptionRepository.create(
-      newUser.id as string,
-      SubscriptionPlan.FREE,
-    );
+    const defaultPlan = await this.resolveDefaultUserPlan();
+    if (defaultPlan) {
+      await this.subscriptionRepository.create(newUser.id as string, defaultPlan);
+    }
 
     this.emailService.queueWelcomeEmail(
       email,
@@ -281,5 +285,13 @@ export class UserService {
   }
   async generateToken(userId: string, email: string): Promise<string> {
     return JwtUtil.sign({ userId, email });
+  }
+
+  private async resolveDefaultUserPlan(): Promise<string | null> {
+    const plan =
+      (await Plan.findOne({ code: PLAN_CODE.TRIAL })) ||
+      (await Plan.findOne({ name: "free" })) ||
+      (await Plan.findOne({ code: PLAN_CODE.STARTER }));
+    return plan ? String(plan._id) : null;
   }
 }

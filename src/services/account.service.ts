@@ -18,6 +18,8 @@ import {
 import { TUser } from "../types/user.type.js";
 import { TAccount, TCreateAccount } from "./../types/account.type.js";
 import { RbacService } from "./rbac.service.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { USAGE_METRIC } from "../constants/subscription.constant.js";
 import { TRole } from "../types/roles-permissions.type.js";
 
 export class AccountService {
@@ -150,6 +152,10 @@ export class AccountService {
 
     if (existingAccount) {
       throw HttpError.conflict("Account is already exists");
+    }
+
+    if (!session) {
+      await new SubscriptionService().checkLimit(orgId, USAGE_METRIC.ACCOUNTS);
     }
 
     const accountData: TCreateAccount = {

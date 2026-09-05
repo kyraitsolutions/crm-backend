@@ -1,54 +1,64 @@
 import { Request, Response, NextFunction } from "express";
-import { Plan, UserSubscription } from "../models/subscription.model.js";
-import { SubscriptionStatus } from "../types/core.js";
-import { ObjectId } from "mongodb";
-import { AccountModel } from "../models/accounts.model.js";
-import httpResponse from "../utils/http.response.js";
+import { SubscriptionService } from "../services/subscription.service.js";
+import { BILLING_ROLES, USAGE_METRIC } from "../constants/subscription.constant.js";
+import { HttpError } from "../utils/http.error.js";
 
-export const checkSubscriptionStatus = async (
+const subscriptionService = new SubscriptionService();
+
+function getOrganizationId(req: Request): string {
+  const organizationId = String(req.user?.organizationId || "");
+  if (!organizationId) {
+    throw HttpError.forbidden("Organization is required");
+  }
+  return organizationId;
+}
+
+export const requireBillingAccess = (
   req: Request,
-  res: Response,
+  _res: Response,
+  next: NextFunction,
+): void => {
+  try {
+    const roleName = String(req.user?.role?.name || "").toUpperCase();
+    if (!BILLING_ROLES.includes(roleName as (typeof BILLING_ROLES)[number])) {
+      throw HttpError.forbidden("Only organization owners and admins can manage billing");
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const requireProductAccess = async (
+  req: Request,
+  _res: Response,
   next: NextFunction,
 ): Promise<void> => {
   try {
-    if (!req.user || !req.user.id) {
-      httpResponse(req, res, 401, "Unauthorized");
-      return;
+    await subscriptionService.assertProductAccess(getOrganizationId(req));
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkSubscriptionStatus = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): Promise<void> => {
+  try {
+    const organizationId =
+      String(req.user?.organizationId || "") ||
+      (req.user?.id
+        ? undefined
+        : undefined);
+
+    if (!req.user?.organizationId) {
+      throw HttpError.forbidden("Organization is required");
     }
 
-    // Get active subscription
-    const sub = await UserSubscription.findOne({
-      userId: new ObjectId(req.user.id),
-    });
-
-    if (!sub) {
-      httpResponse(
-        req,
-        res,
-        403,
-        "No active subscription found. Please upgrade.",
-      );
-      return;
-    }
-
-    if (sub.expiresAt && new Date() > sub.expiresAt) {
-      // Lazily expire it
-      sub.status = SubscriptionStatus.EXPIRED;
-      await sub.save();
-      httpResponse(req, res, 403, "Subscription expired. Please renew.");
-      return;
-    }
-
-    const plan = await Plan.findById({ _id: sub.planId });
-
-    const maxAccounts = plan?.maxAccounts as number;
-
-    const accounts = await AccountModel.countDocuments({ userId: req.user.id });
-
-    if (accounts >= maxAccounts) {
-      httpResponse(req, res, 403, "Account limit exceeded");
-      return;
-    }
+    await subscriptionService.checkLimit(String(organizationId), USAGE_METRIC.ACCOUNTS);
     next();
   } catch (error) {
     next(error);
