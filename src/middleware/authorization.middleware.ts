@@ -187,7 +187,7 @@ export const requirePermission = (
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.user || !req.user.id) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return httpResponse(req, res, 401, "Unauthorized");
       }
 
       const userId = req.user.id;
@@ -201,9 +201,7 @@ export const requirePermission = (
       }).populate("roleId", "name level");
 
       if (!orgMember) {
-        return res
-          .status(403)
-          .json({ message: "User is not part of this organization" });
+        return httpResponse(req, res, 403, "User is not part of this organization");
       }
 
       let accountMember = null;
@@ -226,7 +224,7 @@ export const requirePermission = (
         }).populate("roleId");
 
         if (!accountMember) {
-          return res.status(403).json({ message: "Not part of this account" });
+          return httpResponse(req, res, 403, "Not part of this account");
         }
 
         activeRole = accountMember.roleId;
@@ -242,7 +240,7 @@ export const requirePermission = (
       );
 
       if (!hasPermission) {
-        return res.status(403).json({ responseMessage: "Permission denied" });
+        return httpResponse(req, res, 403, "Permission denied");
       }
 
       // 5️⃣ Role level check (for assigning roles)
@@ -268,8 +266,7 @@ export const requirePermission = (
 
       next();
     } catch (error) {
-      console.error("RBAC Error:", error);
-      return res.status(500).json({ message: "Internal Server Error" });
+      next(error);
     }
   };
 };

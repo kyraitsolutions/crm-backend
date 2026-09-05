@@ -18,7 +18,8 @@ export class EmailController {
         try {
             const email = req.query.email;
             if (!email) {
-                res.status(400).json({ error: 'email query parameter is required' });
+                httpResponse(req, res, 400, "email query parameter is required");
+                return;
             }
             // generate a 6 digit token to verify email
 
@@ -62,8 +63,8 @@ export class EmailController {
             
             const subscribers=await this.emailService.getSubscribers(accountId);
             
-            httpResponse(req, res, 200, "Campaign setup successfully", {
-                data:subscribers
+            httpResponse(req, res, 200, "Subscribers fetched successfully", {
+                docs: subscribers,
             });
 
         } catch (error) {
@@ -77,7 +78,7 @@ export class EmailController {
             const template=await this.emailService.createTemplate(accountId,templateData);
             
             httpResponse(req, res, 200, "Template created successfully", {
-                data:template
+                doc: template,
             });
         } catch (error) {
             handleRouteError("EmailController", error, next, req);
@@ -85,12 +86,12 @@ export class EmailController {
     };
     getTemplates=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            // const {accountId}=req.params;  
-            // const templates=await this.emailService.getTemplates(accountId);
-            
-            // httpResponse(req, res, 200, "Template created successfully", {
-            //     data:templates
-            // });
+            const {accountId}=req.params;
+            const templates=await this.emailService.getTemplates(accountId);
+
+            httpResponse(req, res, 200, "Templates fetched successfully", {
+                docs: templates,
+            });
         } catch (error) {
             handleRouteError("EmailController", error, next, req);
         }   

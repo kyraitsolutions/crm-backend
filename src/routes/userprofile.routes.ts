@@ -13,6 +13,11 @@ export class UserProfileRouter {
   }
 
   private initializeRoutes(): void {
+    this.router.get(
+      "/",
+      AuthMiddleware.authenticate,
+      this.userController.getMe.bind(this.userController),
+    );
     this.router.post(
       "/update",
       AuthMiddleware.authenticate,

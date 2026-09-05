@@ -15,6 +15,8 @@ import { ChunkUtil } from "../utils/chunks.util.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { HttpError } from "../utils/http.error.js";
 import logger from "../utils/logger.js";
+import { ContactService } from "./contact.service.js";
+import { ContactRepository } from "../repositories/contact.repository.js";
 
 const BATCH_SIZE = 1000;
 
@@ -25,6 +27,7 @@ export class LeadService {
   private automationEngine = new AutomationEngine();
   private activityLogService = new ActivityLogService();
   private accountRepository: AccountRepository;
+  private contactService: ContactService;
 
   constructor() {
     this.ai = new GeminiAIUtil();
@@ -33,10 +36,30 @@ export class LeadService {
     this.automationEngine = new AutomationEngine();
     this.activityLogService = new ActivityLogService();
     this.accountRepository = new AccountRepository();
+    this.contactService = new ContactService(new ContactRepository());
+  }
+
+  private contactPayloadFromLead(lead: any) {
+    const data = typeof lead?.toJSON === "function" ? lead.toJSON() : lead;
+    return {
+      accountId: String(data?.accountId || ""),
+      name: data?.name,
+      email: data?.email,
+      phone: data?.phone || data?.mobile,
+      mobile: data?.mobile,
+      source: data?.source?.name || data?.source,
+      tags: data?.tags,
+    };
+  }
+
+  private async syncContactFromLead(lead: any): Promise<void> {
+    await this.contactService.upsertFromLead(this.contactPayloadFromLead(lead));
   }
 
   async createLeadWs(lead: Lead): Promise<Lead> {
-    return await this.leadRepository.create(lead);
+    const created = await this.leadRepository.create(lead);
+    await this.syncContactFromLead(created);
+    return created;
   }
   async createLead(
     context: RequestContext,
@@ -47,6 +70,7 @@ export class LeadService {
       organizationId: context.organizationId,
     });
     const result = await this.leadRepository.create(lead);
+    await this.syncContactFromLead(result);
 
     // Activity Log
     const activityLogDataPayload: Partial<TActivityLog> = {
@@ -150,6 +174,14 @@ export class LeadService {
         const res = await this.leadRepository.bulkWrite(ops);
         results.inserted += res.insertedCount + res.upsertedCount;
         results.updated += res.modifiedCount;
+        await this.contactService.upsertManyFromLeads(
+          batches[i].map((lead) =>
+            this.contactPayloadFromLead({
+              ...lead,
+              accountId: context.accountId,
+            }),
+          ),
+        );
       } catch (err: any) {
         const writeErrors = err?.writeErrors || [];
         results.failed += writeErrors.length;
@@ -374,6 +406,11 @@ export class LeadService {
     }
 
     const updatedLead = await this.leadRepository.updateLeadById(leadId, lead);
+    await this.syncContactFromLead({
+      ...existingLead,
+      ...updatedLead,
+      accountId,
+    });
 
     await this.activityLogService.logUpdate({
       accountId: accountId,
@@ -404,7 +441,11 @@ export class LeadService {
     };
   }
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
-    return await this.leadRepository.update(lead);
+    const updated = await this.leadRepository.update(lead);
+    if (updated) {
+      await this.syncContactFromLead(updated);
+    }
+    return updated;
   }
 
   async notifyLeadUpdated(lead: Lead | null): Promise<void> {

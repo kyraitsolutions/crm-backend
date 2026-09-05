@@ -5,6 +5,8 @@ import {
 } from "../../../../models/integration.model.js";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
+import { ContactService } from "../../../../services/contact.service.js";
+import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
 
@@ -12,33 +14,26 @@ export class IncomingMessageHandler {
   private conservationService = new ConversationService();
   private messageService = new MessageService();
   private integrationService = new IntegrationService();
+  private contactService = new ContactService(new ContactRepository());
 
   constructor() {
     this.conservationService = new ConversationService();
     this.messageService = new MessageService();
     this.integrationService = new IntegrationService();
+    this.contactService = new ContactService(new ContactRepository());
   }
   async handle(value: any) {
     const messages = value.messages ?? [];
     const { phone_number_id } = value?.metadata ?? {};
-
-    console.log("phone_number_id", phone_number_id);
+    const waContacts = value.contacts ?? [];
 
     for (const message of messages) {
       try {
-        console.log("message", message);
         const parsedMessage = messageParser.parse({
           message,
           value,
         });
-        console.log("parsedMessage", parsedMessage);
 
-        // if (!parsedMessage) {
-        //   console.warn("Unsupported WhatsApp message:", message.type);
-        //   continue;
-        // }
-
-        // 1. Find Integration
         const integration =
           await this.integrationService.getIntegrationByFilter({
             provider: IntegrationProvider.WHATSAPP,
@@ -46,14 +41,14 @@ export class IncomingMessageHandler {
             status: IntegrationStatus.CONNECTED,
           });
 
-        console.log("integration", integration);
-
         if (!integration) {
-          console.log(`WhatsApp Integration not found for ${phone_number_id}`);
           throw new Error("WhatsApp integration not found.");
         }
 
-        // // 1. Find/create conversation
+        const waContactName =
+          waContacts.find((contact: any) => contact?.wa_id === message.from)
+            ?.profile?.name || "";
+
         const conversation =
           await this.conservationService.getOrCreateConversation({
             filter: {
@@ -69,6 +64,13 @@ export class IncomingMessageHandler {
               },
             },
           });
+
+        await this.contactService.upsertFromLead({
+          accountId: String(integration.accountId),
+          name: waContactName,
+          phone: message.from,
+          source: "whatsapp",
+        });
 
         console.log("conversation", conversation);
 

@@ -80,7 +80,9 @@ export class LeadController {
         mode,
       );
 
-      httpResponse(req, res, 200, "Leads created successfully", result);
+      httpResponse(req, res, 200, "Leads created successfully", {
+        doc: result,
+      });
     } catch (error) {
       handleRouteError("LeadController.createBulkLead", error, next, req);
     }
@@ -225,7 +227,7 @@ export class LeadController {
       );
 
       httpResponse(req, res, 200, "Lead summary fetched successfully", {
-        data: leadSummary,
+        doc: leadSummary,
       });
     } catch (error) {
       handleRouteError("LeadController.getLeadSummary", error, next, req);

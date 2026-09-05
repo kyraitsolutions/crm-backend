@@ -7,5 +7,6 @@ export * from "./http.error.js";
 export * from "./asyncHandler.js";
 export * from "./request-context.utils.js";
 export * from "./paginationBuilder.js";
+export * from "./phone.util.js";
 export { default as httpResponse, buildRequestMeta } from "./http.response.js";
 export { default as logger, logError } from "./logger.js";
