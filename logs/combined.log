@@ -11140,3 +11140,11 @@
 {"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/overview 304 312ms","timestamp":"2026-09-06 11:06:00"}
 {"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/campaigns 304 258ms","timestamp":"2026-09-06 11:06:03"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-06 11:06:13"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-06 11:11:47"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:11:47"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:11:48"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-06 11:11:49"}
+{"level":"http","message":"POST /api/contacts 200 3371ms","timestamp":"2026-09-06 11:11:50"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/templates 304 260ms","timestamp":"2026-09-06 11:12:01"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/audiences/preview 200 290ms","timestamp":"2026-09-06 11:12:01"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/context 304 496ms","timestamp":"2026-09-06 11:12:01"}
