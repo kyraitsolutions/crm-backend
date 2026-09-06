@@ -11155,3 +11155,21 @@
 {"level":"http","message":"GET /api/account 304 375ms","timestamp":"2026-09-06 11:13:05"}
 {"level":"http","message":"GET /api/subscription 200 1887ms","timestamp":"2026-09-06 11:13:06"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-06 11:13:59"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-06 11:15:55"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:15:56"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:15:57"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-06 11:15:57"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2393ms","timestamp":"2026-09-06 11:16:51"}
+{"level":"http","message":"POST /api/contacts 200 244ms","timestamp":"2026-09-06 11:16:52"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 304 247ms","timestamp":"2026-09-06 11:16:52"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 237ms","timestamp":"2026-09-06 11:16:52"}
+{"level":"http","message":"GET /api/account 304 313ms","timestamp":"2026-09-06 11:16:52"}
+{"level":"http","message":"GET /api/subscription 200 2094ms","timestamp":"2026-09-06 11:16:54"}
+{"level":"http","message":"GET /api/email-marketing/6a7c854242116e6531df0bcb/overview 304 802ms","timestamp":"2026-09-06 11:17:00"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 200 380ms","timestamp":"2026-09-06 11:17:03"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview?module=overview&range=7days 304 451ms","timestamp":"2026-09-06 11:17:03"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 551ms","timestamp":"2026-09-06 11:17:03"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb 200 294ms","timestamp":"2026-09-06 11:17:28"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 226ms","timestamp":"2026-09-06 11:17:40"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview?module=overview&range=7days 304 305ms","timestamp":"2026-09-06 11:17:40"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 232ms","timestamp":"2026-09-06 11:17:40"}

@@ -522,9 +522,9 @@ export class WhatsAppBroadcastService {
     if (payload.templateId) {
       const template = await this.requireMarketingTemplate(accountId, payload.templateId);
       campaign.templateId = template._id;
-      campaign.templateName = template.name;
-      campaign.templateLanguage = template.language;
-      campaign.templateCategory = template.category;
+      campaign.templateName = String(template.name);
+      campaign.templateLanguage = String(template.language);
+      campaign.templateCategory = String(template.category);
     }
     if (payload.name !== undefined) campaign.name = payload.name;
     if (payload.audience !== undefined) campaign.audience = payload.audience;

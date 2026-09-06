@@ -88,8 +88,11 @@ export class IncomingMessageHandler {
 
         await this.messageService.saveMessage(messageDocument);
 
-        const inboundText =
-          parsedMessage?.body?.text || parsedMessage?.searchText || "";
+        const inboundText = parsedMessage
+          ? parsedMessage.searchText ||
+            ("body" in parsedMessage ? parsedMessage.body?.text : "") ||
+            ""
+          : "";
         if (inboundText) {
           const { whatsappBroadcastService } = await import(
             "../../broadcast/services/whatsapp-broadcast.service.js"
