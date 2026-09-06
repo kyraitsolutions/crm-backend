@@ -277,6 +277,16 @@ export class TeamService {
       await session.commitTransaction();
       session.endSession();
 
+      await this.activityLogService.logUpdate({
+        oldDoc: existingMember,
+        newDoc: teamMember,
+        organizationId: String(orgId || ""),
+        entityType: "teamMember",
+        entityId: String(id),
+        actor: { type: "user", name: "" },
+        metadata: { email: teamMember.email },
+      });
+
       return { message: "Team member updated successfully" };
     } catch (error) {
       await session.abortTransaction();
@@ -321,17 +331,23 @@ export class TeamService {
       await this.userprofileRepository.deleteByUserIds(ids, session);
       await this.userRepository.deleteMany(ids, session);
 
-      // Activity log
-      // const activityLogDataPayload = {
-      //   organizationId: orgId,
-      //   metadata: {
-      //     teamMemberName: members[0]?.firstName,
-      //     teamMemberEmail: members[0]?.email,
-      //   },
-      // }
-      // await this.activityLogService.logDelete(ids, );
-
       await session.commitTransaction();
+
+      for (const member of members) {
+        await this.activityLogService.logDelete({
+          organizationId: orgId,
+          entityType: "teamMember",
+          entityId: String((member as any)?.id || (member as any)?._id || (member as any)?.userId),
+          actor: { type: "user", name: "" },
+          metadata: {
+            userId: String((member as any)?.userId || ""),
+          },
+          deletedData: {
+            userId: (member as any)?.userId,
+            roleId: (member as any)?.roleId,
+          },
+        });
+      }
 
       return {
         doc: {

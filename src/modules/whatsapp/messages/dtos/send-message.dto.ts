@@ -10,6 +10,7 @@ export class SendMessageDto {
   file!: Express.Multer.File | null;
   text!: any;
   image!: any;
+  template?: { name: string; language?: { code: string }; components?: unknown[] };
 
   constructor(data: Partial<SendMessageDto>) {
     // this.to = data.to;
@@ -50,6 +51,12 @@ export class SendMessageDto {
 
       case "audio":
         new AudioMessageDto(this).validate();
+        break;
+
+      case "template":
+        if (!this.template?.name) {
+          throw new Error("Template name is required.");
+        }
         break;
 
       default:

@@ -6,6 +6,7 @@ import { TApiResponse } from "../../../types/api-response.type.js";
 import { WhatsAppAccountRepository } from "../../whatsapp/account/repositories/whatsapp-account.repository.js";
 import { IntegrationCredentialRepository } from "../repositories/integration-credential.repository.js";
 import { IntegrationRepository } from "../repositories/integration.repository.js";
+import { ActivityLogService } from "../../../services/activityLog.service.js";
 
 // type SyncState = {
 //   status: SyncStatus;
@@ -22,6 +23,7 @@ export class WhatsAppIntegrationService {
     private credentialRepo = new IntegrationCredentialRepository(),
     private whatsappRepo = new WhatsAppAccountRepository(),
   ) {}
+  private activityLogService = new ActivityLogService();
 
   async completeWhatsAppSignup(payload: {
     code: string;
@@ -204,6 +206,15 @@ export class WhatsAppIntegrationService {
 
       await session.commitTransaction();
 
+      await this.activityLogService.logCreate({
+        accountId: payload.accountId,
+        organizationId: payload.organizationId,
+        entityType: "integration",
+        entityId: String(integration.id),
+        actor: { type: "user", name: "" },
+        metadata: { provider: IntegrationProvider.WHATSAPP },
+      });
+
       return {
         doc: integration,
       };
@@ -255,6 +266,16 @@ export class WhatsAppIntegrationService {
 
       // 4. Commit transaction
       await session.commitTransaction();
+
+      await this.activityLogService.logDelete({
+        accountId,
+        organizationId: String((integration as any)?.organizationId || ""),
+        entityType: "integration",
+        entityId: integrationId,
+        actor: { type: "user", name: "" },
+        metadata: { provider: IntegrationProvider.WHATSAPP },
+        deletedData: { provider: IntegrationProvider.WHATSAPP },
+      });
 
       return {
         doc: {

@@ -25,9 +25,10 @@ export class WhatsAppAccountRepository {
   }
 
   async findByIntegrationId(integrationId: string) {
-    return WhatsAppAccountModel.findOne({
-      integrationId,
-    });
+    const filter = Types.ObjectId.isValid(integrationId)
+      ? { integrationId: new Types.ObjectId(integrationId) }
+      : { integrationId };
+    return WhatsAppAccountModel.findOne(filter);
   }
 
   async findByPhoneNumberId(phoneNumberId: string) {

@@ -29,6 +29,15 @@ export class MessagePayloadService {
           ...BuildMediaMessagePayload.build(payload, context),
         };
 
+      case "template":
+        return {
+          ...basePayload,
+          type: "template",
+          body: {
+            text: payload.template?.name || "template",
+          },
+        };
+
       default:
         throw new Error(
           `Unsupported message type: ${payload.type} while building payload.`,

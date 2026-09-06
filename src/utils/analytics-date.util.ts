@@ -25,8 +25,13 @@ export const getDateRange = (filters: GetDateRangeParams) => {
     }
 
     case "custom": {
-      startDate = new Date(filters.startDate!);
-      endDate = new Date(filters.endDate!);
+      if (filters.startDate && filters.endDate) {
+        startDate = new Date(filters.startDate);
+        endDate = new Date(filters.endDate);
+      } else {
+        startDate = new Date();
+        startDate.setDate(now.getDate() - 6);
+      }
       break;
     }
 

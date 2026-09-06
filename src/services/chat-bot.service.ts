@@ -14,10 +14,12 @@ import {
   TQueryParams,
 } from "../types/api-response.type.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class ChatBotService {
   private repo: ChatbotRepository;
   private accountRepository: AccountRepository;
+  private activityLogService = new ActivityLogService();
 
   constructor() {
     this.repo = new ChatbotRepository();
@@ -107,6 +109,15 @@ export class ChatBotService {
       accountId: accountId,
     });
 
+    await this.activityLogService.logCreate({
+      accountId,
+      organizationId,
+      entityType: "chatbot",
+      entityId: String((chatbot as any)?._id || (chatbot as any)?.id),
+      actor: this.activityLogService.userActor({ id: userId }),
+      metadata: { name: (chatbot as any)?.name },
+    });
+
     return new ResponseChatBotDto(chatbot);
   }
 
@@ -133,6 +144,7 @@ export class ChatBotService {
     chatbotId: string,
     updateDto: CreateChatBotDto,
   ) {
+    const existing = await this.repo.findChatbotById(accountId, chatbotId);
     const result = await this.repo.updateChatbot(
       accountId,
       chatbotId,
@@ -141,14 +153,36 @@ export class ChatBotService {
     if (!result) {
       throw HttpError.notFound("Chatbot not found");
     }
+    const account = await this.accountRepository.findOne(accountId);
+    await this.activityLogService.logUpdate({
+      oldDoc: existing,
+      newDoc: result,
+      accountId,
+      organizationId: String((account as any)?.organizationId || ""),
+      entityType: "chatbot",
+      entityId: chatbotId,
+      actor: { type: "user", name: "" },
+      metadata: { name: (result as any)?.name },
+    });
     return result;
   }
 
   async deleteChatBot(accountId: string, chatbotId: string): Promise<boolean> {
+    const existing = await this.repo.findChatbotById(accountId, chatbotId);
     const result = await this.repo.deleteChatbotById(accountId, chatbotId);
     if (!result) {
       throw HttpError.notFound("Chatbot not Found for this Chatbot Id");
     }
+    const account = await this.accountRepository.findOne(accountId);
+    await this.activityLogService.logDelete({
+      accountId,
+      organizationId: String((account as any)?.organizationId || ""),
+      entityType: "chatbot",
+      entityId: chatbotId,
+      actor: { type: "user", name: "" },
+      metadata: { name: (existing as any)?.name },
+      deletedData: existing,
+    });
     return true;
   }
 }

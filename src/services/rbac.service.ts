@@ -11,8 +11,10 @@ import {
   TApiResponse,
   TPaginatedResponse,
 } from "../types/api-response.type.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class RbacService {
+  private activityLogService = new ActivityLogService();
   constructor(private rbacRepo: RbacRepository) {}
 
   // ROLES RELATED METHODS
@@ -127,6 +129,14 @@ export class RbacService {
 
       await session.commitTransaction();
 
+      await this.activityLogService.logCreate({
+        organizationId,
+        entityType: "role",
+        entityId: String(role._id),
+        actor: { type: "user", name: "" },
+        metadata: { roleName: role.name, permissions },
+      });
+
       return {
         doc: {
           id: role._id,
@@ -225,6 +235,15 @@ export class RbacService {
       }
 
       await session.commitTransaction();
+      await this.activityLogService.logUpdate({
+        oldDoc: { name: undefined, permissions: undefined },
+        newDoc: { name, permissions },
+        organizationId,
+        entityType: "role",
+        entityId: roleId,
+        actor: { type: "user", name: "" },
+        metadata: { roleName: name },
+      });
       return {
         doc: {
           id: roleId,
@@ -252,6 +271,15 @@ export class RbacService {
 
       console.log(deletedRole);
       await session.commitTransaction();
+
+      await this.activityLogService.logDelete({
+        organizationId: String((role as any)?.organizationId || ""),
+        entityType: "role",
+        entityId: roleId,
+        actor: { type: "user", name: "" },
+        metadata: { roleName: (role as any)?.name },
+        deletedData: { name: (role as any)?.name },
+      });
 
       return {
         doc: {

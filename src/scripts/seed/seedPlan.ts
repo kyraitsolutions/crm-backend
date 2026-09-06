@@ -9,6 +9,7 @@ const coreFeatures = {
   [FEATURE.WHATSAPP_MESSAGING]: true,
   [FEATURE.LEAD_MANAGEMENT]: true,
   [FEATURE.WEBHOOKS]: true,
+  [FEATURE.EMAIL_MARKETING]: true,
 };
 
 const plans = [
@@ -35,6 +36,7 @@ const plans = [
       "WhatsApp Messaging",
       "Lead Management",
       "Webhooks",
+      "Email Marketing",
       "WhatsApp AI Agent (limited trial)",
     ],
     addons: [],
@@ -47,6 +49,9 @@ const plans = [
       leadsPerMonth: 500,
       whatsappMessagesPerMonth: 2000,
       aiConversationsPerMonth: 100,
+      emailsPerMonth: 500,
+      emailCampaignsPerMonth: 5,
+      emailRecipientsPerCampaign: 500,
     },
   },
   {
@@ -72,6 +77,7 @@ const plans = [
       "WhatsApp Messaging",
       "Lead Management",
       "Webhooks",
+      "Email Marketing",
     ],
     addons: ["WhatsApp AI Agent"],
     featureMap: { ...coreFeatures, [FEATURE.WHATSAPP_AI_AGENT]: false },
@@ -83,6 +89,9 @@ const plans = [
       leadsPerMonth: 1000,
       whatsappMessagesPerMonth: 10000,
       aiConversationsPerMonth: 0,
+      emailsPerMonth: 2000,
+      emailCampaignsPerMonth: 10,
+      emailRecipientsPerCampaign: 2000,
     },
   },
   {
@@ -108,6 +117,7 @@ const plans = [
       "WhatsApp Messaging",
       "Lead Management",
       "Webhooks",
+      "Email Marketing",
       "WhatsApp AI Agent",
     ],
     addons: [],
@@ -120,6 +130,9 @@ const plans = [
       leadsPerMonth: 10000,
       whatsappMessagesPerMonth: 50000,
       aiConversationsPerMonth: 1000,
+      emailsPerMonth: 25000,
+      emailCampaignsPerMonth: 50,
+      emailRecipientsPerCampaign: 10000,
     },
   },
   {
@@ -145,6 +158,7 @@ const plans = [
       "WhatsApp Messaging",
       "Lead Management",
       "Webhooks",
+      "Email Marketing",
       "WhatsApp AI Agent",
     ],
     addons: [],
@@ -157,6 +171,9 @@ const plans = [
       leadsPerMonth: 50000,
       whatsappMessagesPerMonth: 100000,
       aiConversationsPerMonth: 5000,
+      emailsPerMonth: 100000,
+      emailCampaignsPerMonth: 200,
+      emailRecipientsPerCampaign: 50000,
     },
   },
   {
@@ -182,6 +199,7 @@ const plans = [
       "WhatsApp Messaging",
       "Lead Management",
       "Webhooks",
+      "Email Marketing",
       "WhatsApp AI Agent",
     ],
     addons: [],
@@ -194,6 +212,9 @@ const plans = [
       leadsPerMonth: 50000,
       whatsappMessagesPerMonth: 100000,
       aiConversationsPerMonth: 5000,
+      emailsPerMonth: 100000,
+      emailCampaignsPerMonth: 200,
+      emailRecipientsPerCampaign: 50000,
     },
   },
 ];

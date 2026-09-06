@@ -57,6 +57,20 @@ export class MessageStatusHandler {
     const messageId = status.id;
 
     await this.messageService.updateMessage(messageId, update);
+
+    try {
+      const { whatsappBroadcastService } = await import(
+        "../../broadcast/services/whatsapp-broadcast.service.js"
+      );
+      const errorMessage = status.errors?.[0]?.message || status.errors?.[0]?.title;
+      await whatsappBroadcastService.applyProviderStatus(
+        messageId,
+        status.status,
+        errorMessage,
+      );
+    } catch (error) {
+      console.log("campaign status update failed", error);
+    }
   }
 }
 

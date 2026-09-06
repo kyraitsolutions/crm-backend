@@ -41,6 +41,8 @@ const METRIC_TO_LIMIT: Record<string, string> = {
   [USAGE_METRIC.LEADS]: PLAN_LIMIT.LEADS_PER_MONTH,
   [USAGE_METRIC.WHATSAPP_MESSAGES]: PLAN_LIMIT.WHATSAPP_MESSAGES_PER_MONTH,
   [USAGE_METRIC.AI_CONVERSATIONS]: PLAN_LIMIT.AI_CONVERSATIONS_PER_MONTH,
+  [USAGE_METRIC.EMAILS]: PLAN_LIMIT.EMAILS_PER_MONTH,
+  [USAGE_METRIC.EMAIL_CAMPAIGNS]: PLAN_LIMIT.EMAIL_CAMPAIGNS_PER_MONTH,
 };
 
 const METRIC_TO_FEATURE: Partial<Record<string, FeatureKey>> = {
@@ -51,6 +53,8 @@ const METRIC_TO_FEATURE: Partial<Record<string, FeatureKey>> = {
   [USAGE_METRIC.LEADS]: FEATURE.LEAD_MANAGEMENT,
   [USAGE_METRIC.WHATSAPP_MESSAGES]: FEATURE.WHATSAPP_MESSAGING,
   [USAGE_METRIC.AI_CONVERSATIONS]: FEATURE.WHATSAPP_AI_AGENT,
+  [USAGE_METRIC.EMAILS]: FEATURE.EMAIL_MARKETING,
+  [USAGE_METRIC.EMAIL_CAMPAIGNS]: FEATURE.EMAIL_MARKETING,
 };
 
 const METRIC_ERROR: Partial<Record<string, string>> = {
@@ -60,6 +64,8 @@ const METRIC_ERROR: Partial<Record<string, string>> = {
   [USAGE_METRIC.LEADS]: SUBSCRIPTION_ERROR.LEAD_LIMIT_REACHED,
   [USAGE_METRIC.WHATSAPP_MESSAGES]: SUBSCRIPTION_ERROR.WHATSAPP_MESSAGE_LIMIT_REACHED,
   [USAGE_METRIC.AI_CONVERSATIONS]: SUBSCRIPTION_ERROR.AI_USAGE_LIMIT_REACHED,
+  [USAGE_METRIC.EMAILS]: SUBSCRIPTION_ERROR.EMAIL_LIMIT_REACHED,
+  [USAGE_METRIC.EMAIL_CAMPAIGNS]: SUBSCRIPTION_ERROR.EMAIL_CAMPAIGN_LIMIT_REACHED,
 };
 
 const LIMIT_MESSAGES: Record<string, string> = {
@@ -75,6 +81,10 @@ const LIMIT_MESSAGES: Record<string, string> = {
     "WhatsApp message limit reached. Upgrade your plan to continue sending messages.",
   [SUBSCRIPTION_ERROR.AI_USAGE_LIMIT_REACHED]:
     "AI Agent usage limit reached. Upgrade your plan to continue.",
+  [SUBSCRIPTION_ERROR.EMAIL_LIMIT_REACHED]:
+    "You've reached your email sending limit. Upgrade your plan to continue sending campaigns.",
+  [SUBSCRIPTION_ERROR.EMAIL_CAMPAIGN_LIMIT_REACHED]:
+    "You've reached your email campaign limit. Upgrade your plan to create more campaigns.",
   [SUBSCRIPTION_ERROR.PLAN_LIMIT_REACHED]:
     "You have reached a plan limit. Upgrade your plan to continue.",
 };
@@ -333,6 +343,13 @@ export class SubscriptionService {
     }
 
     const fromPlan = Boolean(plan?.featureMap?.[feature]);
+    if (
+      feature === FEATURE.EMAIL_MARKETING &&
+      plan?.featureMap &&
+      !Object.prototype.hasOwnProperty.call(plan.featureMap, FEATURE.EMAIL_MARKETING)
+    ) {
+      return this.isProductAccessAllowed(status);
+    }
     const fromAddon = addons.some(
       (addon) => addon.addonCode === feature && addon.status === "active",
     );
@@ -469,6 +486,10 @@ export class SubscriptionService {
         organizationId,
         FEATURE.WHATSAPP_AI_AGENT,
       ),
+      [FEATURE.EMAIL_MARKETING]: await this.canAccessFeature(
+        organizationId,
+        FEATURE.EMAIL_MARKETING,
+      ),
     };
 
     const limits = this.normalizeLimits(plan);
@@ -485,6 +506,11 @@ export class SubscriptionService {
       aiConversations: await this.getUsage(
         organizationId,
         USAGE_METRIC.AI_CONVERSATIONS,
+      ),
+      emails: await this.getUsage(organizationId, USAGE_METRIC.EMAILS),
+      emailCampaigns: await this.getUsage(
+        organizationId,
+        USAGE_METRIC.EMAIL_CAMPAIGNS,
       ),
     };
 
@@ -1124,6 +1150,9 @@ export class SubscriptionService {
       leadsPerMonth: limits.leadsPerMonth ?? 1000,
       whatsappMessagesPerMonth: limits.whatsappMessagesPerMonth ?? 10000,
       aiConversationsPerMonth: limits.aiConversationsPerMonth ?? 0,
+      emailsPerMonth: limits.emailsPerMonth ?? 0,
+      emailCampaignsPerMonth: limits.emailCampaignsPerMonth ?? 0,
+      emailRecipientsPerCampaign: limits.emailRecipientsPerCampaign ?? 0,
     };
   }
 

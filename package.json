@@ -16,6 +16,7 @@
     "seed:plans": "tsx src/scripts/seed/seedPlan.ts",
     "migrate:subscriptions": "tsx src/scripts/migrate/backfill-org-subscriptions.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "test:email-marketing": "tsx src/scripts/test/email-marketing.check.ts",
     "worker:email:prod": "node dist/workers/email.worker.js",
     "worker": "tsx --watch src/workers/index.ts"
   },

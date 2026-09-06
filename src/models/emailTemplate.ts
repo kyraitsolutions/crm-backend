@@ -2,6 +2,7 @@ import { Schema, model, Types } from "mongoose";
 import { TemplateCategory } from "../enums/email.enum.js";
 
 export interface EmailTemplate {
+  organizationId?: Types.ObjectId;
   accountId: Types.ObjectId;
   name: string;
   subject: string;
@@ -33,6 +34,11 @@ export interface EmailTemplate {
 }
 const EmailTemplateSchema = new Schema<EmailTemplate>(
   {
+    organizationId: {
+      type: Schema.Types.ObjectId,
+      ref: "Organization",
+      index: true,
+    },
     accountId: {
       type: Schema.Types.ObjectId,
       ref: "Account",

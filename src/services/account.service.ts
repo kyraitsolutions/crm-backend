@@ -21,6 +21,7 @@ import { RbacService } from "./rbac.service.js";
 import { SubscriptionService } from "./subscription.service.js";
 import { USAGE_METRIC } from "../constants/subscription.constant.js";
 import { TRole } from "../types/roles-permissions.type.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class AccountService {
   constructor(
@@ -31,6 +32,7 @@ export class AccountService {
     // private userRepository: UserRepository,
     // private emailService: EmailService,
   ) {}
+  private activityLogService = new ActivityLogService();
 
   async getAccountById(accountId: string): Promise<TApiResponse<AccountDto>> {
     if (!accountId) throw HttpError.badRequest("Account id is required");
@@ -168,6 +170,15 @@ export class AccountService {
 
     const account = await this.accountRepository.create(accountData, session);
 
+    await this.activityLogService.logCreate({
+      accountId: String((account as any)?.id || (account as any)?._id),
+      organizationId: orgId,
+      entityType: "account",
+      entityId: String((account as any)?.id || (account as any)?._id),
+      actor: this.activityLogService.userActor({ id }),
+      metadata: { accountName: account?.accountName, email: account?.email },
+    });
+
     // this.emailService.queueAccountCreationEmail(
     //   account?.email,
     //   account?.accountName,
@@ -185,6 +196,19 @@ export class AccountService {
     }
 
     const result = await this.accountRepository.delete(id);
+
+    await this.activityLogService.logDelete({
+      accountId: id,
+      organizationId: String((account as any)?.organizationId || ""),
+      entityType: "account",
+      entityId: id,
+      actor: { type: "user", name: "" },
+      metadata: { accountName: (account as any)?.accountName },
+      deletedData: {
+        accountName: (account as any)?.accountName,
+        email: (account as any)?.email,
+      },
+    });
 
     return {
       doc: { id: String(result?.id) },

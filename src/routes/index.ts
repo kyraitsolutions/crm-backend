@@ -4,6 +4,7 @@ import { UserRouter } from "./user.routes.js";
 import { Router } from "express";
 import { UserProfileRouter } from "./userprofile.routes.js";
 import { EmailRouter } from "./email.routes.js";
+import { EmailMarketingRouter } from "./email-marketing.routes.js";
 import { TeamRouter } from "./team.routes.js";
 import { SubscriptionRouter } from "./subscription.routes.js";
 import { MediaRouter } from "./media.routes.js";
@@ -34,6 +35,7 @@ export class AppRoutes {
   private userProfileRouter: UserProfileRouter;
 
   private emailRouter: EmailRouter;
+  private emailMarketingRouter: EmailMarketingRouter;
   private teamRouter: TeamRouter;
   private subscriptionRouter: SubscriptionRouter;
   private rbacRouter: RBACRouter;
@@ -68,6 +70,7 @@ export class AppRoutes {
     this.conversationRouter = new ConversationRouter();
     this.messageRouter = new MessageRouter();
     this.emailRouter = new EmailRouter();
+    this.emailMarketingRouter = new EmailMarketingRouter();
     this.teamRouter = new TeamRouter();
     this.subscriptionRouter = new SubscriptionRouter();
     this.rbacRouter = new RBACRouter();
@@ -101,7 +104,9 @@ export class AppRoutes {
     this.router.use("/chatflow", this.chatFlowRouter.getRouter());
     this.router.use("/subscription", this.subscriptionRouter.getRouter());
     this.router.use("/team", this.teamRouter.getRouter());
+    this.router.use("/email", this.emailMarketingRouter.getTrackingRouter());
     this.router.use("/email", this.emailRouter.getRouter());
+    this.router.use("/email-marketing", this.emailMarketingRouter.getRouter());
     this.router.use("/roles", this.rbacRouter.getRouter());
     this.router.use("/media", this.mediaRouter.getRouter());
     this.router.use("/payment", this.paymentRouter.getRouter());

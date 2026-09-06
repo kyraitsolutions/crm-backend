@@ -4,9 +4,21 @@ import { TActivityLog } from "../types/activityLog.type.js";
 import { TActivityLogQuery } from "../types/api-response.type.js";
 import { getObjectChanges } from "../utils/getObjectChanges.utils.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
+import logger from "../utils/logger.js";
 
 export class ActivityLogService {
   private repository = new ActivityLogRepository();
+
+  userActor(user?: { id?: string; name?: string; userName?: string }) {
+    if (user?.id) {
+      return {
+        type: "user" as const,
+        id: user.id,
+        name: user.name || user.userName || "",
+      };
+    }
+    return { type: "system" as const, name: "system" };
+  }
 
   async getActivityLogs(
     accountId: string,
@@ -54,7 +66,26 @@ export class ActivityLogService {
   }
 
   async create(payload: Partial<TActivityLog>) {
-    return this.repository.create(payload);
+    try {
+      if (!payload.organizationId || !payload.entityType || !payload.entityId) {
+        return null;
+      }
+      return await this.repository.create({
+        ...payload,
+        actor: payload.actor || { type: "system", name: "system" },
+      });
+    } catch (error) {
+      logger.error("Failed to write activity log", {
+        entityType: payload.entityType,
+        action: payload.action,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return null;
+    }
+  }
+
+  async log(payload: Partial<TActivityLog>) {
+    return this.create(payload);
   }
 
   async logCreate({

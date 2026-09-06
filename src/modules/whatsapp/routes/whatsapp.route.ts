@@ -3,6 +3,7 @@ import { WhatsappTemplateRouter } from "./whatsapp-template.route.js";
 import { WhatsappWebhookRouter } from "./whatsapp-webhook.route.js";
 import { WhatsAppMessageRouter } from "./whatsapp-message.route.js";
 import { WhatsappAccountRouter } from "./whatsapp-account.route.js";
+import { WhatsappBroadcastRouter } from "./whatsapp-broadcast.route.js";
 
 export class WhatsappRouter {
   public router: Router;
@@ -11,6 +12,7 @@ export class WhatsappRouter {
   private whatsappWebhookRouter = new WhatsappWebhookRouter();
   private whatsappMessageRouter = new WhatsAppMessageRouter();
   private whatsappAccountRouter = new WhatsappAccountRouter();
+  private whatsappBroadcastRouter = new WhatsappBroadcastRouter();
 
   constructor() {
     this.router = Router();
@@ -38,6 +40,11 @@ export class WhatsappRouter {
     this.router.use(
       "/account/:accountId/message",
       this.whatsappMessageRouter.getRouter(),
+    );
+
+    this.router.use(
+      "/account/:accountId/broadcast",
+      this.whatsappBroadcastRouter.getRouter(),
     );
 
     // Webhook endpoint

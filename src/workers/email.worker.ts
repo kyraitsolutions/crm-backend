@@ -128,4 +128,38 @@ async function registerProcessors() {
     const { email, lead } = job.data;
     await emailUtils.sendLeadAssignedEmail(email, lead);
   });
+
+  emailQueue.process(QUEUE_JOBS.EMAIL_CAMPAIGN_PREPARE, 1, async (job) => {
+    const { campaignId } = job.data;
+    logger.info("Preparing email campaign", { campaignId, jobId: job.id });
+    const { emailMarketingService } = await import(
+      "../services/email-marketing.service.js"
+    );
+    await emailMarketingService.prepareAndSend(campaignId);
+  });
+
+  emailQueue.process(QUEUE_JOBS.EMAIL_CAMPAIGN_SEND_BATCH, 1, async (job) => {
+    const { campaignId, recipientIds } = job.data;
+    const { emailMarketingService } = await import(
+      "../services/email-marketing.service.js"
+    );
+    await emailMarketingService.sendBatch(campaignId, recipientIds);
+  });
+
+  emailQueue.process(QUEUE_JOBS.WHATSAPP_CAMPAIGN_PREPARE, 1, async (job) => {
+    const { campaignId } = job.data;
+    logger.info("Preparing WhatsApp campaign", { campaignId, jobId: job.id });
+    const { whatsappBroadcastService } = await import(
+      "../modules/whatsapp/broadcast/services/whatsapp-broadcast.service.js"
+    );
+    await whatsappBroadcastService.prepareAndSend(campaignId);
+  });
+
+  emailQueue.process(QUEUE_JOBS.WHATSAPP_CAMPAIGN_SEND_BATCH, 1, async (job) => {
+    const { campaignId, recipientIds } = job.data;
+    const { whatsappBroadcastService } = await import(
+      "../modules/whatsapp/broadcast/services/whatsapp-broadcast.service.js"
+    );
+    await whatsappBroadcastService.sendBatch(campaignId, recipientIds);
+  });
 }

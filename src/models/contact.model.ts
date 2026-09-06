@@ -18,6 +18,13 @@ export interface Contact {
     timestamp?: Date;
   };
 
+  whatsapp: {
+    optIn: boolean;
+    optedInAt?: Date;
+    optedOutAt?: Date;
+    source?: string;
+  };
+
   // Metadata
   source: "chatbot" | "website"|"webform" | "google_ads" | "manual" | "import" |"instagram"|"whatsapp"|"facebook"|"webhook";
 
@@ -72,6 +79,13 @@ const contactSchema = new Schema<Contact>(
         ],
       },
       timestamp: Date,
+    },
+
+    whatsapp: {
+      optIn: { type: Boolean, default: true, index: true },
+      optedInAt: Date,
+      optedOutAt: Date,
+      source: { type: String, default: "" },
     },
 
     source: {

@@ -86,6 +86,19 @@ export class LeadService {
     const created = await this.leadRepository.create(lead);
     await this.syncContactFromLead(created);
     await this.recordLeadUsage(account?.organizationId && String(account.organizationId));
+    if (account?.organizationId) {
+      await this.activityLogService.logCreate({
+        accountId: String(lead.accountId),
+        organizationId: String(account.organizationId),
+        entityType: "lead",
+        entityId: String((created as any)?._id || (created as any)?.id),
+        actor: { type: "system", name: "chatbot" },
+        metadata: {
+          leadName: (created as any)?.name,
+          source: (created as any)?.source?.name,
+        },
+      });
+    }
     await this.notifyLeadCreated({
       organizationId: asEntityId(account?.organizationId),
       accountId: asEntityId(lead.accountId),

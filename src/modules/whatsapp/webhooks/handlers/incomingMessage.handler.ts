@@ -87,6 +87,24 @@ export class IncomingMessageHandler {
         // // 3. Save to MongoDB
 
         await this.messageService.saveMessage(messageDocument);
+
+        const inboundText =
+          parsedMessage?.body?.text || parsedMessage?.searchText || "";
+        if (inboundText) {
+          const { whatsappBroadcastService } = await import(
+            "../../broadcast/services/whatsapp-broadcast.service.js"
+          );
+          await whatsappBroadcastService.markReply(
+            String(integration.accountId),
+            message.from,
+          );
+          await whatsappBroadcastService.handleInboundText({
+            accountId: String(integration.accountId),
+            organizationId: String(integration.organizationId || ""),
+            phone: message.from,
+            text: inboundText,
+          });
+        }
       } catch (error) {
         console.log("error", error);
         throw error;

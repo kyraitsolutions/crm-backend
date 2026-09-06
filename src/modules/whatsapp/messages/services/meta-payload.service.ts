@@ -50,6 +50,14 @@ export class MetaPayloadService {
         };
       }
 
+      case "template": {
+        return {
+          ...basePayload,
+          type: "template",
+          template: payload.template,
+        };
+      }
+
       default:
         throw new Error(`Unsupported message type: ${payload.type}`);
     }

@@ -1,8 +1,10 @@
 import { HttpError } from "../utils/http.error.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
+import { AccountRepository } from "../repositories/account.repository.js";
 import { TContact, TCreateContact } from "../types/contact.type.js";
 import { normalizeEmail, normalizePhone } from "../utils/phone.util.js";
 import logger from "../utils/logger.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 const CONTACT_SOURCES = [
   "chatbot",
@@ -30,6 +32,9 @@ export type ContactIdentityInput = {
 };
 
 export class ContactService {
+  private activityLogService = new ActivityLogService();
+  private accountRepository = new AccountRepository();
+
   constructor(private contactRepository: ContactRepository) {}
 
   async getContacts(
@@ -151,6 +156,7 @@ export class ContactService {
     const contact = await this.contactRepository.createContact(
       contactPayload as TCreateContact,
     );
+    await this.recordContactActivity("create", contact);
     return contact;
   }
 
@@ -256,9 +262,14 @@ export class ContactService {
     }
 
     try {
-      return (await this.contactRepository.createContact(
+      const created = (await this.contactRepository.createContact(
         payload as TCreateContact,
       )) as TContact;
+      await this.recordContactActivity("create", created, {
+        type: "system",
+        name: "lead-sync",
+      });
+      return created;
     } catch (error: any) {
       if (error?.code === 11000) {
         const duplicate = await this.contactRepository.findExistingContact(
@@ -280,6 +291,44 @@ export class ContactService {
       accountId,
       contactId,
     );
+    await this.recordContactActivity("delete", result || { id: contactId, accountId });
     return result;
+  }
+
+  private async recordContactActivity(
+    op: "create" | "delete",
+    contact: any,
+    actor?: { type: "user" | "system"; id?: string; name?: string },
+  ) {
+    const contactId = String(contact?._id || contact?.id || "");
+    const accountId = String(contact?.accountId || "");
+    if (!contactId || !accountId) return;
+    const account = await this.accountRepository.findOne(accountId);
+    const organizationId = String((account as any)?.organizationId || "");
+    if (!organizationId) return;
+    const payload = {
+      accountId,
+      organizationId,
+      entityType: "contact",
+      entityId: contactId,
+      actor: actor || { type: "system" as const, name: "system" },
+      metadata: {
+        name: contact?.name,
+        email: contact?.email,
+        phone: contact?.phone,
+      },
+    };
+    if (op === "create") {
+      await this.activityLogService.logCreate(payload);
+      return;
+    }
+    await this.activityLogService.logDelete({
+      ...payload,
+      deletedData: {
+        name: contact?.name,
+        email: contact?.email,
+        phone: contact?.phone,
+      },
+    });
   }
 }
