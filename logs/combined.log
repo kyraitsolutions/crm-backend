@@ -11148,3 +11148,10 @@
 {"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/templates 304 260ms","timestamp":"2026-09-06 11:12:01"}
 {"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/audiences/preview 200 290ms","timestamp":"2026-09-06 11:12:01"}
 {"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/context 304 496ms","timestamp":"2026-09-06 11:12:01"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2118ms","timestamp":"2026-09-06 11:13:04"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 304 205ms","timestamp":"2026-09-06 11:13:05"}
+{"level":"http","message":"GET /api/integration/6a7c854242116e6531df0bcb/whatsapp 200 229ms","timestamp":"2026-09-06 11:13:05"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 323ms","timestamp":"2026-09-06 11:13:05"}
+{"level":"http","message":"GET /api/account 304 375ms","timestamp":"2026-09-06 11:13:05"}
+{"level":"http","message":"GET /api/subscription 200 1887ms","timestamp":"2026-09-06 11:13:06"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-06 11:13:59"}
