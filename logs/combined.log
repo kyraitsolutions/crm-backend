@@ -12001,3 +12001,37 @@
 {"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview?module=overview&range=7days 200 284ms","timestamp":"2026-09-11 21:46:23"}
 {"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf?limit=8&page=1 304 213ms","timestamp":"2026-09-11 21:46:23"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-11 21:46:57"}
+{"expired":0,"level":"info","message":"Subscription lifecycle tick","timestamp":"2026-09-11 21:48:59"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-11 21:49:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-11 21:49:09"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-11 21:49:09"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-11 21:49:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-11 21:50:26"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-11 21:50:26"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-11 21:50:27"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-11 21:50:29"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 2020ms","timestamp":"2026-09-11 21:50:42"}
+{"level":"http","message":"GET /api/notification/6a9bfc32452e815bd6e7dd8a 200 215ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf?limit=8&page=1 304 222ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/access 304 217ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/account 304 276ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview?module=overview&range=7days 304 289ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf?limit=8&page=1 304 213ms","timestamp":"2026-09-11 21:50:43"}
+{"level":"http","message":"GET /api/subscription 200 1840ms","timestamp":"2026-09-11 21:50:44"}
+{"level":"http","message":"GET /api/conversation/6a9bfc32452e815bd6e7ddcf?page=1&limit=50 304 63ms","timestamp":"2026-09-11 21:50:50"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 230ms","timestamp":"2026-09-11 21:50:51"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 309ms","timestamp":"2026-09-11 21:50:51"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 318ms","timestamp":"2026-09-11 21:50:51"}
+{"level":"http","message":"POST /api/account/6a9bfc32452e815bd6e7ddcf/leads 200 331ms","timestamp":"2026-09-11 21:50:51"}
+{"level":"http","message":"POST /api/contacts 200 243ms","timestamp":"2026-09-11 21:50:53"}
+{"level":"http","message":"GET /api/email-marketing/6a9bfc32452e815bd6e7ddcf/overview 200 501ms","timestamp":"2026-09-11 21:50:55"}
+{"level":"http","message":"GET /api/whatsapp/account/6a9bfc32452e815bd6e7ddcf/broadcast/overview 304 306ms","timestamp":"2026-09-11 21:50:56"}
+{"level":"http","message":"GET /api/subscription/payments 304 264ms","timestamp":"2026-09-11 21:51:00"}
+{"level":"http","message":"POST /api/subscription/cancel 200 2148ms","timestamp":"2026-09-11 21:51:03"}
+{"level":"http","message":"GET /api/subscription 200 1873ms","timestamp":"2026-09-11 21:51:05"}
+{"level":"http","message":"POST /api/subscription/cancel 200 2013ms","timestamp":"2026-09-11 21:51:06"}
+{"level":"http","message":"GET /api/subscription 200 1916ms","timestamp":"2026-09-11 21:51:08"}
+{"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf 200 474ms","timestamp":"2026-09-11 21:51:21"}
+{"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf?limit=8&page=1 304 239ms","timestamp":"2026-09-11 21:51:28"}
+{"level":"http","message":"GET /api/account/6a9bfc32452e815bd6e7ddcf/overview?module=overview&range=7days 304 320ms","timestamp":"2026-09-11 21:51:29"}
+{"level":"http","message":"GET /api/activity-logs/6a9bfc32452e815bd6e7ddcf?limit=8&page=1 304 233ms","timestamp":"2026-09-11 21:51:29"}
