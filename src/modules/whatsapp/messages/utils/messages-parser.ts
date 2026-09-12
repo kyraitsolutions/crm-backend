@@ -1,11 +1,19 @@
 // This MessageParser is used to parse WhatsApp incoming messages into a common format that can be matched with existing DB messages schema
 
 class MessageParser {
-  parse({ message }: { message: any; value: any }) {
+  parse({
+    message,
+    from = "user",
+    direction = "inbound",
+  }: {
+    message: any;
+    from?: "agent" | "user";
+    direction?: "inbound" | "outbound";
+  }) {
     const base = {
       messageId: message.id,
-      from: "user" as const,
-      direction: "inbound" as const,
+      from: from,
+      direction: direction,
       platform: "whatsapp" as const,
       status: "sent",
       searchText: message.text?.body ?? "",
@@ -86,9 +94,11 @@ class MessageParser {
         };
 
       default:
-        console.warn(`Unsupported WhatsApp message type: ${message.type}`);
-
-        return null;
+        // console.warn(`Unsupported WhatsApp message type: ${message.type}`);
+        return {
+          ...base,
+          type: "unsupported",
+        };
     }
   }
 }

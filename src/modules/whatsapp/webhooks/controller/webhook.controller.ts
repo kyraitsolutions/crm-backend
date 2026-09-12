@@ -35,7 +35,6 @@ export class WebhookController {
   ): Promise<void> => {
     try {
       await this.webhookRouterService.route(req.body);
-
       // Always acknowledge Meta quickly
       res.sendStatus(200);
     } catch (error) {

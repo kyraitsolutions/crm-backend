@@ -10,8 +10,6 @@ export class WhatsappApiClient {
         `/${config.meta.GRAPH_VERSION}` +
         endpoint;
 
-      console.log("url", url);
-
       const { data } = await axios.post(url, payload, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -21,7 +19,6 @@ export class WhatsappApiClient {
 
       return data;
     } catch (error) {
-      console.log(error)
       if (axios.isAxiosError(error)) {
         console.error("Meta API Error:", error.response?.data);
 

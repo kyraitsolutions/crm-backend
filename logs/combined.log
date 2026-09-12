@@ -7945,3 +7945,439 @@
 {"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:02:09"}
 {"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:02:50"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:02:51"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:06:02"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:06:03"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:06:41"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:06:42"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:14:43"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:14:43"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:18:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:18:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:23:40"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:23:41"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:37:20"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:37:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:38:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:38:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:39:50"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:39:50"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:39:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:39:58"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:42:31"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:42:32"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:46:56"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:46:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:47:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:47:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:52:03"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:52:03"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:54:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:54:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:54:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:54:35"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:55:33"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:55:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:55:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:55:40"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:55:54"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:55:54"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:56:49"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:56:49"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:58:37"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:58:37"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:58:41"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:58:44"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:58:44"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:58:53"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:58:53"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:59:10"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:59:10"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 13:59:15"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 13:59:16"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:04:33"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:04:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:04:43"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:04:43"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:05:36"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:05:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:05:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:05:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:07:15"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:07:16"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:08:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:08:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:09:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:09:23"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:09:24"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:12:01"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:12:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:12:13"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:12:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:14:23"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:14:23"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:14:40"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:14:40"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:16:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:16:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:18:53"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:18:53"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:19:01"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:19:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:19:09"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:19:09"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:22:49"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:22:50"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:22:56"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:22:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:23:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:23:38"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:27:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:27:39"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:33:26"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:33:26"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:38:42"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:38:43"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:39:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:39:15"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:39:18"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:39:19"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:39:24"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:39:25"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:42:44"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:42:45"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:51:50"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:51:50"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:51:54"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:51:55"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:52:00"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:52:01"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:54:03"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:54:03"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:54:58"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:54:59"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:56:12"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:56:13"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:58:41"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:58:42"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 14:58:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 14:58:45"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:00:52"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:00:53"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:01:00"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:01:00"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:01:33"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:01:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:06:31"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:06:34"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:06:35"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:07:10"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:07:10"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-05 15:08:59"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-05 15:09:00"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 10:29:04"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 10:29:04"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 10:42:56"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 10:42:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 10:43:23"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 10:43:24"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 10:44:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 10:44:29"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:00:32"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:00:32"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:04:39"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:04:40"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:06:58"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:06:59"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:07:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:07:58"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:08:01"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:08:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:08:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:08:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:08:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:08:27"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:17:01"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:17:01"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:17:18"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:17:19"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:17:32"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:17:33"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:17:43"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:17:44"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:18:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:18:15"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:18:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:18:30"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 11:18:46"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 11:18:47"}
+{"code":"ECONNRESET","errno":-4077,"level":"error","message":"Redis client error: read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:216:20)","syscall":"read","timestamp":"2026-09-06 16:26:42"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:42"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:42"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:42"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:42"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:42"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:42"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:42"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:42"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:42"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:42"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:42"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:43"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:43"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:43"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:43"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:43"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:43"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:43"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:43"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:43"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:44"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:44"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:44"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:44"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:44"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:44"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:45"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:45"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:45"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:26:45"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:26:45"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:26:45"}
+{"code":"ETIMEDOUT","errorno":"ETIMEDOUT","level":"error","message":"Redis client error: connect ETIMEDOUT","stack":"Error: connect ETIMEDOUT\n    at Socket.<anonymous> (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\ioredis\\built\\Redis.js:171:41)\n    at Object.onceWrapper (node:events:633:28)\n    at Socket.emit (node:events:519:28)\n    at Socket._onTimeout (node:net:604:8)\n    at listOnTimeout (node:internal/timers:588:17)\n    at process.processTimers (node:internal/timers:523:7)","syscall":"connect","timestamp":"2026-09-06 16:27:01"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:01"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:01"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:01"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:01"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:01"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:02"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:02"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:02"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:03"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:03"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:03"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:03"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:03"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:03"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:04"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:04"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:04"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:05"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:05"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:05"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:06"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:06"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:06"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:07"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 16:27:07"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 16:27:07"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 16:27:08"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:10:58"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:10:58"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:10:58"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:10:58"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:10:58"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:10:59"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:10:59"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:10:59"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:00"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:00"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:00"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:01"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:01"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:01"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:02"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:02"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:02"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:04"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:04"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:04"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:05"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:05"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:05"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:07"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:07"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:07"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:08"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:08"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:08"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:10"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:10"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:10"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:11"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:11"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:11"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:13"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:13"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:13"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:14"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:14"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:14"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:16"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:16"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:16"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:18"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:18"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:18"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:20"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:20"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:20"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:22"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:22"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:22"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:23"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:23"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:23"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:25"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:25"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:25"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:27"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:27"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:27"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:29"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:29"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:29"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:31"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:31"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:31"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:33"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:33"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:33"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:35"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:35"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:35"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:37"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:37"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:37"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:39"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:39"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:39"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:41"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:41"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:41"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:43"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:43"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:43"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:45"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:45"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:45"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:47"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:47"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:47"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:49"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:49"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:49"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:51"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:51"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:51"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:54"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:54"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:54"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:56"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:56"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:56"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:11:58"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:11:58"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:11:58"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:12:00"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:12:00"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:12:00"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:12:02"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:12:02"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:12:02"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:12:04"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:12:04"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:12:04"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-06 21:12:06"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-06 21:12:06"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-06 21:12:06"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-06 21:12:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-06 21:12:09"}
+{"code":"ECONNRESET","errno":-4077,"level":"error","message":"Redis client error: read ECONNRESET","stack":"Error: read ECONNRESET\n    at TCP.onStreamRead (node:internal/stream_base_commons:216:20)","syscall":"read","timestamp":"2026-09-07 09:08:47"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:47"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:47"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:47"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:47"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:47"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:47"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:47"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:47"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:47"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:47"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:47"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:48"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:48"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:48"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:48"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:48"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:48"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:49"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:49"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:49"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:49"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:49"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:49"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:49"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:49"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:49"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:50"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:50"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:50"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:50"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:50"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:50"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:51"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:51"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:51"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:52"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:52"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:52"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:52"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:52"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:52"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:53"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:53"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:53"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:54"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:54"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:54"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:55"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:55"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:55"}
+{"code":"ENOTFOUND","errno":-3008,"hostname":"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","level":"error","message":"Redis client error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com","stack":"Error: getaddrinfo ENOTFOUND redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com\n    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26)","syscall":"getaddrinfo","timestamp":"2026-09-07 09:08:55"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-07 09:08:55"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-07 09:08:55"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-07 09:08:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-07 09:08:57"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 10:58:59"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 10:58:59"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-12 12:54:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 12:54:33"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 12:54:34"}
+{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":403,"requestId":"3862722b-5360-40a9-a0f3-196077420e91","totalRetryDelay":0},"Code":"InvalidClientTokenId","Error":{"Code":"InvalidClientTokenId","Message":"The security token included in the request is invalid.","Type":"Sender"},"Type":"Sender","level":"error","message":"Failed to send email to abhijeetsingh200200@gmail.com: The security token included in the request is invalid.","name":"InvalidClientTokenId","stack":"InvalidClientTokenId: The security token included in the request is invalid.\n    at ProtocolLib.getErrorSchemaOrThrowBaseException (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:68:67)\n    at AwsQueryProtocol.handleError (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2119:65)\n    at AwsQueryProtocol.deserializeResponse (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2089:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\schema\\index.js:23:24\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\index.js:118:20\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\retry\\index.js:171:50\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\client\\index.js:125:26\n    at async EmailUtils.sendEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:116:22)\n    at async EmailUtils.sendWelcomeEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:210:20)","timestamp":"2026-09-12 13:11:45"}
+{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":403,"requestId":"24170eb9-1ef4-4277-835a-41c80133bf06","totalRetryDelay":0},"Code":"InvalidClientTokenId","Error":{"Code":"InvalidClientTokenId","Message":"The security token included in the request is invalid.","Type":"Sender"},"Type":"Sender","level":"error","message":"Failed to send email to faga@mailinator.com: The security token included in the request is invalid.","name":"InvalidClientTokenId","stack":"InvalidClientTokenId: The security token included in the request is invalid.\n    at ProtocolLib.getErrorSchemaOrThrowBaseException (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:68:67)\n    at AwsQueryProtocol.handleError (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2119:65)\n    at AwsQueryProtocol.deserializeResponse (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2089:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\schema\\index.js:23:24\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\index.js:118:20\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\retry\\index.js:171:50\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\client\\index.js:125:26\n    at async EmailUtils.sendEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:116:22)\n    at async EmailUtils.sendOnboardingSuccessEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:49:7)","timestamp":"2026-09-12 13:12:18"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:23:26"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:23:27"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:25:20"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:25:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:26:13"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:26:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:26:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:26:36"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:27:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:27:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:28:10"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:28:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:29:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:29:45"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:30:52"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:30:53"}
+{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":403,"requestId":"e1043e50-5cfb-492d-94dc-4aa481942523","totalRetryDelay":0},"Code":"InvalidClientTokenId","Error":{"Code":"InvalidClientTokenId","Message":"The security token included in the request is invalid.","Type":"Sender"},"Type":"Sender","level":"error","message":"Failed to send email to sachin@fielmente.com: The security token included in the request is invalid.","name":"InvalidClientTokenId","stack":"InvalidClientTokenId: The security token included in the request is invalid.\n    at ProtocolLib.getErrorSchemaOrThrowBaseException (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:68:67)\n    at AwsQueryProtocol.handleError (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2119:65)\n    at AwsQueryProtocol.deserializeResponse (E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2089:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\schema\\index.js:23:24\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\index.js:118:20\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\retry\\index.js:171:50\n    at async E:\\Kyra\\crm-backend\\crm-backend\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\client\\index.js:125:26\n    at async EmailUtils.sendEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:116:22)\n    at async EmailUtils.sendWelcomeEmail (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\email.utils.ts:210:20)","timestamp":"2026-09-12 13:32:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:34:30"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:34:31"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:38:32"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:38:33"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:38:45"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:38:46"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-12 13:40:15"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-12 13:40:15"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-12 13:57:50"}

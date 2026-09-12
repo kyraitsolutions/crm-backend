@@ -6,7 +6,7 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
-import "./workers/index.js";
+// import "./workers/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { config } from "./config/index.js";
 // import { seedPermissions } from "./scripts/seed/seedPermissions.js";
@@ -39,8 +39,8 @@ export class App {
         credentials: true,
       }),
     );
-    this.app.use(express.json({limit:"10mb"}));
-    this.app.use(express.urlencoded({ extended: true,limit:"10mb" }));
+    this.app.use(express.json({ limit: "10mb" }));
+    this.app.use(express.urlencoded({ extended: true, limit: "10mb" }));
     this.app.use(passport.initialize());
   }
 

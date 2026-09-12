@@ -50,4 +50,8 @@ export class MessageRepository {
   public async deleteMessagesByConversationId(conversationId: string) {
     return MessageModel.deleteMany({ conversationId });
   }
+
+  public async deleteMessageByMessageId(messageId: string) {
+    return MessageModel.deleteOne({ messageId });
+  }
 }

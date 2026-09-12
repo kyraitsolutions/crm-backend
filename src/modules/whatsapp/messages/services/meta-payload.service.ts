@@ -1,14 +1,13 @@
 import { BuildAudioPayload } from "../builders/whatsapp/buildAudioPayload.js";
 import { BuildDocumentPayload } from "../builders/whatsapp/buildDocumentPayload.js";
 import { BuildImagePayload } from "../builders/whatsapp/buildImagePayload.js";
+import { BuildTemplatePayload } from "../builders/whatsapp/BuildTemplatePayload.js";
 import { BuildTextPayload } from "../builders/whatsapp/buildTextPayload.js";
 import { BuildVideoPayload } from "../builders/whatsapp/buildVideoPayload.js";
 
 // Payload Service For Whatsapp Messages What Meta Expects
 export class MetaPayloadService {
   build(payload: any, media: any) {
-    console.log("payload", payload);
-
     const basePayload = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
@@ -49,6 +48,12 @@ export class MetaPayloadService {
           ...BuildAudioPayload.build(payload, media),
         };
       }
+
+      case "template":
+        return {
+          ...basePayload,
+          ...BuildTemplatePayload.build(payload),
+        };
 
       default:
         throw new Error(`Unsupported message type: ${payload.type}`);

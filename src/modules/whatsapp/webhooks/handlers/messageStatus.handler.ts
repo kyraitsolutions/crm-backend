@@ -9,6 +9,7 @@ export class MessageStatusHandler {
 
   async handle(value: any) {
     for (const status of value.statuses) {
+      // console.log("MessageStatusHandler", status);
       await this.updateStatus(status);
     }
   }
@@ -54,8 +55,10 @@ export class MessageStatusHandler {
         break;
     }
 
-    const messageId = status.id;
+    // console.log("messageId", status.id);
+    // console.log("updateStatus", update);
 
+    const messageId = status.id;
     await this.messageService.updateMessage(messageId, update);
   }
 }

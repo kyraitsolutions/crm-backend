@@ -22,21 +22,11 @@ export class IncomingMessageHandler {
     const messages = value.messages ?? [];
     const { phone_number_id } = value?.metadata ?? {};
 
-    console.log("phone_number_id", phone_number_id);
-
     for (const message of messages) {
       try {
-        console.log("message", message);
         const parsedMessage = messageParser.parse({
           message,
-          value,
         });
-        console.log("parsedMessage", parsedMessage);
-
-        // if (!parsedMessage) {
-        //   console.warn("Unsupported WhatsApp message:", message.type);
-        //   continue;
-        // }
 
         // 1. Find Integration
         const integration =
@@ -46,14 +36,13 @@ export class IncomingMessageHandler {
             status: IntegrationStatus.CONNECTED,
           });
 
-        console.log("integration", integration);
-
         if (!integration) {
-          console.log(`WhatsApp Integration not found for ${phone_number_id}`);
-          throw new Error("WhatsApp integration not found.");
+          throw new Error(
+            `WhatsApp Integration not found for ${phone_number_id}`,
+          );
         }
 
-        // // 1. Find/create conversation
+        // 1. Find/create conversation
         const conversation =
           await this.conservationService.getOrCreateConversation({
             filter: {
@@ -70,20 +59,15 @@ export class IncomingMessageHandler {
             },
           });
 
-        console.log("conversation", conversation);
-
-        // // 2. Build DB document
+        // 2. Build DB document
         const messageDocument = {
           accountId: new Types.ObjectId(integration.accountId),
           conversationId: new Types.ObjectId(conversation.id),
-          platform: "whatsapp",
+          // platform: "whatsapp",
           ...parsedMessage,
         };
 
-        console.log("messageDocument", messageDocument);
-
-        // // 3. Save to MongoDB
-
+        // 3. Save to MongoDB
         await this.messageService.saveMessage(messageDocument);
       } catch (error) {
         console.log("error", error);

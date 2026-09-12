@@ -3,6 +3,8 @@ import { emitToAccount } from "../config/wsServer/wsEmitter.js";
 import { ConversationRepository } from "../repositories/conversations.repository.js";
 import { MessageRepository } from "../repositories/messages.repository.js";
 import { buildMessageSearchText } from "../utils/buildMessageSearchTextPayload.js";
+import { TPaginatedResponse } from "../types/api-response.type.js";
+import { TMessage } from "../types/message.type.js";
 
 export class MessageService {
   private messageRepository: MessageRepository;
@@ -12,7 +14,9 @@ export class MessageService {
     this.messageRepository = new MessageRepository();
   }
 
-  public async getMessagesByConversationId(conversationId: string) {
+  public async getMessagesByConversationId(
+    conversationId: string,
+  ): Promise<TPaginatedResponse<TMessage>> {
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
@@ -20,6 +24,7 @@ export class MessageService {
         await this.messageRepository.getMessagesByConversationId(
           conversationId,
         );
+
       await this.conversationRepository.updateConversation(
         conversationId,
         { unreadCount: 0 },
@@ -30,8 +35,11 @@ export class MessageService {
           updateLastMessage: false,
         },
       );
+
       await session.commitTransaction();
-      return messages;
+      return {
+        docs: messages,
+      };
     } catch (error) {
       await session.abortTransaction();
       throw error;
@@ -103,5 +111,9 @@ export class MessageService {
     return message;
   }
 
-  // public async deleteMessage(messageId: string) {}
+  public async deleteMessage(messageId: string) {
+    const message =
+      await this.messageRepository.deleteMessageByMessageId(messageId);
+    return message;
+  }
 }

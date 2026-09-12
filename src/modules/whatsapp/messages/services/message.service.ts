@@ -92,6 +92,7 @@ export class WhatsappMessageService {
     }
 
     const metaPayload = metaPayloadService.build(payload, media);
+    console.log("metaPayload", metaPayload);
 
     const result = await this.whatsappMessageClient.sendMessage({
       accessToken: credential.accessToken,

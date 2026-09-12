@@ -1,6 +1,7 @@
 import { AudioMessageDto } from "./audio-message.dto.js";
 import { DocumentMessageDto } from "./document-message.dto.js";
 import { ImageMessageDto } from "./image-message.dto.js";
+import { TemplateMessageDto } from "./template-message.dto.js";
 import { TextMessageDto } from "./text-message.dto.js";
 import { VideoMessageDto } from "./video-message.dto.js";
 
@@ -21,8 +22,6 @@ export class SendMessageDto {
   }
 
   validate() {
-    console.log(this);
-
     if (!this.to) {
       throw new Error("Recipient is required.");
     }
@@ -50,6 +49,10 @@ export class SendMessageDto {
 
       case "audio":
         new AudioMessageDto(this).validate();
+        break;
+
+      case "template":
+        new TemplateMessageDto(this).validate();
         break;
 
       default:

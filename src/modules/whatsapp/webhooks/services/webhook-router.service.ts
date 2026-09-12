@@ -1,12 +1,13 @@
 import { accountUpdateHandler } from "../handlers/accountUpdate.handler.js";
 import { contactSyncHandler } from "../handlers/contactSync.handler.js";
+import { messageEchoHandler } from "../handlers/messageEcho.hanlder.js";
 // import { historySyncHandler } from "../handlers/history.handler.js";
 import { messagesHandler } from "../handlers/messages.handler.js";
 import { templateHandler } from "../handlers/template.handler.js";
 
 export class WebhookRouterService {
   public async route(payload: any): Promise<void> {
-    // console.log("WebhookRouterService", JSON.stringify(payload, null, 2));
+    console.log("WebhookRouterService", JSON.stringify(payload, null, 2));
 
     // Ignore invalid payloads
     if (!payload?.entry?.length) {
@@ -32,6 +33,10 @@ export class WebhookRouterService {
 
       case "account_update":
         await accountUpdateHandler.handle(change.value);
+        break;
+
+      case "smb_message_echoes":
+        await messageEchoHandler.handle(change.value);
         break;
 
       case "smb_app_state_sync":

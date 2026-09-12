@@ -18,9 +18,8 @@ export class MessageController {
       const { conversationId } = req.params;
       const result =
         await this.messageService.getMessagesByConversationId(conversationId);
-      httpResponse(req, res, 200, "Messages fetched successfully", {
-        doc: result,
-      });
+
+      httpResponse(req, res, 200, "Messages fetched successfully", result);
     } catch (error: any) {
       next(error);
     }

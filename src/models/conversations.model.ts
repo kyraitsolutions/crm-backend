@@ -91,6 +91,18 @@ const conversationSchema = new Schema(
       },
     },
 
+    customerLastMessageAt: {
+      type: Date,
+      default: null,
+      index: true,
+    },
+
+    customerWindowExpiresAt: {
+      type: Date,
+      default: null,
+      index: true,
+    },
+
     unreadCount: {
       type: Number,
       default: 0,

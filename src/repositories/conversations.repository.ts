@@ -138,6 +138,22 @@ export class ConversationRepository {
       if (incrementUnread && payload.direction === "inbound") {
         incQuery.unreadCount = 1;
       }
+
+      if (payload.direction === "inbound") {
+        const customerMessageAt = payload.createdAt
+          ? new Date(payload.createdAt)
+          : new Date();
+
+        const windowExpiresAt = new Date(
+          customerMessageAt.getTime() + 24 * 60 * 60 * 1000,
+        );
+
+        updateQuery.$set = {
+          ...updateQuery.$set,
+          customerLastMessageAt: customerMessageAt,
+          customerWindowExpiresAt: windowExpiresAt,
+        };
+      }
     }
 
     if (resetUnread) {
@@ -156,8 +172,6 @@ export class ConversationRepository {
       updateQuery.$inc = incQuery;
     }
 
-    console.log("ider tak ka safr hai", updateQuery);
-
     const conversation = await ConversationModel.findByIdAndUpdate(
       conversationId,
       updateQuery,
@@ -166,8 +180,6 @@ export class ConversationRepository {
         session,
       },
     );
-
-    console.log("conversation kya hai bata de", conversation);
 
     return conversation;
   }
