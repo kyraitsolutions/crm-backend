@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { RbacService } from "../services/rbac.service.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateRoleDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
@@ -68,7 +69,7 @@ export class RoleController {
 
       httpResponse(req, res, 200, "Role updated successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("RoleController", error, next, req);
     }
   };
 
@@ -78,7 +79,7 @@ export class RoleController {
       const result = await this.rbacService.deleteRole(roleId);
       httpResponse(req, res, 200, "Role deleted successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("RoleController", error, next, req);
     }
   };
 

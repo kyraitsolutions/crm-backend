@@ -49,6 +49,12 @@ export class UserRouter {
       this.userController.getMe.bind(this.userController),
     );
 
+    this.router.get(
+      "/profile",
+      AuthMiddleware.authenticate,
+      this.userController.getMe.bind(this.userController),
+    );
+
     this.router.post(
       "/profile/update",
        AuthMiddleware.authenticate,

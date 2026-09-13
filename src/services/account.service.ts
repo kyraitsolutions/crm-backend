@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 // import { AccountDto, CreateAccountDto } from "../dtos/account.dto.js";
 import { ClientSession } from "mongoose";
 import { ROLES } from "../config/permissions.js";
@@ -17,7 +18,10 @@ import {
 import { TUser } from "../types/user.type.js";
 import { TAccount, TCreateAccount } from "./../types/account.type.js";
 import { RbacService } from "./rbac.service.js";
+import { SubscriptionService } from "./subscription.service.js";
+import { USAGE_METRIC } from "../constants/subscription.constant.js";
 import { TRole } from "../types/roles-permissions.type.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class AccountService {
   constructor(
@@ -28,14 +32,15 @@ export class AccountService {
     // private userRepository: UserRepository,
     // private emailService: EmailService,
   ) {}
+  private activityLogService = new ActivityLogService();
 
   async getAccountById(accountId: string): Promise<TApiResponse<AccountDto>> {
-    if (!accountId) throw new Error("Account id is required");
+    if (!accountId) throw HttpError.badRequest("Account id is required");
 
     const account = await this.accountRepository.findOne(accountId);
 
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     return {
@@ -85,12 +90,12 @@ export class AccountService {
     accountId: string,
     role?: string,
   ): Promise<TApiResponse<AccountAccessDto>> {
-    if (!accountId) throw new Error("Account id is required");
+    if (!accountId) throw HttpError.badRequest("Account id is required");
 
     const account = await this.accountRepository.findOne(accountId);
 
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     if (role === ROLES.OWNER) {
@@ -109,7 +114,7 @@ export class AccountService {
     );
 
     if (!member) {
-      throw new Error("Access denied to this account");
+      throw HttpError.forbidden("Access denied to this account");
     }
 
     // 2. Get role
@@ -148,7 +153,11 @@ export class AccountService {
     );
 
     if (existingAccount) {
-      throw new Error("Account is already exists");
+      throw HttpError.conflict("Account is already exists");
+    }
+
+    if (!session) {
+      await new SubscriptionService().checkLimit(orgId, USAGE_METRIC.ACCOUNTS);
     }
 
     const accountData: TCreateAccount = {
@@ -160,6 +169,15 @@ export class AccountService {
     };
 
     const account = await this.accountRepository.create(accountData, session);
+
+    await this.activityLogService.logCreate({
+      accountId: String((account as any)?.id || (account as any)?._id),
+      organizationId: orgId,
+      entityType: "account",
+      entityId: String((account as any)?.id || (account as any)?._id),
+      actor: this.activityLogService.userActor({ id }),
+      metadata: { accountName: account?.accountName, email: account?.email },
+    });
 
     // this.emailService.queueAccountCreationEmail(
     //   account?.email,
@@ -174,10 +192,23 @@ export class AccountService {
   async deleteAccount(id: string): Promise<TApiResponse<{ id: string }>> {
     const account = await this.accountRepository.findOne(id);
     if (!account) {
-      throw new Error("Account not found");
+      throw HttpError.notFound("Account not found");
     }
 
     const result = await this.accountRepository.delete(id);
+
+    await this.activityLogService.logDelete({
+      accountId: id,
+      organizationId: String((account as any)?.organizationId || ""),
+      entityType: "account",
+      entityId: id,
+      actor: { type: "user", name: "" },
+      metadata: { accountName: (account as any)?.accountName },
+      deletedData: {
+        accountName: (account as any)?.accountName,
+        email: (account as any)?.email,
+      },
+    });
 
     return {
       doc: { id: String(result?.id) },

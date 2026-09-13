@@ -8,6 +8,9 @@ import { WhatsappMessageClient } from "../client/whatsapp-message.client.js";
 import { mediaService } from "./media.service.js";
 import { MessagePayloadService } from "./message-payload.service.js";
 import { metaPayloadService } from "./meta-payload.service.js";
+import { AccountModel } from "../../../../models/accounts.model.js";
+import { SubscriptionService } from "../../../../services/subscription.service.js";
+import { USAGE_METRIC } from "../../../../constants/subscription.constant.js";
 
 export class WhatsappMessageService {
   private integrationRepository = new IntegrationRepository();
@@ -26,6 +29,14 @@ export class WhatsappMessageService {
   }
 
   async send(accountId: string, payload: any) {
+    const account = await AccountModel.findById(accountId).select("organizationId");
+    if (account?.organizationId) {
+      await new SubscriptionService().checkLimit(
+        String(account.organizationId),
+        USAGE_METRIC.WHATSAPP_MESSAGES,
+      );
+    }
+
     // 1. Find Integration
     const integration =
       await this.integrationRepository.findByAccountAndProvider(
@@ -110,6 +121,13 @@ export class WhatsappMessageService {
     console.log("messagePayload", messagePayload);
 
     await this.messageRepository.createMessage(messagePayload as any);
+
+    if (account?.organizationId) {
+      await new SubscriptionService().recordUsage(
+        String(account.organizationId),
+        USAGE_METRIC.WHATSAPP_MESSAGES,
+      );
+    }
 
     return {
       doc: result,

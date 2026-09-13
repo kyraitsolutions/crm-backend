@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose from "mongoose";
 import { ROLES } from "../config/permissions.js";
 import { DASHBOARD_URL_PATH } from "../constants/path.js";
@@ -10,6 +11,7 @@ import { ConfigBootstrapService } from "./configBootstrap.service.js";
 import { EmailService } from "./email.service.js";
 import { OrganizationService } from "./organization.service.js";
 import { RbacService } from "./rbac.service.js";
+import { SubscriptionService } from "./subscription.service.js";
 import { UserService } from "./user.service.js";
 import { UserProfileService } from "./userprofile.service.js";
 import { TApiResponse } from "../types/api-response.type.js";
@@ -23,6 +25,7 @@ export class OrganizationOnboardingService {
     private rbacService: RbacService,
     private configBootstrapService: ConfigBootstrapService,
     private emailService: EmailService,
+    private subscriptionService: SubscriptionService,
   ) {}
 
   async createOrganization(
@@ -36,10 +39,15 @@ export class OrganizationOnboardingService {
       const organizationExists =
         await this.organizationService.isOrganizationExists(data.createdBy);
 
-      if (organizationExists) throw new Error("Organization already exists");
+      if (organizationExists) throw HttpError.conflict("Organization already exists");
 
       // create organization
       const organization = await this.organizationService.create(data, session);
+
+      await this.subscriptionService.createTrialForOrganization(
+        String(organization?.id),
+        session,
+      );
 
       // create default roles
       const roles = await this.rbacService.createDefaultRolesAndPermissions(

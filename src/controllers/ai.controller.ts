@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { AiService } from "../services/ai.service.js";
 
@@ -18,10 +19,10 @@ export class AIController {
       );
 
       httpResponse(req, res, 200, "Lead summary fetched successfully", {
-        data: leadSummary,
+        doc: leadSummary,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("AIController", error, next, req);
     }
   };
 
@@ -31,7 +32,6 @@ export class AIController {
     next: NextFunction,
   ) => {
     try {
-      console.log(req.body);
       const { accountId } = req.params;
       const { aiPrompt } = req.body;
       const templateContent = await this.aiService.createTemplateContent(
@@ -39,11 +39,11 @@ export class AIController {
         aiPrompt,
       );
 
-      httpResponse(req, res, 200, "Tempalte content created successfylly", {
-        data: templateContent,
+      httpResponse(req, res, 200, "Template content created successfully", {
+        doc: templateContent,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("AIController", error, next, req);
     }
   };
 }

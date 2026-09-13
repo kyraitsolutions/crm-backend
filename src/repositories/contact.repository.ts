@@ -1,5 +1,6 @@
 import { ContactModel } from "../models/contact.model.js";
 import { TContact, TCreateContact } from "../types/contact.type.js";
+import { phoneMatchValues } from "../utils/phone.util.js";
 
 export class ContactRepository {
   async getContacts(criteria: any, skip: number,limit?: number, sort?: Record<string, 1 | -1> ): Promise<any> {
@@ -17,14 +18,15 @@ export class ContactRepository {
     email?: string | null,
     phone?: string | null
   ) {
-    const conditions = [];
+    const conditions: Record<string, unknown>[] = [];
 
     if (email) {
       conditions.push({ email });
     }
 
-    if (phone) {
-      conditions.push({ phone });
+    const phones = phoneMatchValues(phone);
+    if (phones.length) {
+      conditions.push({ phone: { $in: phones } });
     }
 
     if (!conditions.length) {
@@ -34,8 +36,20 @@ export class ContactRepository {
     return await ContactModel.findOne({
       accountId,
       $or: conditions,
-    });
+    }).lean();
   }
+
+  async updateContactById(
+    contactId: string,
+    payload: Record<string, unknown>,
+  ): Promise<TContact | null> {
+    return (await ContactModel.findByIdAndUpdate(
+      contactId,
+      { $set: payload },
+      { new: true },
+    )) as unknown as TContact | null;
+  }
+
   async createContact(payload: TCreateContact): Promise<TContact|{}> {
     return await ContactModel.create(payload);
   }

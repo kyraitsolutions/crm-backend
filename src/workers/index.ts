@@ -7,6 +7,10 @@ async function start() {
 
   // Register all workers
   await import("./whatsapp/index.js");
+  const { startSubscriptionLifecycleWorker } = await import(
+    "./subscription.worker.js"
+  );
+  startSubscriptionLifecycleWorker();
   startWorker();
 }
 

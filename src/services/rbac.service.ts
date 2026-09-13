@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import mongoose, { ClientSession } from "mongoose";
 import { RoleResponseDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
 import { RbacRepository } from "../repositories/rbac.repository.js";
@@ -10,8 +11,10 @@ import {
   TApiResponse,
   TPaginatedResponse,
 } from "../types/api-response.type.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class RbacService {
+  private activityLogService = new ActivityLogService();
   constructor(private rbacRepo: RbacRepository) {}
 
   // ROLES RELATED METHODS
@@ -93,7 +96,7 @@ export class RbacService {
         roleName,
       );
 
-      if (isRoleNameExists) throw new Error("Role name already exists");
+      if (isRoleNameExists) throw HttpError.conflict("Role name already exists");
 
       // 1️⃣ Create Role
       const [role] = await this.rbacRepo.createRoles(
@@ -113,7 +116,7 @@ export class RbacService {
         await this.rbacRepo.getPermissionsByKeys(permissions);
 
       if (permissionDocs.length !== permissions.length) {
-        throw new Error("Invalid permissions");
+        throw HttpError.badRequest("Invalid permissions");
       }
 
       // 3️⃣ Create RolePermissions
@@ -125,6 +128,14 @@ export class RbacService {
       await this.rbacRepo.createRolePermissions(rolePermissions, session);
 
       await session.commitTransaction();
+
+      await this.activityLogService.logCreate({
+        organizationId,
+        entityType: "role",
+        entityId: String(role._id),
+        actor: { type: "user", name: "" },
+        metadata: { roleName: role.name, permissions },
+      });
 
       return {
         doc: {
@@ -191,7 +202,7 @@ export class RbacService {
         );
 
         if (existingRole && existingRole.id !== roleId) {
-          throw new Error("Role name already exists");
+          throw HttpError.conflict("Role name already exists");
         }
 
         await this.rbacRepo.updateRoleById(
@@ -204,13 +215,13 @@ export class RbacService {
       // 2️⃣ Update permissions (if provided)
       if (permissions) {
         // get permission docs
-        if (!permissions.length) throw new Error("Invalid permissions");
+        if (!permissions.length) throw HttpError.badRequest("Invalid permissions");
 
         const permissionDocs =
           await this.rbacRepo.getPermissionsByKeys(permissions);
 
         if (permissionDocs.length !== permissions.length) {
-          throw new Error("Invalid permissions");
+          throw HttpError.badRequest("Invalid permissions");
         }
 
         await this.rbacRepo.deleteRolePermissions(roleId, session);
@@ -224,6 +235,15 @@ export class RbacService {
       }
 
       await session.commitTransaction();
+      await this.activityLogService.logUpdate({
+        oldDoc: { name: undefined, permissions: undefined },
+        newDoc: { name, permissions },
+        organizationId,
+        entityType: "role",
+        entityId: roleId,
+        actor: { type: "user", name: "" },
+        metadata: { roleName: name },
+      });
       return {
         doc: {
           id: roleId,
@@ -244,13 +264,22 @@ export class RbacService {
       session.startTransaction();
 
       const role = await this.rbacRepo.getRoleById(roleId);
-      if (!role) throw new Error("Role not found");
+      if (!role) throw HttpError.notFound("Role not found");
 
       const deletedRole = await this.rbacRepo.deleteRoleById(roleId, session);
       await this.rbacRepo.deleteRolePermissions(roleId, session);
 
       console.log(deletedRole);
       await session.commitTransaction();
+
+      await this.activityLogService.logDelete({
+        organizationId: String((role as any)?.organizationId || ""),
+        entityType: "role",
+        entityId: roleId,
+        actor: { type: "user", name: "" },
+        metadata: { roleName: (role as any)?.name },
+        deletedData: { name: (role as any)?.name },
+      });
 
       return {
         doc: {
@@ -267,7 +296,7 @@ export class RbacService {
     roleId: string,
   ): Promise<TPaginatedResponse<string>> {
     const role = await this.rbacRepo.getRoleById(roleId);
-    if (!role) throw new Error("Role not found");
+    if (!role) throw HttpError.notFound("Role not found");
 
     const permissions = await this.rbacRepo.getPermissionsByRole(roleId);
 

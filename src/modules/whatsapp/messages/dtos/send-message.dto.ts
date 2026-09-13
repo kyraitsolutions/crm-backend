@@ -11,6 +11,11 @@ export class SendMessageDto {
   file!: Express.Multer.File | null;
   text!: any;
   image!: any;
+  template?: {
+    name: string;
+    language?: { code: string };
+    components?: unknown[];
+  };
 
   constructor(data: Partial<SendMessageDto>) {
     // this.to = data.to;

@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import redisClient from "../config/redis.js";
 import { ENV } from "../constants/env.constants.js";
 import { OTPUtil } from "../utils/otp.util.js";
@@ -31,13 +32,13 @@ export class OTPService {
         // const storedHash = "jhg";
 
         if (!storedHash) {
-            throw new Error("OTP expired or not requested. Please request a new one.")
+            throw HttpError.badRequest("OTP expired or not requested. Please request a new one.")
         }
         const attempts = await redisClient.incrementRateLimit(attemptsKey, Number(ENV.AUTH.OTP_TTL_SECONDS) * 1000)
 
         if (attempts > Number(ENV.AUTH.MAX_ATTEMPTS)) {
             await redisClient.del(key);
-            throw new Error("Too many attempts. Please request a new code.");
+            throw HttpError.badRequest("Too many attempts. Please request a new code.");
         }
         // fetch hashed otp from radis match and check all the condition and delete key later once success
         const submittedHashOtp = await OTPUtil.hashOTP(submittedOtp);

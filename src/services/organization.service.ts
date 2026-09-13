@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { ClientSession } from "mongoose";
 import {
   CreateOrganizationDto,
@@ -7,8 +8,10 @@ import {
 import { OrganizationRepository } from "../repositories/organization.repository.js";
 import { TOrganizationMember } from "../types/organization.type.js";
 import { TeamRepository } from "../repositories/team.repository.js";
+import { ActivityLogService } from "./activityLog.service.js";
 
 export class OrganizationService {
+  private activityLogService = new ActivityLogService();
   constructor(
     private organizationRepository: OrganizationRepository,
     private teamRepository: TeamRepository,
@@ -33,6 +36,7 @@ export class OrganizationService {
     data: CreateOrganizationDto,
     session?: ClientSession,
   ): Promise<OrganizationResponseDto | null> {
+    const previous = await this.organizationRepository.findById(orgId);
     const organization = await this.organizationRepository.update(
       orgId,
       data,
@@ -40,6 +44,16 @@ export class OrganizationService {
     );
 
     console.log("Org Data",organization)
+
+    await this.activityLogService.logUpdate({
+      oldDoc: previous,
+      newDoc: organization,
+      organizationId: orgId,
+      entityType: "organization",
+      entityId: orgId,
+      actor: { type: "user", name: "" },
+      metadata: { name: (organization as any)?.name },
+    });
 
     return organization ? organization : null;
   }
@@ -49,7 +63,7 @@ export class OrganizationService {
   ): Promise<{ doc: OrganizationResponseDto }> {
     const organization = await this.organizationRepository.findById(id);
 
-    if (!organization) throw new Error("Organization not found");
+    if (!organization) throw HttpError.notFound("Organization not found");
 
     return {
       doc: new OrganizationResponseDto(organization),

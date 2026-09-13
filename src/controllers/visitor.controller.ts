@@ -1,6 +1,7 @@
 // controllers/visitor.controller.ts
 
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { visitorService } from "../container.js";
 import { InitVisitorDto } from "../dtos/visitor.dto.js";
 import httpResponse from "../utils/http.response.js";
@@ -19,7 +20,7 @@ export class VisitorController {
         doc: result,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("VisitorController", error, next, req);
     }
   }
 }

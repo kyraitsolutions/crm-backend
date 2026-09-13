@@ -41,8 +41,23 @@ export class UserAggregateService {
       }
     }
 
-    subscription =
+    const orgId =
+      (organization as any)?.id ||
+      (organization as any)?._id ||
+      (typeof organization === "string" ? organization : null);
+
+    const userSubscription =
       await this.subscriptionService.getCurrentSubscription(userId);
+
+    if (orgId) {
+      try {
+        subscription = await this.subscriptionService.getSnapshot(String(orgId));
+      } catch {
+        subscription = userSubscription;
+      }
+    } else {
+      subscription = userSubscription;
+    }
 
     return {
       doc: {

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { contactService } from "../container.js";
 
@@ -40,7 +41,7 @@ export class ContactController {
         },
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ContactController", error, next, req);
     }
   };
 
@@ -61,7 +62,7 @@ export class ContactController {
         skip: 0,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ContactController", error, next, req);
     }
   };
 }

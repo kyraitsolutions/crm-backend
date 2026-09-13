@@ -1,7 +1,7 @@
 import { BuildAudioPayload } from "../builders/whatsapp/buildAudioPayload.js";
 import { BuildDocumentPayload } from "../builders/whatsapp/buildDocumentPayload.js";
 import { BuildImagePayload } from "../builders/whatsapp/buildImagePayload.js";
-import { BuildTemplatePayload } from "../builders/whatsapp/BuildTemplatePayload.js";
+import { BuildTemplatePayload } from "../builders/whatsapp/buildTemplatePayload.js";
 import { BuildTextPayload } from "../builders/whatsapp/buildTextPayload.js";
 import { BuildVideoPayload } from "../builders/whatsapp/buildVideoPayload.js";
 

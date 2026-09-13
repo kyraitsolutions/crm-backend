@@ -1,4 +1,11 @@
 import { Request, Response } from "express";
+
+export const buildRequestMeta = (request: Request) => ({
+  method: request.method,
+  baseUrl: request.host,
+  endpoint: request.originalUrl || request.url,
+});
+
 export default (
   request: Request,
   response: Response,
@@ -8,13 +15,9 @@ export default (
 ) => {
   const responseData = {
     success: true,
-    responseStatusCode: responseStatusCode,
-    responseMessage: responseMessage,
-    request: {
-      method: request.method,
-      baseUrl: request.host,
-      endpoint: request.url,
-    },
+    responseStatusCode,
+    responseMessage,
+    request: buildRequestMeta(request),
     result,
   };
 

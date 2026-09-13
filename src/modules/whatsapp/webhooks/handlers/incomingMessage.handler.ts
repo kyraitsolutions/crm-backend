@@ -5,6 +5,8 @@ import {
 } from "../../../../models/integration.model.js";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
+import { ContactService } from "../../../../services/contact.service.js";
+import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
 
@@ -12,15 +14,18 @@ export class IncomingMessageHandler {
   private conservationService = new ConversationService();
   private messageService = new MessageService();
   private integrationService = new IntegrationService();
+  private contactService = new ContactService(new ContactRepository());
 
   constructor() {
     this.conservationService = new ConversationService();
     this.messageService = new MessageService();
     this.integrationService = new IntegrationService();
+    this.contactService = new ContactService(new ContactRepository());
   }
   async handle(value: any) {
     const messages = value.messages ?? [];
     const { phone_number_id } = value?.metadata ?? {};
+    const waContacts = value.contacts ?? [];
 
     for (const message of messages) {
       try {
@@ -28,7 +33,6 @@ export class IncomingMessageHandler {
           message,
         });
 
-        // 1. Find Integration
         const integration =
           await this.integrationService.getIntegrationByFilter({
             provider: IntegrationProvider.WHATSAPP,
@@ -37,12 +41,13 @@ export class IncomingMessageHandler {
           });
 
         if (!integration) {
-          throw new Error(
-            `WhatsApp Integration not found for ${phone_number_id}`,
-          );
+          throw new Error("WhatsApp integration not found.");
         }
 
-        // 1. Find/create conversation
+        const waContactName =
+          waContacts.find((contact: any) => contact?.wa_id === message.from)
+            ?.profile?.name || "";
+
         const conversation =
           await this.conservationService.getOrCreateConversation({
             filter: {
@@ -59,7 +64,14 @@ export class IncomingMessageHandler {
             },
           });
 
-        // 2. Build DB document
+        await this.contactService.upsertFromLead({
+          accountId: String(integration.accountId),
+          name: waContactName,
+          phone: message.from,
+          source: "whatsapp",
+        });
+
+        // // 2. Build DB document
         const messageDocument = {
           accountId: new Types.ObjectId(integration.accountId),
           conversationId: new Types.ObjectId(conversation.id),
@@ -69,6 +81,26 @@ export class IncomingMessageHandler {
 
         // 3. Save to MongoDB
         await this.messageService.saveMessage(messageDocument);
+
+        const inboundText = parsedMessage
+          ? parsedMessage.searchText ||
+            ("body" in parsedMessage ? parsedMessage.body?.text : "") ||
+            ""
+          : "";
+        if (inboundText) {
+          const { whatsappBroadcastService } =
+            await import("../../broadcast/services/whatsapp-broadcast.service.js");
+          await whatsappBroadcastService.markReply(
+            String(integration.accountId),
+            message.from,
+          );
+          await whatsappBroadcastService.handleInboundText({
+            accountId: String(integration.accountId),
+            organizationId: String(integration.organizationId || ""),
+            phone: message.from,
+            text: inboundText,
+          });
+        }
       } catch (error) {
         console.log("error", error);
         throw error;

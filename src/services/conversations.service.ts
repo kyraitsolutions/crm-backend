@@ -1,30 +1,26 @@
 // services/conversation.service.ts
 
 import mongoose, { FilterQuery } from "mongoose";
-import { emitToOrganization } from "../config/wsServer/wsEmitter.js";
 import { InitConversationDto } from "../dtos/conversation.dot.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { ConversationRepository } from "../repositories/conversations.repository.js";
-import { NotificationRepository } from "../repositories/notification.repository.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
 import {
   TConversationQuery,
-  // TQueryParams
 } from "../types/api-response.type.js";
 import { TConversation } from "../types/conversation.type.js";
 import { MessageRepository } from "../repositories/messages.repository.js";
 import { buildSearchPreview } from "../utils/buildSearchPreview.js";
+import { notificationService } from "../container.js";
 
 export class ConversationService {
   private repository: ConversationRepository;
   private accountRepository: AccountRepository;
-  private notificationRepository: NotificationRepository;
   private messageRepository: MessageRepository;
 
   constructor() {
     this.repository = new ConversationRepository();
     this.accountRepository = new AccountRepository();
-    this.notificationRepository = new NotificationRepository();
     this.messageRepository = new MessageRepository();
   }
 
@@ -62,34 +58,14 @@ export class ConversationService {
         if (!account) return null;
 
         const notificationPayload = {
-          organizationId: account.organizationId,
-          title: `Customer initiated a new chat on ${payload.platform}`,
-          description: "",
+          organizationId: String(account.organizationId),
           accountId: payload.accountId,
-          typeId: String(conversation?.id) || "",
-          type: "message" as const,
-          channelType: payload.platform as
-            | "chatbot"
-            | "instagram"
-            | "facebook"
-            | "whatsapp",
-          meta: payload,
+          conversationId: String(conversation?.id || ""),
+          platform: payload.platform,
+          isNew: true,
         };
 
-        const notification =
-          await this.notificationRepository.findByTypeIdAndUpdate(
-            notificationPayload,
-            session,
-          );
-
-        emitToOrganization({
-          organizationId: account.organizationId,
-          accountId: payload.accountId,
-          event: "NEW_NOTIFICATION",
-          data: {
-            notification,
-          },
-        });
+        await notificationService.notifyConversation(notificationPayload);
 
         await session.commitTransaction();
       }
@@ -229,6 +205,21 @@ export class ConversationService {
     }
 
     conversation = await this.repository.createConversation(create);
+    const accountId = String(create.accountId || filter.accountId || "");
+    if (accountId && conversation) {
+      const account = await this.accountRepository.findOne(accountId);
+      if (account?.organizationId) {
+        await notificationService.notifyConversation({
+          organizationId: String(account.organizationId),
+          accountId,
+          conversationId: String((conversation as any).id || (conversation as any)._id),
+          platform: String(create.platform || filter.platform || "whatsapp"),
+          isNew: true,
+          phone: (create as any)?.contact?.phoneNumber || filter?.["contact.phoneNumber"],
+          contactName: (create as any)?.contact?.name,
+        });
+      }
+    }
 
     return conversation;
   }

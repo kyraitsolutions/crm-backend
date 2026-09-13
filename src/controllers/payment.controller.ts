@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 // import { PaymentService } from "../services/payment.service.js";
 import { razorpay } from "../config/razorpay.js";
@@ -41,7 +42,7 @@ export class PaymentController {
       });
     } catch (error) {
       console.error("RAZORPAY ERROR:", error);
-      next(error);
+      handleRouteError("PaymentController", error, next, req);
     }
   };
 }

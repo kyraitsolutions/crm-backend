@@ -49,7 +49,7 @@ export class WhatsappTemplateRepository {
         .skip(skip)
         .limit(limit),
 
-      WhatsappTemplateModel.countDocuments(),
+      WhatsappTemplateModel.countDocuments(filter),
     ]);
 
     if (!docs) return { docs: [], total: 0, page: 0 };

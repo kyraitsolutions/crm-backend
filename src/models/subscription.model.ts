@@ -1,66 +1,74 @@
 import { Document, Schema, model } from "mongoose";
 
-export type PlanName = "free" | "gold" | "platinum" | "payg";
+export type PlanName = string;
 
 export interface PlanDocument extends Document {
-  name: PlanName;
-
-  price: number;
+  code: string;
+  name: string;
+  description: string;
+  featured: boolean;
+  isActive: boolean;
+  isPublic: boolean;
+  isTrial: boolean;
+  trialDays: number;
+  currency: string;
+  price: { monthly: number; annually: number };
+  period: string;
   durationDays: number;
-  desmoncription: string;
   button: string;
-
   maxAccounts: number;
   maxChatbots: number;
   maxWebforms: number;
-
   features: string[];
   addons: string[];
-
+  featureMap: Record<string, boolean>;
+  limits: Record<string, number>;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export type SubscriptionStatus = "active" | "expired";
+export type UserSubscriptionStatus = "active" | "expired";
 
 export interface UserSubscriptionDocument extends Document {
   userId: Schema.Types.ObjectId;
   planId: Schema.Types.ObjectId;
-
-  status: SubscriptionStatus;
-
+  status: UserSubscriptionStatus;
   startedAt: Date;
   expiresAt: Date;
-
   credits: number;
-
   createdAt: Date;
   updatedAt: Date;
 }
+
 const planSchema = new Schema(
   {
+    code: { type: String, unique: true, sparse: true, index: true },
     name: {
       type: String,
-      enum: ["free", "gold", "platinum", "payg"],
-      default: "free",
       required: true,
       unique: true,
     },
     maxAccounts: { type: Number, default: 1 },
     maxChatbots: { type: Number, default: 1 },
     maxWebforms: { type: Number, default: 1 },
-
     description: { type: String, default: "" },
     featured: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
+    isPublic: { type: Boolean, default: true },
+    isTrial: { type: Boolean, default: false },
+    trialDays: { type: Number, default: 0 },
+    currency: { type: String, default: "INR" },
     price: {
       monthly: { type: Number, default: 0 },
       annually: { type: Number, default: 0 },
-    }, // ₹ or $
-    period: { type: String, default: "month" }, // or "year"
-    durationDays: { type: Number, default: 30 }, // plan validity
+    },
+    period: { type: String, default: "month" },
+    durationDays: { type: Number, default: 30 },
     button: { type: String },
     features: [{ type: String }],
     addons: [{ type: String }],
+    featureMap: { type: Schema.Types.Mixed, default: {} },
+    limits: { type: Schema.Types.Mixed, default: {} },
   },
   {
     timestamps: true,
@@ -74,7 +82,6 @@ const planSchema = new Schema(
   },
 );
 
-
 const userSubscriptionSchema = new Schema(
   {
     userId: {
@@ -82,24 +89,18 @@ const userSubscriptionSchema = new Schema(
       ref: "User",
       required: true,
     },
-
     planId: {
       type: Schema.Types.ObjectId,
       ref: "Plan",
       required: true,
     },
-
     status: {
       type: String,
       enum: ["active", "expired"],
       default: "active",
     },
-
     startedAt: { type: Date, default: Date.now },
-
     expiresAt: { type: Date, required: true },
-
-    // For Pay-as-you-go
     credits: { type: Number, default: 0 },
   },
   {

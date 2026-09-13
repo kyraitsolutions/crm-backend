@@ -9,16 +9,25 @@ const emailQueue = new Queue("email processing", {
       config.redis.host ||
       "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
     port: parseInt(process.env.REDIS_PORT || "14482"),
-    password: process.env.REDIS_PASS || "", // this must be correct
+    password: process.env.REDIS_PASS || "",
   },
   defaultJobOptions: {
     removeOnComplete: 10,
     removeOnFail: 5,
-    attempts: 3,
+    attempts: 5,
     backoff: {
       type: "exponential",
       delay: 2000,
     },
+    timeout: 15 * 60 * 1000,
+  },
+  settings: {
+    // Campaign prepare/send can outlive Bull's 30s default lock, especially
+    // when tsx watch restarts the worker or SES sends with a delay between emails.
+    lockDuration: 15 * 60 * 1000,
+    lockRenewTime: 30 * 1000,
+    stalledInterval: 30 * 1000,
+    maxStalledCount: 10,
   },
 });
 
@@ -74,8 +83,8 @@ emailQueue.on("completed", (job) => {
   logger.info(`Email job ${job.id} completed`);
 });
 
-emailQueue.on("failed", (job, err) => {
-  logger.error(`Email job ${job.id} failed:`, err);
+emailQueue.on("stalled", (job) => {
+  logger.warn(`Email job ${job.id} stalled and will be retried`);
 });
 
 // notificationQueue.on('completed', (job) => {

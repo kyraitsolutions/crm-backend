@@ -14,12 +14,19 @@ export interface Contact {
   // Consent & compliance
   consent: {
     marketing: boolean;
-    source?: "chatbot" |"website"| "webform" | "manual" | "google_ads" | "import"|"instagram"|"whatsapp"|"facebook";
+    source?: "chatbot" |"website"| "webform" | "manual" | "google_ads" | "import"|"instagram"|"whatsapp"|"facebook"|"webhook";
     timestamp?: Date;
   };
 
+  whatsapp: {
+    optIn: boolean;
+    optedInAt?: Date;
+    optedOutAt?: Date;
+    source?: string;
+  };
+
   // Metadata
-  source: "chatbot" | "website"|"webform" | "google_ads" | "manual" | "import" |"instagram"|"whatsapp"|"facebook";
+  source: "chatbot" | "website"|"webform" | "google_ads" | "manual" | "import" |"instagram"|"whatsapp"|"facebook"|"webhook";
 
   // Segmentation
   tags: string[];
@@ -58,14 +65,43 @@ const contactSchema = new Schema<Contact>(
       marketing: { type: Boolean, default: false },
       source: {
         type: String,
-        enum: ["chatbot", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook"],
+        enum: [
+          "chatbot",
+          "website",
+          "webform",
+          "google_ads",
+          "manual",
+          "import",
+          "instagram",
+          "whatsapp",
+          "facebook",
+          "webhook",
+        ],
       },
       timestamp: Date,
     },
 
+    whatsapp: {
+      optIn: { type: Boolean, default: true, index: true },
+      optedInAt: Date,
+      optedOutAt: Date,
+      source: { type: String, default: "" },
+    },
+
     source: {
       type: String,
-      enum: ["chatbot", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook"],
+      enum: [
+        "chatbot",
+        "website",
+        "webform",
+        "google_ads",
+        "manual",
+        "import",
+        "instagram",
+        "whatsapp",
+        "facebook",
+        "webhook",
+      ],
     },
 
     tags: [{ type: String }],
@@ -88,7 +124,18 @@ contactSchema.index(
   { accountId: 1, email: 1 },
   {
     unique: true,
+    sparse: true,
+    name: "uniq_account_email",
     collation: { locale: "en", strength: 2 },
+  },
+);
+
+contactSchema.index(
+  { accountId: 1, phone: 1 },
+  {
+    unique: true,
+    sparse: true,
+    name: "uniq_account_phone",
   },
 );
 

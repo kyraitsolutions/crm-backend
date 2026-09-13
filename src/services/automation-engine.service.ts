@@ -13,6 +13,8 @@ export class AutomationEngine {
       event.trigger,
     );
 
+
+    console.log("Automations found for trigger", automations);
     for (const automation of automations) {
       const matched = this.conditionEvaluator.evaluate(
         automation.conditions,
@@ -20,6 +22,7 @@ export class AutomationEngine {
       );
 
       if (!matched) {
+        console.log("Condition not matched for automation", automation._id);
         continue;
       }
 

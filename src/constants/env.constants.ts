@@ -62,6 +62,7 @@ export const ENV = {
   URL: {
     BACKEND_URL: process.env.BACKEND_URL!,
     FRONTEND_URL: process.env.FRONTEND_URL!,
+    EMAIL_TRACKING_BASE_URL: process.env.EMAIL_TRACKING_BASE_URL,
   },
 
   META: {
@@ -102,5 +103,6 @@ export const ENV = {
   RAZORPAY: {
     KEY_ID: process.env.RAZORPAY_KEY_ID!,
     KEY_SECRET: process.env.RAZORPAY_KEY_SECRET!,
+    WEBHOOK_SECRET: process.env.RAZORPAY_WEBHOOK_SECRET || process.env.RAZORPAY_KEY_SECRET!,
   },
 };

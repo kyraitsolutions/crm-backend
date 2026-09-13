@@ -1,3 +1,4 @@
+import { HttpError } from "../utils/http.error.js";
 import { ClientSession } from "mongoose";
 
 import { ConfigurationItemDto } from "../dtos/configuration.dto.js";
@@ -49,7 +50,7 @@ export class ConfigBootstrapService {
     const config = await this.configRepository.findById(configId);
 
     if (!config) {
-      throw new Error("Configuration not found");
+      throw HttpError.notFound("Configuration not found");
     }
 
     const labelExists = config.values.some(
@@ -57,13 +58,13 @@ export class ConfigBootstrapService {
     );
 
     if (labelExists) {
-      throw new Error("Status label already exists");
+      throw HttpError.conflict("Status label already exists");
     }
 
     const keyExists = config.values.some((item) => item.key === dto.key);
 
     if (keyExists) {
-      throw new Error("Status key already exists");
+      throw HttpError.conflict("Status key already exists");
     }
 
     if (!dto?.key) {
@@ -86,7 +87,7 @@ export class ConfigBootstrapService {
     const config = await this.configRepository.findById(configId);
 
     if (!config) {
-      throw new Error("Configuration not found");
+      throw HttpError.notFound("Configuration not found");
     }
 
     const item = config.values.find(
@@ -94,11 +95,11 @@ export class ConfigBootstrapService {
     );
 
     if (!item) {
-      throw new Error("Configuration item not found");
+      throw HttpError.notFound("Configuration item not found");
     }
 
     if (dto?.key && item?.key !== dto?.key) {
-      throw new Error("Cannot update key configuration");
+      throw HttpError.forbidden("Cannot update key configuration");
     }
 
     const updatedConfig = this.configRepository.updateItem(

@@ -4,18 +4,17 @@ import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
 import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
-import { EmailService } from "../services/email.service.js";
-import { AccountModel } from "../models/accounts.model.js";
 import { getMetaData } from "../utils/request-meta.utils.js";
 import { LeadDto } from "../dtos/lead.dto.js";
+import { handleRouteError } from "../utils/asyncHandler.js";
+import { buildRequestContext } from "../utils/request-context.utils.js";
+import { buildPagination } from "../utils/paginationBuilder.js";
 
 export class LeadController {
   private leadService: LeadService;
-  private emailService: EmailService;
 
   constructor() {
     this.leadService = new LeadService();
-    this.emailService = new EmailService();
   }
 
   getLeads = async (
@@ -24,15 +23,12 @@ export class LeadController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const user = req.user as any;
+      const user = req.user as { id: string };
       const { accountId } = req.params;
-
       const payload = req.body;
-
-      const limit = req.body.limit ? Number(req.body.limit) : 10;
-
-      const page = Math.max(Number(payload.page), 1);
-      const skip = (Math.max(Number(page), 1) - 1) * limit;
+      const limit = payload.limit ? Number(payload.limit) : 10;
+      const page = Math.max(Number(payload.page) || 1, 1);
+      const skip = (page - 1) * limit;
 
       const [leads, totalDocs] = await this.leadService.getLeads(
         user.id,
@@ -41,24 +37,20 @@ export class LeadController {
         skip,
       );
 
-      const totalPages = Math.ceil(totalDocs / limit) || 1;
-
-      // console.log(leads,totalDocs)
-
       httpResponse(req, res, 200, "Leads fetched successfully", {
         docs: leads,
         pagination: {
-          page,
-          limit,
+          ...buildPagination({
+            page,
+            limit,
+            totalDocs,
+            docsCount: Array.isArray(leads) ? leads.length : 0,
+          }),
           skip,
-          totalDocs: totalDocs,
-          totalPages: totalPages,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1,
         },
       });
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.getLeads", error, next, req);
     }
   };
 
@@ -71,33 +63,28 @@ export class LeadController {
         doc: lead,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.getLead", error, next, req);
     }
   };
 
   createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // const { accountId } = req.params;
+      const { accountId } = req.params;
       const { leads, uniqueKey, mode } = req.body;
+      const context = buildRequestContext(req, accountId);
 
-      console.log("BODY:", JSON.stringify(req.body).slice(0, 500));
-      console.log(leads,uniqueKey,mode)
-      // const context = {
-      //   accountId: String(accountId),
-      //   organizationId: String(req?.user?.organizationId),
-      //   userId: String(req?.user?.organizationId),
-      //   userName: String(req?.user?.name),
-      // };
+      const result = await this.leadService.createBulkLead(
+        context,
+        leads,
+        uniqueKey,
+        mode,
+      );
 
-      // const lead = await this.leadService.createBulkLead(
-      //   context,
-      //   leads,
-      //   uniqueKey,
-      //   mode,
-      // );
-      httpResponse(req, res, 200, "Lead create successfully", "");
+      httpResponse(req, res, 200, "Leads created successfully", {
+        doc: result,
+      });
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.createBulkLead", error, next, req);
     }
   };
 
@@ -105,7 +92,6 @@ export class LeadController {
     try {
       const { accountId } = req.params;
       const meta = await getMetaData(req);
-
       const leadData = req.body;
       const leadDto = new LeadDto(leadData);
 
@@ -128,20 +114,13 @@ export class LeadController {
         },
       };
 
-      const context = {
-        accountId: String(accountId),
-        organizationId: String(req?.user?.organizationId),
-        userId: String(req?.user?.organizationId),
-        userName: String(req?.user?.name),
-      };
-
       const result = await this.leadService.createLead(
-        context,
+        buildRequestContext(req, accountId),
         leadDataPayload,
       );
-      httpResponse(req, res, 200, "Lead create successfully", result);
+      httpResponse(req, res, 200, "Lead created successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.createLead", error, next, req);
     }
   };
 
@@ -151,24 +130,9 @@ export class LeadController {
     data: any,
   ) => {
     try {
-      const lead = await this.leadService.createLeadWs(data);
-
-      wss.clients.forEach((client) => {
-        if (client.readyState === ws.OPEN && ws.accountId === data?.accountId) {
-          client.send(
-            JSON.stringify({
-              event: WEBSOCKET_EVENTS["Chatbot Lead Created"],
-              data: {
-                lead: {
-                  ...lead.toObject(),
-                },
-              },
-            }),
-          );
-        }
-      });
+      await this.leadService.createLeadWs(data);
     } catch (error) {
-      if (error) {
+      handleRouteError("LeadController.createLeadWs", error, () => {
         wss.clients.forEach((client) => {
           if (client.readyState === ws.OPEN) {
             client.send(
@@ -179,7 +143,7 @@ export class LeadController {
             );
           }
         });
-      }
+      });
     }
     return null;
   };
@@ -187,21 +151,15 @@ export class LeadController {
   updateLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { accountId, leadId } = req.params;
-      const leadData = req.body;
-
-      const currentUser = {
-        ...req.user,
-      };
-
       const result = await this.leadService.updateLead(
         accountId,
         leadId,
-        leadData,
-        currentUser,
+        req.body,
+        req.user,
       );
       httpResponse(req, res, 200, "Lead updated successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.updateLead", error, next, req);
     }
   };
 
@@ -212,25 +170,7 @@ export class LeadController {
   ) => {
     try {
       const lead = await this.leadService.updateLeadWs(data);
-
-      if (lead?.name && lead.phone && lead.email) {
-        const account = await AccountModel.findOne({
-          _id: lead.accountId,
-        });
-
-        const leadPayload = {
-          ...lead,
-          accountName: account?.accountName,
-          supportEmail: account?.email,
-        };
-
-        console.log("leadPayload", leadPayload);
-
-        this.emailService.queueLeadAcknowledgementEmail(
-          leadPayload?.email as string,
-          leadPayload,
-        );
-      }
+      await this.leadService.notifyLeadUpdated(lead);
 
       wss.clients.forEach((client) => {
         if (client.readyState === ws.OPEN) {
@@ -247,7 +187,7 @@ export class LeadController {
         }
       });
     } catch (error) {
-      if (error) {
+      handleRouteError("LeadController.updateLeadWs", error, () => {
         wss.clients.forEach((client) => {
           if (client.readyState === ws.OPEN) {
             client.send(
@@ -258,7 +198,7 @@ export class LeadController {
             );
           }
         });
-      }
+      });
     }
     return null;
   };
@@ -272,10 +212,10 @@ export class LeadController {
       );
 
       httpResponse(req, res, 200, "Lead summary fetched successfully", {
-        data: leadSummary,
+        doc: leadSummary,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("LeadController.getLeadSummary", error, next, req);
     }
   };
 }

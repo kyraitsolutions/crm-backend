@@ -538,10 +538,6 @@ export default class AnalyticsRepository {
       status: "open",
     };
 
-    // if (module && module !== "overview") {
-    //   query["source.name"] = module;
-    // }
-
     const pipeline: PipelineStage[] = [
       {
         $match: query,

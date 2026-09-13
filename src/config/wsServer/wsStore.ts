@@ -8,10 +8,4 @@ export const setWssInstance = (wss: WebSocketServer) => {
   wssInstance = wss;
 };
 
-export const getWssInstance = () => {
-  if (!wssInstance) {
-    throw new Error("WebSocket server not initialized");
-  }
-
-  return wssInstance;
-};
+export const getWssInstance = () => wssInstance;

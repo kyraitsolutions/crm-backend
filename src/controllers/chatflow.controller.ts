@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { chatflowService } from "../container.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateChatFlowDto } from "../dtos/chatflow.dto.js";
@@ -35,7 +36,7 @@ export class ChatFlowController {
         },
       );
     } catch (error) {
-      next(error);
+      handleRouteError("ChatFlowController", error, next, req);
       return;
     }
   }
@@ -59,7 +60,7 @@ export class ChatFlowController {
 
       httpResponse(req, res, 200, "Chat flow fetched successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("ChatFlowController", error, next, req);
     }
   }
 
@@ -77,7 +78,7 @@ export class ChatFlowController {
         doc: chatbotFlow,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatFlowController", error, next, req);
     }
   }
 
@@ -98,7 +99,7 @@ export class ChatFlowController {
         doc: chatbotFlow,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatFlowController", error, next, req);
     }
   }
 
@@ -112,7 +113,7 @@ export class ChatFlowController {
         doc: chatbotFlow,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatFlowController", error, next, req);
     }
   }
 }

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { ChatBotService } from "../services/chat-bot.service.js";
 import { CreateChatBotDto, ResponseChatBotDto } from "../dtos/index.js";
 import httpResponse from "../utils/http.response.js";
@@ -27,7 +28,7 @@ export class ChatBotController {
         count: chatbots.length,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -47,7 +48,7 @@ export class ChatBotController {
         docs: chatbot,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -63,7 +64,7 @@ export class ChatBotController {
       const result = await this.chatBotService.getChatBots(accountId, query);
       httpResponse(req, res, 200, "Chatbot fetched successfully", result);
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -80,7 +81,7 @@ export class ChatBotController {
         docs: chatBot,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -97,7 +98,7 @@ export class ChatBotController {
         doc: chatbotFlow,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -114,7 +115,7 @@ export class ChatBotController {
         doc: chatBotsWithFlow,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -131,7 +132,7 @@ export class ChatBotController {
         docs: new ResponseChatBotDto(chatBot),
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 
@@ -147,7 +148,7 @@ export class ChatBotController {
         status: result,
       });
     } catch (error) {
-      next(error);
+      handleRouteError("ChatBotController", error, next, req);
     }
   }
 

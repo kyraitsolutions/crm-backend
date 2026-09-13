@@ -6,7 +6,7 @@ import {z} from "zod";
 export const ContactStatusSchema=z.enum([
     "subscribed" , "unsubscribed" ,"bounced"
 ]);
-export const ContactSourcesSchema=z.enum(["chatbot", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook"]);
+export const ContactSourcesSchema=z.enum(["chatbot", "website", "webform", "google_ads", "manual", "import","instagram","whatsapp","facebook","webhook"]);
 
 export const CreateContactSchema=z.object({
     accountId: z.string(),

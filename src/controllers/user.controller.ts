@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { handleRouteError } from "../utils/asyncHandler.js";
 import { ENV } from "../constants/index.js";
 import { LoginDto, RegisterDto } from "../dtos/index.js";
 import { OrganizationMember } from "../models/organizationMember.model.js";
@@ -11,9 +12,7 @@ import { UpdateUserProfileDto } from "../dtos/userprofile.dto.js";
 export class UserController {
   register = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
-      console.log("Register request body:", req.body); // Log the request body for debugging
       const registerDto = new RegisterDto(req.body);
-      console.log("register Dto",registerDto);
       const result = await userService.register(registerDto);
 
       httpResponse(req, res, 201, "User registered successfully", {
@@ -21,8 +20,7 @@ export class UserController {
       });
       // res.status(201).json(result);
     } catch (error) {
-      console.log(error)
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
@@ -35,44 +33,41 @@ export class UserController {
       });
       // res.status(200).json(result);
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
   forgotPassword=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
     try {
       const {email}=req.body;
-      console.log("Body",req.body)
       const result=await userService.forgotPassword(email)
       httpResponse(req, res, 201, "Password sent successfully", {
         doc: result
       });
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   }
   verifyOTP=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
     try {
       const {email,otp}=req.body;
-      console.log("Body",req.body)
       const result=await userService.verifyOTP(email,otp)
       httpResponse(req, res, 201, "Password sent successfully", {
         doc: result
       });
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   }
   resetPassword=async(req:Request,res:Response,next:NextFunction):Promise<void>=>{
     try {
       const {resetToken,newPassword}=req.body;
-      console.log(resetToken,newPassword)
       const result=await userService.resetPassword(resetToken,newPassword);
       httpResponse(req, res, 201, "Password sent successfully", {
         doc: result
       });
     } catch (error) {
-      next(error)
+      handleRouteError("UserController", error, next, req);
     }
   }
 
@@ -80,7 +75,6 @@ export class UserController {
     try {
       const user = req.user as any;
 
-      console.log("Google callback user:", user); // Log the user object for debugging
       const token = await userService.generateToken(user.id, user.email);
 
       const platform = req.query.state;
@@ -91,7 +85,7 @@ export class UserController {
           : ENV.FRONTEND.CALLBACK_URL;
       res.redirect(`${redirectUrl}?token=${token}`);
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
@@ -116,7 +110,7 @@ export class UserController {
         result,
       );
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
@@ -155,14 +149,13 @@ export class UserController {
         },
       });
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
   
   updateProfile = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
     try {
-      console.log(req.body)
       const userId = (req.user as any).id;
       const payload={
         ...req.body,
@@ -178,12 +171,12 @@ export class UserController {
         profilePicture:req.body?.avatar
       }
       const updateDto = new UpdateUserProfileDto(payload);
-      console.log(updateDto);
       const updatedUser = await userProfileService.update(userId, updateDto);
-      // const updatedUser = {};
-      res.status(200).json(updatedUser);
+      httpResponse(req, res, 200, "User profile updated successfully", {
+        doc: updatedUser,
+      });
     } catch (error) {
-      next(error);
+      handleRouteError("UserController", error, next, req);
     }
   };
 
@@ -198,7 +191,7 @@ export class UserController {
   //     const updatedUser = await this.userService.updateUser(userId, updateDto);
   //     res.status(200).json(updatedUser);
   //   } catch (error) {
-  //     next(error);
+  //     handleRouteError("UserController", error, next, req);
   //   }
   // };
 
@@ -212,7 +205,7 @@ export class UserController {
   //     await this.userService.deleteUser(userId);
   //     res.status(204).send();
   //   } catch (error) {
-  //     next(error);
+  //     handleRouteError("UserController", error, next, req);
   //   }
   // };
 }
