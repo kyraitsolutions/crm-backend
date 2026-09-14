@@ -22,6 +22,17 @@ const conversationSchema = new Schema(
         index: true,
       },
 
+      chatFlowId: {
+        type: Schema.Types.ObjectId,
+        ref: "ChatFlow",
+        index: true,
+      },
+
+      aiAgentId: {
+        type: String,
+        default: null,
+      },
+
       whatsappUserId: {
         type: String,
       },

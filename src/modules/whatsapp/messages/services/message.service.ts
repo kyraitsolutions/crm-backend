@@ -122,6 +122,13 @@ export class WhatsappMessageService {
 
     await this.messageRepository.createMessage(messagePayload as any);
 
+    if (payload.source !== "automation" && conversation?.id) {
+      const { whatsappLiveChatService } = await import(
+        "../../live-chat/services/whatsapp-live-chat.service.js"
+      );
+      await whatsappLiveChatService.markHumanIntervention(String(conversation.id));
+    }
+
     if (account?.organizationId) {
       await new SubscriptionService().recordUsage(
         String(account.organizationId),

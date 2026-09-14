@@ -101,6 +101,23 @@ export class IncomingMessageHandler {
             text: inboundText,
           });
         }
+
+        try {
+          const { whatsappLiveChatService } = await import(
+            "../../live-chat/services/whatsapp-live-chat.service.js"
+          );
+          const conversationId = String(
+            conversation.id || (conversation as any)._id || "",
+          );
+          await whatsappLiveChatService.handleInbound({
+            accountId: String(integration.accountId),
+            organizationId: String(integration.organizationId || ""),
+            conversationId,
+            phone: message.from,
+          });
+        } catch (liveChatError) {
+          console.log("live chat inbound error", liveChatError);
+        }
       } catch (error) {
         console.log("error", error);
         throw error;
