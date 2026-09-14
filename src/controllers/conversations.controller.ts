@@ -7,6 +7,8 @@ import httpResponse from "../utils/http.response.js";
 import { InitConversationDto } from "../dtos/conversation.dot.js";
 // import { TConversationQuery } from "../types/api-response.type";
 import { parseQueryParams } from "../utils/query.utils.js";
+import { asEntityId } from "../utils/request-context.utils.js";
+import { HttpError } from "../utils/http.error.js";
 
 export class ConversationController {
   private service: ConversationService;
@@ -84,6 +86,34 @@ export class ConversationController {
         success: false,
         message: error.message,
       });
+    }
+  }
+
+  async deleteConversations(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accountId } = req.params;
+      const conversationIds = Array.isArray(req.body?.conversationIds)
+        ? req.body.conversationIds.map(String)
+        : req.body?.conversationId
+          ? [String(req.body.conversationId)]
+          : [];
+      const userId = asEntityId(req.user?.id);
+      if (!userId) throw HttpError.unauthorized("Unauthorized");
+
+      const result = await this.service.deleteConversations(
+        accountId,
+        conversationIds,
+        {
+          deleteContact: Boolean(req.body?.deleteContact),
+          userId,
+        },
+      );
+
+      httpResponse(req, res, 200, "Conversation moved to recycle bin", {
+        doc: result,
+      });
+    } catch (error) {
+      handleRouteError("ConversationController.deleteConversations", error, next, req);
     }
   }
 }

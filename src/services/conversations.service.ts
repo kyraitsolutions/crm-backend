@@ -223,6 +223,20 @@ export class ConversationService {
 
     return conversation;
   }
+
+  async deleteConversations(
+    accountId: string,
+    conversationIds: string[],
+    options: { deleteContact?: boolean; userId: string },
+  ) {
+    const { recyclebinService } = await import("../container.js");
+    return recyclebinService.moveConversationsToBin({
+      accountId,
+      userId: options.userId,
+      conversationIds,
+      deleteContact: Boolean(options.deleteContact),
+    });
+  }
 }
 
 export const conversationService = new ConversationService();

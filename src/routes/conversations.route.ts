@@ -2,6 +2,7 @@
 
 import { Router } from "express";
 import { ConversationController } from "../controllers/conversations.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
 
 export class ConversationRouter {
   private router: Router;
@@ -37,6 +38,12 @@ export class ConversationRouter {
     this.router.get(
       "/visitor/:visitorId",
       this.controller.getConversationByVisitor.bind(this.controller),
+    );
+
+    this.router.post(
+      "/:accountId/delete",
+      AuthMiddleware.authenticate,
+      this.controller.deleteConversations.bind(this.controller),
     );
   }
 

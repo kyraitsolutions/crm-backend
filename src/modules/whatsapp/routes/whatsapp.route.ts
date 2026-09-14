@@ -5,6 +5,7 @@ import { WhatsAppMessageRouter } from "./whatsapp-message.route.js";
 import { WhatsappAccountRouter } from "./whatsapp-account.route.js";
 import { WhatsappBroadcastRouter } from "./whatsapp-broadcast.route.js";
 import { WhatsappLiveChatRouter } from "./whatsapp-live-chat.route.js";
+import { WhatsappCannedMessageRouter } from "./whatsapp-canned.route.js";
 
 export class WhatsappRouter {
   public router: Router;
@@ -15,6 +16,7 @@ export class WhatsappRouter {
   private whatsappAccountRouter = new WhatsappAccountRouter();
   private whatsappBroadcastRouter = new WhatsappBroadcastRouter();
   private whatsappLiveChatRouter = new WhatsappLiveChatRouter();
+  private whatsappCannedRouter = new WhatsappCannedMessageRouter();
 
   constructor() {
     this.router = Router();
@@ -52,6 +54,11 @@ export class WhatsappRouter {
     this.router.use(
       "/account/:accountId/live-chat",
       this.whatsappLiveChatRouter.getRouter(),
+    );
+
+    this.router.use(
+      "/account/:accountId/canned-messages",
+      this.whatsappCannedRouter.getRouter(),
     );
 
     // Webhook endpoint

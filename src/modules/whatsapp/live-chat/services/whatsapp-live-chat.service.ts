@@ -244,6 +244,7 @@ export class WhatsAppLiveChatService {
       ? settings.welcomeMessage
       : settings.offHoursMessage;
     const flag = withinHours ? "welcomeSentAt" : "offHoursSentAt";
+    const flagPath = `metadata.liveChat.${flag}`;
     if (!reply?.enabled) {
       logger.info("WHATSAPP_LIVE_CHAT_SKIPPED", {
         reason: withinHours ? "welcome_disabled" : "off_hours_disabled",
@@ -261,15 +262,31 @@ export class WhatsAppLiveChatService {
       return null;
     }
 
-    const sent = await this.sendAutoReply(params.accountId, params.phone, reply);
-    if (!sent) return null;
+    const claimed = await ConversationModel.updateOne(
+      {
+        _id: conversation._id,
+        $or: [{ [flagPath]: { $exists: false } }, { [flagPath]: null }],
+      },
+      { $set: { [flagPath]: new Date() } },
+    );
+    if (!claimed.matchedCount) {
+      logger.info("WHATSAPP_LIVE_CHAT_SKIPPED", {
+        reason: "already_sent",
+        flag,
+        conversationId: params.conversationId,
+      });
+      return null;
+    }
 
-    liveChat[flag] = new Date();
-    conversation.metadata = {
-      ...(conversation.metadata || {}),
-      liveChat,
-    };
-    await conversation.save();
+    const sent = await this.sendAutoReply(params.accountId, params.phone, reply);
+    if (!sent) {
+      await ConversationModel.updateOne(
+        { _id: conversation._id },
+        { $unset: { [flagPath]: 1 } },
+      );
+      return null;
+    }
+
     logger.info("WHATSAPP_LIVE_CHAT_AUTOREPLY_SENT", {
       accountId: params.accountId,
       phone: params.phone,
@@ -342,12 +359,15 @@ export class WhatsAppLiveChatService {
       }
     }
 
-    conversation.identifiers = identifiers;
-    conversation.metadata = {
-      ...(conversation.metadata || {}),
-      liveChat,
-    };
-    await conversation.save();
+    await ConversationModel.updateOne(
+      { _id: conversation._id },
+      {
+        $set: {
+          identifiers,
+          "metadata.liveChat": liveChat,
+        },
+      },
+    );
     return { action: "auto_resolve" as const, mode };
   }
 

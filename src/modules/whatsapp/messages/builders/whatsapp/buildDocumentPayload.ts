@@ -11,6 +11,12 @@ export class BuildDocumentPayload {
         ...(payload.caption && {
           caption: payload.caption,
         }),
+        ...((payload.filename ||
+          payload.document?.filename ||
+          media.filename) && {
+          filename:
+            payload.filename || payload.document?.filename || media.filename,
+        }),
       },
     };
   }
