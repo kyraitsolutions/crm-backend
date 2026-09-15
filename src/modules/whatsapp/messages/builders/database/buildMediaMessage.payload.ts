@@ -11,16 +11,17 @@ export class BuildMediaMessagePayload {
           ...(media?.id && { id: media.id }),
           ...(media?.link && { link: media.link }),
 
-          ...(payload.file?.size && {
-            size: payload.file.size,
+          ...((payload.file?.size || payload[payload.type]?.size) && {
+            size: payload.file?.size || payload[payload.type]?.size,
           }),
 
-          ...(payload.file?.mimetype && {
-            mimetype: payload.file.mimetype,
+          ...((payload.file?.mimetype || payload[payload.type]?.mimeType) && {
+            mimetype: payload.file?.mimetype || payload[payload.type]?.mimeType,
           }),
 
-          ...(payload.file?.originalname && {
-            filename: payload.file.originalname,
+          ...((payload.file?.originalname || payload[payload.type]?.filename) && {
+            filename:
+              payload.file?.originalname || payload[payload.type]?.filename,
           }),
         },
       },

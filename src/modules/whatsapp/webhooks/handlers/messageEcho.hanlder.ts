@@ -90,6 +90,11 @@ export class MessageEchoHandler {
     };
 
     await this.messageService.saveMessage(messageDocument);
+
+    const { whatsappLiveChatService } = await import(
+      "../../live-chat/services/whatsapp-live-chat.service.js"
+    );
+    await whatsappLiveChatService.markHumanIntervention(String(conversation.id));
   }
 }
 
