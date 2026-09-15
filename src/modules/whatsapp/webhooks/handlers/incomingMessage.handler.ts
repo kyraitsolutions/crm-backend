@@ -1,8 +1,4 @@
 import { Types } from "mongoose";
-import {
-  IntegrationProvider,
-  IntegrationStatus,
-} from "../../../../models/integration.model.js";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
 import { ContactService } from "../../../../services/contact.service.js";
@@ -34,14 +30,17 @@ export class IncomingMessageHandler {
         });
 
         const integration =
-          await this.integrationService.getIntegrationByFilter({
-            provider: IntegrationProvider.WHATSAPP,
-            providerResourceId: String(phone_number_id),
-            status: IntegrationStatus.CONNECTED,
-          });
+          await this.integrationService.resolveWhatsAppByPhoneNumberId(
+            String(phone_number_id),
+          );
 
         if (!integration) {
-          throw new Error("WhatsApp integration not found.");
+          console.warn("WHATSAPP_WEBHOOK_SKIPPED", {
+            reason: "integration_not_found",
+            phoneNumberId: phone_number_id,
+            messageId: parsedMessage.messageId,
+          });
+          continue;
         }
 
         const waContactName =
@@ -79,8 +78,12 @@ export class IncomingMessageHandler {
           ...parsedMessage,
         };
 
-        // 3. Save to MongoDB
-        await this.messageService.saveMessage(messageDocument);
+        // 3. Save to MongoDB (unique messageId makes webhook retries idempotent)
+        try {
+          await this.messageService.saveMessage(messageDocument);
+        } catch (saveError: any) {
+          if (saveError?.code !== 11000) throw saveError;
+        }
 
         const inboundText = parsedMessage
           ? parsedMessage.searchText ||
@@ -109,18 +112,44 @@ export class IncomingMessageHandler {
           const conversationId = String(
             conversation.id || (conversation as any)._id || "",
           );
-          await whatsappLiveChatService.handleInbound({
+          const liveChatResult = await whatsappLiveChatService.handleInbound({
             accountId: String(integration.accountId),
             organizationId: String(integration.organizationId || ""),
             conversationId,
             phone: message.from,
           });
+
+          const skipAgentTypes = ["reaction", "unsupported", ""];
+          const agentText =
+            String(inboundText || parsedMessage.searchText || "") ||
+            (parsedMessage.type && !skipAgentTypes.includes(String(parsedMessage.type))
+              ? `[${parsedMessage.type}]`
+              : "");
+          if (
+            liveChatResult?.action === "auto_resolve" &&
+            liveChatResult.mode === "ai_agent" &&
+            parsedMessage.messageId &&
+            !skipAgentTypes.includes(String(parsedMessage.type || ""))
+          ) {
+            const { enqueueWhatsAppAiAgentJob } = await import(
+              "../../../../queue/whatsapp/ai-agent.queue.js"
+            );
+            await enqueueWhatsAppAiAgentJob({
+              organizationId: String(integration.organizationId || ""),
+              accountId: String(integration.accountId),
+              conversationId,
+              messageId: String(parsedMessage.messageId),
+              phone: message.from,
+              inboundText: agentText,
+              inboundType: String(parsedMessage.type || "text"),
+              contactName: waContactName,
+            });
+          }
         } catch (liveChatError) {
           console.log("live chat inbound error", liveChatError);
         }
       } catch (error) {
-        console.log("error", error);
-        throw error;
+        console.log("incoming message error", error);
       }
     }
   }

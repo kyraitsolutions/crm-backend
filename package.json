@@ -60,6 +60,7 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "razorpay": "^2.9.6",
+    "sarvamai": "^1.1.8-alpha.5",
     "tsx": "^4.20.6",
     "twilio": "^6.0.2",
     "winston": "^3.18.3",

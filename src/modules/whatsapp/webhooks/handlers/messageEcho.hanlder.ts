@@ -1,8 +1,4 @@
 import { Types } from "mongoose";
-import {
-  IntegrationProvider,
-  IntegrationStatus,
-} from "../../../../models/integration.model.js";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
@@ -20,16 +16,16 @@ export class MessageEchoHandler {
     for (const echo of echoes) {
       try {
         const integration =
-          await this.integrationService.getIntegrationByFilter({
-            provider: IntegrationProvider.WHATSAPP,
-            providerResourceId: String(phone_number_id),
-            status: IntegrationStatus.CONNECTED,
-          });
+          await this.integrationService.resolveWhatsAppByPhoneNumberId(
+            String(phone_number_id),
+          );
 
         if (!integration) {
-          throw new Error(
-            `WhatsApp integration not found for ${phone_number_id}`,
-          );
+          console.warn("WHATSAPP_ECHO_SKIPPED", {
+            reason: "integration_not_found",
+            phoneNumberId: phone_number_id,
+          });
+          continue;
         }
 
         // Message deleted from mobile
@@ -42,7 +38,6 @@ export class MessageEchoHandler {
         await this.handleMessage(echo, integration);
       } catch (error) {
         console.error("Message echo error:", error);
-        throw error;
       }
     }
   }
@@ -89,7 +84,20 @@ export class MessageEchoHandler {
       ...parsedMessage,
     };
 
-    await this.messageService.saveMessage(messageDocument);
+    const { MessageModel } = await import("../../../../models/messages.model.js");
+    const alreadyStored = await MessageModel.exists({
+      messageId: parsedMessage.messageId,
+    });
+    if (alreadyStored) {
+      return;
+    }
+
+    try {
+      await this.messageService.saveMessage(messageDocument);
+    } catch (error: any) {
+      if (error?.code === 11000) return;
+      throw error;
+    }
 
     const { whatsappLiveChatService } = await import(
       "../../live-chat/services/whatsapp-live-chat.service.js"

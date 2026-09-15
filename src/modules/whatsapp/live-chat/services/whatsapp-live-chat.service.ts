@@ -9,6 +9,7 @@ import { HttpError } from "../../../../utils/http.error.js";
 import logger from "../../../../utils/logger.js";
 import { WhatsappMessageService } from "../../messages/services/message.service.js";
 import { WhatsappTemplateModel } from "../../templates/models/template.model.js";
+import { WhatsAppAiAgentConfigModel } from "../../ai-agent/models/whatsapp-ai-agent-config.model.js";
 import {
   AUTO_REPLY_TYPE,
   AUTO_RESOLVE_MODE,
@@ -19,6 +20,13 @@ import {
 } from "../constants/live-chat.constant.js";
 import { UpdateWhatsAppLiveChatDto } from "../dtos/live-chat.dto.js";
 import { WhatsAppLiveChatSettingsModel } from "../models/whatsapp-live-chat-settings.model.js";
+import {
+  autoResolveCoversOffHours,
+  autoResolveCoversWelcome,
+  autoResolveResolverLabel,
+  autoResolveWindowLabel,
+  matchesAutoResolveWindow,
+} from "../utils/auto-resolve.util.js";
 import { isWithinWorkingHours } from "../utils/working-hours.util.js";
 
 type AutoReply = {
@@ -36,15 +44,22 @@ export class WhatsAppLiveChatService {
 
   private serialize(settings: any) {
     if (!settings) return settings;
+    const autoResolve = {
+      ...settings.autoResolve,
+      chatFlowId: settings.autoResolve?.chatFlowId
+        ? String(settings.autoResolve.chatFlowId)
+        : null,
+      aiAgentId: settings.autoResolve?.aiAgentId || null,
+    };
+    const welcomeMessage = { ...settings.welcomeMessage };
+    const offHoursMessage = { ...settings.offHoursMessage };
+    if (autoResolveCoversWelcome(autoResolve)) welcomeMessage.enabled = false;
+    if (autoResolveCoversOffHours(autoResolve)) offHoursMessage.enabled = false;
     return {
       ...settings,
-      autoResolve: {
-        ...settings.autoResolve,
-        chatFlowId: settings.autoResolve?.chatFlowId
-          ? String(settings.autoResolve.chatFlowId)
-          : null,
-        aiAgentId: settings.autoResolve?.aiAgentId || null,
-      },
+      autoResolve,
+      welcomeMessage,
+      offHoursMessage,
     };
   }
 
@@ -85,7 +100,7 @@ export class WhatsAppLiveChatService {
 
   async getContext(organizationId: string, accountId: string) {
     const settings = await this.getSettings(organizationId, accountId);
-    const [flows, templates, canUseAiAgent] = await Promise.all([
+    const [flows, templates, canUseAiAgent, agentConfig] = await Promise.all([
       ChatFlow.find({
         accountId,
         isDeleted: { $ne: true },
@@ -103,9 +118,14 @@ export class WhatsAppLiveChatService {
       this.subscriptionService
         .canAccessFeature(organizationId, FEATURE.WHATSAPP_AI_AGENT)
         .catch(() => false),
+      WhatsAppAiAgentConfigModel.findOne({ accountId })
+        .select("_id enabled")
+        .lean(),
     ]);
 
-    const aiAgentId = settings.autoResolve?.aiAgentId || null;
+    const aiAgentId =
+      settings.autoResolve?.aiAgentId ||
+      (agentConfig?._id ? String(agentConfig._id) : null);
 
     return {
       settings,
@@ -123,9 +143,10 @@ export class WhatsAppLiveChatService {
         status: template.status,
       })),
       aiAgent: {
-        configured: Boolean(aiAgentId) || Boolean(canUseAiAgent),
+        configured: Boolean(agentConfig?._id),
         id: aiAgentId,
         available: Boolean(canUseAiAgent),
+        enabled: Boolean(agentConfig?.enabled),
       },
     };
   }
@@ -164,6 +185,38 @@ export class WhatsAppLiveChatService {
       });
     }
 
+    if (
+      payload.welcomeMessage?.enabled === true &&
+      autoResolveCoversWelcome(nextAutoResolve)
+    ) {
+      throw HttpError.badRequest(
+        `Welcome message is disabled while the ${autoResolveResolverLabel(
+          nextAutoResolve.mode,
+        )} runs ${autoResolveWindowLabel(nextAutoResolve.scheduleMode)}`,
+      );
+    }
+    if (
+      payload.offHoursMessage?.enabled === true &&
+      autoResolveCoversOffHours(nextAutoResolve)
+    ) {
+      throw HttpError.badRequest(
+        `Off-hours message is disabled while the ${autoResolveResolverLabel(
+          nextAutoResolve.mode,
+        )} runs ${autoResolveWindowLabel(nextAutoResolve.scheduleMode)}`,
+      );
+    }
+
+    const welcomeMessage = this.mergeReply(
+      current.welcomeMessage,
+      payload.welcomeMessage,
+    );
+    const offHoursMessage = this.mergeReply(
+      current.offHoursMessage,
+      payload.offHoursMessage,
+    );
+    if (autoResolveCoversWelcome(nextAutoResolve)) welcomeMessage.enabled = false;
+    if (autoResolveCoversOffHours(nextAutoResolve)) offHoursMessage.enabled = false;
+
     const next = {
       autoResolve: {
         ...nextAutoResolve,
@@ -178,11 +231,8 @@ export class WhatsAppLiveChatService {
               : current.workingHours.days,
           }
         : current.workingHours,
-      welcomeMessage: this.mergeReply(current.welcomeMessage, payload.welcomeMessage),
-      offHoursMessage: this.mergeReply(
-        current.offHoursMessage,
-        payload.offHoursMessage,
-      ),
+      welcomeMessage,
+      offHoursMessage,
     };
 
     const updated = await WhatsAppLiveChatSettingsModel.findOneAndUpdate(
@@ -229,7 +279,7 @@ export class WhatsAppLiveChatService {
     const autoActive =
       Boolean(settings.autoResolve?.enabled) &&
       !liveChat.humanIntervened &&
-      this.matchesAutoResolveWindow(settings.autoResolve?.scheduleMode, withinHours);
+      matchesAutoResolveWindow(settings.autoResolve?.scheduleMode, withinHours);
 
     if (autoActive) {
       return this.attachAutoResolve({
@@ -240,14 +290,41 @@ export class WhatsAppLiveChatService {
       });
     }
 
+    if (liveChat.autoResolveActive && !liveChat.humanIntervened) {
+      await this.pauseAutoResolve(conversation._id, liveChat);
+    }
+
+    if (liveChat.humanIntervened) {
+      logger.info("WHATSAPP_LIVE_CHAT_SKIPPED", {
+        reason: "human_intervened",
+        conversationId: params.conversationId,
+      });
+      return null;
+    }
+
+    if (liveChat.attachedAt) {
+      logger.info("WHATSAPP_LIVE_CHAT_SKIPPED", {
+        reason: "already_auto_resolved",
+        conversationId: params.conversationId,
+      });
+      return null;
+    }
+
+    const replyCovered = withinHours
+      ? autoResolveCoversWelcome(settings.autoResolve)
+      : autoResolveCoversOffHours(settings.autoResolve);
     const reply: AutoReply = withinHours
       ? settings.welcomeMessage
       : settings.offHoursMessage;
     const flag = withinHours ? "welcomeSentAt" : "offHoursSentAt";
     const flagPath = `metadata.liveChat.${flag}`;
-    if (!reply?.enabled) {
+    if (replyCovered || !reply?.enabled) {
       logger.info("WHATSAPP_LIVE_CHAT_SKIPPED", {
-        reason: withinHours ? "welcome_disabled" : "off_hours_disabled",
+        reason: replyCovered
+          ? "window_owned_by_auto_resolve"
+          : withinHours
+            ? "welcome_disabled"
+            : "off_hours_disabled",
         withinHours,
         conversationId: params.conversationId,
       });
@@ -313,13 +390,18 @@ export class WhatsAppLiveChatService {
     });
   }
 
-  private matchesAutoResolveWindow(
-    scheduleMode: string | undefined,
-    withinHours: boolean,
-  ) {
-    if (scheduleMode === AUTO_RESOLVE_SCHEDULE.ALWAYS) return true;
-    if (scheduleMode === AUTO_RESOLVE_SCHEDULE.OFF_HOURS) return !withinHours;
-    return withinHours;
+  private async pauseAutoResolve(conversationId: string, liveChat: Record<string, any>) {
+    liveChat.autoResolveActive = false;
+    liveChat.pausedAt = new Date();
+    await ConversationModel.updateOne(
+      { _id: conversationId },
+      {
+        $set: {
+          "metadata.liveChat.autoResolveActive": false,
+          "metadata.liveChat.pausedAt": liveChat.pausedAt,
+        },
+      },
+    );
   }
 
   private async attachAutoResolve(params: {
@@ -330,7 +412,7 @@ export class WhatsAppLiveChatService {
   }) {
     const { conversation, settings, liveChat, organizationId } = params;
     const mode = settings.autoResolve.mode;
-    const alreadyAttached = Boolean(liveChat.autoResolveActive);
+    const alreadyAttached = Boolean(liveChat.attachedAt);
 
     liveChat.autoResolveActive = true;
     liveChat.mode = mode;
@@ -409,6 +491,10 @@ export class WhatsAppLiveChatService {
           err.details,
         );
       }
+      const { aiAgentConfigService } = await import(
+        "../../ai-agent/services/ai-agent-config.service.js"
+      );
+      await aiAgentConfigService.getOrCreate(organizationId, accountId);
       return;
     }
 

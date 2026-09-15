@@ -80,7 +80,7 @@ async function registerProcessors() {
     const { email, lead } = job.data;
 
     logger.info(`Processing lead notification email for ${email}`);
-    await emailUtils.sendLeadAcknowledgementEmail(email, lead);
+    await emailUtils.sendLeadNotificationEmail(email, lead);
   });
 
 
@@ -127,6 +127,12 @@ async function registerProcessors() {
   emailQueue.process(QUEUE_JOBS.SEND_LEAD_ASSIGNED_EMAIL, async (job) => {
     const { email, lead } = job.data;
     await emailUtils.sendLeadAssignedEmail(email, lead);
+  });
+
+  emailQueue.process(QUEUE_JOBS.WHATSAPP_ESCALATION_EMAIL, async (job) => {
+    const { email, data } = job.data;
+    logger.info(`Processing WhatsApp escalation email for ${email}`);
+    await emailUtils.sendWhatsAppEscalationEmail(email, data);
   });
 
   emailQueue.process(QUEUE_JOBS.EMAIL_CAMPAIGN_PREPARE, 1, async (job) => {

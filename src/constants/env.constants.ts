@@ -37,10 +37,12 @@ export const ENV = {
   },
 
   AI: {
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
-    OPENAI_MODEL: process.env.OPENAI_MODEL!,
-    GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY!,
-    GOOGLE_GENAI_MODEL: process.env.GOOGLE_GENAI_MODEL!,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
+    OPENAI_MODEL: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY || "",
+    GOOGLE_GENAI_MODEL: process.env.GOOGLE_GENAI_MODEL || "gemini-3-flash-preview",
+    SARVAM_API_KEY: process.env.SARVAM_API_KEY || "",
+    SARVAM_MODEL: process.env.SARVAM_MODEL || "sarvam-105b-conversations",
   },
 
   AWS: {

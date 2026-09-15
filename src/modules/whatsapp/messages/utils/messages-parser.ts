@@ -86,10 +86,35 @@ class MessageParser {
           },
         };
 
+      case "interactive": {
+        const reply =
+          message.interactive?.button_reply?.title ||
+          message.interactive?.list_reply?.title ||
+          message.interactive?.nfm_reply?.response_json ||
+          "";
+        return {
+          ...base,
+          type: "interactive",
+          searchText: String(reply),
+          body: { text: String(reply) },
+          interactive: message.interactive,
+        };
+      }
+
+      case "button": {
+        const text = message.button?.text || message.button?.payload || "";
+        return {
+          ...base,
+          type: "interactive",
+          searchText: String(text),
+          body: { text: String(text) },
+        };
+      }
+
       case "reaction":
         return {
           ...base,
-          type: "",
+          type: "reaction",
           interactive: message.reaction,
         };
 

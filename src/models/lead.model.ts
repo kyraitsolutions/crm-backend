@@ -64,6 +64,13 @@ export interface Lead extends Document {
     };
   };
 
+  score?: number;
+  scoreLevel?: string;
+  scoreFactors?: string[];
+  scoreUpdatedAt?: Date;
+  convertedAt?: Date;
+  conversionSource?: string;
+
   isDeleted?: boolean;
   deletedAt?: Date;
   deletedBy?: Schema.Types.ObjectId | string;
@@ -160,6 +167,12 @@ const leadSchema = new Schema<Lead>(
     assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
     tags: [{ type: String }],
     notes: [leadNoteSchema],
+    score: { type: Number, default: 0, min: 0, max: 100 },
+    scoreLevel: { type: String, default: "LOW" },
+    scoreFactors: { type: [String], default: [] },
+    scoreUpdatedAt: { type: Date, default: null },
+    convertedAt: { type: Date, default: null },
+    conversionSource: { type: String, default: "" },
     meta: {
       ip: { type: String, default: "" },
       userAgent: { type: String, default: "" },

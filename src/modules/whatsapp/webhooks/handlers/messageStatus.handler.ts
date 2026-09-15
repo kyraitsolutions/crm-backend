@@ -59,7 +59,14 @@ export class MessageStatusHandler {
     // console.log("updateStatus", update);
 
     const messageId = status.id;
-    await this.messageService.updateMessage(messageId, update);
+    try {
+      await this.messageService.updateMessage(messageId, update);
+    } catch (error: any) {
+      if (error?.statusCode === 404 || error?.message === "Message not found") {
+        return;
+      }
+      throw error;
+    }
 
     try {
       const { whatsappBroadcastService } = await import(
