@@ -380,25 +380,45 @@ export class WhatsAppAiSalesAgentService {
       });
     }
 
+    const profile = {
+      ...(updatedLead || lead),
+      customFields: {
+        ...((updatedLead || lead)?.customFields || {}),
+        ...qualificationUpdates,
+      },
+    };
+
     const inboundCount = transcript.filter((item) => item.from === "user").length;
     const score = aiAgentScoringService.calculate({
       config,
-      lead: updatedLead || lead,
+      lead: profile,
       intent: decision.intent || "",
       inboundCount,
       requestedDiscount: decision.requestedDiscountPercent,
       buyingStage: decision.buyingStage,
     });
 
-    await aiAgentToolsService.updateLeadFields({
-      accountId: job.accountId,
-      leadId: String(lead.id || lead._id),
-      fields: {},
-      score,
-    });
+    if (lead.id) {
+      await aiAgentToolsService.updateLeadFields({
+        accountId: job.accountId,
+        leadId: String(lead.id || lead._id),
+        fields: {},
+        score,
+      });
+    }
+
+    await ConversationModel.updateOne(
+      { _id: job.conversationId, accountId: job.accountId },
+      {
+        $set: {
+          score: score.score,
+          scoreLevel: score.level,
+        },
+      },
+    );
 
     const missingFields = (config.qualificationFields || [])
-      .filter((field) => field.required && !fieldValue(updatedLead || lead, field.key))
+      .filter((field) => field.required && !fieldValue(profile, field.key))
       .map((field) => field.key);
 
     const ctx = {
@@ -504,7 +524,7 @@ export class WhatsAppAiSalesAgentService {
       score,
     });
     let converted = false;
-    if (conversion.ok) {
+    if (conversion.ok && lead.id) {
       const marked = await aiAgentToolsService.markConverted(
         job.accountId,
         String(lead.id || lead._id),
@@ -525,8 +545,8 @@ export class WhatsAppAiSalesAgentService {
         conversationId: job.conversationId,
         eventKey,
         typeId: converted
-          ? `ai-converted:${lead.id || lead._id}`
-          : `ai-score:${lead.id || lead._id}:${score.level}`,
+          ? `ai-converted:${job.conversationId}`
+          : `ai-score:${job.conversationId}:${score.level}`,
         title: converted ? "Lead converted" : `High priority lead (${score.level})`,
         description: [
           `${lead.name || job.phone}`,
@@ -548,7 +568,7 @@ export class WhatsAppAiSalesAgentService {
       {
         $set: {
           contactId: (contact as any)?.id || (contact as any)?._id || null,
-          leadId: lead.id || lead._id,
+          leadId: lead.id || null,
           currentIntent: decision.intent || "",
           buyingStage: decision.buyingStage || "",
           requirements: qualificationUpdates,

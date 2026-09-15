@@ -140,6 +140,14 @@ export class ConversationRepository {
       }
 
       if (payload.direction === "inbound") {
+        incQuery.inboundCount = 1;
+      }
+
+      if (payload.direction === "outbound") {
+        incQuery.outboundCount = 1;
+      }
+
+      if (payload.direction === "inbound") {
         const customerMessageAt = payload.createdAt
           ? new Date(payload.createdAt)
           : new Date();
@@ -163,9 +171,29 @@ export class ConversationRepository {
       };
     }
 
+    const conversationPatch: Record<string, unknown> = {};
+    for (const key of [
+      "unreadCount",
+      "contact",
+      "tags",
+      "isBlocked",
+      "isDeleted",
+      "metadata",
+      "visitorId",
+      "identifiers",
+      "score",
+      "scoreLevel",
+      "customerLastMessageAt",
+      "customerWindowExpiresAt",
+    ] as const) {
+      if (payload?.[key] !== undefined) {
+        conversationPatch[key] = payload[key];
+      }
+    }
+
     updateQuery.$set = {
       ...updateQuery.$set,
-      ...payload,
+      ...conversationPatch,
     };
 
     if (Object.keys(incQuery).length > 0) {

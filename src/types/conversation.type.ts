@@ -1,13 +1,7 @@
 import { z } from "zod";
 import { IdentifiersSchema, PlatformSchema } from "./share.type.js";
 
-export const ConversationStatusSchema = z.enum([
-  "open",
-  "pending",
-  "resolved",
-  "closed",
-  "archived",
-]);
+export const ConversationStatusSchema = z.string().min(1);
 
 export const MessageFromSchema = z.enum(["me", "bot", "user", "system"]);
 
@@ -32,7 +26,23 @@ export const ConversationSchema = z.object({
   status: ConversationStatusSchema.default("open"),
   lastMessage: LastMessageSchema.optional(),
   unreadCount: z.number().default(0),
-  tags: z.string().nullable().optional(),
+  tags: z
+    .array(z.object({ label: z.string(), color: z.string().optional() }))
+    .default([]),
+  score: z.number().default(0),
+  scoreLevel: z.string().optional(),
+  inboundCount: z.number().default(0),
+  outboundCount: z.number().default(0),
+  followUps: z
+    .array(
+      z.object({
+        note: z.string().optional(),
+        dueAt: z.date().nullable().optional(),
+        completedAt: z.date().nullable().optional(),
+        createdAt: z.date().optional(),
+      }),
+    )
+    .default([]),
   totalMessages: z.number().default(0),
   isBlocked: z.boolean().default(false),
   isDeleted: z.boolean().default(false),

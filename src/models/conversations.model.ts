@@ -64,7 +64,6 @@ const conversationSchema = new Schema(
 
     status: {
       type: String,
-      enum: ["open", "pending", "resolved", "closed", "archived"] as string[],
       default: "open",
       index: true,
     },
@@ -120,7 +119,45 @@ const conversationSchema = new Schema(
     },
 
     tags: {
-      type: [String],
+      type: [
+        {
+          _id: false,
+          label: { type: String, required: true },
+          color: { type: String, default: "#84cc16" },
+        },
+      ],
+      default: [],
+    },
+
+    score: {
+      type: Number,
+      default: 0,
+    },
+
+    scoreLevel: {
+      type: String,
+      default: "",
+    },
+
+    inboundCount: {
+      type: Number,
+      default: 0,
+    },
+
+    outboundCount: {
+      type: Number,
+      default: 0,
+    },
+
+    followUps: {
+      type: [
+        {
+          note: { type: String, default: "" },
+          dueAt: { type: Date, default: null },
+          completedAt: { type: Date, default: null },
+          createdAt: { type: Date, default: Date.now },
+        },
+      ],
       default: [],
     },
 

@@ -107,27 +107,16 @@ export class AiAgentToolsService {
       return { ...(existing as any), ...patch, id: String(existing._id), isNew: false };
     }
 
-    const created = await this.leadService.createLeadWs({
-      accountId: params.accountId,
+    return {
+      id: "",
       name: params.name || params.phone,
       phone: params.phone,
       mobile: params.phone,
       email: params.email || "",
       message: String(params.inboundText || "").slice(0, 2000),
       source: { name: "whatsapp" },
-      stage: "new",
-      status: "active",
-    } as any);
-
-    const json = typeof (created as any)?.toJSON === "function" ? (created as any).toJSON() : created;
-    const lead = { ...json, id: String(json.id || json._id), isNew: true };
-    await this.queueWhatsAppLeadEmail({
-      accountId: params.accountId,
-      conversationId: params.conversationId,
-      lead,
-      message: params.inboundText,
-    });
-    return lead;
+      isNew: false,
+    };
   }
 
   async updateLeadFields(params: {
@@ -137,6 +126,7 @@ export class AiAgentToolsService {
     stage?: string;
     score?: { score: number; level: string; factors: string[] };
   }) {
+    if (!params.leadId) return null;
     const $set: Record<string, unknown> = {};
     const reserved = new Set(["name", "email", "phone", "mobile", "company", "message", "description"]);
     for (const [rawKey, rawValue] of Object.entries(params.fields || {})) {
@@ -165,6 +155,7 @@ export class AiAgentToolsService {
   }
 
   async markConverted(accountId: string, leadId: string, stage: string) {
+    if (!leadId) return null;
     return LeadModel.findOneAndUpdate(
       {
         _id: leadId,
@@ -383,11 +374,23 @@ export class AiAgentToolsService {
       });
     }
 
+    await ConversationModel.updateOne(
+      { _id: ctx.conversationId, accountId: ctx.accountId },
+      {
+        $push: {
+          followUps: {
+            note: reason,
+            dueAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+            createdAt: new Date(),
+          },
+        },
+      },
+    );
+
     await this.createFollowUpTask({
       organizationId: ctx.organizationId,
       accountId: ctx.accountId,
       conversationId: ctx.conversationId,
-      leadId: lead?.id,
       title: `WhatsApp follow-up: ${who}`,
       description: reason,
     });
@@ -520,12 +523,11 @@ export class AiAgentToolsService {
     organizationId: string;
     accountId: string;
     conversationId: string;
-    leadId?: string;
     title: string;
     description: string;
   }) {
-    const entityType = params.leadId ? "lead" : "conversation";
-    const entityId = params.leadId || params.conversationId;
+    const entityType = "conversation";
+    const entityId = params.conversationId;
     const existing = await Task.findOne({
       accountId: params.accountId,
       entityType,

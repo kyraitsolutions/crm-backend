@@ -59,6 +59,7 @@ export class IncomingMessageHandler {
               platform: "whatsapp",
               contact: {
                 phoneNumber: message.from,
+                name: waContactName || undefined,
               },
             },
           });

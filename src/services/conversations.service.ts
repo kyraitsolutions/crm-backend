@@ -11,7 +11,9 @@ import {
 import { TConversation } from "../types/conversation.type.js";
 import { MessageRepository } from "../repositories/messages.repository.js";
 import { buildSearchPreview } from "../utils/buildSearchPreview.js";
-import { notificationService } from "../container.js";
+import { notificationService, configBootstrapService } from "../container.js";
+import { HttpError } from "../utils/http.error.js";
+import { ConversationModel } from "../models/conversations.model.js";
 
 export class ConversationService {
   private repository: ConversationRepository;
@@ -201,6 +203,15 @@ export class ConversationService {
     let conversation = await this.repository.findOne(filter);
 
     if (conversation) {
+      const nextName = String((create as any)?.contact?.name || "").trim();
+      if (nextName && !String((conversation as any)?.contact?.name || "").trim()) {
+        const updated = await ConversationModel.findByIdAndUpdate(
+          conversation._id,
+          { $set: { "contact.name": nextName } },
+          { new: true },
+        );
+        if (updated) conversation = updated;
+      }
       return conversation;
     }
 
@@ -236,6 +247,80 @@ export class ConversationService {
       conversationIds,
       deleteContact: Boolean(options.deleteContact),
     });
+  }
+
+  async updateConversationProfile(
+    accountId: string,
+    conversationId: string,
+    payload: {
+      status?: string;
+      tags?: { label: string; color?: string }[];
+      followUps?: {
+        note?: string;
+        dueAt?: string | Date | null;
+        completedAt?: string | Date | null;
+        createdAt?: string | Date | null;
+      }[];
+    },
+    organizationId?: string,
+  ) {
+    const conversation = await this.repository.findOne({
+      _id: conversationId,
+      accountId,
+      isDeleted: false,
+    });
+    if (!conversation) {
+      throw HttpError.notFound("Conversation not found");
+    }
+
+    const $set: Record<string, unknown> = {};
+    if (payload.status) {
+      const key = String(payload.status).trim().toLowerCase();
+      if (organizationId) {
+        const configs = await configBootstrapService.getConfigurations({
+          organizationId,
+          module: "conversation",
+          configType: "status",
+        });
+        const list = (configs as any)?.doc;
+        const values = Array.isArray(list) ? list[0]?.values : list?.values;
+        const allowed = (values || []).map((item: any) => String(item.key).toLowerCase());
+        if (allowed.length && !allowed.includes(key)) {
+          throw HttpError.badRequest("Select a configured conversation status");
+        }
+      }
+      $set.status = key;
+    }
+
+    if (payload.tags) {
+      $set.tags = payload.tags
+        .map((tag) => ({
+          label: String(tag.label || "").trim(),
+          color: String(tag.color || "#84cc16"),
+        }))
+        .filter((tag) => tag.label);
+    }
+
+    if (payload.followUps) {
+      $set.followUps = payload.followUps
+        .map((item) => ({
+          note: String(item.note || "").trim(),
+          dueAt: item.dueAt ? new Date(item.dueAt) : null,
+          completedAt: item.completedAt ? new Date(item.completedAt) : null,
+          createdAt: item.createdAt ? new Date(item.createdAt) : new Date(),
+        }))
+        .filter((item) => item.note || item.dueAt);
+    }
+
+    if (!Object.keys($set).length) {
+      return conversation;
+    }
+
+    return ConversationModel.findOneAndUpdate(
+      { _id: conversationId, accountId, isDeleted: false },
+      { $set },
+      { new: true },
+    );
   }
 }
 
