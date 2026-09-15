@@ -12,6 +12,10 @@ import { requirePermission } from "../middleware/authorization.middleware.js";
 import { AccountController } from "../controllers/account.controller.js";
 import { RecyclebinController } from "../controllers/recyclebin.controller.js";
 
+/**
+ * Account-scoped API routes.
+ * OpenAPI docs: /api/docs  |  spec: src/docs/account.swagger.ts
+ */
 export class AccountRouter {
   public router: Router;
   private accountController: AccountController;

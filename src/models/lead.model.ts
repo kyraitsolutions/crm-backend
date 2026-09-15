@@ -43,6 +43,12 @@ export interface Lead extends Document {
     url?: string;
     formId?: string;
     chatbotId?: string;
+    pageId?: string;
+    leadgenId?: string;
+    adId?: string;
+    adgroupId?: string;
+    campaignId?: string;
+    createdTime?: Date | null;
   };
 
   assignedTo?: string;
@@ -152,10 +158,14 @@ const leadSchema = new Schema<Lead>(
         set: (v: string) => v?.toLowerCase(),
       },
       url: { type: String, default: "" },
-      // ✅ formId / chatbotId stored as plain String, not ObjectId ref
-      //    so empty string "" is valid and won't throw CastError
       formId: { type: String, default: "" },
       chatbotId: { type: String, default: "" },
+      pageId: { type: String, default: "" },
+      leadgenId: { type: String, default: "" },
+      adId: { type: String, default: "" },
+      adgroupId: { type: String, default: "" },
+      campaignId: { type: String, default: "" },
+      createdTime: { type: Date, default: null },
     },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
     tags: [{ type: String }],
@@ -215,6 +225,16 @@ leadSchema.index({ status: 1 });
 leadSchema.index({ "source.name": 1 });
 leadSchema.index({ "source.formId": 1 });
 leadSchema.index({ "source.chatbotId": 1 });
+leadSchema.index({ "source.pageId": 1 });
+leadSchema.index(
+  { "source.leadgenId": 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      "source.leadgenId": { $exists: true, $gt: "" },
+    },
+  },
+);
 leadSchema.index({ assignedTo: 1 });
 leadSchema.index({ tags: 1 });
 leadSchema.index({ company: 1 });

@@ -6,6 +6,7 @@ import { AppRoutes } from "./routes/index.js";
 import { initDB } from "./db/index.js";
 import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
+import { setupSwagger } from "./docs/swagger.js";
 import logger from "./utils/logger.js";
 
 export class App {
@@ -15,6 +16,7 @@ export class App {
   constructor() {
     this.app = express();
     this.initializeMiddlewares();
+    this.setupSwagger();
     this.appRoutes = new AppRoutes();
     this.initializeRoutes();
     this.initializeErrorHandling();
@@ -51,6 +53,10 @@ export class App {
       });
       next();
     });
+  }
+
+  private setupSwagger(): void {
+    setupSwagger(this.app);
   }
 
   private initializeRoutes(): void {

@@ -30,6 +30,12 @@ export interface ILead {
     url?: string;
     formId?: string;
     chatbotId?: string;
+    pageId?: string;
+    leadgenId?: string;
+    adId?: string;
+    adgroupId?: string;
+    campaignId?: string;
+    createdTime?: Date | string | null;
   };
 
   assignedTo?: string;
