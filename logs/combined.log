@@ -13430,3 +13430,30 @@
 {"level":"info","message":"Redis client connected","timestamp":"2026-09-15 21:30:50"}
 {"level":"info","message":"Redis client ready","timestamp":"2026-09-15 21:30:51"}
 {"level":"info","message":"Database connected successfully","timestamp":"2026-09-15 21:30:53"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-15 21:31:18"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-15 21:31:18"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-15 21:31:19"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-15 21:31:21"}
+{"level":"http","message":"GET /api-docs 404 16ms","timestamp":"2026-09-15 21:32:17"}
+{"level":"http","message":"GET /favicon.ico 404 2ms","timestamp":"2026-09-15 21:32:17"}
+{"level":"http","message":"GET /api/integration/6a8c7218bccbe3ce030ecd1c/facebook 304 882ms","timestamp":"2026-09-15 21:33:04"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 773ms","timestamp":"2026-09-15 21:33:17"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 977ms","timestamp":"2026-09-15 21:33:17"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 972ms","timestamp":"2026-09-15 21:33:17"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 973ms","timestamp":"2026-09-15 21:33:17"}
+{"level":"http","message":"GET /api/conversation/6a8c7218bccbe3ce030ecd1c?page=1&limit=50 200 310ms","timestamp":"2026-09-15 21:33:59"}
+{"level":"http","message":"GET /api/conversation/6a8c7218bccbe3ce030ecd1c?page=1&limit=50 304 303ms","timestamp":"2026-09-15 21:34:00"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 304 752ms","timestamp":"2026-09-15 21:34:00"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/overview?module=overview&range=7days 304 955ms","timestamp":"2026-09-15 21:34:00"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 304 565ms","timestamp":"2026-09-15 21:34:01"}
+{"level":"http","message":"GET /api/integration/6a8c7218bccbe3ce030ecd1c/whatsapp 304 549ms","timestamp":"2026-09-15 21:34:02"}
+{"level":"error","message":"SubscriptionController No subscription found for this organization. Please choose a plan.","method":"GET","path":"/api/subscription","stack":"HttpError: No subscription found for this organization. Please choose a plan.\n    at Function.paymentRequired (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\http.error.ts:27:12)\n    at SubscriptionService.getResolvedSubscription (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\subscription.service.ts:223:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async SubscriptionService.getSnapshot (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\subscription.service.ts:466:7)\n    at async SubscriptionController.getCurrent (E:\\Kyra\\crm-backend\\crm-backend\\src\\controllers\\subscription.controller.ts:28:24)","statusCode":402,"timestamp":"2026-09-15 21:34:03"}
+{"level":"error","message":"Unhandled request error No subscription found for this organization. Please choose a plan.","method":"GET","path":"/api/subscription","stack":"HttpError: No subscription found for this organization. Please choose a plan.\n    at Function.paymentRequired (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\http.error.ts:27:12)\n    at SubscriptionService.getResolvedSubscription (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\subscription.service.ts:223:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async SubscriptionService.getSnapshot (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\subscription.service.ts:466:7)\n    at async SubscriptionController.getCurrent (E:\\Kyra\\crm-backend\\crm-backend\\src\\controllers\\subscription.controller.ts:28:24)","statusCode":402,"timestamp":"2026-09-15 21:34:03"}
+{"level":"http","message":"GET /api/subscription 402 688ms","timestamp":"2026-09-15 21:34:03"}
+{"level":"http","message":"GET /api/whatsapp/account/6a8c7218bccbe3ce030ecd1c/broadcast/optin 304 784ms","timestamp":"2026-09-15 21:34:06"}
+{"level":"http","message":"POST /api/contacts 200 797ms","timestamp":"2026-09-15 21:34:18"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 769ms","timestamp":"2026-09-15 21:34:19"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 938ms","timestamp":"2026-09-15 21:34:19"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 941ms","timestamp":"2026-09-15 21:34:19"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 953ms","timestamp":"2026-09-15 21:34:19"}
+{"level":"http","message":"POST /api/contacts 200 714ms","timestamp":"2026-09-15 21:34:23"}
