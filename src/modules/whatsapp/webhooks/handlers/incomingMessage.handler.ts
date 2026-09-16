@@ -9,6 +9,8 @@ import { ContactService } from "../../../../services/contact.service.js";
 import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
+import { whatsappLiveChatService } from "../../live-chat/services/whatsapp-live-chat.service.js";
+import { whatsappBroadcastService } from "../../broadcast/services/whatsapp-broadcast.service.js";
 
 export class IncomingMessageHandler {
   private conservationService = new ConversationService();
@@ -88,8 +90,6 @@ export class IncomingMessageHandler {
             ""
           : "";
         if (inboundText) {
-          const { whatsappBroadcastService } =
-            await import("../../broadcast/services/whatsapp-broadcast.service.js");
           await whatsappBroadcastService.markReply(
             String(integration.accountId),
             message.from,
@@ -102,22 +102,12 @@ export class IncomingMessageHandler {
           });
         }
 
-        try {
-          const { whatsappLiveChatService } = await import(
-            "../../live-chat/services/whatsapp-live-chat.service.js"
-          );
-          const conversationId = String(
-            conversation.id || (conversation as any)._id || "",
-          );
-          await whatsappLiveChatService.handleInbound({
-            accountId: String(integration.accountId),
-            organizationId: String(integration.organizationId || ""),
-            conversationId,
-            phone: message.from,
-          });
-        } catch (liveChatError) {
-          console.log("live chat inbound error", liveChatError);
-        }
+        await whatsappLiveChatService.handleInbound({
+          accountId: String(integration.accountId),
+          organizationId: String(integration.organizationId || ""),
+          conversationId: String(conversation.id),
+          phone: message.from,
+        });
       } catch (error) {
         console.log("error", error);
         throw error;

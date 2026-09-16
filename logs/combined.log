@@ -19793,3 +19793,14 @@
 {"level":"info","message":"Redis client ready","timestamp":"2026-09-15 21:38:22"}
 {"level":"info","message":"Database connected successfully","timestamp":"2026-09-15 21:38:25"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-15 21:40:59"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-15 21:46:26"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-15 21:46:27"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-15 21:46:28"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-15 21:46:30"}
+{"level":"http","message":"POST /api/integration/meta/auth/connect 401 156ms","timestamp":"2026-09-15 21:46:45"}
+{"level":"http","message":"POST /api/integration/meta/auth/connect 401 2ms","timestamp":"2026-09-15 21:46:47"}
+{"level":"error","message":"UserController Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async UserController.login (E:\\Kyra\\crm-backend\\crm-backend\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-15 21:47:12"}
+{"level":"error","message":"Unhandled request error Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (E:\\Kyra\\crm-backend\\crm-backend\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (E:\\Kyra\\crm-backend\\crm-backend\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async UserController.login (E:\\Kyra\\crm-backend\\crm-backend\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-15 21:47:12"}
+{"level":"http","message":"POST /api/auth/login 401 228ms","timestamp":"2026-09-15 21:47:12"}
+{"level":"http","message":"POST /api/auth/forgot-password 201 776ms","timestamp":"2026-09-15 21:47:30"}
+{"level":"info","message":"OTP email queued for support@kyraitsolutions.com","timestamp":"2026-09-15 21:47:31"}

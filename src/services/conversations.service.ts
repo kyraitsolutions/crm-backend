@@ -205,9 +205,12 @@ export class ConversationService {
     }
 
     conversation = await this.repository.createConversation(create);
+
     const accountId = String(create.accountId || filter.accountId || "");
+
     if (accountId && conversation) {
       const account = await this.accountRepository.findOne(accountId);
+      
       if (account?.organizationId) {
         await notificationService.notifyConversation({
           organizationId: String(account.organizationId),
