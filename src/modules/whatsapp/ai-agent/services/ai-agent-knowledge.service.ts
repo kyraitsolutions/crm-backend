@@ -64,7 +64,7 @@ export class AiAgentKnowledgeService {
     return this.serialize(deleted.toJSON());
   }
 
-  async retrieve(accountId: string, query: string, limit = 5) {
+  async retrieve(accountId: string, query: string, limit = 2) {
     const terms = tokenize(query);
     const articles = await WhatsAppAiAgentKnowledgeModel.find({
       accountId,
@@ -89,19 +89,14 @@ export class AiAgentKnowledgeService {
       .sort((a, b) => b.score - a.score)
       .slice(0, limit);
 
-    if (!ranked.length) {
-      return articles.slice(0, Math.min(3, articles.length)).map((article) => ({
-        id: String(article._id),
-        title: article.title,
-        content: String(article.content).slice(0, 1200),
-        tags: article.tags || [],
-      }));
-    }
+    const picked = ranked.length
+      ? ranked.map((item) => item.article)
+      : articles.slice(0, Math.min(2, articles.length));
 
-    return ranked.map(({ article }) => ({
+    return picked.map((article) => ({
       id: String(article._id),
       title: article.title,
-      content: String(article.content).slice(0, 1200),
+      content: String(article.content).slice(0, 500),
       tags: article.tags || [],
     }));
   }

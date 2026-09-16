@@ -71,6 +71,43 @@ const fieldValue = (lead: any, key: string) => {
   return fields[key];
 };
 
+const pickRelevantAssets = (
+  assets: { canned: any[]; templates: any[] },
+  inbound: string,
+) => {
+  const terms = inbound
+    .toLowerCase()
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 2);
+  const scoreOf = (text: string) => {
+    const hay = text.toLowerCase();
+    return terms.reduce((count, term) => count + (hay.includes(term) ? 1 : 0), 0);
+  };
+  const rank = (
+    items: any[],
+    textOf: (item: any) => string,
+    limit: number,
+  ) => {
+    const ranked = [...items].sort(
+      (a, b) => scoreOf(textOf(b)) - scoreOf(textOf(a)),
+    );
+    const matched = ranked.filter((item) => scoreOf(textOf(item)) > 0);
+    return (matched.length ? matched : ranked).slice(0, limit);
+  };
+  return {
+    canned: rank(
+      assets?.canned || [],
+      (item) => `${item.name} ${item.shortcut} ${item.preview}`,
+      6,
+    ),
+    templates: rank(
+      assets?.templates || [],
+      (item) => `${item.name} ${item.category}`,
+      4,
+    ),
+  };
+};
+
 export class WhatsAppAiSalesAgentService {
   private subscriptionService = new SubscriptionService();
 
@@ -259,9 +296,13 @@ export class WhatsAppAiSalesAgentService {
       return { skipped: true, reason: "human_required" };
     }
 
-    const settings = await WhatsAppLiveChatSettingsModel.findOne({
-      accountId: job.accountId,
-    }).lean();
+    const [settings, canUse, config] = await Promise.all([
+      WhatsAppLiveChatSettingsModel.findOne({ accountId: job.accountId }).lean(),
+      this.subscriptionService
+        .canAccessFeature(job.organizationId, FEATURE.WHATSAPP_AI_AGENT)
+        .catch(() => false),
+      aiAgentConfigService.getOrCreate(job.organizationId, job.accountId),
+    ]);
     if (
       !settings?.autoResolve?.enabled ||
       settings.autoResolve.mode !== AUTO_RESOLVE_MODE.AI_AGENT
@@ -273,64 +314,64 @@ export class WhatsAppAiSalesAgentService {
     if (!matchesAutoResolveWindow(settings.autoResolve.scheduleMode, withinHours)) {
       return { skipped: true, reason: "outside_ai_schedule" };
     }
-
-    const canUse = await this.subscriptionService
-      .canAccessFeature(job.organizationId, FEATURE.WHATSAPP_AI_AGENT)
-      .catch(() => false);
     if (!canUse) return { skipped: true, reason: "feature_unavailable" };
-
-    const config = (await aiAgentConfigService.getOrCreate(
-      job.organizationId,
-      job.accountId,
-    )) as WhatsAppAiAgentConfig;
     if (!config.enabled) return { skipped: true, reason: "config_disabled" };
 
     const inbound = String(job.inboundText || "").trim();
     if (!inbound) return { skipped: true, reason: "empty_inbound" };
 
-    const state = await WhatsAppAiAgentStateModel.findOneAndUpdate(
-      { conversationId: job.conversationId },
-      {
-        $setOnInsert: {
-          organizationId: job.organizationId,
-          accountId: job.accountId,
-          conversationId: job.conversationId,
+    if (!String(job.messageId).startsWith("resume:")) {
+      const latestInbound = await MessageModel.findOne({
+        conversationId: job.conversationId,
+        direction: "inbound",
+      })
+        .sort({ createdAt: -1 })
+        .select("messageId")
+        .lean();
+      if (latestInbound?.messageId && latestInbound.messageId !== job.messageId) {
+        return { skipped: true, reason: "superseded" };
+      }
+    }
+
+    void aiAgentToolsService.sendTypingIndicator(job.accountId, job.messageId);
+
+    const [state, history, knowledge, assets, contact, lead] = await Promise.all([
+      WhatsAppAiAgentStateModel.findOneAndUpdate(
+        { conversationId: job.conversationId },
+        {
+          $setOnInsert: {
+            organizationId: job.organizationId,
+            accountId: job.accountId,
+            conversationId: job.conversationId,
+          },
+          $set: {
+            lastInboundMessageId: job.messageId,
+            phone: job.phone,
+          },
         },
-        $set: {
-          lastInboundMessageId: job.messageId,
-          phone: job.phone,
-        },
-      },
-      { upsert: true, new: true },
-    );
+        { upsert: true, new: true },
+      ),
+      MessageModel.find({ conversationId: job.conversationId })
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .select("from searchText body.text type createdAt")
+        .lean(),
+      aiAgentKnowledgeService.retrieve(job.accountId, inbound, 2),
+      aiAgentToolsService.listSendableAssets(job.accountId),
+      aiAgentToolsService.findContact(job.accountId, job.phone),
+      aiAgentToolsService.findOrCreateLead({
+        accountId: job.accountId,
+        organizationId: job.organizationId,
+        phone: job.phone,
+        name: job.contactName,
+        inboundText: inbound,
+        conversationId: job.conversationId,
+      }),
+    ]);
 
     if (state.escalation?.required) {
       return { skipped: true, reason: "already_escalated" };
     }
-
-    const [history, knowledge, assets] = await Promise.all([
-      MessageModel.find({ conversationId: job.conversationId })
-        .sort({ createdAt: -1 })
-        .limit(12)
-        .select("from searchText body.text type createdAt")
-        .lean(),
-      aiAgentKnowledgeService.retrieve(job.accountId, inbound),
-      aiAgentToolsService.listSendableAssets(job.accountId),
-    ]);
-
-    const contact = await aiAgentToolsService.findContact(
-      job.accountId,
-      job.phone,
-    );
-    const lead = await aiAgentToolsService.findOrCreateLead({
-      accountId: job.accountId,
-      organizationId: job.organizationId,
-      phone: job.phone,
-      name: job.contactName || (contact as any)?.name,
-      email: (contact as any)?.email,
-      inboundText: inbound,
-      conversationId: job.conversationId,
-    });
 
     const transcript = [...history].reverse().map((message: any) => ({
       from: message.from,
@@ -339,11 +380,11 @@ export class WhatsAppAiSalesAgentService {
     }));
 
     const decision = await this.reason({
-      config,
+      config: config as WhatsAppAiAgentConfig,
       inbound,
       transcript,
       knowledge,
-      assets,
+      assets: pickRelevantAssets(assets, inbound),
       lead,
       state,
     });
@@ -355,42 +396,17 @@ export class WhatsAppAiSalesAgentService {
       ...(decision.entities || {}),
     };
 
-    const updatedLead = await aiAgentToolsService.updateLeadFields({
-      accountId: job.accountId,
-      leadId: String(lead.id || lead._id),
-      fields: qualificationUpdates,
-    });
-
-    const maxDiscount = Number(config.discount?.maximumPercent ?? 0);
-    const requestedDiscount = Number(decision.requestedDiscountPercent || 0);
-    const discountExceeded =
-      Boolean(config.discount?.enabled) &&
-      requestedDiscount > 0 &&
-      requestedDiscount > maxDiscount;
-
-    if (
-      config.discount?.enabled &&
-      requestedDiscount > 0 &&
-      requestedDiscount <= maxDiscount
-    ) {
-      await aiAgentToolsService.updateLeadFields({
-        accountId: job.accountId,
-        leadId: String(lead.id || lead._id),
-        fields: { offered_discount: requestedDiscount },
-      });
-    }
-
     const profile = {
-      ...(updatedLead || lead),
+      ...lead,
       customFields: {
-        ...((updatedLead || lead)?.customFields || {}),
+        ...(lead?.customFields || {}),
         ...qualificationUpdates,
       },
     };
 
     const inboundCount = transcript.filter((item) => item.from === "user").length;
     const score = aiAgentScoringService.calculate({
-      config,
+      config: config as WhatsAppAiAgentConfig,
       lead: profile,
       intent: decision.intent || "",
       inboundCount,
@@ -398,26 +414,14 @@ export class WhatsAppAiSalesAgentService {
       buyingStage: decision.buyingStage,
     });
 
-    if (lead.id) {
-      await aiAgentToolsService.updateLeadFields({
-        accountId: job.accountId,
-        leadId: String(lead.id || lead._id),
-        fields: {},
-        score,
-      });
-    }
+    const maxDiscount = Number((config as WhatsAppAiAgentConfig).discount?.maximumPercent ?? 0);
+    const requestedDiscount = Number(decision.requestedDiscountPercent || 0);
+    const discountExceeded =
+      Boolean((config as WhatsAppAiAgentConfig).discount?.enabled) &&
+      requestedDiscount > 0 &&
+      requestedDiscount > maxDiscount;
 
-    await ConversationModel.updateOne(
-      { _id: job.conversationId, accountId: job.accountId },
-      {
-        $set: {
-          score: score.score,
-          scoreLevel: score.level,
-        },
-      },
-    );
-
-    const missingFields = (config.qualificationFields || [])
+    const missingFields = ((config as WhatsAppAiAgentConfig).qualificationFields || [])
       .filter((field) => field.required && !fieldValue(profile, field.key))
       .map((field) => field.key);
 
@@ -427,33 +431,34 @@ export class WhatsAppAiSalesAgentService {
       conversationId: job.conversationId,
       phone: job.phone,
       messageId: job.messageId,
-      contactName: job.contactName || lead.name,
-      businessName: config.businessProfile?.name,
+      contactName: job.contactName || (contact as any)?.name || lead.name,
+      businessName: (config as WhatsAppAiAgentConfig).businessProfile?.name,
     };
 
     const escalateReasons: string[] = [];
+    const agentConfig = config as WhatsAppAiAgentConfig;
     if (decision.escalate && decision.escalateReason) escalateReasons.push(decision.escalateReason);
-    if (config.escalation.onHumanRequest && /HUMAN_REQUEST/i.test(String(decision.intent))) {
+    if (agentConfig.escalation?.onHumanRequest && /HUMAN_REQUEST/i.test(String(decision.intent))) {
       escalateReasons.push("Customer requested a human");
     }
-    if (config.escalation.onComplaint && /SUPPORT|COMPLAINT/i.test(String(decision.intent))) {
+    if (agentConfig.escalation?.onComplaint && /SUPPORT|COMPLAINT/i.test(String(decision.intent))) {
       escalateReasons.push("Complaint or support issue");
     }
-    if (config.escalation.onUnknownInfo && decision.informationUnavailable) {
+    if (agentConfig.escalation?.onUnknownInfo && decision.informationUnavailable) {
       escalateReasons.push("Requested information is not in the knowledge base");
     }
-    if (config.escalation.onDiscountExceeded && discountExceeded) {
+    if (agentConfig.escalation?.onDiscountExceeded && discountExceeded) {
       escalateReasons.push(`Discount ${requestedDiscount}% exceeds allowed ${maxDiscount}%`);
     }
     if (
-      config.escalation.onLowConfidence &&
-      Number(decision.confidence ?? 1) < Number(config.escalation.lowConfidenceThreshold || 0.4)
+      agentConfig.escalation?.onLowConfidence &&
+      Number(decision.confidence ?? 1) < Number(agentConfig.escalation.lowConfidenceThreshold || 0.4)
     ) {
       escalateReasons.push("Low agent confidence");
     }
     if (
-      config.escalation.onQualifiedLead &&
-      aiAgentScoringService.meetsLevel(config, score.level, config.scoring.convertFromLevel)
+      agentConfig.escalation?.onQualifiedLead &&
+      aiAgentScoringService.meetsLevel(agentConfig, score.level, agentConfig.scoring.convertFromLevel)
     ) {
       escalateReasons.push("Qualified lead requires human follow-up");
     }
@@ -467,19 +472,8 @@ export class WhatsAppAiSalesAgentService {
     const alreadySent = Boolean(runDoc?.outboundSent);
 
     if (shouldEscalate) {
-      await aiAgentToolsService.escalate({
-        ctx,
-        config,
-        reason: escalateReasons[0],
-        lead: updatedLead || lead,
-        score,
-        message: inbound,
-        intent: decision.intent,
-      });
-      tools.push("escalate_to_human");
-      actions.push("escalate_to_human");
-      if (!alreadySent && config.escalation.customerMessage) {
-        await aiAgentToolsService.sendText(ctx, config.escalation.customerMessage);
+      if (!alreadySent && agentConfig.escalation?.customerMessage) {
+        await aiAgentToolsService.sendText(ctx, agentConfig.escalation.customerMessage);
         tools.push("send_text");
         outboundCount += 1;
       }
@@ -503,7 +497,7 @@ export class WhatsAppAiSalesAgentService {
 
       for (const action of allowed.slice(0, 2)) {
         if (outboundCount >= 2) break;
-        const executed = await this.executeSend(action, ctx, updatedLead || lead);
+        const executed = await this.executeSend(action, ctx, profile);
         if (executed && "sent" in executed && executed.sent) {
           tools.push(action.name);
           actions.push(action.name);
@@ -518,8 +512,46 @@ export class WhatsAppAiSalesAgentService {
       }
     }
 
+    const updatedLead = await aiAgentToolsService.updateLeadFields({
+      accountId: job.accountId,
+      leadId: String(lead.id || lead._id),
+      fields: {
+        ...qualificationUpdates,
+        ...(agentConfig.discount?.enabled &&
+        requestedDiscount > 0 &&
+        requestedDiscount <= maxDiscount
+          ? { offered_discount: requestedDiscount }
+          : {}),
+      },
+      score,
+    });
+
+    await ConversationModel.updateOne(
+      { _id: job.conversationId, accountId: job.accountId },
+      {
+        $set: {
+          score: score.score,
+          scoreLevel: score.level,
+        },
+      },
+    );
+
+    if (shouldEscalate) {
+      await aiAgentToolsService.escalate({
+        ctx,
+        config: agentConfig,
+        reason: escalateReasons[0],
+        lead: updatedLead || lead,
+        score,
+        message: inbound,
+        intent: decision.intent,
+      });
+      tools.push("escalate_to_human");
+      actions.push("escalate_to_human");
+    }
+
     const conversion = aiAgentScoringService.canConvert({
-      config,
+      config: agentConfig,
       lead: updatedLead || lead,
       score,
     });
@@ -528,7 +560,7 @@ export class WhatsAppAiSalesAgentService {
       const marked = await aiAgentToolsService.markConverted(
         job.accountId,
         String(lead.id || lead._id),
-        config.scoring.convertedStage || "converted",
+        agentConfig.scoring.convertedStage || "converted",
       );
       converted = Boolean(marked);
       if (converted) tools.push("mark_converted");
@@ -536,7 +568,7 @@ export class WhatsAppAiSalesAgentService {
 
     if (
       converted ||
-      aiAgentScoringService.meetsLevel(config, score.level, config.scoring.notifyFromLevel || "HOT")
+      aiAgentScoringService.meetsLevel(agentConfig, score.level, agentConfig.scoring.notifyFromLevel || "HOT")
     ) {
       const eventKey = converted ? "converted" : `score:${score.level}`;
       await aiAgentToolsService.notifyLeadEvent({
@@ -663,9 +695,6 @@ export class WhatsAppAiSalesAgentService {
     state: any;
   }): Promise<AgentDecision> {
     const { config } = params;
-    const intents = (config.intents || [])
-      .map((item) => `${item.key}: ${item.description}`)
-      .join("\n");
     const fields = (config.qualificationFields || [])
       .map((item) => `${item.key} (${item.label}${item.required ? ", required" : ""})`)
       .join(", ");
@@ -673,69 +702,45 @@ export class WhatsAppAiSalesAgentService {
     const system = `${config.instructions || DEFAULT_AGENT_INSTRUCTIONS}
 
 Business: ${config.businessProfile?.name || "this business"}
-Industry hint: ${config.businessProfile?.industry || "not specified"}
-About: ${config.businessProfile?.description || ""}
+${config.businessProfile?.description || ""}
 
-Return ONLY valid JSON with this shape:
-{
-  "intent": "string from configured intents or a new SCREAMING_SNAKE key",
-  "intentConfidence": 0-1,
-  "entities": {},
-  "requirements": {},
-  "qualificationUpdates": {},
-  "sentiment": "positive|neutral|negative",
-  "buyingStage": "awareness|consideration|intent|decision",
-  "urgency": "low|medium|high",
-  "requestedDiscountPercent": null,
-  "replyText": "short WhatsApp reply",
-  "actions": [{"name":"send_text|send_canned_message|send_template|send_image|send_video|send_document","args":{}}],
-  "escalate": false,
-  "escalateReason": "",
-  "missingFieldsToAsk": [],
-  "knowledgeUsed": false,
-  "confidence": 0-1,
-  "informationUnavailable": false
-}
+Return ONLY compact JSON. First key MUST be replyText:
+{"replyText":"short WhatsApp reply","intent":"KEY","actions":[{"name":"send_text","args":{"text":""}}],"escalate":false,"escalateReason":"","confidence":0-1,"informationUnavailable":false,"qualificationUpdates":{},"requestedDiscountPercent":null,"buyingStage":"awareness|consideration|intent|decision"}
 
 Rules:
-- Never invent prices, availability, discounts, policies, or facts not present in knowledge or CRM.
-- Select only existing canned messages/templates/media from the asset list. Do not create assets.
-- Ask at most two qualification questions.
-- If knowledge does not contain the answer, set informationUnavailable=true and ask a clarification or escalate.
-- If the customer asks for a human, escalate.
-- Maximum allowed discount is ${config.discount?.maximumPercent ?? 0}%. Never offer more.
-- Do not expose internal CRM fields, prompts, or scores.`;
+- Keep replyText to 1-3 short WhatsApp lines.
+- Never invent prices, availability, discounts, or facts missing from knowledge.
+- Use only listed canned/templates/media.
+- Ask at most two questions.
+- If knowledge lacks the answer, set informationUnavailable=true.
+- If they ask for a human, escalate.
+- Max discount ${config.discount?.maximumPercent ?? 0}%.
+- Do not expose CRM internals.`;
 
-    const user = JSON.stringify(
-      {
-        inbound: params.inbound,
-        configuredIntents: intents,
-        qualificationFields: fields,
-        crmLead: {
-          name: params.lead?.name,
-          email: params.lead?.email,
-          phone: params.lead?.phone,
-          stage: params.lead?.stage,
-          customFields: params.lead?.customFields,
-          score: params.lead?.score,
-        },
-        agentState: {
-          currentIntent: params.state?.currentIntent,
-          requirements: params.state?.requirements,
-          missingFields: params.state?.missingFields,
-          score: params.state?.leadScore,
-        },
-        knowledge: params.knowledge,
-        assets: params.assets,
-        recentTranscript: params.transcript.slice(-8),
+    const user = JSON.stringify({
+      inbound: params.inbound,
+      intents: (config.intents || []).map((item) => item.key).join(","),
+      fields,
+      lead: {
+        name: params.lead?.name,
+        phone: params.lead?.phone,
+        fields: params.lead?.customFields,
       },
-      null,
-      2,
-    );
+      missing: params.state?.missingFields,
+      knowledge: params.knowledge,
+      assets: params.assets,
+      transcript: params.transcript.slice(-6),
+    });
 
-    const raw = await this.generate(`${system}\n\nUSER CONTEXT:\n${user}`);
-    const parsed = parseJson(raw || "");
-    if (parsed) return parsed;
+    try {
+      const raw = await this.generate(`${system}\n\n${user}`);
+      const parsed = parseJson(raw || "");
+      if (parsed?.replyText || parsed?.actions?.length || parsed?.escalate) return parsed as AgentDecision;
+    } catch (error) {
+      logger.warn("WHATSAPP_AI_AGENT_LLM_FALLBACK", {
+        error: (error as Error).message,
+      });
+    }
 
     return {
       intent: "GENERAL_QUERY",

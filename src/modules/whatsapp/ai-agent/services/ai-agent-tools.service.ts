@@ -7,8 +7,6 @@ import { LeadModel } from "../../../../models/lead.model.js";
 import { Notification } from "../../../../models/notification.model.js";
 import { Task } from "../../../../models/tasks.model.js";
 import { ContactRepository } from "../../../../repositories/contact.repository.js";
-import { ContactService } from "../../../../services/contact.service.js";
-import { LeadService } from "../../../../services/lead.service.js";
 import logger from "../../../../utils/logger.js";
 import { phoneMatchValues } from "../../../../utils/phone.util.js";
 import { CANNED_MESSAGE_STATUS } from "../../canned/constants/canned.constant.js";
@@ -67,16 +65,11 @@ const interpolate = (text: string, ctx: ToolContext, lead?: any) => {
 
 export class AiAgentToolsService {
   private whatsappMessageService = new WhatsappMessageService();
-  private contactService = new ContactService(new ContactRepository());
-  private leadService = new LeadService();
+  private contactRepository = new ContactRepository();
+  private assetsCache = new Map<string, { at: number; value: any }>();
 
   async findContact(accountId: string, phone: string, email?: string) {
-    return this.contactService.upsertFromLead({
-      accountId,
-      phone,
-      email,
-      source: "whatsapp",
-    });
+    return this.contactRepository.findExistingContact(accountId, email, phone);
   }
 
   async findOrCreateLead(params: {
@@ -98,13 +91,7 @@ export class AiAgentToolsService {
       .lean();
 
     if (existing) {
-      const patch: Record<string, unknown> = {};
-      if (params.name && !existing.name) patch.name = params.name;
-      if (params.email && !existing.email) patch.email = params.email;
-      if (Object.keys(patch).length) {
-        await LeadModel.updateOne({ _id: existing._id, accountId: params.accountId }, { $set: patch });
-      }
-      return { ...(existing as any), ...patch, id: String(existing._id), isNew: false };
+      return { ...(existing as any), id: String(existing._id), isNew: false };
     }
 
     return {
@@ -174,6 +161,9 @@ export class AiAgentToolsService {
   }
 
   async listSendableAssets(accountId: string) {
+    const cached = this.assetsCache.get(accountId);
+    if (cached && Date.now() - cached.at < 30_000) return cached.value;
+
     const [canned, templates] = await Promise.all([
       WhatsAppCannedMessageModel.find({
         accountId,
@@ -186,13 +176,13 @@ export class AiAgentToolsService {
         .lean(),
     ]);
 
-    return {
+    const value = {
       canned: canned.map((item) => ({
         id: String(item._id),
         name: item.name,
         shortcut: item.shortcut,
         type: item.type,
-        preview: String(item.text || "").slice(0, 160),
+        preview: String(item.text || "").slice(0, 100),
         category: item.category,
         hasMedia: Boolean(item.media?.url),
       })),
@@ -203,6 +193,18 @@ export class AiAgentToolsService {
         category: item.category,
       })),
     };
+    this.assetsCache.set(accountId, { at: Date.now(), value });
+    return value;
+  }
+
+  async sendTypingIndicator(accountId: string, inboundMessageId: string) {
+    const messageId = String(inboundMessageId || "");
+    if (!messageId || messageId.startsWith("resume:")) return;
+    await this.whatsappMessageService
+      .sendTypingIndicator(accountId, messageId)
+      .catch((error) =>
+        logger.warn("WHATSAPP_TYPING_SKIPPED", { error: (error as Error).message }),
+      );
   }
 
   async sendText(ctx: ToolContext, body: string) {

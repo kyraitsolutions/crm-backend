@@ -141,6 +141,39 @@ export class WhatsappMessageService {
     };
   }
 
+  async sendTypingIndicator(accountId: string, inboundMessageId: string) {
+    const integration =
+      await this.integrationRepository.findByAccountAndProvider(
+        accountId,
+        IntegrationProvider.WHATSAPP,
+      );
+    if (!integration) return;
+
+    const credential =
+      await this.integrationCredentialRepository.findByIntegrationId(
+        integration._id.toString(),
+      );
+    if (!credential?.accessToken) return;
+
+    const whatsappAccount =
+      await this.whatsappAccountRepository.findByPhoneNumberId(
+        integration?.providerResourceId,
+      );
+    const phoneNumberId = whatsappAccount?.phoneNumberInfo?.id;
+    if (!phoneNumberId) return;
+
+    await this.whatsappMessageClient.sendMessage({
+      accessToken: credential.accessToken,
+      phoneNumberId,
+      payload: {
+        messaging_product: "whatsapp",
+        status: "read",
+        message_id: inboundMessageId,
+        typing_indicator: { type: "text" },
+      },
+    });
+  }
+
   async getMedia(accountId: string, mediaId: string) {
     if (!mediaId) {
       throw new Error("Media ID is required.");

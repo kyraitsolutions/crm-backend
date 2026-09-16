@@ -19,8 +19,8 @@ export const whatsappAiAgentQueue = new Queue<WhatsAppAiAgentJobData>(
     redis: redisConfig,
     defaultJobOptions: {
       ...defaultJobOptions,
-      attempts: 3,
-      backoff: { type: "exponential", delay: 4000 },
+      attempts: 2,
+      backoff: { type: "exponential", delay: 2000 },
     },
   },
 );
@@ -42,6 +42,7 @@ export async function enqueueWhatsAppAiAgentJob(data: WhatsAppAiAgentJobData) {
   try {
     return await whatsappAiAgentQueue.add("process", data, {
       jobId: data.messageId,
+      delay: 1500,
     });
   } catch (error: any) {
     if (String(error?.message || "").includes("already exists")) {

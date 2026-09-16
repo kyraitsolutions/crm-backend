@@ -16,9 +16,18 @@ const serialize = (doc: any) => {
 };
 
 export class AiAgentConfigService {
+  private cache = new Map<string, { at: number; value: any }>();
+
   async getOrCreate(organizationId: string, accountId: string) {
+    const cached = this.cache.get(accountId);
+    if (cached && Date.now() - cached.at < 30_000) return cached.value;
+
     const existing = await WhatsAppAiAgentConfigModel.findOne({ accountId });
-    if (existing) return serialize(existing);
+    if (existing) {
+      const value = serialize(existing);
+      this.cache.set(accountId, { at: Date.now(), value });
+      return value;
+    }
 
     const created = await WhatsAppAiAgentConfigModel.create({
       organizationId,
@@ -38,7 +47,9 @@ export class AiAgentConfigService {
       if (error?.code !== 11000) throw error;
       return WhatsAppAiAgentConfigModel.findOne({ accountId });
     });
-    return serialize(created);
+    const value = serialize(created);
+    this.cache.set(accountId, { at: Date.now(), value });
+    return value;
   }
 
   async update(
@@ -46,6 +57,7 @@ export class AiAgentConfigService {
     accountId: string,
     payload: Record<string, unknown>,
   ) {
+    this.cache.delete(accountId);
     const current = await this.getOrCreate(organizationId, accountId);
     const next = {
       enabled: payload.enabled ?? current.enabled,
@@ -85,7 +97,9 @@ export class AiAgentConfigService {
       { $set: { organizationId, ...next } },
       { new: true, upsert: true },
     );
-    return serialize(updated);
+    const value = serialize(updated);
+    this.cache.set(accountId, { at: Date.now(), value });
+    return value;
   }
 }
 
