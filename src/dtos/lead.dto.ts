@@ -21,7 +21,13 @@ export class LeadDto {
     name: LeadSourceName;
     url: string;
     formId: string;
-    chatbotId: string;
+    chatbotId?: string;
+    pageId?: string;
+    leadgenId?: string;
+    adId?: string;
+    adgroupId?: string;
+    campaignId?: string;
+    createdTime?: Date | string | null;
   };
 
   assignedTo?: string;
@@ -66,6 +72,12 @@ export class LeadDto {
       url: data?.source?.url || "",
       formId: data?.source?.formId || "",
       chatbotId: data?.source?.chatbotId || "",
+      pageId: data?.source?.pageId || "",
+      leadgenId: data?.source?.leadgenId || "",
+      adId: data?.source?.adId || "",
+      adgroupId: data?.source?.adgroupId || "",
+      campaignId: data?.source?.campaignId || "",
+      createdTime: data?.source?.createdTime || null,
     };
 
     if (data?.assignedTo) {

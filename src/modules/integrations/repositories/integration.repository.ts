@@ -52,11 +52,15 @@ export class IntegrationRepository {
     });
   }
 
-  async disconnect(integrationId: string, session?: ClientSession) {
+  async disconnect(
+    integrationId: string,
+    session?: ClientSession,
+    provider?: IntegrationProvider,
+  ) {
     return IntegrationModel.findOneAndUpdate(
       {
         _id: integrationId,
-        provider: IntegrationProvider.WHATSAPP,
+        ...(provider ? { provider } : {}),
       },
       {
         $set: {

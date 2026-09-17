@@ -25,6 +25,7 @@ import { HealthRouter } from "./health.routes.js";
 import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
 // import { TwilioRouter } from "../modules/salesAgent/routes/twilio.route.js";
 import { IntegrationsRouter } from "../modules/integrations/routes/index.js";
+import { MetaRouter } from "../modules/meta/routes/meta.route.js";
 
 export class AppRoutes {
   private organizationRouter: OrganizationRouter;
@@ -51,8 +52,9 @@ export class AppRoutes {
   private automationRouter: AutomationRouter;
   private activityLogRouter: ActivityLogRouter;
   private integrationRouter: IntegrationsRouter;
+  private metaRouter: MetaRouter;
   private whatsappRouter: WhatsappRouter;
-  private webhookRouter:WebhookRouter;
+  private webhookRouter: WebhookRouter;
   // private twilioRouter:TwilioRouter;
   private healthRouter: HealthRouter;
 
@@ -83,9 +85,10 @@ export class AppRoutes {
     this.configurationRouter = new ConfigurationRouter();
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();
-    this.webhookRouter=new WebhookRouter();
+    this.webhookRouter = new WebhookRouter();
     // this.twilioRouter=new TwilioRouter();
     this.integrationRouter = new IntegrationsRouter();
+    this.metaRouter = new MetaRouter();
     this.healthRouter = new HealthRouter();
 
     this.router = Router();
@@ -119,8 +122,9 @@ export class AppRoutes {
     this.router.use("/automation", this.automationRouter.getRouter());
     this.router.use("/activity-logs", this.activityLogRouter.getRouter());
     this.router.use("/integration", this.integrationRouter.getRouter());
+    this.router.use("/meta", this.metaRouter.getRouter());
     this.router.use("/whatsapp", this.whatsappRouter.getRouter());
-    this.router.use("/webhook",this.webhookRouter.getRouter());
+    this.router.use("/webhook", this.webhookRouter.getRouter());
     // this.router.use("/twilio",this.twilioRouter.getRouter());
     this.router.use("/health", this.healthRouter.getRouter());
   }

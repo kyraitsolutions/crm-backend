@@ -24,6 +24,14 @@ export class LeadRespository {
     return await LeadModel.create(lead);
   }
 
+  async findByLeadgenId(leadgenId: string) {
+    if (!leadgenId) return null;
+    return LeadModel.findOne({
+      "source.leadgenId": leadgenId,
+      isDeleted: { $ne: true },
+    });
+  }
+
   async bulkWrite(ops: any[]) {
     return await LeadModel.bulkWrite(ops, { ordered: false });
   }
