@@ -64,6 +64,18 @@ export class IncomingMessageHandler {
             },
           });
 
+        if (!conversation) {
+          console.warn("WHATSAPP_WEBHOOK_SKIPPED", {
+            reason: "conversation_not_created",
+            messageId: parsedMessage.messageId,
+          });
+          continue;
+        }
+
+        const conversationId = String(
+          (conversation as any).id || (conversation as any)._id || "",
+        );
+
         await this.contactService.upsertFromLead({
           accountId: String(integration.accountId),
           name: waContactName,
@@ -74,7 +86,7 @@ export class IncomingMessageHandler {
         // // 2. Build DB document
         const messageDocument = {
           accountId: new Types.ObjectId(integration.accountId),
-          conversationId: new Types.ObjectId(conversation.id),
+          conversationId: new Types.ObjectId(conversationId),
           // platform: "whatsapp",
           ...parsedMessage,
         };
@@ -109,9 +121,6 @@ export class IncomingMessageHandler {
         try {
           const { whatsappLiveChatService } = await import(
             "../../live-chat/services/whatsapp-live-chat.service.js"
-          );
-          const conversationId = String(
-            conversation.id || (conversation as any)._id || "",
           );
           const liveChatResult = await whatsappLiveChatService.handleInbound({
             accountId: String(integration.accountId),

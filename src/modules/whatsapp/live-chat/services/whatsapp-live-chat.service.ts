@@ -291,7 +291,7 @@ export class WhatsAppLiveChatService {
     }
 
     if (liveChat.autoResolveActive && !liveChat.humanIntervened) {
-      await this.pauseAutoResolve(conversation._id, liveChat);
+      await this.pauseAutoResolve(String(conversation._id), liveChat);
     }
 
     if (liveChat.humanIntervened) {

@@ -200,13 +200,13 @@ export class ConversationService {
     filter: any;
     create: Partial<TConversation>;
   }) {
-    let conversation = await this.repository.findOne(filter);
+    let conversation: any = await this.repository.findOne(filter);
 
     if (conversation) {
       const nextName = String((create as any)?.contact?.name || "").trim();
-      if (nextName && !String((conversation as any)?.contact?.name || "").trim()) {
+      if (nextName && !String(conversation?.contact?.name || "").trim()) {
         const updated = await ConversationModel.findByIdAndUpdate(
-          conversation._id,
+          conversation._id || conversation.id,
           { $set: { "contact.name": nextName } },
           { new: true },
         );

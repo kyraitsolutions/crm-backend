@@ -71,6 +71,12 @@ export class MessageEchoHandler {
       },
     );
 
+    if (!conversation) return;
+
+    const conversationId = String(
+      (conversation as any).id || (conversation as any)._id || "",
+    );
+
     const parsedMessage = messageParser.parse({
       message: echo,
       from: "agent",
@@ -79,7 +85,7 @@ export class MessageEchoHandler {
 
     const messageDocument = {
       accountId: new Types.ObjectId(integration.accountId),
-      conversationId: new Types.ObjectId(conversation.id),
+      conversationId: new Types.ObjectId(conversationId),
       // platform: "whatsapp",
       ...parsedMessage,
     };
@@ -102,7 +108,7 @@ export class MessageEchoHandler {
     const { whatsappLiveChatService } = await import(
       "../../live-chat/services/whatsapp-live-chat.service.js"
     );
-    await whatsappLiveChatService.markHumanIntervention(String(conversation.id));
+    await whatsappLiveChatService.markHumanIntervention(conversationId);
   }
 }
 

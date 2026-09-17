@@ -455,35 +455,6 @@ export class AiAgentToolsService {
     });
   }
 
-  private async queueWhatsAppLeadEmail(params: {
-    accountId: string;
-    conversationId?: string;
-    lead: any;
-    message?: string;
-  }) {
-    const account = await AccountModel.findById(params.accountId).select("email accountName");
-    if (!account?.email) return;
-    const leadId = String(params.lead?.id || params.lead?._id || "");
-    await emailService
-      .queueLeadNotificationEmail({
-        email: String(account.email),
-        lead: {
-          name: params.lead?.name || params.lead?.phone,
-          phone: params.lead?.phone || params.lead?.mobile,
-          email: params.lead?.email,
-          message: String(params.message || params.lead?.message || "").slice(0, 800),
-          source: { name: "whatsapp" },
-          accountName: account.accountName,
-          inboxUrl: whatsappInboxUrl(params.accountId, params.conversationId),
-          leadUrl: leadDetailUrl(params.accountId, leadId),
-          receivedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-        },
-      })
-      .catch((error) =>
-        logger.warn("WHATSAPP_NEW_LEAD_EMAIL_SKIPPED", { error: (error as Error).message }),
-      );
-  }
-
   private async queueWhatsAppEscalationEmail(params: {
     accountId: string;
     conversationId: string;

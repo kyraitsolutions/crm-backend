@@ -20,9 +20,13 @@ export const ConversationSchema = z.object({
   visitorId: z.string(),
   platform: PlatformSchema,
   identifiers: IdentifiersSchema,
-  contact: z.object({
-    phoneNumber: z.string(),
-  }),
+  contact: z
+    .object({
+      phoneNumber: z.string().optional(),
+      name: z.string().optional(),
+      profilePicture: z.string().optional(),
+    })
+    .optional(),
   status: ConversationStatusSchema.default("open"),
   lastMessage: LastMessageSchema.optional(),
   unreadCount: z.number().default(0),

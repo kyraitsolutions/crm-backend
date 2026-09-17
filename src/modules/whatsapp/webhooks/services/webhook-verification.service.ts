@@ -2,7 +2,7 @@ import { ParsedQs } from "qs";
 import { config } from "../../../../config/index.js";
 
 export class WebhookVerificationService {
-  private readonly verifyToken = config.meta.VERIFY_WEBHOOK_TOKEN;
+  private readonly verifyToken = config.meta.VERIFY_WEBHOOK_TOKEN_WA;
 
   public verify(query: ParsedQs): string {
     const mode = query["hub.mode"];
