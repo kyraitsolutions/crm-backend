@@ -5,6 +5,7 @@ import { ContactService } from "../../../../services/contact.service.js";
 import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
+import logger from "../../../../utils/logger.js";
 
 export class IncomingMessageHandler {
   private conservationService = new ConversationService();
@@ -76,12 +77,19 @@ export class IncomingMessageHandler {
           (conversation as any).id || (conversation as any)._id || "",
         );
 
-        await this.contactService.upsertFromLead({
+        const contact = await this.contactService.upsertFromLead({
           accountId: String(integration.accountId),
           name: waContactName,
           phone: message.from,
           source: "whatsapp",
         });
+        if (!contact) {
+          logger.warn("WHATSAPP_CONTACT_NOT_CREATED", {
+            accountId: String(integration.accountId),
+            phone: message.from,
+            conversationId,
+          });
+        }
 
         // // 2. Build DB document
         const messageDocument = {

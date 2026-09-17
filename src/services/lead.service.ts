@@ -63,28 +63,90 @@ export class LeadService {
     );
   }
 
+  private pickLeadIdentity(data: Record<string, any>, keys: string[]): string {
+    for (const key of keys) {
+      const value = data?.[key];
+      if (value == null) continue;
+      const text = String(value).trim();
+      if (text) return text;
+    }
+    return "";
+  }
+
+  private flattenLeadCustomFields(customFields: unknown): Record<string, any> {
+    if (!customFields) return {};
+    if (customFields instanceof Map) {
+      return Object.fromEntries(customFields);
+    }
+    if (typeof customFields === "object") {
+      return { ...(customFields as Record<string, any>) };
+    }
+    return {};
+  }
+
   private contactPayloadFromLead(lead: any) {
-    const data = typeof lead?.toJSON === "function" ? lead.toJSON() : lead;
+    const data = typeof lead?.toJSON === "function" ? lead.toJSON() : lead || {};
+    const custom = this.flattenLeadCustomFields(data.customFields);
+    const merged = { ...custom, ...data };
+    const firstName = this.pickLeadIdentity(merged, ["first_name", "firstName"]);
+    const lastName = this.pickLeadIdentity(merged, ["last_name", "lastName"]);
+    const name =
+      this.pickLeadIdentity(merged, ["name", "full_name", "fullName"]) ||
+      [firstName, lastName].filter(Boolean).join(" ").trim();
+
     return {
-      accountId: String(data?.accountId || ""),
-      name: data?.name,
-      email: data?.email,
-      phone: data?.phone || data?.mobile,
-      mobile: data?.mobile,
+      accountId: String(data?.accountId || merged?.accountId || ""),
+      name,
+      email: this.pickLeadIdentity(merged, [
+        "email",
+        "email_address",
+        "emailAddress",
+        "work_email",
+      ]),
+      phone: this.pickLeadIdentity(merged, [
+        "phone",
+        "mobile",
+        "phone_number",
+        "phoneNumber",
+        "mobile_number",
+        "mobileNumber",
+        "whatsapp",
+        "whatsapp_number",
+      ]),
+      mobile: this.pickLeadIdentity(merged, ["mobile", "mobileNumber", "phone"]),
       source: data?.source?.name || data?.source,
-      tags: data?.tags,
+      tags: Array.isArray(data?.tags) ? data.tags : [],
     };
   }
 
-  private async syncContactFromLead(lead: any): Promise<void> {
-    await this.contactService.upsertFromLead(this.contactPayloadFromLead(lead));
+  private async syncContactFromLead(lead: any, fallback?: any): Promise<void> {
+    const payload = this.contactPayloadFromLead({
+      ...(fallback || {}),
+      ...(typeof lead?.toJSON === "function" ? lead.toJSON() : lead || {}),
+      accountId:
+        (typeof lead?.toJSON === "function" ? lead.toJSON() : lead)?.accountId ||
+        fallback?.accountId,
+      source:
+        (typeof lead?.toJSON === "function" ? lead.toJSON() : lead)?.source ||
+        fallback?.source,
+    });
+
+    const contact = await this.contactService.upsertFromLead(payload);
+    if (!contact) {
+      logger.warn("Lead contact not created", {
+        accountId: payload.accountId,
+        source: payload.source,
+        hasPhone: Boolean(payload.phone),
+        hasEmail: Boolean(payload.email),
+      });
+    }
   }
 
   async createLeadWs(lead: Lead): Promise<Lead> {
     const account = await this.accountRepository.findOne(String(lead.accountId));
     await this.assertLeadCapacity(account?.organizationId && String(account.organizationId));
     const created = await this.leadRepository.create(lead);
-    await this.syncContactFromLead(created);
+    await this.syncContactFromLead(created, lead);
     await this.recordLeadUsage(account?.organizationId && String(account.organizationId));
     if (account?.organizationId) {
       await this.activityLogService.logCreate({
@@ -116,7 +178,7 @@ export class LeadService {
     });
     await this.assertLeadCapacity(context.organizationId);
     const result = await this.leadRepository.create(lead);
-    await this.syncContactFromLead(result);
+    await this.syncContactFromLead(result, lead);
     await this.recordLeadUsage(context.organizationId);
 
     // Activity Log

@@ -56,7 +56,22 @@ export class WebhookController {
       const { accountId } = req.params;
       const meta = await getMetaData(req);
 
-      const leadData = req.body;
+      const leadData = {
+        ...req.body,
+        phone:
+          req.body?.phone ||
+          req.body?.phoneNumber ||
+          req.body?.phone_number ||
+          req.body?.mobile ||
+          req.body?.mobileNumber,
+        mobile:
+          req.body?.mobile ||
+          req.body?.mobileNumber ||
+          req.body?.mobile_number ||
+          req.body?.phone,
+        email: req.body?.email || req.body?.email_address,
+        name: req.body?.name || req.body?.full_name || req.body?.fullName,
+      };
       const leadDto = new LeadDto(leadData);
 
       const leadDataPayload = {

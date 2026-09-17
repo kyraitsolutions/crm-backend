@@ -120,13 +120,19 @@ const contactSchema = new Schema<Contact>(
   },
 );
 
+// Compound unique+sparse indexes still include docs that only have accountId.
+// Contacts without email then share { accountId, email: null } and the second
+// WhatsApp contact in an account fails with E11000. Partial filters keep
+// uniqueness only when email/phone actually exist.
 contactSchema.index(
   { accountId: 1, email: 1 },
   {
     unique: true,
-    sparse: true,
     name: "uniq_account_email",
     collation: { locale: "en", strength: 2 },
+    partialFilterExpression: {
+      email: { $type: "string", $gt: "" },
+    },
   },
 );
 
@@ -134,8 +140,10 @@ contactSchema.index(
   { accountId: 1, phone: 1 },
   {
     unique: true,
-    sparse: true,
     name: "uniq_account_phone",
+    partialFilterExpression: {
+      phone: { $type: "string", $gt: "" },
+    },
   },
 );
 

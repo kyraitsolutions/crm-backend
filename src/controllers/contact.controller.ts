@@ -65,4 +65,26 @@ export class ContactController {
       handleRouteError("ContactController", error, next, req);
     }
   };
+
+  updateContact = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { accountId, contactId, ...data } = req.body || {};
+      const id = String(contactId || req.params.contactId || "");
+      const account = String(accountId || "");
+      if (!account || !id) {
+        httpResponse(req, res, 400, "accountId and contactId are required", {});
+        return;
+      }
+      const contact = await contactService.updateContact(account, id, data);
+      httpResponse(req, res, 200, "contact updated successfully", {
+        docs: contact,
+      });
+    } catch (error) {
+      handleRouteError("ContactController", error, next, req);
+    }
+  };
 }

@@ -2,9 +2,35 @@ import { HttpError } from "../utils/http.error.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
 import { AccountRepository } from "../repositories/account.repository.js";
 import { TContact, TCreateContact } from "../types/contact.type.js";
-import { normalizeEmail, normalizePhone } from "../utils/phone.util.js";
+import {
+  normalizeEmail,
+  normalizePhone,
+  toContactPhone,
+} from "../utils/phone.util.js";
 import logger from "../utils/logger.js";
 import { ActivityLogService } from "./activityLog.service.js";
+
+const isObjectIdString = (value: string) => /^[a-fA-F0-9]{24}$/.test(value);
+
+const resolveAccountId = (value: unknown): string => {
+  if (!value) return "";
+  if (typeof value === "string") {
+    return isObjectIdString(value) ? value : "";
+  }
+  if (typeof (value as { toHexString?: () => string }).toHexString === "function") {
+    const hex = String((value as { toHexString: () => string }).toHexString());
+    return isObjectIdString(hex) ? hex : "";
+  }
+  if (typeof value === "object") {
+    const nested =
+      (value as { _id?: unknown; id?: unknown })._id ??
+      (value as { id?: unknown }).id;
+    if (nested && nested !== value) {
+      return resolveAccountId(nested);
+    }
+  }
+  return "";
+};
 
 const CONTACT_SOURCES = [
   "chatbot",
@@ -126,7 +152,7 @@ export class ContactService {
   }
   async createContact(payload: TCreateContact): Promise<TContact | {}> {
     const email = normalizeEmail(payload.email);
-    const phone = normalizePhone(payload.phone);
+    const phone = toContactPhone(payload.phone);
 
     const existingContact = await this.contactRepository.findExistingContact(
       payload.accountId,
@@ -160,12 +186,100 @@ export class ContactService {
     return contact;
   }
 
+  async updateContact(
+    accountId: string,
+    contactId: string,
+    payload: Partial<TCreateContact>,
+  ): Promise<TContact> {
+    const existing = await this.contactRepository.findByAccountAndId(
+      accountId,
+      contactId,
+    );
+    if (!existing) {
+      throw HttpError.notFound("Contact not found");
+    }
+
+    const email = normalizeEmail(payload.email);
+    const phone = toContactPhone(payload.phone);
+    const duplicate = await this.contactRepository.findExistingContact(
+      accountId,
+      email,
+      phone,
+      contactId,
+    );
+    if (duplicate) {
+      throw HttpError.conflict(
+        "A contact with this email or phone number already exists.",
+      );
+    }
+
+    const $set: Record<string, unknown> = {
+      lastActivity: new Date(),
+    };
+    if (payload.name != null) $set.name = String(payload.name).trim();
+    if (payload.source) $set.source = this.mapSource(payload.source);
+    if (payload.status) $set.status = payload.status;
+    if (payload.tags !== undefined) {
+      const tags = Array.isArray(payload.tags)
+        ? payload.tags
+        : payload.tags
+          ? [payload.tags]
+          : [];
+      $set.tags = tags.filter(Boolean);
+    }
+    if (phone) $set.phone = phone;
+
+    const update: Record<string, unknown> = { $set };
+    if (email) {
+      $set.email = email;
+    } else {
+      update.$unset = { email: 1 };
+    }
+
+    const updated = await this.contactRepository.updateContactByAccount(
+      accountId,
+      contactId,
+      update,
+    );
+    if (!updated) {
+      throw HttpError.notFound("Contact not found");
+    }
+
+    try {
+      const account = await this.accountRepository.findOne(accountId);
+      const organizationId = String((account as any)?.organizationId || "");
+      if (organizationId) {
+        await this.activityLogService.logUpdate({
+          accountId,
+          organizationId,
+          entityType: "contact",
+          entityId: contactId,
+          actor: { type: "user", name: "user" },
+          oldDoc: existing,
+          newDoc: updated,
+        });
+      }
+    } catch (activityError) {
+      logger.warn("Contact activity log failed after update", {
+        accountId,
+        contactId,
+        error:
+          activityError instanceof Error
+            ? activityError.message
+            : String(activityError),
+      });
+    }
+
+    return updated as unknown as TContact;
+  }
+
   async upsertFromLead(lead: ContactIdentityInput): Promise<TContact | null> {
     try {
       return await this.upsertUniqueContact(lead);
     } catch (error) {
       logger.error("Failed to sync contact from lead", {
         accountId: lead.accountId,
+        phone: lead.phone || lead.mobile,
         error: error instanceof Error ? error.message : String(error),
       });
       return null;
@@ -200,22 +314,28 @@ export class ContactService {
   private async upsertUniqueContact(
     input: ContactIdentityInput,
   ): Promise<TContact | null> {
-    const accountId = String(input.accountId || "");
+    const accountId = resolveAccountId(input.accountId);
     const email = normalizeEmail(input.email);
-    const phone = normalizePhone(input.phone || input.mobile);
+    const source = this.mapSource(input.source);
+    const isWhatsApp = source === "whatsapp";
+    const phone = toContactPhone(input.phone || input.mobile);
     const name = String(input.name || "").trim();
 
     if (!accountId || (!email && !phone)) {
+      logger.warn("Contact upsert skipped: missing accountId or identity", {
+        accountId: String(input.accountId || ""),
+        hasEmail: Boolean(email),
+        hasPhone: Boolean(normalizePhone(input.phone || input.mobile)),
+      });
       return null;
     }
 
     const existing = await this.contactRepository.findExistingContact(
       accountId,
       email,
-      phone,
+      phone || input.phone || input.mobile,
     );
 
-    const source = this.mapSource(input.source);
     const now = new Date();
 
     if (existing) {
@@ -229,8 +349,25 @@ export class ContactService {
       if (email && !existing.email) {
         patch.email = email;
       }
-      if (phone && (!existing.phone || existing.phone.length < phone.length)) {
-        patch.phone = phone;
+      if (phone) {
+        const existingDigits = String(existing.phone || "").replace(/\D/g, "");
+        const nextDigits = phone.replace(/\D/g, "");
+        const sameNumber =
+          existingDigits.slice(-10) === nextDigits.slice(-10);
+        if (!existingDigits) {
+          patch.phone = phone;
+        } else if (sameNumber && existing.phone !== phone) {
+          if (isWhatsApp || nextDigits.length >= existingDigits.length) {
+            patch.phone = phone;
+          }
+        }
+      }
+      if (isWhatsApp && !(existing as any).whatsapp?.optIn) {
+        patch.whatsapp = {
+          optIn: true,
+          optedInAt: now,
+          source: "whatsapp",
+        };
       }
 
       const updated = await this.contactRepository.updateContactById(
@@ -260,14 +397,37 @@ export class ContactService {
     if (phone) {
       payload.phone = phone;
     }
+    if (isWhatsApp) {
+      payload.whatsapp = {
+        optIn: true,
+        optedInAt: now,
+        source: "whatsapp",
+      };
+    }
 
     try {
       const created = (await this.contactRepository.createContact(
         payload as TCreateContact,
       )) as TContact;
-      await this.recordContactActivity("create", created, {
-        type: "system",
-        name: "lead-sync",
+      try {
+        await this.recordContactActivity("create", created, {
+          type: "system",
+          name: isWhatsApp ? "whatsapp" : "lead-sync",
+        });
+      } catch (activityError) {
+        logger.warn("Contact activity log failed after create", {
+          accountId,
+          error:
+            activityError instanceof Error
+              ? activityError.message
+              : String(activityError),
+        });
+      }
+      logger.info("Contact created", {
+        accountId,
+        source,
+        phone,
+        contactId: String((created as any)?._id || (created as any)?.id || ""),
       });
       return created;
     } catch (error: any) {
@@ -275,9 +435,18 @@ export class ContactService {
         const duplicate = await this.contactRepository.findExistingContact(
           accountId,
           email,
-          phone,
+          phone || input.phone || input.mobile,
         );
-        return duplicate as unknown as TContact;
+        if (duplicate) {
+          return duplicate as unknown as TContact;
+        }
+        logger.error("Contact create hit duplicate key without a match", {
+          accountId,
+          phone,
+          email,
+          keyPattern: error?.keyPattern,
+          keyValue: error?.keyValue,
+        });
       }
       throw error;
     }

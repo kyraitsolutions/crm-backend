@@ -1,5 +1,4 @@
 import { Types } from "mongoose";
-import { ContactModel } from "../models/contact.model.js";
 import { Lead, LeadModel } from "../models/lead.model.js";
 import { Router, Request, Response } from "express";
 
@@ -63,42 +62,6 @@ export class LeadRespository {
     const savedLead = await LeadModel.findByIdAndUpdate(id, updateData, {
       new: true,
     }).lean();
-
-    // 2️⃣ Stop if no email
-    if (!lead.email || lead.email.trim() === "") {
-      return savedLead;
-    }
-
-    // // 3️⃣ Stop if no consent
-    // if (!lead.consent?.marketing) {
-    //   return savedLead;
-    // }
-    // 4️⃣ Safe contact upsert
-    const contact = await ContactModel.findOneAndUpdate(
-      {
-        accountId: lead.accountId,
-        email: lead.email.toLowerCase(),
-      },
-      {
-        $set: {
-          email: lead.email.toLowerCase(),
-          name: lead.name,
-          phone: lead.phone,
-          status: lead.consentStatus || "unsubscribed",
-          source: lead.source?.name || "chatbot",
-          "consent.marketing": true,
-          "consent.timestamp": new Date(),
-          "consent.source": lead.source?.name || "chatbot",
-          tags: lead.tags || "warm",
-        },
-        // $setOnInsert: {
-        //   source: lead.source?.name || "chatbot",
-        // },
-      },
-      { upsert: true, new: true },
-    );
-
-    console.log(contact)
 
     return savedLead;
   }

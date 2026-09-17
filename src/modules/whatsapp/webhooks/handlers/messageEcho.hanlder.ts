@@ -1,13 +1,17 @@
 import { Types } from "mongoose";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
+import { ContactService } from "../../../../services/contact.service.js";
+import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
+import logger from "../../../../utils/logger.js";
 
 export class MessageEchoHandler {
   private conversationService = new ConversationService();
   private messageService = new MessageService();
   private integrationService = new IntegrationService();
+  private contactService = new ContactService(new ContactRepository());
 
   async handle(value: any) {
     const echoes = value?.message_echoes ?? [];
@@ -76,6 +80,20 @@ export class MessageEchoHandler {
     const conversationId = String(
       (conversation as any).id || (conversation as any)._id || "",
     );
+
+    const echoContact = await this.contactService.upsertFromLead({
+      accountId: String(integration.accountId),
+      name: conversation?.contact?.name,
+      phone: echo.to,
+      source: "whatsapp",
+    });
+    if (!echoContact) {
+      logger.warn("WHATSAPP_ECHO_CONTACT_NOT_CREATED", {
+        accountId: String(integration.accountId),
+        phone: echo.to,
+        conversationId,
+      });
+    }
 
     const parsedMessage = messageParser.parse({
       message: echo,

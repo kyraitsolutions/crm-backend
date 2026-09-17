@@ -358,7 +358,12 @@ export class WhatsAppAiSalesAgentService {
         .lean(),
       aiAgentKnowledgeService.retrieve(job.accountId, inbound, 2),
       aiAgentToolsService.listSendableAssets(job.accountId),
-      aiAgentToolsService.findContact(job.accountId, job.phone),
+      aiAgentToolsService.findContact(
+        job.accountId,
+        job.phone,
+        undefined,
+        job.contactName,
+      ),
       aiAgentToolsService.findOrCreateLead({
         accountId: job.accountId,
         organizationId: job.organizationId,
@@ -495,8 +500,8 @@ export class WhatsAppAiSalesAgentService {
         allowed.push({ name: "send_text", args: { text: decision.replyText } });
       }
 
-      for (const action of allowed.slice(0, 2)) {
-        if (outboundCount >= 2) break;
+      for (const action of allowed.slice(0, 1)) {
+        if (outboundCount >= 1) break;
         const executed = await this.executeSend(action, ctx, profile);
         if (executed && "sent" in executed && executed.sent) {
           tools.push(action.name);
@@ -512,133 +517,157 @@ export class WhatsAppAiSalesAgentService {
       }
     }
 
-    const updatedLead = await aiAgentToolsService.updateLeadFields({
-      accountId: job.accountId,
-      leadId: String(lead.id || lead._id),
-      fields: {
-        ...qualificationUpdates,
-        ...(agentConfig.discount?.enabled &&
-        requestedDiscount > 0 &&
-        requestedDiscount <= maxDiscount
-          ? { offered_discount: requestedDiscount }
-          : {}),
-      },
-      score,
-    });
-
-    await ConversationModel.updateOne(
-      { _id: job.conversationId, accountId: job.accountId },
-      {
-        $set: {
-          score: score.score,
-          scoreLevel: score.level,
+    const leadId = String(lead?.id || lead?._id || "").trim();
+    let updatedLead = lead;
+    try {
+      updatedLead = (await aiAgentToolsService.updateLeadFields({
+        accountId: job.accountId,
+        leadId,
+        fields: {
+          ...qualificationUpdates,
+          ...(agentConfig.discount?.enabled &&
+          requestedDiscount > 0 &&
+          requestedDiscount <= maxDiscount
+            ? { offered_discount: requestedDiscount }
+            : {}),
         },
-      },
-    );
+        score,
+      })) || lead;
 
-    if (shouldEscalate) {
-      await aiAgentToolsService.escalate({
-        ctx,
+      await ConversationModel.updateOne(
+        { _id: job.conversationId, accountId: job.accountId },
+        {
+          $set: {
+            score: score.score,
+            scoreLevel: score.level,
+          },
+        },
+      );
+
+      if (shouldEscalate) {
+        await aiAgentToolsService.escalate({
+          ctx,
+          config: agentConfig,
+          reason: escalateReasons[0],
+          lead: updatedLead || lead,
+          score,
+          message: inbound,
+          intent: decision.intent,
+        });
+        tools.push("escalate_to_human");
+        actions.push("escalate_to_human");
+      }
+
+      const conversion = aiAgentScoringService.canConvert({
         config: agentConfig,
-        reason: escalateReasons[0],
         lead: updatedLead || lead,
         score,
-        message: inbound,
-        intent: decision.intent,
       });
-      tools.push("escalate_to_human");
-      actions.push("escalate_to_human");
-    }
+      let converted = false;
+      if (conversion.ok && leadId) {
+        const marked = await aiAgentToolsService.markConverted(
+          job.accountId,
+          leadId,
+          agentConfig.scoring.convertedStage || "converted",
+        );
+        converted = Boolean(marked);
+        if (converted) tools.push("mark_converted");
+      }
 
-    const conversion = aiAgentScoringService.canConvert({
-      config: agentConfig,
-      lead: updatedLead || lead,
-      score,
-    });
-    let converted = false;
-    if (conversion.ok && lead.id) {
-      const marked = await aiAgentToolsService.markConverted(
-        job.accountId,
-        String(lead.id || lead._id),
-        agentConfig.scoring.convertedStage || "converted",
-      );
-      converted = Boolean(marked);
-      if (converted) tools.push("mark_converted");
-    }
+      if (
+        converted ||
+        aiAgentScoringService.meetsLevel(agentConfig, score.level, agentConfig.scoring.notifyFromLevel || "HOT")
+      ) {
+        const eventKey = converted ? "converted" : `score:${score.level}`;
+        await aiAgentToolsService.notifyLeadEvent({
+          organizationId: job.organizationId,
+          accountId: job.accountId,
+          conversationId: job.conversationId,
+          eventKey,
+          typeId: converted
+            ? `ai-converted:${job.conversationId}`
+            : `ai-score:${job.conversationId}:${score.level}`,
+          title: converted ? "Lead converted" : `High priority lead (${score.level})`,
+          description: [
+            `${lead.name || job.phone}`,
+            job.phone,
+            `Intent: ${decision.intent || "n/a"}`,
+            `Score: ${score.score}`,
+            score.factors.slice(0, 4).join(", "),
+          ]
+            .filter(Boolean)
+            .join(" · "),
+          lead: updatedLead || lead,
+          meta: { score, intent: decision.intent, phone: job.phone },
+        });
+        tools.push("notify_admin");
+      }
 
-    if (
-      converted ||
-      aiAgentScoringService.meetsLevel(agentConfig, score.level, agentConfig.scoring.notifyFromLevel || "HOT")
-    ) {
-      const eventKey = converted ? "converted" : `score:${score.level}`;
-      await aiAgentToolsService.notifyLeadEvent({
-        organizationId: job.organizationId,
-        accountId: job.accountId,
-        conversationId: job.conversationId,
-        eventKey,
-        typeId: converted
-          ? `ai-converted:${job.conversationId}`
-          : `ai-score:${job.conversationId}:${score.level}`,
-        title: converted ? "Lead converted" : `High priority lead (${score.level})`,
-        description: [
-          `${lead.name || job.phone}`,
-          job.phone,
-          `Intent: ${decision.intent || "n/a"}`,
-          `Score: ${score.score}`,
-          score.factors.slice(0, 4).join(", "),
-        ]
-          .filter(Boolean)
-          .join(" · "),
-        lead: updatedLead || lead,
-        meta: { score, intent: decision.intent, phone: job.phone },
-      });
-      tools.push("notify_admin");
-    }
-
-    await WhatsAppAiAgentStateModel.updateOne(
-      { conversationId: job.conversationId },
-      {
-        $set: {
-          contactId: (contact as any)?.id || (contact as any)?._id || null,
-          leadId: lead.id || null,
-          currentIntent: decision.intent || "",
-          buyingStage: decision.buyingStage || "",
-          requirements: qualificationUpdates,
-          missingFields,
-          leadScore: score.score,
-          leadScoreLevel: score.level,
-          lastAction: actions[actions.length - 1] || "",
-          pendingAction: missingFields[0] || "",
+      await WhatsAppAiAgentStateModel.updateOne(
+        { conversationId: job.conversationId },
+        {
+          $set: {
+            contactId: (contact as any)?.id || (contact as any)?._id || null,
+            leadId: leadId || null,
+            currentIntent: decision.intent || "",
+            buyingStage: decision.buyingStage || "",
+            requirements: qualificationUpdates,
+            missingFields,
+            leadScore: score.score,
+            leadScoreLevel: score.level,
+            lastAction: actions[actions.length - 1] || "",
+            pendingAction: missingFields[0] || "",
+          },
         },
-      },
-    );
-
-    if (!liveChat.autoResolveActive) {
-      await whatsAppAiAgentService.startConversation(job.organizationId).catch((error) =>
-        logger.warn("WHATSAPP_AI_AGENT_USAGE_SKIPPED", { error: (error as Error).message }),
       );
+
+      if (!liveChat.autoResolveActive) {
+        await whatsAppAiAgentService.startConversation(job.organizationId).catch((error) =>
+          logger.warn("WHATSAPP_AI_AGENT_USAGE_SKIPPED", { error: (error as Error).message }),
+        );
+      }
+
+      logger.info("WHATSAPP_AI_AGENT_COMPLETED", {
+        conversationId: job.conversationId,
+        messageId: job.messageId,
+        intent: decision.intent,
+        score: score.score,
+        level: score.level,
+        escalated: shouldEscalate,
+        converted,
+      });
+
+      return {
+        intent: decision.intent,
+        actions,
+        tools,
+        knowledgeIds: knowledge.map((item) => item.id),
+        score: score.score,
+        level: score.level,
+        escalated: shouldEscalate,
+        converted,
+      };
+    } catch (error) {
+      logger.warn("WHATSAPP_AI_AGENT_POST_SEND_FAILED", {
+        conversationId: job.conversationId,
+        messageId: job.messageId,
+        sent: outboundCount > 0,
+        error: (error as Error).message,
+      });
+      if (outboundCount > 0) {
+        return {
+          intent: decision.intent,
+          actions,
+          tools,
+          knowledgeIds: knowledge.map((item) => item.id),
+          score: score.score,
+          level: score.level,
+          escalated: shouldEscalate,
+          converted: false,
+        };
+      }
+      throw error;
     }
-
-    logger.info("WHATSAPP_AI_AGENT_COMPLETED", {
-      conversationId: job.conversationId,
-      messageId: job.messageId,
-      intent: decision.intent,
-      score: score.score,
-      level: score.level,
-      escalated: shouldEscalate,
-      converted,
-    });
-
-    return {
-      intent: decision.intent,
-      actions,
-      tools,
-      knowledgeIds: knowledge.map((item) => item.id),
-      score: score.score,
-      level: score.level,
-      escalated: shouldEscalate,
-      converted,
-    };
   }
 
   private async executeSend(

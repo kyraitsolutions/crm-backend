@@ -24689,3 +24689,650 @@
 {"level":"warn","message":"No connected Meta account for page","pageId":"444444444444","timestamp":"2026-09-17 21:21:24"}
 {"level":"http","message":"POST /api/meta/webhook 200 76ms","timestamp":"2026-09-17 21:21:24"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-17 21:22:20"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:32:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:32:12"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:32:12"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:32:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 98ms","timestamp":"2026-09-17 21:32:28"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 106ms","timestamp":"2026-09-17 21:32:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 142ms","timestamp":"2026-09-17 21:32:35"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 134ms","timestamp":"2026-09-17 21:32:36"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 123ms","timestamp":"2026-09-17 21:32:43"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-17 21:32:53"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:37:04"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:37:06"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:37:06"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:37:07"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 435ms","timestamp":"2026-09-17 21:37:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 92ms","timestamp":"2026-09-17 21:37:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 45ms","timestamp":"2026-09-17 21:37:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 101ms","timestamp":"2026-09-17 21:37:38"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:38:06"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 200 278ms","timestamp":"2026-09-17 21:38:28"}
+{"level":"http","message":"GET /api/account 200 349ms","timestamp":"2026-09-17 21:38:28"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 200 373ms","timestamp":"2026-09-17 21:38:28"}
+{"level":"http","message":"GET /api/subscription 200 2153ms","timestamp":"2026-09-17 21:38:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:38:41"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 238ms","timestamp":"2026-09-17 21:38:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 306ms","timestamp":"2026-09-17 21:38:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 303ms","timestamp":"2026-09-17 21:38:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 319ms","timestamp":"2026-09-17 21:38:42"}
+{"level":"http","message":"GET /api/message/6aa83ebf6b1aa9dc89affb76? 200 218ms","timestamp":"2026-09-17 21:38:45"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 200 245ms","timestamp":"2026-09-17 21:38:45"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 200 256ms","timestamp":"2026-09-17 21:38:45"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1996598734387132 200 1921ms","timestamp":"2026-09-17 21:38:47"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/5672615939630252 200 2010ms","timestamp":"2026-09-17 21:38:47"}
+{"level":"http","message":"GET /api/message/6aabe852e3287fae9f6fcd85? 200 106ms","timestamp":"2026-09-17 21:38:48"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1097203866001388 200 2936ms","timestamp":"2026-09-17 21:38:48"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa83ebf6b1aa9dc89affb76/resume 200 3434ms","timestamp":"2026-09-17 21:38:51"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 610ms","timestamp":"2026-09-17 21:39:02"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aabe852e3287fae9f6fcd85/resume 200 866ms","timestamp":"2026-09-17 21:39:02"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 66ms","timestamp":"2026-09-17 21:39:16"}
+{"level":"http","message":"GET /api/message/6aa83ebf6b1aa9dc89affb76? 304 232ms","timestamp":"2026-09-17 21:39:18"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 315ms","timestamp":"2026-09-17 21:39:18"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 323ms","timestamp":"2026-09-17 21:39:18"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1996598734387132 304 1524ms","timestamp":"2026-09-17 21:39:19"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/5672615939630252 304 1690ms","timestamp":"2026-09-17 21:39:19"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1097203866001388 304 1802ms","timestamp":"2026-09-17 21:39:20"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/message/send 200 3937ms","timestamp":"2026-09-17 21:39:28"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:39:29"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 402ms","timestamp":"2026-09-17 21:39:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:39:30"}
+{"level":"http","message":"GET /api/message/6aa9a30a980d660b3a15621d? 304 1003ms","timestamp":"2026-09-17 21:39:32"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa83ebf6b1aa9dc89affb76/resume 200 1096ms","timestamp":"2026-09-17 21:39:32"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 258ms","timestamp":"2026-09-17 21:39:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 349ms","timestamp":"2026-09-17 21:39:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 361ms","timestamp":"2026-09-17 21:39:36"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa9a30a980d660b3a15621d/resume 200 520ms","timestamp":"2026-09-17 21:39:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 565ms","timestamp":"2026-09-17 21:39:36"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 100ms","timestamp":"2026-09-17 21:39:39"}
+{"level":"http","message":"POST /api/contacts 200 491ms","timestamp":"2026-09-17 21:39:40"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 34ms","timestamp":"2026-09-17 21:39:41"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 2108ms","timestamp":"2026-09-17 21:39:41"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 325ms","timestamp":"2026-09-17 21:39:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 440ms","timestamp":"2026-09-17 21:39:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 462ms","timestamp":"2026-09-17 21:39:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 476ms","timestamp":"2026-09-17 21:39:44"}
+{"level":"http","message":"POST /api/contacts 200 260ms","timestamp":"2026-09-17 21:39:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 90ms","timestamp":"2026-09-17 21:39:48"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 253ms","timestamp":"2026-09-17 21:39:50"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 234ms","timestamp":"2026-09-17 21:39:51"}
+{"level":"http","message":"GET /api/message/6aa9a30a980d660b3a15621d? 304 871ms","timestamp":"2026-09-17 21:39:51"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 1316ms","timestamp":"2026-09-17 21:39:51"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 1461ms","timestamp":"2026-09-17 21:39:52"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 249ms","timestamp":"2026-09-17 21:39:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 322ms","timestamp":"2026-09-17 21:39:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 329ms","timestamp":"2026-09-17 21:39:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 343ms","timestamp":"2026-09-17 21:39:58"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa9a30a980d660b3a15621d/resume 200 595ms","timestamp":"2026-09-17 21:39:59"}
+{"level":"http","message":"GET /api/message/6aa9a30a980d660b3a15621d? 304 238ms","timestamp":"2026-09-17 21:40:02"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 252ms","timestamp":"2026-09-17 21:40:02"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 252ms","timestamp":"2026-09-17 21:40:02"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 271ms","timestamp":"2026-09-17 21:40:03"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 304ms","timestamp":"2026-09-17 21:40:03"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 363ms","timestamp":"2026-09-17 21:40:03"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 369ms","timestamp":"2026-09-17 21:40:03"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa9a30a980d660b3a15621d/resume 200 494ms","timestamp":"2026-09-17 21:40:03"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 264ms","timestamp":"2026-09-17 21:40:09"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 315ms","timestamp":"2026-09-17 21:40:09"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&search=sach 200 470ms","timestamp":"2026-09-17 21:40:14"}
+{"level":"http","message":"GET /api/message/6aa7c031856cdc604943c220? 200 145ms","timestamp":"2026-09-17 21:40:22"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa9a30a980d660b3a15621d/resume 200 1043ms","timestamp":"2026-09-17 21:40:23"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1403786591137363 200 2287ms","timestamp":"2026-09-17 21:40:24"}
+{"level":"http","message":"POST /api/contacts 200 251ms","timestamp":"2026-09-17 21:40:34"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa7c031856cdc604943c220/resume 200 838ms","timestamp":"2026-09-17 21:40:35"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 242ms","timestamp":"2026-09-17 21:40:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 311ms","timestamp":"2026-09-17 21:40:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 307ms","timestamp":"2026-09-17 21:40:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 315ms","timestamp":"2026-09-17 21:40:36"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 294ms","timestamp":"2026-09-17 21:40:41"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview?module=overview&range=7days 304 375ms","timestamp":"2026-09-17 21:40:41"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 423ms","timestamp":"2026-09-17 21:40:42"}
+{"level":"http","message":"GET /api/message/6aa7c031856cdc604943c220? 304 104ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 273ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 424ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 437ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 296ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 44ms","timestamp":"2026-09-17 21:40:49"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1403786591137363 304 2845ms","timestamp":"2026-09-17 21:40:52"}
+{"level":"http","message":"GET /api/message/6aa83ebf6b1aa9dc89affb76? 200 316ms","timestamp":"2026-09-17 21:40:54"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa7c031856cdc604943c220/resume 200 593ms","timestamp":"2026-09-17 21:40:54"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1996598734387132 304 1668ms","timestamp":"2026-09-17 21:40:56"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/5672615939630252 304 1731ms","timestamp":"2026-09-17 21:40:56"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1097203866001388 304 1947ms","timestamp":"2026-09-17 21:40:56"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 947ms","timestamp":"2026-09-17 21:41:02"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa83ebf6b1aa9dc89affb76/resume 200 599ms","timestamp":"2026-09-17 21:41:02"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:41:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 86ms","timestamp":"2026-09-17 21:41:23"}
+{"level":"http","message":"GET /api/message/6aa83ebf6b1aa9dc89affb76? 304 212ms","timestamp":"2026-09-17 21:41:26"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 219ms","timestamp":"2026-09-17 21:41:26"}
+{"level":"http","message":"PATCH /api/notification/6aa83ebfe3287fae9f626721/read 200 232ms","timestamp":"2026-09-17 21:41:26"}
+{"level":"http","message":"POST /api/contacts 200 248ms","timestamp":"2026-09-17 21:41:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 85ms","timestamp":"2026-09-17 21:41:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 27ms","timestamp":"2026-09-17 21:41:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1707ms","timestamp":"2026-09-17 21:41:32"}
+{"level":"http","message":"GET /api/message/6aac11320c59499cd541adcc? 200 100ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 119ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"PATCH /api/notification/6aac1131e3287fae9f7045c2/read 200 233ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 90ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 251ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 212ms","timestamp":"2026-09-17 21:41:36"}
+{"level":"http","message":"POST /api/contacts 200 501ms","timestamp":"2026-09-17 21:41:40"}
+{"level":"http","message":"GET /api/message/6aac11320c59499cd541adcc? 304 97ms","timestamp":"2026-09-17 21:42:05"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 226ms","timestamp":"2026-09-17 21:42:05"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 244ms","timestamp":"2026-09-17 21:42:05"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 942ms","timestamp":"2026-09-17 21:42:13"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac11320c59499cd541adcc/resume 200 897ms","timestamp":"2026-09-17 21:42:14"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 244ms","timestamp":"2026-09-17 21:42:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 331ms","timestamp":"2026-09-17 21:42:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 338ms","timestamp":"2026-09-17 21:42:15"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 656ms","timestamp":"2026-09-17 21:42:15"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 481ms","timestamp":"2026-09-17 21:42:16"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 191ms","timestamp":"2026-09-17 21:42:16"}
+{"conversationId":"6aac11320c59499cd541adcc","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTU1ODM4N0RFQzIzQkJFRjQyNUNGQUIyREE4M0VGMzgA","timestamp":"2026-09-17 21:42:21"}
+{"conversationId":"6aa83ebf6b1aa9dc89affb76","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTU2M0Q0RkM3MTA1MjlCMTJGMENFQkMzMkYzQUE1M0UA","timestamp":"2026-09-17 21:42:21"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 366ms","timestamp":"2026-09-17 21:42:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 121ms","timestamp":"2026-09-17 21:42:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:42:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 371ms","timestamp":"2026-09-17 21:42:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 136ms","timestamp":"2026-09-17 21:42:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 85ms","timestamp":"2026-09-17 21:42:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 86ms","timestamp":"2026-09-17 21:42:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1526ms","timestamp":"2026-09-17 21:42:24"}
+{"conversationId":"6aac11320c59499cd541adcc","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTU1ODM4N0RFQzIzQkJFRjQyNUNGQUIyREE4M0VGMzgA","timestamp":"2026-09-17 21:42:24"}
+{"conversationId":"6aa83ebf6b1aa9dc89affb76","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTU2M0Q0RkM3MTA1MjlCMTJGMENFQkMzMkYzQUE1M0UA","timestamp":"2026-09-17 21:42:25"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 123ms","timestamp":"2026-09-17 21:42:26"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 94ms","timestamp":"2026-09-17 21:42:27"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 120ms","timestamp":"2026-09-17 21:42:39"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 33ms","timestamp":"2026-09-17 21:42:40"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 123ms","timestamp":"2026-09-17 21:42:42"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 577ms","timestamp":"2026-09-17 21:42:43"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:42:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 77ms","timestamp":"2026-09-17 21:42:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 30ms","timestamp":"2026-09-17 21:42:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1661ms","timestamp":"2026-09-17 21:42:49"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 29ms","timestamp":"2026-09-17 21:42:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 108ms","timestamp":"2026-09-17 21:42:53"}
+{"conversationId":"6aac116350347e66e90e6d35","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTUzOUJDOERGRDQ4RTYwQzEzRjc3QjE1ODhEQjg0MUIA","timestamp":"2026-09-17 21:42:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 146ms","timestamp":"2026-09-17 21:42:54"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 85ms","timestamp":"2026-09-17 21:42:55"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 90ms","timestamp":"2026-09-17 21:42:55"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 146ms","timestamp":"2026-09-17 21:42:55"}
+{"conversationId":"6aac116350347e66e90e6d35","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTUzOUJDOERGRDQ4RTYwQzEzRjc3QjE1ODhEQjg0MUIA","timestamp":"2026-09-17 21:42:57"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 122ms","timestamp":"2026-09-17 21:42:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 136ms","timestamp":"2026-09-17 21:43:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 40ms","timestamp":"2026-09-17 21:43:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 47ms","timestamp":"2026-09-17 21:43:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1561ms","timestamp":"2026-09-17 21:43:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 544ms","timestamp":"2026-09-17 21:43:08"}
+{"conversationId":"6aac116350347e66e90e6d35","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTVDMzk4NUUwQkVGMEEzNjA4QkY3RTVGOTFCODYxNDUA","timestamp":"2026-09-17 21:43:10"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 118ms","timestamp":"2026-09-17 21:43:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 163ms","timestamp":"2026-09-17 21:43:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 133ms","timestamp":"2026-09-17 21:43:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 132ms","timestamp":"2026-09-17 21:43:11"}
+{"conversationId":"6aac116350347e66e90e6d35","error":"Cast to ObjectId failed for value \"undefined\" (type string) at path \"_id\" for model \"Lead\"","level":"error","message":"WHATSAPP_AI_AGENT_FAILED","messageId":"wamid.HBgMOTE3NDk3MDQyMTgwFQIAEhggQTVDMzk4NUUwQkVGMEEzNjA4QkY3RTVGOTFCODYxNDUA","timestamp":"2026-09-17 21:43:14"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:44:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:44:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:44:15"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:44:16"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:44:17"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:44:18"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:44:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:44:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:44:35"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 1266ms","timestamp":"2026-09-17 21:44:36"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:44:36"}
+{"level":"http","message":"GET /api/message/6aac116350347e66e90e6d35? 200 129ms","timestamp":"2026-09-17 21:44:43"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 266ms","timestamp":"2026-09-17 21:44:43"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 305ms","timestamp":"2026-09-17 21:44:43"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:44:59"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:44:59"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:45:00"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:45:02"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 351ms","timestamp":"2026-09-17 21:45:08"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac116350347e66e90e6d35/resume 200 1155ms","timestamp":"2026-09-17 21:45:09"}
+{"level":"http","message":"POST /api/contacts 200 355ms","timestamp":"2026-09-17 21:45:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 392ms","timestamp":"2026-09-17 21:45:18"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 142ms","timestamp":"2026-09-17 21:45:20"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 108ms","timestamp":"2026-09-17 21:45:20"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 240ms","timestamp":"2026-09-17 21:45:25"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 309ms","timestamp":"2026-09-17 21:45:25"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 332ms","timestamp":"2026-09-17 21:45:25"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 338ms","timestamp":"2026-09-17 21:45:25"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 110ms","timestamp":"2026-09-17 21:45:25"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 47ms","timestamp":"2026-09-17 21:45:26"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1640ms","timestamp":"2026-09-17 21:45:27"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 91ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 93ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 199ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"PATCH /api/notification/6aac121ce3287fae9f7047dd/read 200 228ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 92ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 99ms","timestamp":"2026-09-17 21:45:33"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 219ms","timestamp":"2026-09-17 21:45:43"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 297ms","timestamp":"2026-09-17 21:45:43"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 300ms","timestamp":"2026-09-17 21:45:43"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 317ms","timestamp":"2026-09-17 21:45:43"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 157ms","timestamp":"2026-09-17 21:45:44"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 363ms","timestamp":"2026-09-17 21:45:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 28ms","timestamp":"2026-09-17 21:45:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 83ms","timestamp":"2026-09-17 21:45:45"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 213ms","timestamp":"2026-09-17 21:45:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 923ms","timestamp":"2026-09-17 21:45:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 109ms","timestamp":"2026-09-17 21:45:51"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 107ms","timestamp":"2026-09-17 21:45:51"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:45:51"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:45:51"}
+{"level":"http","message":"POST /api/contacts 200 554ms","timestamp":"2026-09-17 21:45:54"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 241ms","timestamp":"2026-09-17 21:45:56"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 296ms","timestamp":"2026-09-17 21:45:56"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 307ms","timestamp":"2026-09-17 21:45:56"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 310ms","timestamp":"2026-09-17 21:45:56"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 109ms","timestamp":"2026-09-17 21:45:58"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 129ms","timestamp":"2026-09-17 21:45:58"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 118ms","timestamp":"2026-09-17 21:45:58"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 318ms","timestamp":"2026-09-17 21:45:58"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 331ms","timestamp":"2026-09-17 21:45:58"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 216ms","timestamp":"2026-09-17 21:45:59"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 255ms","timestamp":"2026-09-17 21:45:59"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 271ms","timestamp":"2026-09-17 21:46:00"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 279ms","timestamp":"2026-09-17 21:46:00"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 390ms","timestamp":"2026-09-17 21:46:00"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 272ms","timestamp":"2026-09-17 21:46:03"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 304ms","timestamp":"2026-09-17 21:46:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 91ms","timestamp":"2026-09-17 21:46:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 28ms","timestamp":"2026-09-17 21:46:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 756ms","timestamp":"2026-09-17 21:46:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 108ms","timestamp":"2026-09-17 21:46:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:46:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 103ms","timestamp":"2026-09-17 21:46:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:46:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 112ms","timestamp":"2026-09-17 21:46:37"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 68ms","timestamp":"2026-09-17 21:46:37"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1116ms","timestamp":"2026-09-17 21:46:38"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 136ms","timestamp":"2026-09-17 21:46:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 133ms","timestamp":"2026-09-17 21:46:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 109ms","timestamp":"2026-09-17 21:46:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:46:51"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 93ms","timestamp":"2026-09-17 21:46:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 901ms","timestamp":"2026-09-17 21:46:54"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 38ms","timestamp":"2026-09-17 21:46:54"}
+{"level":"http","message":"GET /api/message/6aa7c031856cdc604943c220? 304 156ms","timestamp":"2026-09-17 21:46:58"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 481ms","timestamp":"2026-09-17 21:46:58"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 101ms","timestamp":"2026-09-17 21:46:58"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa7c031856cdc604943c220/resume 200 432ms","timestamp":"2026-09-17 21:46:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 82ms","timestamp":"2026-09-17 21:46:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:46:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 100ms","timestamp":"2026-09-17 21:47:00"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1403786591137363 304 1995ms","timestamp":"2026-09-17 21:47:00"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 136ms","timestamp":"2026-09-17 21:47:00"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 42ms","timestamp":"2026-09-17 21:47:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 87ms","timestamp":"2026-09-17 21:47:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 175ms","timestamp":"2026-09-17 21:47:14"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 54ms","timestamp":"2026-09-17 21:47:14"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 977ms","timestamp":"2026-09-17 21:47:14"}
+{"level":"http","message":"GET /api/message/6aa7c031856cdc604943c220? 304 155ms","timestamp":"2026-09-17 21:47:16"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 518ms","timestamp":"2026-09-17 21:47:17"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 105ms","timestamp":"2026-09-17 21:47:18"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa7c031856cdc604943c220/resume 200 394ms","timestamp":"2026-09-17 21:47:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:47:20"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:47:20"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 92ms","timestamp":"2026-09-17 21:47:20"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:47:20"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 278ms","timestamp":"2026-09-17 21:47:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 359ms","timestamp":"2026-09-17 21:47:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 398ms","timestamp":"2026-09-17 21:47:36"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 417ms","timestamp":"2026-09-17 21:47:36"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 933ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 139ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 170ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 301ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 315ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 151ms","timestamp":"2026-09-17 21:47:37"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/message/send 200 2463ms","timestamp":"2026-09-17 21:48:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 98ms","timestamp":"2026-09-17 21:48:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 124ms","timestamp":"2026-09-17 21:48:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 103ms","timestamp":"2026-09-17 21:48:05"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/message/send 200 2167ms","timestamp":"2026-09-17 21:48:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:48:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 106ms","timestamp":"2026-09-17 21:48:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 120ms","timestamp":"2026-09-17 21:48:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:48:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 92ms","timestamp":"2026-09-17 21:48:17"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 31ms","timestamp":"2026-09-17 21:48:17"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 119ms","timestamp":"2026-09-17 21:48:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 43ms","timestamp":"2026-09-17 21:48:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 90ms","timestamp":"2026-09-17 21:48:29"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 86ms","timestamp":"2026-09-17 21:48:50"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 126ms","timestamp":"2026-09-17 21:49:17"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 31ms","timestamp":"2026-09-17 21:50:40"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:50:41"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 34ms","timestamp":"2026-09-17 21:50:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 50ms","timestamp":"2026-09-17 21:50:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:50:49"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:50:49"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 218ms","timestamp":"2026-09-17 21:50:58"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 105ms","timestamp":"2026-09-17 21:51:10"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 32ms","timestamp":"2026-09-17 21:51:10"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:51:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:51:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:51:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1671ms","timestamp":"2026-09-17 21:51:24"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:51:25"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:51:47"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:51:47"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:51:47"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:51:50"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:52:05"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:52:05"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:52:05"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:52:08"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:52:14"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:52:14"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:52:15"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1605ms","timestamp":"2026-09-17 21:52:16"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:52:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:52:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:52:21"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:52:25"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:53:07"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:53:07"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:53:08"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:53:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 21:53:19"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:53:20"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:53:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:53:28"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:53:29"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:53:34"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:53:35"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:53:36"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:53:39"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 21:53:46"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 21:53:46"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 21:53:47"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 21:53:51"}
+{"level":"http","message":"POST /api/contacts 200 25165ms","timestamp":"2026-09-17 21:55:09"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 26941ms","timestamp":"2026-09-17 21:55:10"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 409ms","timestamp":"2026-09-17 21:55:55"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 537ms","timestamp":"2026-09-17 21:55:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 689ms","timestamp":"2026-09-17 21:55:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 1586ms","timestamp":"2026-09-17 21:55:56"}
+{"level":"http","message":"POST /api/contacts 200 274ms","timestamp":"2026-09-17 21:55:58"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 171ms","timestamp":"2026-09-17 21:56:19"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 200 190ms","timestamp":"2026-09-17 21:56:19"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 108ms","timestamp":"2026-09-17 21:56:19"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 330ms","timestamp":"2026-09-17 21:56:19"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 391ms","timestamp":"2026-09-17 21:56:19"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 653ms","timestamp":"2026-09-17 21:56:28"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac121d2f4ba5f62ab98f92/resume 200 511ms","timestamp":"2026-09-17 21:56:29"}
+{"level":"http","message":"GET / 404 1ms","timestamp":"2026-09-17 21:57:00"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 148ms","timestamp":"2026-09-17 21:57:01"}
+{"level":"http","message":"PATCH /api/notification/6aac121ce3287fae9f7047dd/read 200 254ms","timestamp":"2026-09-17 21:57:16"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 291ms","timestamp":"2026-09-17 21:57:16"}
+{"level":"http","message":"GET /api/message/6aac121d2f4ba5f62ab98f92? 304 356ms","timestamp":"2026-09-17 21:57:16"}
+{"level":"http","message":"GET /api/message/6aac116350347e66e90e6d35? 304 173ms","timestamp":"2026-09-17 21:57:18"}
+{"level":"http","message":"PATCH /api/notification/6aac1162e3287fae9f7045e0/read 200 313ms","timestamp":"2026-09-17 21:57:19"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 966ms","timestamp":"2026-09-17 21:57:29"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 21:57:42"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 232ms","timestamp":"2026-09-17 21:58:06"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 292ms","timestamp":"2026-09-17 21:58:06"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 323ms","timestamp":"2026-09-17 21:58:06"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 564ms","timestamp":"2026-09-17 21:58:06"}
+{"level":"http","message":"GET /api/message/6aac116350347e66e90e6d35? 304 123ms","timestamp":"2026-09-17 21:58:07"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 152ms","timestamp":"2026-09-17 21:58:07"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 235ms","timestamp":"2026-09-17 21:58:07"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 144ms","timestamp":"2026-09-17 21:58:07"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&search=surv 200 135ms","timestamp":"2026-09-17 21:58:09"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50&search=surbh 200 115ms","timestamp":"2026-09-17 21:58:11"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 373ms","timestamp":"2026-09-17 21:58:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:58:28"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 34ms","timestamp":"2026-09-17 21:58:29"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 107ms","timestamp":"2026-09-17 21:58:34"}
+{"accountId":"6a7c854242116e6531df0bcb","contactId":"6aac1532f70ae1e8e3d64375","level":"info","message":"Contact created","phone":"7497042180","source":"whatsapp","timestamp":"2026-09-17 21:58:34"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 48ms","timestamp":"2026-09-17 21:58:35"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 2547ms","timestamp":"2026-09-17 21:58:36"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 105ms","timestamp":"2026-09-17 21:58:41"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 21:58:42"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 101ms","timestamp":"2026-09-17 21:58:42"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 21:58:42"}
+{"level":"http","message":"POST /api/contacts 200 217ms","timestamp":"2026-09-17 21:58:43"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 106ms","timestamp":"2026-09-17 21:58:52"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 35ms","timestamp":"2026-09-17 21:58:52"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1088ms","timestamp":"2026-09-17 21:58:53"}
+{"level":"http","message":"GET /api/message/6aac116350347e66e90e6d35? 304 131ms","timestamp":"2026-09-17 21:58:55"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 160ms","timestamp":"2026-09-17 21:58:55"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 285ms","timestamp":"2026-09-17 21:58:56"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 155ms","timestamp":"2026-09-17 21:58:56"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 29ms","timestamp":"2026-09-17 21:58:57"}
+{"level":"http","message":"GET /api/message/6aac1532f70ae1e8e3d6436e? 200 122ms","timestamp":"2026-09-17 21:58:58"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 296ms","timestamp":"2026-09-17 21:58:58"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 102ms","timestamp":"2026-09-17 21:58:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 91ms","timestamp":"2026-09-17 21:58:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 103ms","timestamp":"2026-09-17 21:58:59"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 102ms","timestamp":"2026-09-17 21:58:59"}
+{"accountId":"6a7c854242116e6531df0bcb","contactId":"6aac154cf70ae1e8e3d643f6","level":"info","message":"Contact created","phone":"8433173694","source":"whatsapp","timestamp":"2026-09-17 21:59:00"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 2168ms","timestamp":"2026-09-17 21:59:02"}
+{"level":"http","message":"POST /api/contacts 200 262ms","timestamp":"2026-09-17 21:59:03"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac1532f70ae1e8e3d6436e/resume 200 925ms","timestamp":"2026-09-17 21:59:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 138ms","timestamp":"2026-09-17 21:59:09"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 116ms","timestamp":"2026-09-17 21:59:09"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 99ms","timestamp":"2026-09-17 21:59:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 130ms","timestamp":"2026-09-17 21:59:32"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 90ms","timestamp":"2026-09-17 21:59:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 53ms","timestamp":"2026-09-17 21:59:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 112ms","timestamp":"2026-09-17 21:59:56"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 102ms","timestamp":"2026-09-17 22:00:16"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 94ms","timestamp":"2026-09-17 22:01:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 31ms","timestamp":"2026-09-17 22:01:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 93ms","timestamp":"2026-09-17 22:01:05"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 90ms","timestamp":"2026-09-17 22:01:06"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:01:10"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:01:10"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:01:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:01:20"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:01:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:01:21"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:01:25"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-17 22:03:37"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:03:49"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:03:49"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:03:50"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:03:52"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 112ms","timestamp":"2026-09-17 22:04:34"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 157ms","timestamp":"2026-09-17 22:04:40"}
+{"level":"http","message":"GET /api/message/6aac1532f70ae1e8e3d6436e? 200 178ms","timestamp":"2026-09-17 22:04:40"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 114ms","timestamp":"2026-09-17 22:04:40"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 375ms","timestamp":"2026-09-17 22:04:40"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 546ms","timestamp":"2026-09-17 22:04:40"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 960ms","timestamp":"2026-09-17 22:04:52"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac1532f70ae1e8e3d6436e/resume 200 685ms","timestamp":"2026-09-17 22:04:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 88ms","timestamp":"2026-09-17 22:04:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 38ms","timestamp":"2026-09-17 22:04:54"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 32ms","timestamp":"2026-09-17 22:04:54"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 86ms","timestamp":"2026-09-17 22:04:54"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 108ms","timestamp":"2026-09-17 22:04:55"}
+{"level":"http","message":"POST /api/contacts 200 238ms","timestamp":"2026-09-17 22:04:55"}
+{"level":"http","message":"GET /api/message/6aac154cf70ae1e8e3d643f1? 200 119ms","timestamp":"2026-09-17 22:05:03"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 272ms","timestamp":"2026-09-17 22:05:03"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 512ms","timestamp":"2026-09-17 22:05:04"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 228ms","timestamp":"2026-09-17 22:05:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 298ms","timestamp":"2026-09-17 22:05:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 314ms","timestamp":"2026-09-17 22:05:09"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 312ms","timestamp":"2026-09-17 22:05:09"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac154cf70ae1e8e3d643f1/resume 200 417ms","timestamp":"2026-09-17 22:05:09"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 155ms","timestamp":"2026-09-17 22:05:10"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 252ms","timestamp":"2026-09-17 22:05:10"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 296ms","timestamp":"2026-09-17 22:05:10"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 130ms","timestamp":"2026-09-17 22:05:10"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 266ms","timestamp":"2026-09-17 22:05:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 342ms","timestamp":"2026-09-17 22:05:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 380ms","timestamp":"2026-09-17 22:05:19"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 377ms","timestamp":"2026-09-17 22:05:19"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac154cf70ae1e8e3d643f1/resume 200 677ms","timestamp":"2026-09-17 22:05:19"}
+{"level":"http","message":"GET /api/message/6aac154cf70ae1e8e3d643f1? 304 99ms","timestamp":"2026-09-17 22:05:20"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 234ms","timestamp":"2026-09-17 22:05:20"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 36ms","timestamp":"2026-09-17 22:05:22"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 123ms","timestamp":"2026-09-17 22:05:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 109ms","timestamp":"2026-09-17 22:05:24"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 124ms","timestamp":"2026-09-17 22:05:24"}
+{"accountId":"6a7c854242116e6531df0bcb","contactId":"6aac16d3d045ba81c75961b0","level":"info","message":"Contact created","phone":"+918433173694","source":"whatsapp","timestamp":"2026-09-17 22:05:31"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1781ms","timestamp":"2026-09-17 22:05:32"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 120ms","timestamp":"2026-09-17 22:05:37"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 102ms","timestamp":"2026-09-17 22:05:38"}
+{"level":"http","message":"POST /api/contacts 200 251ms","timestamp":"2026-09-17 22:05:53"}
+{"level":"http","message":"GET /api/message/6aac154cf70ae1e8e3d643f1? 304 122ms","timestamp":"2026-09-17 22:06:14"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 143ms","timestamp":"2026-09-17 22:06:14"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 262ms","timestamp":"2026-09-17 22:06:14"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 139ms","timestamp":"2026-09-17 22:06:14"}
+{"level":"http","message":"GET /api/message/6aac16d2d045ba81c75961ab? 200 132ms","timestamp":"2026-09-17 22:06:15"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 232ms","timestamp":"2026-09-17 22:06:15"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 97ms","timestamp":"2026-09-17 22:06:20"}
+{"level":"http","message":"PATCH /api/notification/6aac16d1e3287fae9f705c2d/read 200 219ms","timestamp":"2026-09-17 22:06:36"}
+{"level":"http","message":"GET /api/message/6a9432e671f57a1ccdf08cd7? 200 101ms","timestamp":"2026-09-17 22:07:02"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac16d2d045ba81c75961ab/resume 200 494ms","timestamp":"2026-09-17 22:07:02"}
+{"level":"http","message":"GET /api/message/6aa7c031856cdc604943c220? 304 118ms","timestamp":"2026-09-17 22:07:03"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6a9432e671f57a1ccdf08cd7/resume 200 469ms","timestamp":"2026-09-17 22:07:04"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/message/media/1403786591137363 304 1717ms","timestamp":"2026-09-17 22:07:05"}
+{"level":"http","message":"GET /api/message/6aac16d2d045ba81c75961ab? 200 706ms","timestamp":"2026-09-17 22:07:07"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aa7c031856cdc604943c220/resume 200 1066ms","timestamp":"2026-09-17 22:07:08"}
+{"level":"http","message":"POST /api/notification/read-all 200 314ms","timestamp":"2026-09-17 22:07:12"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 39ms","timestamp":"2026-09-17 22:07:20"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 22:09:26"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:11:05"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:11:05"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:11:06"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 835ms","timestamp":"2026-09-17 22:11:06"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 2501ms","timestamp":"2026-09-17 22:11:08"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 3078ms","timestamp":"2026-09-17 22:11:08"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:11:09"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:11:15"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:11:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:11:21"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:11:22"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:11:25"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:11:37"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:11:38"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:11:38"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 740ms","timestamp":"2026-09-17 22:11:39"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 252ms","timestamp":"2026-09-17 22:11:40"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1790ms","timestamp":"2026-09-17 22:11:40"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 1218ms","timestamp":"2026-09-17 22:11:40"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:11:41"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:12:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:12:02"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:12:03"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:12:08"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:12:08"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:12:09"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 222ms","timestamp":"2026-09-17 22:12:13"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 170ms","timestamp":"2026-09-17 22:12:13"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:12:14"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 99ms","timestamp":"2026-09-17 22:12:18"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 322ms","timestamp":"2026-09-17 22:12:26"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 344ms","timestamp":"2026-09-17 22:12:31"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 97ms","timestamp":"2026-09-17 22:12:34"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 37ms","timestamp":"2026-09-17 22:12:34"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 35ms","timestamp":"2026-09-17 22:12:50"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 235ms","timestamp":"2026-09-17 22:12:57"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 102ms","timestamp":"2026-09-17 22:13:00"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 105ms","timestamp":"2026-09-17 22:13:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 38ms","timestamp":"2026-09-17 22:13:11"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 107ms","timestamp":"2026-09-17 22:13:41"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 38ms","timestamp":"2026-09-17 22:13:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 84ms","timestamp":"2026-09-17 22:15:29"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 109ms","timestamp":"2026-09-17 22:15:30"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 49ms","timestamp":"2026-09-17 22:15:31"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 96ms","timestamp":"2026-09-17 22:16:05"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:17:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:17:11"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:17:11"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:17:14"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 42ms","timestamp":"2026-09-17 22:17:20"}
+{"level":"http","message":"POST /api/conversation/6a7c854242116e6531df0bcb/delete 200 558ms","timestamp":"2026-09-17 22:17:24"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac16d2d045ba81c75961ab/resume 200 1098ms","timestamp":"2026-09-17 22:17:26"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 484ms","timestamp":"2026-09-17 22:17:27"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 682ms","timestamp":"2026-09-17 22:17:27"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 700ms","timestamp":"2026-09-17 22:17:27"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 755ms","timestamp":"2026-09-17 22:17:27"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 124ms","timestamp":"2026-09-17 22:17:28"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 146ms","timestamp":"2026-09-17 22:17:28"}
+{"accountId":"6a7c854242116e6531df0bcb","contactId":"6aac19dfed1d0db84181824a","level":"info","message":"Contact created","phone":"+918433173694","source":"whatsapp","timestamp":"2026-09-17 22:18:31"}
+{"level":"http","message":"POST /api/contacts 200 226ms","timestamp":"2026-09-17 22:18:31"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 2156ms","timestamp":"2026-09-17 22:18:33"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 145ms","timestamp":"2026-09-17 22:18:35"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 304 151ms","timestamp":"2026-09-17 22:18:35"}
+{"level":"http","message":"GET /api/message/6aac19dfed1d0db841818245? 200 122ms","timestamp":"2026-09-17 22:18:38"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 228ms","timestamp":"2026-09-17 22:18:38"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 253ms","timestamp":"2026-09-17 22:18:38"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 99ms","timestamp":"2026-09-17 22:18:38"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 89ms","timestamp":"2026-09-17 22:18:39"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 230ms","timestamp":"2026-09-17 22:18:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 318ms","timestamp":"2026-09-17 22:18:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 333ms","timestamp":"2026-09-17 22:18:44"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 342ms","timestamp":"2026-09-17 22:18:44"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aac19dfed1d0db841818245/resume 200 452ms","timestamp":"2026-09-17 22:18:44"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 216ms","timestamp":"2026-09-17 22:18:47"}
+{"accountId":"6a7c854242116e6531df0bcb","level":"info","message":"Creating lead","organizationId":"6a7c854042116e6531df0b8c","timestamp":"2026-09-17 22:19:13"}
+{"accountId":"6a7c854242116e6531df0bcb","contactId":"6aac1a0aed1d0db8418182fd","level":"info","message":"Contact created","phone":"+918528295631","source":"google_ads","timestamp":"2026-09-17 22:19:14"}
+{"accountId":"6a7c854242116e6531df0bcb","leadId":"6aac1a0aed1d0db8418182f8","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-17 22:19:14"}
+{"accountId":"6a7c854242116e6531df0bcb","level":"info","message":"Creating lead","organizationId":"6a7c854042116e6531df0b8c","timestamp":"2026-09-17 22:19:15"}
+{"level":"info","message":"Lead Notification email queued for support@kyraitsolutions.com","timestamp":"2026-09-17 22:19:15"}
+{"level":"info","message":"Lead assignment email queued for undefined","timestamp":"2026-09-17 22:19:15"}
+{"accountId":"6a7c854242116e6531df0bcb","leadId":"6aac1a0bed1d0db841818327","level":"debug","message":"Lead created, running automations","timestamp":"2026-09-17 22:19:15"}
+{"level":"info","message":"Task assignment email queued for undefined","timestamp":"2026-09-17 22:19:16"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/lead 200 2895ms","timestamp":"2026-09-17 22:19:16"}
+{"level":"info","message":"Lead Notification email queued for support@kyraitsolutions.com","timestamp":"2026-09-17 22:19:16"}
+{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":400,"requestId":"64d46f07-ff6d-4550-9e62-54f995a96a13","totalRetryDelay":0},"Code":"ValidationError","Error":{"Code":"ValidationError","Message":"1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null","Type":"Sender"},"Type":"Sender","level":"error","message":"Failed to send email to undefined: 1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null","name":"ValidationError","stack":"ValidationError: 1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null\n    at ProtocolLib.getErrorSchemaOrThrowBaseException (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:68:67)\n    at AwsQueryProtocol.handleError (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2119:65)\n    at AwsQueryProtocol.deserializeResponse (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2089:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\schema\\index.js:23:24\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\index.js:118:20\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\retry\\index.js:171:50\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\client\\index.js:125:26\n    at async EmailUtils.sendEmail (D:\\Kyra\\chat-base-api\\src\\utils\\email.utils.ts:116:22)\n    at async EmailUtils.sendTaskAssignedEmail (D:\\Kyra\\chat-base-api\\src\\utils\\email.utils.ts:338:7)","timestamp":"2026-09-17 22:19:16"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 252ms","timestamp":"2026-09-17 22:19:16"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 337ms","timestamp":"2026-09-17 22:19:16"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 348ms","timestamp":"2026-09-17 22:19:16"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 361ms","timestamp":"2026-09-17 22:19:16"}
+{"level":"info","message":"Lead assignment email queued for undefined","timestamp":"2026-09-17 22:19:16"}
+{"level":"info","message":"Task assignment email queued for undefined","timestamp":"2026-09-17 22:19:17"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/lead 200 2547ms","timestamp":"2026-09-17 22:19:17"}
+{"$fault":"client","$metadata":{"attempts":1,"httpStatusCode":400,"requestId":"3db36973-19a9-407d-b1ed-c38fe16511ff","totalRetryDelay":0},"Code":"ValidationError","Error":{"Code":"ValidationError","Message":"1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null","Type":"Sender"},"Type":"Sender","level":"error","message":"Failed to send email to undefined: 1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null","name":"ValidationError","stack":"ValidationError: 1 validation error detected: Value at 'destination' failed to satisfy constraint: Member must not be null\n    at ProtocolLib.getErrorSchemaOrThrowBaseException (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:68:67)\n    at AwsQueryProtocol.handleError (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2119:65)\n    at AwsQueryProtocol.deserializeResponse (D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\protocols\\index.js:2089:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\schema\\index.js:23:24\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\index.js:118:20\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@smithy\\core\\dist-cjs\\submodules\\retry\\index.js:171:50\n    at async D:\\Kyra\\chat-base-api\\node_modules\\@aws-sdk\\core\\dist-cjs\\submodules\\client\\index.js:125:26\n    at async EmailUtils.sendEmail (D:\\Kyra\\chat-base-api\\src\\utils\\email.utils.ts:116:22)\n    at async EmailUtils.sendLeadAssignedEmail (D:\\Kyra\\chat-base-api\\src\\utils\\email.utils.ts:382:7)","timestamp":"2026-09-17 22:19:17"}
+{"level":"http","message":"POST /api/contacts 200 290ms","timestamp":"2026-09-17 22:19:21"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 262ms","timestamp":"2026-09-17 22:19:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 339ms","timestamp":"2026-09-17 22:19:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 351ms","timestamp":"2026-09-17 22:19:42"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 358ms","timestamp":"2026-09-17 22:19:42"}
+{"level":"http","message":"POST /api/contacts 200 233ms","timestamp":"2026-09-17 22:19:53"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:22:21"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:22:22"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:22:22"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-17 22:24:28"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-17 22:24:29"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-17 22:24:29"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-17 22:24:34"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 38ms","timestamp":"2026-09-17 22:25:25"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 104ms","timestamp":"2026-09-17 22:25:26"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 41ms","timestamp":"2026-09-17 22:25:31"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 137ms","timestamp":"2026-09-17 22:27:43"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 108ms","timestamp":"2026-09-17 22:27:44"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 120ms","timestamp":"2026-09-17 22:27:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 85ms","timestamp":"2026-09-17 22:27:46"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 95ms","timestamp":"2026-09-17 22:27:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 148ms","timestamp":"2026-09-17 22:27:53"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 113ms","timestamp":"2026-09-17 22:28:03"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 31ms","timestamp":"2026-09-17 22:28:04"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 116ms","timestamp":"2026-09-17 22:28:08"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 125ms","timestamp":"2026-09-17 22:28:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 136ms","timestamp":"2026-09-17 22:28:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 43ms","timestamp":"2026-09-17 22:28:26"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 112ms","timestamp":"2026-09-17 22:28:27"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 218ms","timestamp":"2026-09-17 22:28:45"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 180ms","timestamp":"2026-09-17 22:28:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 521ms","timestamp":"2026-09-17 22:28:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 110ms","timestamp":"2026-09-17 22:28:49"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 91ms","timestamp":"2026-09-17 22:28:50"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 126ms","timestamp":"2026-09-17 22:30:23"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 118ms","timestamp":"2026-09-17 22:31:16"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 100ms","timestamp":"2026-09-17 22:31:33"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 143ms","timestamp":"2026-09-17 22:31:34"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 61ms","timestamp":"2026-09-17 22:31:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 97ms","timestamp":"2026-09-17 22:31:47"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 44ms","timestamp":"2026-09-17 22:31:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 119ms","timestamp":"2026-09-17 22:31:48"}
+{"level":"http","message":"POST /api/whatsapp/webhook 200 99ms","timestamp":"2026-09-17 22:32:05"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-17 22:34:08"}

@@ -12,8 +12,9 @@ export const CreateContactSchema=z.object({
     accountId: z.string(),
     name:z.string(),
     email:z.string().email("Invalid email").nullable().optional(),
-    phone:z.string().min(10,"Phone number must have 10 digits").max(10,"Phone number must not have more than 10 digits"),
+    phone:z.string().min(10,"Phone number must have at least 10 digits").max(16,"Phone number is too long"),
     status:ContactStatusSchema.default("subscribed"),
+    source:ContactSourcesSchema.optional(),
     tags: z
     .union([z.string(), z.array(z.string())])
     .transform((val) =>
