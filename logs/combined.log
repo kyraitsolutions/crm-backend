@@ -6891,3 +6891,127 @@
 {"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 640ms","timestamp":"2026-09-20 17:29:41"}
 {"level":"info","message":"Shutting down queues...","timestamp":"2026-09-20 17:29:52"}
 {"level":"info","message":"All queues closed","timestamp":"2026-09-20 17:29:52"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-20 17:46:00"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-20 17:46:00"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-20 17:46:00"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-20 17:46:08"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 200 887ms","timestamp":"2026-09-20 17:52:09"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/overview?module=overview&range=7days 200 1282ms","timestamp":"2026-09-20 17:52:09"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 304 615ms","timestamp":"2026-09-20 17:52:10"}
+{"level":"http","message":"GET /api/conversation/6a8c7218bccbe3ce030ecd1c?page=1&limit=50 200 407ms","timestamp":"2026-09-20 17:52:12"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 304 697ms","timestamp":"2026-09-20 17:52:14"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/overview?module=overview&range=7days 304 796ms","timestamp":"2026-09-20 17:52:14"}
+{"level":"http","message":"GET /api/activity-logs/6a8c7218bccbe3ce030ecd1c?limit=8&page=1 304 432ms","timestamp":"2026-09-20 17:52:15"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-20 17:55:11"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-20 17:55:12"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-20 17:55:12"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-20 17:55:19"}
+{"level":"error","message":"CONTACT_IMPORT_WORKER redis maxmemory-policy is not noeviction","policy":"","timestamp":"2026-09-20 17:55:25"}
+{"level":"http","message":"POST /api/auth/login 200 406ms","timestamp":"2026-09-20 17:57:37"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 3812ms","timestamp":"2026-09-20 17:57:41"}
+{"level":"http","message":"GET /api/account 200 384ms","timestamp":"2026-09-20 17:57:42"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 200 510ms","timestamp":"2026-09-20 17:57:42"}
+{"level":"http","message":"GET /api/subscription 200 3008ms","timestamp":"2026-09-20 17:57:44"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 200 317ms","timestamp":"2026-09-20 17:57:46"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 200 425ms","timestamp":"2026-09-20 17:57:46"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview?module=overview&range=7days 200 440ms","timestamp":"2026-09-20 17:57:46"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 281ms","timestamp":"2026-09-20 17:57:46"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 169ms","timestamp":"2026-09-20 17:57:53"}
+{"level":"http","message":"PATCH /api/notification/6aaf8cd9e3287fae9f80e14d/read 200 474ms","timestamp":"2026-09-20 17:57:54"}
+{"level":"http","message":"GET /api/message/6aaf8cd59b76570536281381? 200 140ms","timestamp":"2026-09-20 17:57:54"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 200 334ms","timestamp":"2026-09-20 17:57:54"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 200 349ms","timestamp":"2026-09-20 17:57:54"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 200 307ms","timestamp":"2026-09-20 17:58:05"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 421ms","timestamp":"2026-09-20 17:58:05"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 449ms","timestamp":"2026-09-20 17:58:05"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 512ms","timestamp":"2026-09-20 17:58:05"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aaf8cd59b76570536281381/resume 200 1807ms","timestamp":"2026-09-20 17:58:07"}
+{"level":"http","message":"POST /api/contacts 200 266ms","timestamp":"2026-09-20 17:58:08"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 200 376ms","timestamp":"2026-09-20 17:58:09"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 377ms","timestamp":"2026-09-20 17:58:26"}
+{"level":"http","message":"POST /api/contacts 200 326ms","timestamp":"2026-09-20 17:58:31"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 382ms","timestamp":"2026-09-20 17:58:31"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/config 200 1034ms","timestamp":"2026-09-20 17:58:37"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports 201 573ms","timestamp":"2026-09-20 17:58:52"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360/local-upload 200 451ms","timestamp":"2026-09-20 17:58:53"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360/complete-upload 200 1042ms","timestamp":"2026-09-20 17:58:54"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/config 304 375ms","timestamp":"2026-09-20 17:58:54"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360 200 399ms","timestamp":"2026-09-20 17:58:54"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360/preview 200 361ms","timestamp":"2026-09-20 17:58:55"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360/cancel 200 718ms","timestamp":"2026-09-20 17:59:13"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360/events 200 18526ms","timestamp":"2026-09-20 17:59:13"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360 200 497ms","timestamp":"2026-09-20 17:59:13"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1841b25507597c32360 304 428ms","timestamp":"2026-09-20 17:59:14"}
+{"level":"http","message":"POST /api/contacts 200 251ms","timestamp":"2026-09-20 17:59:17"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 200 341ms","timestamp":"2026-09-20 17:59:17"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 328ms","timestamp":"2026-09-20 18:00:43"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/config 304 415ms","timestamp":"2026-09-20 18:00:46"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports 201 545ms","timestamp":"2026-09-20 18:00:54"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/local-upload 200 352ms","timestamp":"2026-09-20 18:00:54"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/complete-upload 200 1374ms","timestamp":"2026-09-20 18:00:56"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/config 304 767ms","timestamp":"2026-09-20 18:00:56"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa 200 779ms","timestamp":"2026-09-20 18:00:56"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/preview 200 575ms","timestamp":"2026-09-20 18:00:58"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/dry-run 200 681ms","timestamp":"2026-09-20 18:01:13"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/start 200 2515ms","timestamp":"2026-09-20 18:01:21"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa 200 488ms","timestamp":"2026-09-20 18:01:21"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa/events 200 26718ms","timestamp":"2026-09-20 18:01:23"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports/6aafd1fe1b25507597c323fa 200 417ms","timestamp":"2026-09-20 18:01:24"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 200 371ms","timestamp":"2026-09-20 18:01:29"}
+{"level":"http","message":"POST /api/contacts 200 291ms","timestamp":"2026-09-20 18:01:33"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 536ms","timestamp":"2026-09-20 18:01:33"}
+{"level":"http","message":"GET /api/email-marketing/6a7c854242116e6531df0bcb/overview 200 639ms","timestamp":"2026-09-20 18:02:22"}
+{"level":"http","message":"GET /api/email-marketing/6a7c854242116e6531df0bcb/campaigns 200 598ms","timestamp":"2026-09-20 18:02:28"}
+{"level":"http","message":"GET /api/email-marketing/6a7c854242116e6531df0bcb/templates 200 321ms","timestamp":"2026-09-20 18:02:42"}
+{"level":"http","message":"POST /api/email-marketing/6a7c854242116e6531df0bcb/audiences/preview 200 364ms","timestamp":"2026-09-20 18:02:44"}
+{"level":"http","message":"POST /api/contacts 200 350ms","timestamp":"2026-09-20 18:02:50"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 382ms","timestamp":"2026-09-20 18:02:50"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 392ms","timestamp":"2026-09-20 18:03:02"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 426ms","timestamp":"2026-09-20 18:03:02"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 447ms","timestamp":"2026-09-20 18:03:02"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 480ms","timestamp":"2026-09-20 18:03:02"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-20 18:03:48"}
+{"level":"info","message":"All queues closed","timestamp":"2026-09-20 18:03:48"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-20 18:10:56"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-20 18:10:57"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-20 18:10:57"}
+{"level":"error","message":"UserController Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (D:\\Kyra\\chat-base-api\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (D:\\Kyra\\chat-base-api\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async UserController.login (D:\\Kyra\\chat-base-api\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-20 18:11:04"}
+{"level":"error","message":"Unhandled request error Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (D:\\Kyra\\chat-base-api\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (D:\\Kyra\\chat-base-api\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async UserController.login (D:\\Kyra\\chat-base-api\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-20 18:11:04"}
+{"level":"http","message":"POST /api/auth/login 401 578ms","timestamp":"2026-09-20 18:11:04"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-20 18:11:05"}
+{"level":"error","message":"UserController Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (D:\\Kyra\\chat-base-api\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (D:\\Kyra\\chat-base-api\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async UserController.login (D:\\Kyra\\chat-base-api\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-20 18:11:07"}
+{"level":"error","message":"Unhandled request error Invalid credentials","method":"POST","path":"/api/auth/login","stack":"HttpError: Invalid credentials\n    at Function.unauthorized (D:\\Kyra\\chat-base-api\\src\\utils\\http.error.ts:19:12)\n    at UserService.login (D:\\Kyra\\chat-base-api\\src\\services\\user.service.ts:102:23)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async UserController.login (D:\\Kyra\\chat-base-api\\src\\controllers\\user.controller.ts:30:22)","statusCode":401,"timestamp":"2026-09-20 18:11:07"}
+{"level":"http","message":"POST /api/auth/login 401 66ms","timestamp":"2026-09-20 18:11:07"}
+{"level":"http","message":"POST /api/auth/login 200 303ms","timestamp":"2026-09-20 18:11:17"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/access 304 372ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/notification/6a7c854042116e6531df0b8c 200 646ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/account 304 732ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 200 686ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/overview?module=overview&range=7days 304 751ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/activity-logs/6a7c854242116e6531df0bcb?limit=8&page=1 304 288ms","timestamp":"2026-09-20 18:11:18"}
+{"level":"http","message":"GET /api/integration/6a7c854242116e6531df0bcb/whatsapp 200 445ms","timestamp":"2026-09-20 18:11:22"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/optin 200 376ms","timestamp":"2026-09-20 18:11:28"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/live-chat/context 200 445ms","timestamp":"2026-09-20 18:11:32"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent 200 591ms","timestamp":"2026-09-20 18:11:38"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/canned-messages 200 749ms","timestamp":"2026-09-20 18:11:41"}
+{"level":"http","message":"GET /api/message/6aaf8cd59b76570536281381? 304 339ms","timestamp":"2026-09-20 18:11:49"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 401ms","timestamp":"2026-09-20 18:11:49"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/templates?page=1&limit=10 304 529ms","timestamp":"2026-09-20 18:11:50"}
+{"level":"http","message":"GET /api/configuration?module=conversation&configType=status 304 871ms","timestamp":"2026-09-20 18:11:50"}
+{"level":"http","message":"GET /api/conversation/6a7c854242116e6531df0bcb?page=1&limit=50 200 459ms","timestamp":"2026-09-20 18:11:50"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 306ms","timestamp":"2026-09-20 18:12:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 432ms","timestamp":"2026-09-20 18:12:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 463ms","timestamp":"2026-09-20 18:12:48"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 496ms","timestamp":"2026-09-20 18:12:48"}
+{"level":"http","message":"POST /api/whatsapp/account/6a7c854242116e6531df0bcb/ai-agent/conversations/6aaf8cd59b76570536281381/resume 200 1939ms","timestamp":"2026-09-20 18:12:50"}
+{"level":"http","message":"POST /api/contacts 200 347ms","timestamp":"2026-09-20 18:12:50"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 427ms","timestamp":"2026-09-20 18:12:50"}
+{"level":"http","message":"GET /api/email-marketing/6a7c854242116e6531df0bcb/overview 304 505ms","timestamp":"2026-09-20 18:12:52"}
+{"level":"http","message":"GET /api/whatsapp/account/6a7c854242116e6531df0bcb/broadcast/overview 200 475ms","timestamp":"2026-09-20 18:12:53"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 280ms","timestamp":"2026-09-20 18:12:54"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 389ms","timestamp":"2026-09-20 18:12:54"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 414ms","timestamp":"2026-09-20 18:12:54"}
+{"level":"http","message":"POST /api/account/6a7c854242116e6531df0bcb/leads 200 420ms","timestamp":"2026-09-20 18:12:54"}
+{"level":"http","message":"POST /api/contacts 200 313ms","timestamp":"2026-09-20 18:12:56"}
+{"level":"http","message":"GET /api/account/6a7c854242116e6531df0bcb/contacts/imports?limit=20 304 363ms","timestamp":"2026-09-20 18:12:56"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-20 18:13:44"}
