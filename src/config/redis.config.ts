@@ -1,4 +1,4 @@
-import Redis, { type RedisOptions } from "ioredis";
+import { Redis, type RedisOptions } from "ioredis";
 import { config } from "./index.js";
 import logger from "../utils/logger.js";
 
@@ -67,7 +67,7 @@ export function createBullClient(type: string): Redis {
 
 function createRedisConnection(): Redis {
   const redis = new Redis(redisConfig);
-  redis.on("error", (error) => {
+  redis.on("error", (error: Error) => {
     logger.error("Redis error", { error: redisErrorMessage(error) });
   });
   return redis;

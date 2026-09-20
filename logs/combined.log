@@ -6778,3 +6778,116 @@
 {"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf92e6491948866bb8c9f2/recipients 304 1004ms","timestamp":"2026-09-20 14:15:07"}
 {"level":"http","message":"POST /api/contacts 200 370ms","timestamp":"2026-09-20 14:15:11"}
 {"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 436ms","timestamp":"2026-09-20 14:15:11"}
+{"level":"info","message":"Server is running on port 3000","timestamp":"2026-09-20 14:15:58"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-20 14:15:58"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-20 14:15:59"}
+{"level":"info","message":"Database connected successfully","timestamp":"2026-09-20 14:16:03"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 3404ms","timestamp":"2026-09-20 14:16:31"}
+{"level":"http","message":"GET /api/notification/6a8c7216bccbe3ce030eccdd 304 351ms","timestamp":"2026-09-20 14:16:32"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/access 304 362ms","timestamp":"2026-09-20 14:16:32"}
+{"level":"http","message":"GET /api/account 304 430ms","timestamp":"2026-09-20 14:16:32"}
+{"level":"http","message":"POST /api/contacts 200 511ms","timestamp":"2026-09-20 14:16:32"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 464ms","timestamp":"2026-09-20 14:16:32"}
+{"level":"http","message":"GET /api/subscription 200 2433ms","timestamp":"2026-09-20 14:16:34"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 1236ms","timestamp":"2026-09-20 14:16:54"}
+{"level":"http","message":"POST /api/contacts 200 396ms","timestamp":"2026-09-20 14:16:56"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 436ms","timestamp":"2026-09-20 14:16:56"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 457ms","timestamp":"2026-09-20 14:17:35"}
+{"level":"http","message":"GET /api/configuration?module=lead&configType=status 304 322ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 398ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 402ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/leads 200 411ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"POST /api/contacts 200 265ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 436ms","timestamp":"2026-09-20 14:17:37"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 534ms","timestamp":"2026-09-20 14:17:43"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 746ms","timestamp":"2026-09-20 14:17:46"}
+{"level":"http","message":"GET /api/whatsapp/account/6a8c7218bccbe3ce030ecd1c/broadcast/overview 200 525ms","timestamp":"2026-09-20 14:17:49"}
+{"level":"http","message":"POST /api/contacts 200 255ms","timestamp":"2026-09-20 14:17:50"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 443ms","timestamp":"2026-09-20 14:17:51"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 511ms","timestamp":"2026-09-20 14:17:56"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9481491948866bb8cbae 200 293ms","timestamp":"2026-09-20 14:17:57"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 322ms","timestamp":"2026-09-20 14:17:57"}
+{"level":"http","message":"POST /api/contacts 200 276ms","timestamp":"2026-09-20 14:18:04"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 489ms","timestamp":"2026-09-20 14:18:04"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 292ms","timestamp":"2026-09-20 14:18:07"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports 201 405ms","timestamp":"2026-09-20 14:18:22"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/local-upload 200 539ms","timestamp":"2026-09-20 14:18:23"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/complete-upload 200 934ms","timestamp":"2026-09-20 14:18:24"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 326ms","timestamp":"2026-09-20 14:18:24"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 328ms","timestamp":"2026-09-20 14:18:24"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/preview 200 395ms","timestamp":"2026-09-20 14:19:59"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/dry-run 200 452ms","timestamp":"2026-09-20 14:20:12"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/start 200 3674ms","timestamp":"2026-09-20 14:20:31"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 458ms","timestamp":"2026-09-20 14:20:31"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 836ms","timestamp":"2026-09-20 14:20:46"}
+{"level":"http","message":"POST /api/contacts 200 396ms","timestamp":"2026-09-20 14:20:47"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 200 839ms","timestamp":"2026-09-20 14:20:47"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 633ms","timestamp":"2026-09-20 14:20:57"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns 200 758ms","timestamp":"2026-09-20 14:20:59"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/templates 304 459ms","timestamp":"2026-09-20 14:21:01"}
+{"level":"http","message":"POST /api/email-marketing/6a8c7218bccbe3ce030ecd1c/audiences/preview 200 2969ms","timestamp":"2026-09-20 14:21:03"}
+{"level":"http","message":"POST /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns 200 1316ms","timestamp":"2026-09-20 14:21:18"}
+{"campaignId":"6aaf9e869cc8d8ba25fc2342","level":"info","message":"CAMPAIGN_QUEUED","timestamp":"2026-09-20 14:21:23"}
+{"level":"http","message":"POST /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf9e869cc8d8ba25fc2342/send 200 3746ms","timestamp":"2026-09-20 14:21:23"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf9e869cc8d8ba25fc2342/analytics 200 378ms","timestamp":"2026-09-20 14:21:24"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf9e869cc8d8ba25fc2342/recipients 200 519ms","timestamp":"2026-09-20 14:21:24"}
+{"level":"http","message":"POST /api/contacts 200 263ms","timestamp":"2026-09-20 14:21:26"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 200 490ms","timestamp":"2026-09-20 14:21:26"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 689ms","timestamp":"2026-09-20 14:21:29"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 693ms","timestamp":"2026-09-20 14:21:29"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 200 1549ms","timestamp":"2026-09-20 14:21:58"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns 200 713ms","timestamp":"2026-09-20 14:21:59"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf9e869cc8d8ba25fc2342/analytics 200 477ms","timestamp":"2026-09-20 14:22:05"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns/6aaf9e869cc8d8ba25fc2342/recipients 200 2028ms","timestamp":"2026-09-20 14:22:07"}
+{"level":"http","message":"POST /api/contacts 200 376ms","timestamp":"2026-09-20 14:22:13"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 200 568ms","timestamp":"2026-09-20 14:22:13"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 970ms","timestamp":"2026-09-20 14:22:19"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 969ms","timestamp":"2026-09-20 14:22:19"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/pause 200 3094ms","timestamp":"2026-09-20 14:39:39"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 1422ms","timestamp":"2026-09-20 14:39:40"}
+{"level":"http","message":"POST /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/resume 200 9148ms","timestamp":"2026-09-20 14:40:10"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 3180ms","timestamp":"2026-09-20 14:40:13"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3/events 200 1147770ms","timestamp":"2026-09-20 14:41:27"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 200 1035ms","timestamp":"2026-09-20 14:41:28"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:01"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 17:26:02"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-20 17:26:02"}
+{"level":"info","message":"Redis client reconnecting...","timestamp":"2026-09-20 17:26:02"}
+{"level":"info","message":"Redis client connected","timestamp":"2026-09-20 17:26:07"}
+{"level":"info","message":"Redis client ready","timestamp":"2026-09-20 17:26:08"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:09"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:34"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:42"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 17:26:42"}
+{"level":"warn","message":"Redis client connection closed","timestamp":"2026-09-20 17:26:42"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:43"}
+{"level":"http","message":"GET /api/auth/me?includes=organization,permissions 200 6211ms","timestamp":"2026-09-20 17:26:47"}
+{"level":"http","message":"GET /api/notification/6a8c7216bccbe3ce030eccdd 304 284ms","timestamp":"2026-09-20 17:26:48"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/access 304 570ms","timestamp":"2026-09-20 17:26:48"}
+{"level":"http","message":"GET /api/account 304 649ms","timestamp":"2026-09-20 17:26:48"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/config 304 372ms","timestamp":"2026-09-20 17:26:48"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports/6aaf9dd69cc8d8ba25fc21f3 304 429ms","timestamp":"2026-09-20 17:26:49"}
+{"level":"http","message":"GET /api/subscription 200 2403ms","timestamp":"2026-09-20 17:26:50"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:51"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 200 582ms","timestamp":"2026-09-20 17:26:56"}
+{"level":"http","message":"POST /api/contacts 200 1786ms","timestamp":"2026-09-20 17:26:57"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:59"}
+{"level":"http","message":"POST /api/contacts 200 1598ms","timestamp":"2026-09-20 17:27:12"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 200 985ms","timestamp":"2026-09-20 17:27:44"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/campaigns 200 612ms","timestamp":"2026-09-20 17:27:48"}
+{"level":"http","message":"GET /api/account/6a8c7218bccbe3ce030ecd1c/contacts/imports?limit=20 304 838ms","timestamp":"2026-09-20 17:29:26"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 900ms","timestamp":"2026-09-20 17:29:26"}
+{"level":"http","message":"POST /api/contacts 200 1795ms","timestamp":"2026-09-20 17:29:27"}
+{"level":"http","message":"GET /api/whatsapp/account/6a8c7218bccbe3ce030ecd1c/broadcast/overview 304 677ms","timestamp":"2026-09-20 17:29:40"}
+{"level":"http","message":"GET /api/email-marketing/6a8c7218bccbe3ce030ecd1c/overview 304 640ms","timestamp":"2026-09-20 17:29:41"}
+{"level":"info","message":"Shutting down queues...","timestamp":"2026-09-20 17:29:52"}
+{"level":"info","message":"All queues closed","timestamp":"2026-09-20 17:29:52"}

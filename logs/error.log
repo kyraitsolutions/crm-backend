@@ -4625,3 +4625,20 @@
 {"error":"ERR max number of clients reached","level":"error","message":"Redis error","timestamp":"2026-09-20 14:13:18"}
 {"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 14:13:18"}
 {"level":"error","message":"CONTACT_IMPORT_WORKER redis maxmemory-policy is not noeviction","policy":"","timestamp":"2026-09-20 14:14:36"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 15:30:03"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:01"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 17:26:02"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:09"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:34"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:42"}
+{"error":"read ECONNRESET","level":"error","message":"Redis client error","timestamp":"2026-09-20 17:26:42"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:43"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:51"}
+{"error":"read ECONNRESET","level":"error","message":"Redis error","timestamp":"2026-09-20 17:26:59"}
