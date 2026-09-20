@@ -5,6 +5,7 @@ import {
   accountSwaggerComponents,
   accountSwaggerPaths,
 } from "./account.swagger.js";
+import { contactImportSwaggerPaths } from "./contact-import.swagger.js";
 
 export const swaggerSpec = {
   openapi: "3.0.3",
@@ -29,8 +30,12 @@ export const swaggerSpec = {
     { name: "Account AI", description: "AI template generation" },
     { name: "Account Campaigns", description: "Email campaign broadcasting" },
     { name: "Account Recycle Bin", description: "Deleted records" },
+    { name: "Account Contact Imports", description: "Bulk contact import" },
   ],
-  paths: accountSwaggerPaths,
+  paths: {
+    ...accountSwaggerPaths,
+    ...contactImportSwaggerPaths,
+  },
   components: {
     ...accountSwaggerComponents,
     securitySchemes: {

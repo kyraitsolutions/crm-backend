@@ -67,8 +67,14 @@ export class ContactService {
     accountId: string,
     payload: Record<string, any>,
     skip: number,
+    pageLimit?: number,
   ): Promise<any> {
-    const { search, limit = 10, dateRange, filters = {}, sort = {} } = payload;
+    const { search, dateRange, filters = {}, sort = {} } = payload;
+    const limit =
+      Number(pageLimit) ||
+      Number(payload.rowPerPage) ||
+      Number(payload.limit) ||
+      10;
 
     console.log("Payload", payload);
 

@@ -11,6 +11,8 @@ import { BroadcastController } from "../controllers/broadcasting.controller.js";
 import { requirePermission } from "../middleware/authorization.middleware.js";
 import { AccountController } from "../controllers/account.controller.js";
 import { RecyclebinController } from "../controllers/recyclebin.controller.js";
+import { createContactImportRouter } from "../modules/contacts/import/http/contact-import.routes.js";
+import { getContactImportHttpService } from "../modules/contacts/import/runtime/http-runtime.js";
 
 /**
  * Account-scoped API routes.
@@ -280,6 +282,11 @@ export class AccountRouter {
       "/:accountId/recyclebin/empty",
       AuthMiddleware.authenticate,
       this.recyclebinController.empty.bind(this.recyclebinController),
+    );
+
+    this.router.use(
+      "/:accountId/contacts/imports",
+      createContactImportRouter(getContactImportHttpService()),
     );
 
     // TODO: =============================================================================================

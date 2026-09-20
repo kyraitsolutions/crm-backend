@@ -21,6 +21,11 @@ export const PERMISSIONS = [
   "chatbots.delete",
   "chatbots.view",
 
+  // Contacts
+  "contacts.create",
+  "contacts.view",
+  "contacts.import",
+
   // Leads
   "leads.create",
   "leads.edit",

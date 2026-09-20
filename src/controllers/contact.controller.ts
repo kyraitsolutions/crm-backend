@@ -23,10 +23,10 @@ export class ContactController {
         String(accountId || ""),
         payload,
         skip,
+        limit,
       );
 
-      console.log(contacts);
-      const totalPages = Math.ceil(contacts.totalDocs / limit) || 1;
+      const totalPages = Math.max(1, Math.ceil(Number(totalDocs || 0) / limit) || 1);
 
       httpResponse(req, res, 200, "contacts fetched successfully", {
         docs: contacts,

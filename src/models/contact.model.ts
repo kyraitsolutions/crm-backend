@@ -120,10 +120,10 @@ const contactSchema = new Schema<Contact>(
   },
 );
 
-// Compound unique+sparse indexes still include docs that only have accountId.
-// Contacts without email then share { accountId, email: null } and the second
-// WhatsApp contact in an account fails with E11000. Partial filters keep
-// uniqueness only when email/phone actually exist.
+// Workspace-scoped identity (accountId = workspace). Import invariant 4:
+// this unique+partial index is the authority on email duplicates. Collation
+// treats case-folded emails as one key. Empty/missing email is excluded so
+// phone-only contacts do not collide on null.
 contactSchema.index(
   { accountId: 1, email: 1 },
   {
@@ -136,6 +136,8 @@ contactSchema.index(
   },
 );
 
+// Workspace-scoped identity for phone. Same invariant as email: uniqueness
+// only when phone is a non-empty string. Import upserts filter on this key.
 contactSchema.index(
   { accountId: 1, phone: 1 },
   {
