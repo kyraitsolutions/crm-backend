@@ -214,17 +214,25 @@ export class EmailService {
     logger.info(`Lead Acknowledgement email queued for ${email}`);
   }
   async queueLeadNotificationEmail({email, lead}: {email: string, lead: any}): Promise<void> {
-    console.log("Queueing lead notification email for:", email, lead);
-    const jobData = {
-      email,
-      lead,
-    };
-    console.log("Job Data for lead notification email:", jobData);
-    await emailQueue.add("lead-notification-email", {
+    await emailQueue.add(QUEUE_JOBS.LEAD_NOTIFICATION_EMAIL, {
       email,
       lead,
     });
     logger.info(`Lead Notification email queued for ${email}`);
+  }
+
+  async queueWhatsAppEscalationEmail({
+    email,
+    data,
+  }: {
+    email: string;
+    data: Record<string, unknown>;
+  }): Promise<void> {
+    await emailQueue.add(QUEUE_JOBS.WHATSAPP_ESCALATION_EMAIL, {
+      email,
+      data,
+    });
+    logger.info(`WhatsApp escalation email queued for ${email}`);
   }
 
   async queueTaskAssignedEmail(data: {

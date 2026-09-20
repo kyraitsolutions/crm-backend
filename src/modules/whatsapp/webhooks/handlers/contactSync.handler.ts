@@ -3,18 +3,18 @@ import {
   IntegrationProvider,
 } from "../../../../models/integration.model.js";
 import { contactSyncQueue } from "../../../../queue/index.js";
-// import { WhatsAppAccountModel } from "../../account/models/whatsapp-account.model.js";
+import type { TWhatsAppContactSyncValue } from "../types/index.js";
 
 export class ContactSyncHandler {
-  public async handle(payload: any): Promise<void> {
+  public async handle(payload: TWhatsAppContactSyncValue): Promise<void> {
     console.log("ContactSyncHandler", JSON.stringify(payload, null, 2));
 
     const { state_sync, metadata } = payload;
-    const { phone_number_id } = metadata;
+    const phoneNumberId = metadata?.phone_number_id;
 
     const existInegration = await IntegrationModel.findOne({
       provider: IntegrationProvider.WHATSAPP,
-      providerResourceId: String(phone_number_id),
+      providerResourceId: String(phoneNumberId),
     });
 
     if (!existInegration) {

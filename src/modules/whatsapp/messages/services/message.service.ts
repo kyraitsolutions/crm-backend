@@ -11,6 +11,7 @@ import { metaPayloadService } from "./meta-payload.service.js";
 import { AccountModel } from "../../../../models/accounts.model.js";
 import { SubscriptionService } from "../../../../services/subscription.service.js";
 import { USAGE_METRIC } from "../../../../constants/subscription.constant.js";
+import { whatsappLiveChatService } from "../../live-chat/services/whatsapp-live-chat.service.js";
 
 export class WhatsappMessageService {
   private integrationRepository = new IntegrationRepository();
@@ -69,7 +70,7 @@ export class WhatsappMessageService {
     }
 
     // 4. Get Or Create Conversation
-    const conversation = await conversationService.getOrCreateConversation({
+    const { conversation } = await conversationService.getOrCreateConversation({
       filter: {
         accountId,
         platform: "whatsapp",
@@ -103,7 +104,9 @@ export class WhatsappMessageService {
     }
 
     const metaPayload = metaPayloadService.build(payload, media);
-    console.log("metaPayload", metaPayload);
+
+    console.log("metaPayload", JSON.stringify(metaPayload, null, 2));
+   
 
     const result = await this.whatsappMessageClient.sendMessage({
       accessToken: credential.accessToken,
@@ -118,14 +121,10 @@ export class WhatsappMessageService {
       media: media,
     });
 
-    console.log("messagePayload", messagePayload);
 
     await this.messageRepository.createMessage(messagePayload as any);
 
     if (payload.source !== "automation" && conversation?.id) {
-      const { whatsappLiveChatService } = await import(
-        "../../live-chat/services/whatsapp-live-chat.service.js"
-      );
       await whatsappLiveChatService.markHumanIntervention(String(conversation.id));
     }
 
@@ -139,6 +138,39 @@ export class WhatsappMessageService {
     return {
       doc: result,
     };
+  }
+
+  async sendTypingIndicator(accountId: string, inboundMessageId: string) {
+    const integration =
+      await this.integrationRepository.findByAccountAndProvider(
+        accountId,
+        IntegrationProvider.WHATSAPP,
+      );
+    if (!integration) return;
+
+    const credential =
+      await this.integrationCredentialRepository.findByIntegrationId(
+        integration._id.toString(),
+      );
+    if (!credential?.accessToken) return;
+
+    const whatsappAccount =
+      await this.whatsappAccountRepository.findByPhoneNumberId(
+        integration?.providerResourceId,
+      );
+    const phoneNumberId = whatsappAccount?.phoneNumberInfo?.id;
+    if (!phoneNumberId) return;
+
+    await this.whatsappMessageClient.sendMessage({
+      accessToken: credential.accessToken,
+      phoneNumberId,
+      payload: {
+        messaging_product: "whatsapp",
+        status: "read",
+        message_id: inboundMessageId,
+        typing_indicator: { type: "text" },
+      },
+    });
   }
 
   async getMedia(accountId: string, mediaId: string) {

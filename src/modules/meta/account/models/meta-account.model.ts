@@ -1,11 +1,38 @@
 import { Schema, model } from "mongoose";
 
+const InstagramAccountSchema = new Schema(
+  {
+    id: {
+      type: String,
+      required: true,
+      index: true,
+    },
+
+    username: {
+      type: String,
+      default: null,
+    },
+
+    name: {
+      type: String,
+      default: null,
+    },
+
+    profilePictureUrl: {
+      type: String,
+      default: null,
+    },
+  },
+  {
+    _id: false,
+  },
+);
+
 const FacebookPageSchema = new Schema(
   {
     id: {
       type: String,
       required: true,
-      unique: true,
     },
 
     name: {
@@ -47,32 +74,19 @@ const FacebookPageSchema = new Schema(
       type: [String],
       default: [],
     },
-  },
-  {
-    _id: false,
-  },
-);
 
-const InstagramAccountSchema = new Schema(
-  {
-    id: {
-      type: String,
-      required: true,
-      index: true,
-    },
-
-    username: {
+    accessToken: {
       type: String,
       default: null,
     },
 
-    name: {
-      type: String,
-      default: null,
+    webhookSubscribed: {
+      type: Boolean,
+      default: false,
     },
 
-    profilePictureUrl: {
-      type: String,
+    instagram: {
+      type: InstagramAccountSchema,
       default: null,
     },
   },
@@ -87,6 +101,18 @@ const MetaAccountSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Integration",
       required: true,
+      unique: true,
+      index: true,
+    },
+
+    facebookPages: {
+      type: [FacebookPageSchema],
+      default: [],
+    },
+
+    activePageId: {
+      type: String,
+      default: null,
       index: true,
     },
 
@@ -125,5 +151,8 @@ const MetaAccountSchema = new Schema(
     versionKey: false,
   },
 );
+
+MetaAccountSchema.index({ "facebookPages.id": 1 });
+MetaAccountSchema.index({ "facebookPage.id": 1 });
 
 export const MetaAccountModel = model("MetaAccount", MetaAccountSchema);

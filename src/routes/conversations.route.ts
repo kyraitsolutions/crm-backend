@@ -45,6 +45,12 @@ export class ConversationRouter {
       AuthMiddleware.authenticate,
       this.controller.deleteConversations.bind(this.controller),
     );
+
+    this.router.patch(
+      "/:accountId/:conversationId",
+      AuthMiddleware.authenticate,
+      this.controller.updateConversationProfile.bind(this.controller),
+    );
   }
 
   public getRouter() {

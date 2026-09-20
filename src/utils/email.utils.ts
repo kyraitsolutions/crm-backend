@@ -388,6 +388,86 @@ export class EmailUtils {
     }
   }
 
+  async sendLeadNotificationEmail(email: string, lead: any): Promise<boolean> {
+    try {
+      const sourceLabel = this.leadSourceLabel(lead);
+      const isWhatsApp = /whatsapp/i.test(sourceLabel);
+      const leadName = String(lead?.name || lead?.phone || lead?.mobile || "New contact");
+      const leadPhone = lead?.phone || lead?.mobile || "";
+      const leadEmail = lead?.email || "";
+      const message = String(lead?.message || lead?.description || "").trim();
+      const year = new Date().getFullYear();
+
+      if (isWhatsApp) {
+        const html = this.compileTemplate(EMAIL_TEMPLATES_PATH.WHATSAPP_NEW_LEAD, {
+          accountName: lead?.accountName || "Kyra CRM",
+          leadName,
+          leadPhone,
+          leadEmail,
+          sourceLabel: "WhatsApp",
+          message,
+          receivedAt: lead?.receivedAt || new Date().toLocaleString(),
+          inboxUrl: lead?.inboxUrl || "",
+          leadUrl: lead?.leadUrl || "",
+          year,
+        });
+        await this.sendEmail(email, `New WhatsApp lead: ${leadName}`, html);
+        return true;
+      }
+
+      const html = this.compileTemplate(EMAIL_TEMPLATES_PATH.LEAD_NOTIFICATION, {
+        headline: `New lead from ${sourceLabel}`,
+        intro: `A new lead was received in Kyra CRM from ${sourceLabel}. Review the details below and follow up.`,
+        leadName,
+        leadPhone,
+        leadEmail,
+        sourceLabel,
+        message,
+        ctaUrl: lead?.leadUrl || lead?.inboxUrl || lead?.dashboardUrl || "",
+        ctaLabel: lead?.leadUrl ? "View lead" : "Open dashboard",
+        year,
+      });
+      await this.sendEmail(email, `New lead: ${leadName}`, html);
+      return true;
+    } catch (error) {
+      logger.error("Lead notification email error", error);
+      return false;
+    }
+  }
+
+  async sendWhatsAppEscalationEmail(email: string, data: any): Promise<boolean> {
+    try {
+      const leadName = String(data?.leadName || data?.name || data?.phone || "WhatsApp customer");
+      const html = this.compileTemplate(EMAIL_TEMPLATES_PATH.WHATSAPP_ESCALATION, {
+        leadName,
+        leadPhone: data?.leadPhone || data?.phone || "",
+        leadEmail: data?.leadEmail || data?.email || "",
+        reason: data?.reason || "The AI agent needs a teammate to take over.",
+        scoreLabel: data?.scoreLabel || "",
+        intent: data?.intent || "",
+        message: data?.message || "",
+        inboxUrl: data?.inboxUrl || "",
+        leadUrl: data?.leadUrl || "",
+        year: new Date().getFullYear(),
+      });
+      await this.sendEmail(email, `WhatsApp escalation: ${leadName}`, html);
+      return true;
+    } catch (error) {
+      logger.error("WhatsApp escalation email error", error);
+      return false;
+    }
+  }
+
+  private compileTemplate(relativePath: string, data: Record<string, unknown>) {
+    const source = fs.readFileSync(path.join(process.cwd(), relativePath), "utf8");
+    return Handlebars.compile(source)(data);
+  }
+
+  private leadSourceLabel(lead: any) {
+    const raw = lead?.sourceLabel || lead?.source?.name || lead?.source || "CRM";
+    return String(raw);
+  }
+
   // Template methods
   generateEmailTemplate(templateName: string, data: any): string {
     const templates: { [key: string]: (data: any) => string } = {

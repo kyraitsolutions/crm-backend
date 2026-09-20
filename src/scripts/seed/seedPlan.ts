@@ -239,4 +239,4 @@ export const seedPlans = async () => {
   }
 };
 
-seedPlans();
+

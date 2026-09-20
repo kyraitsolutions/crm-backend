@@ -2,12 +2,13 @@ import {
   SyncStatus,
   WhatsAppAccountModel,
 } from "../../account/models/whatsapp-account.model.js";
+import type { TWhatsAppAccountUpdateValue } from "../types/index.js";
 
 export class AccountUpdateHandler {
-  public async handle(payload: any): Promise<void> {
+  public async handle(payload: TWhatsAppAccountUpdateValue): Promise<void> {
     const { event, waba_info } = payload;
 
-    if (event !== "PARTNER_APP_UNINSTALLED") {
+    if (event !== "PARTNER_APP_UNINSTALLED" || !waba_info?.waba_id) {
       return;
     }
 

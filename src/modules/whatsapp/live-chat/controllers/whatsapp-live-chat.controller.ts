@@ -66,4 +66,26 @@ export class WhatsAppLiveChatController {
       );
     }
   };
+
+  resumeConversation = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { organizationId, accountId } = this.orgAccount(req);
+      const conversationId = String(req.params.conversationId || "");
+      if (!conversationId) throw HttpError.badRequest("Conversation is required");
+
+      const doc = await whatsappLiveChatService.resumeConversation({
+        organizationId,
+        accountId,
+        conversationId,
+      });
+      httpResponse(req, res, 200, "Auto resolve resumed", { doc });
+    } catch (error) {
+      handleRouteError(
+        "WhatsAppLiveChatController.resumeConversation",
+        error,
+        next,
+        req,
+      );
+    }
+  };
 }

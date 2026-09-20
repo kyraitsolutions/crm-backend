@@ -1,12 +1,14 @@
 // This MessageParser is used to parse WhatsApp incoming messages into a common format that can be matched with existing DB messages schema
 
+import type { TWhatsAppWebhookMessage } from "../../webhooks/types/index.js";
+
 class MessageParser {
   parse({
     message,
     from = "user",
     direction = "inbound",
   }: {
-    message: any;
+    message: TWhatsAppWebhookMessage;
     from?: "agent" | "user";
     direction?: "inbound" | "outbound";
   }) {
@@ -86,10 +88,42 @@ class MessageParser {
           },
         };
 
+      case "interactive": {
+        const reply =
+          message.interactive?.button_reply?.title ||
+          message.interactive?.list_reply?.title ||
+          message.interactive?.nfm_reply?.response_json ||
+          "";
+        return {
+          ...base,
+          type: "interactive",
+          searchText: String(reply),
+          body: { text: String(reply) },
+          interactive: message.interactive,
+        };
+      }
+
+      case "button": {
+        const text = message.button?.text || message.button?.payload || "";
+        return {
+          ...base,
+          type: "interactive",
+          searchText: String(text),
+          body: { text: String(text) },
+          interactive: {
+            type: "button_reply",
+            button_reply: {
+              id: message.button?.payload || "",
+              title: message.button?.text || "",
+            },
+          },
+        };
+      }
+
       case "reaction":
         return {
           ...base,
-          type: "",
+          type: "reaction",
           interactive: message.reaction,
         };
 

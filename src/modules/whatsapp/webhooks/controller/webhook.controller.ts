@@ -34,11 +34,10 @@ export class WebhookController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      await this.webhookRouterService.route(req.body);
-      // Always acknowledge Meta quickly
-      res.sendStatus(200);
+      await this.webhookRouterService.route(req.body as unknown);
     } catch (error) {
-      next(error);
+      console.error("WhatsApp webhook processing error", error);
     }
+    res.sendStatus(200);
   };
 }

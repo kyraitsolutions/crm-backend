@@ -37,10 +37,12 @@ export const ENV = {
   },
 
   AI: {
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
-    OPENAI_MODEL: process.env.OPENAI_MODEL!,
-    GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY!,
-    GOOGLE_GENAI_MODEL: process.env.GOOGLE_GENAI_MODEL!,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
+    OPENAI_MODEL: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY || "",
+    GOOGLE_GENAI_MODEL: process.env.GOOGLE_GENAI_MODEL || "gemini-3-flash-preview",
+    SARVAM_API_KEY: process.env.SARVAM_API_KEY || "",
+    SARVAM_MODEL: process.env.SARVAM_MODEL || "sarvam-105b-conversations",
   },
 
   AWS: {
@@ -68,11 +70,12 @@ export const ENV = {
   META: {
     APP_ID: process.env.META_APP_ID!,
     APP_SECRET: process.env.META_APP_SECRET!,
+    CONFIG_ID: process.env.META_CONFIG_ID!,
     GRAPH_BASE_URL: process.env.META_GRAPH_BASE_URL!,
     GRAPH_VERSION: process.env.META_GRAPH_VERSION!,
     REDIRECT_URI: process.env.META_REDIRECT_URI,
     VERIFY_WEBHOOK_TOKEN_FB: process.env.META_WEBHOOK_VERIFY_TOKEN_FB!,
-    VERIFY_WEBHOOK_TOKEN: process.env.WEBHOOK_VERIFY_TOKEN!,
+    VERIFY_WEBHOOK_TOKEN_WA: process.env.META_WEBHOOK_VERIFY_TOKEN_WA!,
     SYSTEM_USER_ACCESS_TOKEN: process.env.SYSTEM_USER_ACCESS_TOKEN!,
   },
 

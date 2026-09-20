@@ -4,9 +4,16 @@ import { IntegrationProvider } from "../../../models/integration.model.js";
 import { MetaClient } from "../../../providers/meta/meta.client.js";
 import { ActivityLogService } from "../../../services/activityLog.service.js";
 import { TApiResponse } from "../../../types/api-response.type.js";
+import { HttpError } from "../../../utils/http.error.js";
 import { MetaAccountRepository } from "../../meta/account/repositories/meta-account.repository.js";
 import { IntegrationCredentialRepository } from "../repositories/integration-credential.repository.js";
 import { IntegrationRepository } from "../repositories/integration.repository.js";
+import { TStoredFacebookPage } from "../types/index.js";
+import {
+  getStoredFacebookPages,
+  toPublicFacebookPage,
+  toPublicMetaAccount,
+} from "../utils/meta-account.utils.js";
 
 interface GenerateMetaAuthUrlParams {
   accountId: string;
@@ -18,6 +25,13 @@ interface CompleteMetaSignupParams {
   accountId: string;
   organizationId: string;
 }
+
+const REQUIRED_META_SCOPES = [
+  "pages_show_list",
+  "pages_read_engagement",
+  "pages_manage_metadata",
+  "leads_retrieval",
+];
 
 export class MetaIntegrationService {
   constructor(
@@ -31,9 +45,11 @@ export class MetaIntegrationService {
   public generateMetaAuthUrl({
     accountId,
     organizationId,
-  }: GenerateMetaAuthUrlParams): { signupUrl: string } {
+  }: GenerateMetaAuthUrlParams): TApiResponse<{
+    signupUrl: string;
+  }> {
     const appId = config.meta.APP_ID as string;
-    const configId = "3168850996644844";
+    const configId = config.meta.CONFIG_ID;
     const redirectUri = config.meta.REDIRECT_URI as string;
 
     const params = new URLSearchParams({
@@ -41,11 +57,18 @@ export class MetaIntegrationService {
       redirect_uri: redirectUri,
       config_id: configId,
       response_type: "code",
+      "scope": "pages_show_list pages_read_engagement pages_manage_metadata leads_retrieval",
+      auth_type: "rerequest",
       state: `{"accountId":"${accountId}","organizationId":"${organizationId}"}`,
     });
 
+    const metaBaseUrl = "https://www.facebook.com";
+    const signupUrl = `${metaBaseUrl}/${config.meta.GRAPH_VERSION}/dialog/oauth?${params.toString()}`;
+
     return {
-      signupUrl: `https://www.facebook.com/v24.0/dialog/oauth?${params.toString()}`,
+      doc: {
+        signupUrl,
+      },
     };
   }
 
@@ -58,59 +81,76 @@ export class MetaIntegrationService {
     let accessToken = tokenResponse?.access_token;
     const tokenType = tokenResponse?.token_type || "bearer";
 
+    const debugToken = await this.metaClient.debugToken(accessToken);
+    const grantedScopes: string[] = debugToken?.data?.scopes ?? [];
+
+  
+
     if (!accessToken) {
       throw new Error("Meta access token not found");
     }
 
+    const missingScopes = REQUIRED_META_SCOPES.filter(
+      (scope) => !grantedScopes.includes(scope),
+    );
 
-      const longLived = await this.metaClient.getLongLivedUserToken(
-        accessToken,
+    if (missingScopes.length) {
+      console.warn(
+        `Meta Login Configuration did not grant: ${missingScopes.join(", ")}. ` +
+          "Checking a permission in App Dashboard is not enough — add it to the Facebook Login for Business configuration used as META_CONFIG_ID, then connect again.",
       );
+    }
 
-      if (longLived?.access_token) {
-        accessToken = longLived.access_token;
-      }
-      
-       const pages = await this.metaClient.getFacebookPages(accessToken);
+    const longLived = await this.metaClient.getLongLivedUserToken(accessToken);
+
+    if (longLived?.access_token) {
+      accessToken = longLived.access_token;
+    }
+
+    const pages = await this.metaClient.getFacebookPages(accessToken);
+    console.log("pages", pages);
 
     if (!pages?.length) {
       throw new Error("No Facebook Page found for this Meta account");
     }
 
-    const page = pages[0];
+    const facebookPages = pages
+      .map((page: any) => this.mapStoredPage(page))
+      .filter((page: TStoredFacebookPage | null): page is TStoredFacebookPage =>
+        Boolean(page?.id && page?.accessToken),
+      );
+    console.log("facebookPages", facebookPages);
 
-    if (!page?.id) {
-      throw new Error("Facebook Page ID not found");
+    if (!facebookPages.length) {
+      throw new Error("No Facebook Page access token found");
     }
 
-    if (!page?.access_token) {
-      throw new Error("Facebook Page access token not found");
-    }
+    const webhookResults = await Promise.all(
+      facebookPages.map(async (page: TStoredFacebookPage) => {
+        const webhookResponse = await this.metaClient.subscribePageWebhook(
+          page.id,
+          page.accessToken as string,
+        );
 
-    const facebookPage = await this.metaClient.getFacebookPage(
-      page.id,
-      page.access_token,
+        return {
+          ...page,
+          webhookSubscribed: Boolean(webhookResponse?.success),
+        };
+      }),
     );
 
-    const instagramAccount = await this.metaClient.getInstagramAccount(
-      page.id,
-      page.access_token,
-    );
 
-    const webhookResponse = await this.metaClient.subscribePageWebhook(
-      page.id,
-      page.access_token,
-    );
-
+    const activePage = webhookResults[0];
+    const publicActivePage = toPublicFacebookPage(activePage);
     const session = await mongoose.startSession();
     session.startTransaction();
 
     try {
-      const integration = await this.integrationRepo.createAndUpdate(
+      const integration = await this.integrationRepo.createAndUpdateByAccount(
         {
           organizationId,
           accountId,
-          providerResourceId: page.id,
+          providerResourceId: activePage.id,
           provider: IntegrationProvider.FACEBOOK,
         },
         session,
@@ -119,7 +159,7 @@ export class MetaIntegrationService {
       await this.credentialRepo.createAndUpdate(
         {
           integrationId: String(integration._id),
-          accessToken: page.access_token,
+          accessToken,
           type: tokenType,
           tokenExpiresAt: null,
         },
@@ -129,28 +169,11 @@ export class MetaIntegrationService {
       const metaAccount = await this.metaRepo.createAndUpdate(
         {
           integrationId: String(integration._id),
-          facebookPage: {
-            id: facebookPage.id,
-            name: facebookPage.name,
-            username: facebookPage.username ?? page.username ?? null,
-            category: facebookPage.category ?? page.category ?? null,
-            link: facebookPage.link ?? page.link ?? null,
-            picture:
-              facebookPage.picture?.data?.url ?? page.picture?.data?.url ?? null,
-            about: facebookPage.about ?? null,
-            description: facebookPage.description ?? null,
-            tasks: page.tasks ?? [],
-          },
-          instagram: instagramAccount
-            ? {
-                id: instagramAccount.id,
-                username: instagramAccount.username ?? null,
-                name: instagramAccount.name ?? null,
-                profilePictureUrl:
-                  instagramAccount.profile_picture_url ?? null,
-              }
-            : null,
-          webhookSubscribed: Boolean(webhookResponse?.success),
+          facebookPages: webhookResults,
+          activePageId: activePage.id,
+          facebookPage: publicActivePage,
+          instagram: activePage.instagram ?? null,
+          webhookSubscribed: Boolean(activePage.webhookSubscribed),
           isConnected: true,
           connectedAt: new Date(),
           onboardingCompleted: true,
@@ -172,7 +195,7 @@ export class MetaIntegrationService {
       return {
         doc: {
           integration,
-          metaAccount,
+          metaAccount: toPublicMetaAccount(metaAccount),
         },
       };
     } catch (error) {
@@ -181,6 +204,92 @@ export class MetaIntegrationService {
     } finally {
       await session.endSession();
     }
+  }
+
+  async setActivePage({
+    accountId,
+    pageId,
+  }: {
+    accountId: string;
+    pageId: string;
+  }) {
+    if (!pageId) {
+      throw HttpError.badRequest("Facebook Page ID is required");
+    }
+
+    const integration = await this.integrationRepo.findByAccountAndProvider(
+      accountId,
+      IntegrationProvider.FACEBOOK,
+    );
+
+    if (!integration) {
+      throw HttpError.notFound("Facebook integration is not connected");
+    }
+
+    const metaAccount = await this.metaRepo.findByIntegrationId(
+      String(integration._id),
+    );
+    const pages = getStoredFacebookPages(metaAccount);
+    const selectedPage = pages.find((page) => page.id === pageId);
+
+    if (!selectedPage) {
+      throw HttpError.notFound("Facebook Page not found on this connection");
+    }
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      await this.integrationRepo.updateProviderResourceId(
+        String(integration._id),
+        pageId,
+        session,
+      );
+
+      const publicPage = toPublicFacebookPage(selectedPage);
+      const updatedMetaAccount = await this.metaRepo.createAndUpdate(
+        {
+          integrationId: String(integration._id),
+          facebookPages: pages,
+          activePageId: pageId,
+          facebookPage: publicPage,
+          instagram: selectedPage.instagram ?? null,
+          webhookSubscribed: Boolean(selectedPage.webhookSubscribed),
+          isConnected: true,
+        },
+        session,
+      );
+
+      await session.commitTransaction();
+
+      return {
+        doc: toPublicMetaAccount(updatedMetaAccount),
+      };
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
+    }
+  }
+
+  private mapStoredPage(page: any): TStoredFacebookPage | null {
+    if (!page?.id) return null;
+
+    return {
+      id: String(page.id),
+      name: page.name || "Facebook Page",
+      username: page.username ?? null,
+      category: page.category ?? null,
+      link: page.link ?? null,
+      picture: page.picture?.data?.url ?? null,
+      about: page.about ?? null,
+      description: page.description ?? null,
+      tasks: page.tasks ?? [],
+      accessToken: page.access_token ?? null,
+      webhookSubscribed: false,
+      instagram: null,
+    };
   }
 
   async disconnect({

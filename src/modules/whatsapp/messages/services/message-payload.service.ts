@@ -11,7 +11,7 @@ export class MessagePayloadService {
       direction: "outbound",
       type: payload.type,
       status: "sent",
-      from: context?.from || "agent",
+      from: payload.from || context?.from || "agent",
     };
     switch (payload.type) {
       case "text":
@@ -36,6 +36,20 @@ export class MessagePayloadService {
           body: {
             text: payload.template?.name || "template",
           },
+        };
+
+      case "interactive":
+        return {
+          ...basePayload,
+          type: "interactive",
+          searchText:
+            payload.interactive?.body?.text ||
+            payload.searchText ||
+            "Interactive Message",
+          body: {
+            text: payload.interactive?.body?.text || "",
+          },
+          interactive: payload.interactive,
         };
 
       default:

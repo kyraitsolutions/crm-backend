@@ -116,4 +116,25 @@ export class ConversationController {
       handleRouteError("ConversationController.deleteConversations", error, next, req);
     }
   }
+
+  async updateConversationProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { accountId, conversationId } = req.params;
+      const organizationId = asEntityId(req.user?.organizationId);
+      const result = await this.service.updateConversationProfile(
+        accountId,
+        conversationId,
+        {
+          status: req.body?.status,
+          tags: req.body?.tags,
+          followUps: req.body?.followUps,
+        },
+        organizationId,
+      );
+
+      httpResponse(req, res, 200, "Conversation updated", { doc: result });
+    } catch (error) {
+      handleRouteError("ConversationController.updateConversationProfile", error, next, req);
+    }
+  }
 }

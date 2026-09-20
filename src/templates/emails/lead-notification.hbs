@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New lead received</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding:28px 12px;">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e7eb;">
+          <tr>
+            <td style="background:#3b5d50;color:#ffffff;padding:24px 28px;">
+              <p style="margin:0 0 6px 0;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;opacity:0.9;">
+                New lead
+              </p>
+              <h1 style="margin:0;font-size:22px;line-height:1.3;">
+                {{headline}}
+              </h1>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:28px;">
+              <p style="margin:0 0 16px 0;font-size:15px;color:#374151;line-height:1.6;">
+                {{intro}}
+              </p>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8faf9;border:1px solid #d7e3dd;border-radius:8px;">
+                <tr>
+                  <td colspan="2" style="padding:14px 18px;border-bottom:1px solid #d7e3dd;font-size:14px;font-weight:bold;color:#1f3a32;">
+                    Lead details
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:12px 18px;width:140px;font-size:13px;color:#4b6b60;">Name</td>
+                  <td style="padding:12px 18px;font-size:14px;color:#111827;">{{leadName}}</td>
+                </tr>
+                {{#if leadPhone}}
+                <tr>
+                  <td style="padding:12px 18px;font-size:13px;color:#4b6b60;">Phone</td>
+                  <td style="padding:12px 18px;font-size:14px;color:#111827;">{{leadPhone}}</td>
+                </tr>
+                {{/if}}
+                {{#if leadEmail}}
+                <tr>
+                  <td style="padding:12px 18px;font-size:13px;color:#4b6b60;">Email</td>
+                  <td style="padding:12px 18px;font-size:14px;color:#111827;">{{leadEmail}}</td>
+                </tr>
+                {{/if}}
+                <tr>
+                  <td style="padding:12px 18px;font-size:13px;color:#4b6b60;">Source</td>
+                  <td style="padding:12px 18px;font-size:14px;color:#111827;">{{sourceLabel}}</td>
+                </tr>
+              </table>
+
+              {{#if message}}
+              <p style="margin:20px 0 8px 0;font-size:13px;font-weight:bold;color:#111827;">Message</p>
+              <p style="margin:0;padding:14px 16px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;color:#374151;line-height:1.5;">
+                {{message}}
+              </p>
+              {{/if}}
+
+              {{#if ctaUrl}}
+              <div style="margin-top:28px;text-align:center;">
+                <a href="{{ctaUrl}}" style="display:inline-block;background:#3b5d50;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:bold;font-size:14px;">
+                  {{ctaLabel}}
+                </a>
+              </div>
+              {{/if}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:16px 28px;background:#f9fafb;color:#6b7280;font-size:12px;text-align:center;">
+              This is an internal Kyra CRM notification for your team.
+              <br />© {{year}} Kyra CRM
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
