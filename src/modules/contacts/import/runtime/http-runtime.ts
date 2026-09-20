@@ -24,10 +24,6 @@ export function getContactImportHttpService(): ContactImportHttpService {
   return singleton;
 }
 
-export function setContactImportHttpServiceForTests(service?: ContactImportHttpService): void {
-  singleton = service;
-}
-
 export function buildProductionHttpDeps(): ContactImportHttpDeps {
   const repository = new ContactImportRepository();
   const importConfig = config.import;

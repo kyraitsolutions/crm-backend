@@ -1,4 +1,5 @@
 import Queue from "bull";
+import { createBullClient } from "../../../../config/redis.config.js";
 import {
   IMPORT_BACKOFF_BASE_MS,
   IMPORT_CHUNK_ATTEMPTS,
@@ -50,7 +51,10 @@ export class BullImportQueue implements QueuePort {
         host: options.redis.host,
         port: options.redis.port,
         password: options.redis.password,
+        maxRetriesPerRequest: null,
+        enableReadyCheck: false,
       },
+      createClient: createBullClient,
       defaultJobOptions: {
         removeOnComplete: true,
         removeOnFail: true,

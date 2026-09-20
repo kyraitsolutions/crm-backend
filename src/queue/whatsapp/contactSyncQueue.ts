@@ -1,9 +1,10 @@
 import Queue from "bull";
-import { redisConfig } from "../../config/redis.config.js";
+import { createBullClient, redisConfig, redisErrorMessage } from "../../config/redis.config.js";
 import { defaultJobOptions } from "../../config/bull.config.js";
 
 export const contactSyncQueue = new Queue("whatsapp-contact-sync", {
   redis: redisConfig,
+  createClient: createBullClient,
   defaultJobOptions: defaultJobOptions,
 });
 
@@ -12,7 +13,7 @@ contactSyncQueue.on("ready", () => {
 });
 
 contactSyncQueue.on("error", (error) => {
-  console.error("❌ Contact Sync Queue Error", error);
+  console.error("❌ Contact Sync Queue Error", redisErrorMessage(error));
 });
 
 contactSyncQueue.on("completed", (job) => {

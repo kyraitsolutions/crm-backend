@@ -1,8 +1,9 @@
 import { S3Client } from "@aws-sdk/client-s3";
 import mongoose from "mongoose";
 import os from "node:os";
-import { Redis } from "ioredis";
+import type { Redis } from "ioredis";
 import { config } from "../config/index.js";
+import { getSharedRedis } from "../config/redis.config.js";
 import { settingsFromConfig } from "../modules/contacts/import/config/import-env.js";
 import { SubscriptionImportQuota } from "../modules/contacts/import/http/quota.js";
 import { ContactImportRepository } from "../modules/contacts/import/repositories/contact-import.repository.js";
@@ -29,14 +30,7 @@ async function main(): Promise<void> {
   await mongoose.connect(config.db.url);
   logger.info("CONTACT_IMPORT_WORKER mongo connected");
 
-  const redis = new Redis({
-    host: config.redis.host,
-    port: config.redis.port,
-    password: config.redis.pass || undefined,
-    lazyConnect: true,
-    maxRetriesPerRequest: null,
-  });
-  await redis.connect();
+  const redis = getSharedRedis();
   await assertNoeviction(redis, importConfig.checkRedisPolicy);
 
   const tempRoot = importConfig.xlsxTempDir ?? os.tmpdir();
@@ -83,7 +77,6 @@ async function main(): Promise<void> {
       await sleep(250);
     }
     await queue.close();
-    redis.disconnect();
     await mongoose.disconnect();
     process.exit(0);
   };

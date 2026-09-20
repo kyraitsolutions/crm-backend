@@ -1009,15 +1009,7 @@ Phone values always go through `libphonenumber-js` (no “already E.164” skip)
 
 ### Environment variables
 
-See `.env.example` for every `IMPORT_*` key, its default, and a one-line meaning. Test-only: `IMPORT_MONGO_TMP` (MongoMemory dbPath; default `os.tmpdir()`), `IMPORT_FILE_TMP` (local FileStore fixtures; default `os.tmpdir()`), `IMPORT_TEST_ALLOW_REMOTE=1` (opt in to non-local Redis/S3).
-
-### Test suites
-
-| Script | What runs | Target |
-|--------|-----------|--------|
-| `npm test` | Fast unit + in-memory orchestration (excludes `integration/`, `xlsx-scale`, `orchestration.scale`) | under 2 minutes |
-| `npm run test:scale` | 100k CSV/XLSX e2e, 500k XLSX scale, dual-worker 100k | long |
-| `npm run test:integration` | Redis + MinIO (or Docker) contract tests | CI optional |
+See `.env.example` for every `IMPORT_*` key, its default, and a one-line meaning.
 
 ### HTTP API (accepted)
 
@@ -1028,29 +1020,3 @@ See `docs/api/contact-import.md` for request/response examples and error codes. 
 **Assignee.** Assignment is not supported in v1. `defaultAssigneeId` is rejected as an unknown start key (`400`). `ContactModel` has no assignment field.
 
 **defaultCountry.** Required on start as a 2-letter ISO code (`400 IMPORT_DEFAULT_COUNTRY_REQUIRED` otherwise). The start path does not read Organization or fall back to `IN`. `GET /config` reports `{ code, source: "organization" }` only when `Organization.address.country` is a valid ISO-2; otherwise `{ code: null, source: "none" }`. Account has no country field.
-
-### Running integration tests
-
-```bash
-npm run test:integration
-```
-
-If `REDIS_URL` and `MINIO_ENDPOINT` (or `AWS_S3_ENDPOINT`) are already set, Jest runs against that infra and Docker is not started. MinIO credentials (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET`, `AWS_S3_REGION`) are documented in `.env.example`.
-
-If those URLs are unset and Docker is available, the script starts `docker-compose.test.yml` (`redis:7` on `127.0.0.1:16379`, MinIO on `127.0.0.1:19000`), waits for the ports, then runs Jest with `jest.integration.config.cjs`.
-
-Safety:
-
-- Refuses to run if `REDIS_URL` or the S3 endpoint is not localhost / `redis` / `minio` unless `IMPORT_TEST_ALLOW_REMOTE=1`.
-- Each run uses a unique Bull prefix (`bull-ci-{runId}`) and queue name (`ci-import-{runId}`), and a unique S3 key prefix (`test-runs/{runId}/`).
-- Tests obliterate that queue and delete that prefix. They never use the production queue name `contact-import` or the app’s default `bull:` prefix.
-
-If the URLs are unset and Docker is not installed (or `docker info` fails), the script prints a skip message and exits 0.
-
-Manual compose (optional):
-
-```bash
-docker compose -p contact-import-test -f docker-compose.test.yml up -d
-# REDIS_URL=redis://127.0.0.1:16379 MINIO_ENDPOINT=http://127.0.0.1:19000 …
-docker compose -p contact-import-test -f docker-compose.test.yml down
-```

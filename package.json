@@ -19,13 +19,10 @@
     "migrate:grant-contacts-import": "tsx src/scripts/migrate/grant-contacts-import.ts",
     "report:contact-duplicates": "tsx src/scripts/migrate/report-contact-identity-duplicates.ts",
     "report:contact-phone-formats": "tsx src/scripts/migrate/report-contact-phone-formats.ts",
-    "test": "tsx src/modules/contacts/import/scripts/normalize-phone-smoke.ts && node --expose-gc --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --forceExit",
-    "test:scale": "node --expose-gc --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.scale.config.cjs --runInBand --forceExit",
-    "test:integration": "tsx src/scripts/test/contact-import.integration.ts",
     "worker:import": "tsx src/workers/contact-import.worker.ts",
     "test:email-marketing": "tsx src/scripts/test/email-marketing.check.ts",
     "worker:email:prod": "node dist/workers/email.worker.js",
-    "worker": "tsx --watch src/workers/index.ts"
+    "worker": "tsx src/workers/index.ts"
   },
   "type": "module",
   "dependencies": {
@@ -57,7 +54,6 @@
     "ffmpeg-static": "^5.3.0",
     "fluent-ffmpeg": "^2.1.3",
     "handlebars": "^4.7.8",
-    "jest": "^30.2.0",
     "jsonwebtoken": "^9.0.2",
     "libphonenumber-js": "^1.13.13",
     "mongodb": "^6.7.0",
@@ -85,21 +81,13 @@
     "@types/cors": "^2.8.19",
     "@types/fluent-ffmpeg": "^2.1.28",
     "@types/ioredis": "^4.28.10",
-    "@types/jest": "^30.0.0",
     "@types/multer": "^2.2.0",
     "@types/nodemailer": "^7.0.12",
     "@types/sax": "^1.2.7",
-    "@types/supertest": "^7.2.1",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/ws": "^8.18.1",
     "@types/yauzl": "^3.4.0",
-    "aws-sdk-client-mock": "^4.1.0",
-    "exceljs": "^4.4.0",
-    "mongodb-memory-server": "^10.2.3",
-    "supertest": "^7.2.2",
-    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3",
-    "xlsx": "^0.18.5"
+    "typescript": "^5.9.3"
   }
 }
