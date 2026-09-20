@@ -1,21 +1,36 @@
 import { MessageService } from "../../../../services/messages.service.js";
+import type {
+  TWhatsAppMessageStatus,
+  TWhatsAppMessageStatusesValue,
+} from "../types/index.js";
+
+type TMessageStatusUpdate = {
+  status: string;
+  "analytics.sentAt"?: Date;
+  "analytics.deliveredAt"?: Date;
+  "analytics.readAt"?: Date;
+  "analytics.failedAt"?: Date;
+  error?: {
+    code?: number;
+    title?: string;
+    message?: string;
+    details?: string;
+    href?: string;
+    raw: TWhatsAppMessageStatus["errors"];
+  };
+};
 
 export class MessageStatusHandler {
   private messageService = new MessageService();
 
-  constructor() {
-    this.messageService = new MessageService();
-  }
-
-  async handle(value: any) {
-    for (const status of value.statuses) {
-      // console.log("MessageStatusHandler", status);
+  async handle(value: TWhatsAppMessageStatusesValue) {
+    for (const status of value.statuses ?? []) {
       await this.updateStatus(status);
     }
   }
 
-  private async updateStatus(status: any) {
-    const update: any = {
+  private async updateStatus(status: TWhatsAppMessageStatus) {
+    const update: TMessageStatusUpdate = {
       status: status.status,
     };
 
@@ -38,31 +53,30 @@ export class MessageStatusHandler {
 
       case "failed":
         update["analytics.failedAt"] = timestamp;
-
         if (status.errors?.length) {
           const error = status.errors[0];
-
           update.error = {
             code: error.code,
             title: error.title,
             message: error.message,
             details: error.error_data?.details,
             href: error.href,
-            raw: error,
+            raw: status.errors,
           };
         }
-
         break;
     }
-
-    // console.log("messageId", status.id);
-    // console.log("updateStatus", update);
 
     const messageId = status.id;
     try {
       await this.messageService.updateMessage(messageId, update);
-    } catch (error: any) {
-      if (error?.statusCode === 404 || error?.message === "Message not found") {
+    } catch (error) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        (("statusCode" in error && error.statusCode === 404) ||
+          ("message" in error && error.message === "Message not found"))
+      ) {
         return;
       }
       throw error;

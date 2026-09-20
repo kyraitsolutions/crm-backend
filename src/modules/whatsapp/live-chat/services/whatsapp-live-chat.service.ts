@@ -225,11 +225,11 @@ export class WhatsAppLiveChatService {
       },
       workingHours: payload.workingHours
         ? {
-            timezone: payload.workingHours.timezone || current.workingHours.timezone,
-            days: payload.workingHours.days?.length
-              ? payload.workingHours.days
-              : current.workingHours.days,
-          }
+          timezone: payload.workingHours.timezone || current.workingHours.timezone,
+          days: payload.workingHours.days?.length
+            ? payload.workingHours.days
+            : current.workingHours.days,
+        }
         : current.workingHours,
       welcomeMessage,
       offHoursMessage,
@@ -291,7 +291,7 @@ export class WhatsAppLiveChatService {
     }
 
     if (liveChat.autoResolveActive && !liveChat.humanIntervened) {
-      await this.pauseAutoResolve(String(conversation._id), liveChat);
+      await this.pauseAutoResolve((conversation as any)?._id, liveChat);
     }
 
     if (liveChat.humanIntervened) {
@@ -385,9 +385,90 @@ export class WhatsAppLiveChatService {
     await ConversationModel.findByIdAndUpdate(conversationId, {
       $set: {
         "metadata.liveChat.humanIntervened": true,
+        "metadata.liveChat.autoResolveActive": false,
         "metadata.liveChat.intervenedAt": new Date(),
       },
     });
+    const { whatsappChatflowService } = await import(
+      "../../chatflow/services/whatsapp-chatflow.service.js"
+    );
+    await whatsappChatflowService.pauseByConversation(conversationId);
+  }
+
+  async resumeConversation(params: {
+    organizationId: string;
+    accountId: string;
+    conversationId: string;
+  }) {
+    const conversation = await ConversationModel.findOne({
+      _id: params.conversationId,
+      accountId: params.accountId,
+    });
+    if (!conversation) return { resumed: false, reason: "conversation_missing" };
+
+    const liveChat = {
+      ...(((conversation.metadata as Record<string, any> | undefined)?.liveChat ||
+        {}) as Record<string, any>),
+    };
+    const wasPaused = Boolean(liveChat.humanIntervened || liveChat.escalationReason);
+    if (!wasPaused) return { resumed: false, reason: "already_active" };
+
+    const settings = await this.getSettings(params.organizationId, params.accountId);
+    const withinHours = isWithinWorkingHours(settings.workingHours);
+    const mode = liveChat.mode || settings.autoResolve?.mode;
+    const scheduled =
+      Boolean(settings.autoResolve?.enabled) &&
+      matchesAutoResolveWindow(settings.autoResolve?.scheduleMode, withinHours);
+
+    switch (mode) {
+      case AUTO_RESOLVE_MODE.FLOW: {
+        await ConversationModel.updateOne(
+          { _id: params.conversationId, accountId: params.accountId },
+          {
+            $set: {
+              "metadata.liveChat.humanIntervened": false,
+              "metadata.liveChat.autoResolveActive": scheduled,
+            },
+            $unset: { "metadata.liveChat.escalationReason": 1 },
+          },
+        );
+        if (!scheduled) {
+          return { resumed: false, reason: "outside_schedule", mode };
+        }
+        const { whatsappChatflowService } = await import(
+          "../../chatflow/services/whatsapp-chatflow.service.js"
+        );
+        const result = await whatsappChatflowService.resumeConversation({
+          organizationId: params.organizationId,
+          accountId: params.accountId,
+          conversationId: params.conversationId,
+        });
+        return { ...result, mode };
+      }
+      case AUTO_RESOLVE_MODE.AI_AGENT: {
+        const { whatsappAiSalesAgentService } = await import(
+          "../../ai-agent/services/whatsapp-ai-sales-agent.service.js"
+        );
+        const result = await whatsappAiSalesAgentService.resumeConversation({
+          organizationId: params.organizationId,
+          accountId: params.accountId,
+          conversationId: params.conversationId,
+        });
+        return { ...result, mode };
+      }
+      default:
+        await ConversationModel.updateOne(
+          { _id: params.conversationId, accountId: params.accountId },
+          {
+            $set: {
+              "metadata.liveChat.humanIntervened": false,
+              "metadata.liveChat.autoResolveActive": false,
+            },
+            $unset: { "metadata.liveChat.escalationReason": 1 },
+          },
+        );
+        return { resumed: true, queued: false, mode };
+    }
   }
 
   private async pauseAutoResolve(conversationId: string, liveChat: Record<string, any>) {
@@ -450,7 +531,15 @@ export class WhatsAppLiveChatService {
         },
       },
     );
-    return { action: "auto_resolve" as const, mode };
+    return {
+      action: "auto_resolve" as const,
+      mode,
+      isNewAttach: !alreadyAttached,
+      chatFlowId: settings.autoResolve.chatFlowId
+        ? String(settings.autoResolve.chatFlowId)
+        : null,
+      aiAgentId: settings.autoResolve.aiAgentId || null,
+    };
   }
 
   private async assertAutoResolveReady(

@@ -5,7 +5,16 @@ import { ContactService } from "../../../../services/contact.service.js";
 import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
-import logger from "../../../../utils/logger.js";
+import type { TConversation } from "../../../../types/conversation.type.js";
+import type {
+  TWhatsAppMessageEcho,
+  TWhatsAppMessageEchoesValue,
+} from "../types/index.js";
+
+type TWhatsAppIntegrationRef = {
+  accountId: string;
+  organizationId?: string;
+};
 
 export class MessageEchoHandler {
   private conversationService = new ConversationService();
@@ -13,58 +22,57 @@ export class MessageEchoHandler {
   private integrationService = new IntegrationService();
   private contactService = new ContactService(new ContactRepository());
 
-  async handle(value: any) {
-    const echoes = value?.message_echoes ?? [];
-    const { phone_number_id } = value?.metadata ?? {};
+  async handle(value: TWhatsAppMessageEchoesValue) {
+    const echoes = value.message_echoes ?? [];
+    const phoneNumberId = value.metadata?.phone_number_id;
 
     for (const echo of echoes) {
       try {
         const integration =
           await this.integrationService.resolveWhatsAppByPhoneNumberId(
-            String(phone_number_id),
+            String(phoneNumberId || ""),
           );
 
-        if (!integration) {
+        const integrationRef = this.toIntegrationRef(integration);
+        if (!integrationRef) {
           console.warn("WHATSAPP_ECHO_SKIPPED", {
             reason: "integration_not_found",
-            phoneNumberId: phone_number_id,
+            phoneNumberId,
           });
           continue;
         }
 
-        // Message deleted from mobile
         if (echo.type === "revoke") {
           await this.handleRevoke(echo);
           continue;
         }
 
-        // Normal outgoing mobile message
-        await this.handleMessage(echo, integration);
+        await this.handleMessage(echo, integrationRef);
       } catch (error) {
         console.error("Message echo error:", error);
       }
     }
   }
 
-  private async handleRevoke(echo: any) {
-    const originalMessageId = echo?.revoke?.original_message_id;
-
-    if (!originalMessageId) {
-      return;
-    }
-
+  private async handleRevoke(echo: TWhatsAppMessageEcho) {
+    const originalMessageId = echo.revoke?.original_message_id;
+    if (!originalMessageId) return;
     await this.messageService.deleteMessage(originalMessageId);
   }
 
-  private async handleMessage(echo: any, integration: any) {
-    const conversation = await this.conversationService.getOrCreateConversation(
+  private async handleMessage(
+    echo: TWhatsAppMessageEcho,
+    integration: TWhatsAppIntegrationRef,
+  ) {
+    if (!echo.to) return;
+
+    const { conversation } = await this.conversationService.getOrCreateConversation(
       {
         filter: {
           accountId: new Types.ObjectId(integration.accountId),
           platform: "whatsapp",
           "contact.phoneNumber": echo.to,
         },
-
         create: {
           accountId: String(integration.accountId),
           platform: "whatsapp",
@@ -103,8 +111,7 @@ export class MessageEchoHandler {
 
     const messageDocument = {
       accountId: new Types.ObjectId(integration.accountId),
-      conversationId: new Types.ObjectId(conversationId),
-      // platform: "whatsapp",
+      conversationId: new Types.ObjectId(this.conversationId(conversation)),
       ...parsedMessage,
     };
 
@@ -116,17 +123,49 @@ export class MessageEchoHandler {
       return;
     }
 
-    try {
-      await this.messageService.saveMessage(messageDocument);
-    } catch (error: any) {
-      if (error?.code === 11000) return;
-      throw error;
-    }
-
     const { whatsappLiveChatService } = await import(
       "../../live-chat/services/whatsapp-live-chat.service.js"
     );
-    await whatsappLiveChatService.markHumanIntervention(conversationId);
+    await whatsappLiveChatService.markHumanIntervention(
+      this.conversationId(conversation),
+    );
+
+    try {
+      await this.messageService.saveMessage(messageDocument);
+    } catch (error) {
+      if (
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        (error as { code?: number }).code === 11000
+      ) {
+        return;
+      }
+      throw error;
+    }
+  }
+
+  private toIntegrationRef(integration: unknown): TWhatsAppIntegrationRef | null {
+    if (!integration || typeof integration !== "object") return null;
+    const record = integration as {
+      accountId?: unknown;
+      organizationId?: unknown;
+    };
+    const accountId = String(record.accountId || "").trim();
+    if (!accountId) return null;
+
+    return {
+      accountId,
+      ...(record.organizationId
+        ? { organizationId: String(record.organizationId) }
+        : {}),
+    };
+  }
+
+  private conversationId(conversation: TConversation | { id?: string; _id?: unknown }) {
+    if ("id" in conversation && conversation.id) return String(conversation.id);
+    if ("_id" in conversation && conversation._id) return String(conversation._id);
+    return "";
   }
 }
 

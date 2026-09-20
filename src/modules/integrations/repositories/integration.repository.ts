@@ -41,6 +41,54 @@ export class IntegrationRepository {
     return IntegrationModel.findOne(filter, null, { session });
   }
 
+  async createAndUpdateByAccount(
+    data: {
+      organizationId: string;
+      accountId: string;
+      providerResourceId: string;
+      provider: IntegrationProvider;
+    },
+    session?: ClientSession,
+  ) {
+    return IntegrationModel.findOneAndUpdate(
+      {
+        organizationId: new Types.ObjectId(data.organizationId),
+        accountId: new Types.ObjectId(data.accountId),
+        provider: data.provider,
+      },
+      {
+        $set: {
+          ...data,
+          status: IntegrationStatus.CONNECTED,
+        },
+      },
+      {
+        upsert: true,
+        new: true,
+        session,
+      },
+    );
+  }
+
+  async updateProviderResourceId(
+    integrationId: string,
+    providerResourceId: string,
+    session?: ClientSession,
+  ) {
+    return IntegrationModel.findByIdAndUpdate(
+      integrationId,
+      {
+        $set: {
+          providerResourceId,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
+  }
+
   async findByAccountAndProvider(
     accountId: string,
     provider: IntegrationProvider,

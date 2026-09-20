@@ -34,7 +34,7 @@ export class WebhookController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      await this.webhookRouterService.route(req.body);
+      await this.webhookRouterService.route(req.body as unknown);
     } catch (error) {
       console.error("WhatsApp webhook processing error", error);
     }

@@ -8,6 +8,7 @@ import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
 import { setupSwagger } from "./docs/swagger.js";
 import logger from "./utils/logger.js";
+// import { seedPlans } from "./scripts/seed/seedPlan.js";
 
 export class App {
   public app: Application;
@@ -71,9 +72,9 @@ export class App {
   public async listen(port: number): Promise<void> {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
-    // await import("./workers/index.js");
     // configureNumber()
     // await seedPermissions();
+    // seedPlans()
     server.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
     });

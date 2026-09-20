@@ -1,15 +1,13 @@
 import { incomingMessageHandler } from "./incomingMessage.handler.js";
 import { messageStatusHandler } from "./messageStatus.handler.js";
+import type { TWhatsAppMessagesValue } from "../types/index.js";
 
 export class MessagesHandler {
-  async handle(value: any) {
-    // console.log("MessagesHandler", JSON.stringify(value, null, 2));
-    // Incoming customer message
+  async handle(value: TWhatsAppMessagesValue) {
     if (value.messages?.length) {
       await incomingMessageHandler.handle(value);
     }
 
-    // Outgoing message status
     if (value.statuses?.length) {
       await messageStatusHandler.handle(value);
     }

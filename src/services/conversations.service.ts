@@ -199,26 +199,31 @@ export class ConversationService {
   }: {
     filter: any;
     create: Partial<TConversation>;
-  }) {
-    let conversation: any = await this.repository.findOne(filter);
+  }): Promise<{ conversation: TConversation; isNew: boolean }> {
+    let conversation = await this.repository.findOne(filter);
 
     if (conversation) {
       const nextName = String((create as any)?.contact?.name || "").trim();
       if (nextName && !String(conversation?.contact?.name || "").trim()) {
         const updated = await ConversationModel.findByIdAndUpdate(
-          conversation._id || conversation.id,
+          (conversation as any)._id,
           { $set: { "contact.name": nextName } },
           { new: true },
         );
-        if (updated) conversation = updated;
+        if (updated) {
+          conversation = updated.toJSON() as TConversation;
+        }
       }
-      return conversation;
+      return { conversation, isNew: false };
     }
 
     conversation = await this.repository.createConversation(create);
+
     const accountId = String(create.accountId || filter.accountId || "");
+
     if (accountId && conversation) {
       const account = await this.accountRepository.findOne(accountId);
+
       if (account?.organizationId) {
         await notificationService.notifyConversation({
           organizationId: String(account.organizationId),
@@ -232,7 +237,7 @@ export class ConversationService {
       }
     }
 
-    return conversation;
+    return { conversation, isNew: true };
   }
 
   async deleteConversations(

@@ -2,6 +2,10 @@ import { IntegrationProvider, IntegrationStatus } from "../../../models/integrat
 import { MetaAccountRepository } from "../../meta/account/repositories/meta-account.repository.js";
 import { WhatsAppAccountRepository } from "../../whatsapp/account/repositories/whatsapp-account.repository.js";
 import { IntegrationRepository } from "../repositories/integration.repository.js";
+import {
+  getStoredFacebookPages,
+  toPublicMetaAccount,
+} from "../utils/meta-account.utils.js";
 
 export class IntegrationService {
   constructor(
@@ -58,10 +62,13 @@ export class IntegrationService {
         const meta = await this.metaRepo.findByIntegrationId(
           String(integration._id),
         );
+        const publicMeta = toPublicMetaAccount(meta);
+        const pages = getStoredFacebookPages(publicMeta);
+        const hasInstagram = pages.some((page) => page.instagram?.id);
 
         if (
           payload.provider === IntegrationProvider.INSTAGRAM &&
-          !meta?.instagram?.id
+          !hasInstagram
         ) {
           return {
             doc: {
@@ -75,7 +82,7 @@ export class IntegrationService {
             id: String(integration.id),
             connected: true,
             provider: payload.provider,
-            data: meta,
+            data: publicMeta,
           },
         };
       }

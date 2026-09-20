@@ -88,12 +88,14 @@ export class NotificationService {
     );
 
     const eventPayload = { notification };
+
     emitToOrganization({
       organizationId,
       accountId,
       event: "NEW_NOTIFICATION",
       data: eventPayload,
     });
+    
     emitToAccount(accountId, "NEW_NOTIFICATION", eventPayload);
 
     return notification;

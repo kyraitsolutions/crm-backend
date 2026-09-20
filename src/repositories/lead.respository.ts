@@ -31,6 +31,49 @@ export class LeadRespository {
     });
   }
 
+  async findFacebookLeads({
+    accountId,
+    pageId,
+    search,
+    limit,
+    skip,
+  }: {
+    accountId: string;
+    pageId: string;
+    search?: string;
+    limit: number;
+    skip: number;
+  }) {
+    const criteria: Record<string, unknown> = {
+      accountId,
+      isDeleted: { $ne: true },
+      $or: [{ "source.pageId": pageId }, { "source.name": "facebook" }],
+    };
+
+    if (search?.trim()) {
+      const rx = { $regex: search.trim(), $options: "i" };
+      criteria.$and = [
+        {
+          $or: [{ name: rx }, { email: rx }, { phone: rx }, { mobile: rx }],
+        },
+      ];
+    }
+
+    const [docs, totalDocs] = await Promise.all([
+      LeadModel.find(criteria)
+        .select(
+          "name email phone mobile message status stage source createdAt updatedAt",
+        )
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      LeadModel.countDocuments(criteria),
+    ]);
+
+    return { docs, totalDocs };
+  }
+
   async bulkWrite(ops: any[]) {
     return await LeadModel.bulkWrite(ops, { ordered: false });
   }

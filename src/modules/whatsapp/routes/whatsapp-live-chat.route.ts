@@ -22,6 +22,11 @@ export class WhatsappLiveChatRouter {
       AuthMiddleware.authenticate,
       this.controller.updateSettings,
     );
+    this.router.post(
+      "/conversations/:conversationId/resume",
+      AuthMiddleware.authenticate,
+      this.controller.resumeConversation,
+    );
   }
 
   getRouter() {

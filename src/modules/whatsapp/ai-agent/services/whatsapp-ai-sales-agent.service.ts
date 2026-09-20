@@ -17,6 +17,8 @@ import { aiAgentKnowledgeService } from "./ai-agent-knowledge.service.js";
 import { aiAgentLlmService } from "./ai-agent-llm.service.js";
 import { aiAgentScoringService } from "./ai-agent-scoring.service.js";
 import { aiAgentToolsService } from "./ai-agent-tools.service.js";
+import { enqueueWhatsAppAiAgentJob } from "../../../../queue/index.js";
+import { TConversation } from "../../../../types/conversation.type.js";
 
 export type AiAgentJob = {
   organizationId: string;
@@ -164,10 +166,13 @@ export class WhatsAppAiSalesAgentService {
     accountId: string;
     conversationId: string;
   }) {
-    const conversation = await ConversationModel.findOne({
+
+    const conversation : TConversation | null = await ConversationModel.findOne({
       _id: params.conversationId,
       accountId: params.accountId,
     });
+
+   
     if (!conversation) return { resumed: false, reason: "conversation_missing" };
 
     const liveChat = (conversation.metadata as any)?.liveChat || {};
@@ -239,9 +244,7 @@ export class WhatsAppAiSalesAgentService {
       return { resumed: true, queued: false };
     }
 
-    const { enqueueWhatsAppAiAgentJob } = await import(
-      "../../../../queue/whatsapp/ai-agent.queue.js"
-    );
+   
     await enqueueWhatsAppAiAgentJob({
       organizationId: params.organizationId,
       accountId: params.accountId,

@@ -178,7 +178,7 @@ export class WhatsAppIntegrationService {
         session,
       );
 
-      console.log("integration", integration);
+      
 
       // 7. Store Credential for WhatsApp
       await this.credentialRepo.createAndUpdate(
@@ -216,7 +216,7 @@ export class WhatsAppIntegrationService {
       });
 
       return {
-        doc: integration,
+        doc:integration
       };
     } catch (error) {
       await session.abortTransaction();

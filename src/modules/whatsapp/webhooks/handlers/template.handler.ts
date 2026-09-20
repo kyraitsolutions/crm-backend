@@ -1,8 +1,8 @@
 import { WhatsappTemplateModel } from "../../templates/models/template.model.js";
-import { TemplateWebhookPayload } from "../types/template.types.js";
+import type { TWhatsAppTemplateWebhookValue } from "../types/index.js";
 
 export class TemplateHandler {
-  public async handle(payload: TemplateWebhookPayload): Promise<void> {
+  public async handle(payload: TWhatsAppTemplateWebhookValue): Promise<void> {
     console.log("TemplateHandler", payload);
 
     const {

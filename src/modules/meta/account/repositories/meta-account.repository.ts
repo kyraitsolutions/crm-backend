@@ -6,7 +6,6 @@ export class MetaAccountRepository {
     return MetaAccountModel.findOneAndUpdate(
       {
         integrationId: new Types.ObjectId(data.integrationId),
-        "facebookPage.id": data.facebookPage.id,
       },
       {
         $set: data,
@@ -28,21 +27,46 @@ export class MetaAccountRepository {
 
   async findByPageId(pageId: string) {
     return MetaAccountModel.findOne({
-      "facebookPage.id": pageId,
+      $or: [{ "facebookPages.id": pageId }, { "facebookPage.id": pageId }],
     });
   }
 
   async findConnectedByPageId(pageId: string) {
     return MetaAccountModel.findOne({
-      "facebookPage.id": pageId,
       isConnected: true,
+      $or: [{ "facebookPages.id": pageId }, { "facebookPage.id": pageId }],
     });
   }
 
   async findByInstagramId(instagramId: string) {
     return MetaAccountModel.findOne({
-      "instagram.id": instagramId,
+      $or: [
+        { "facebookPages.instagram.id": instagramId },
+        { "instagram.id": instagramId },
+      ],
     });
+  }
+
+  async setActivePage(
+    integrationId: string,
+    pageId: string,
+    session?: ClientSession,
+  ) {
+    return MetaAccountModel.findOneAndUpdate(
+      {
+        integrationId: new Types.ObjectId(integrationId),
+        "facebookPages.id": pageId,
+      },
+      {
+        $set: {
+          activePageId: pageId,
+        },
+      },
+      {
+        new: true,
+        session,
+      },
+    );
   }
 
   async disconnect(integrationId: string, session?: ClientSession) {
