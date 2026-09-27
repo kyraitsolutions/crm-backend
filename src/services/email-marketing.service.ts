@@ -1303,6 +1303,25 @@ export class EmailMarketingService {
     });
   }
 
+  private plainTextToHtml(value: string) {
+    const source = String(value || "");
+    if (/<\/?[a-z][a-z0-9]*(\s[^>]*)?>/i.test(source)) return source;
+    const lines = source
+      .replace(/\r\n?/g, "\n")
+      .split("\n")
+      .map((line) => {
+        const escaped = line
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;")
+          .replace(/ (?= )/g, "&nbsp;");
+        return `<p style="margin:0;">${escaped || "<br>"}</p>`;
+      })
+      .join("");
+    return `<div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.5;color:#1f2937;">${lines}</div>`;
+  }
+
   private unwrapEmailHtml(html: string) {
     return String(html || "")
       .replace(/<!DOCTYPE[^>]*>/gi, "")
@@ -1364,7 +1383,9 @@ export class EmailMarketingService {
     organizationName: string,
     isTest = false,
   ) {
-    let html = this.unwrapEmailHtml(this.applyVars(campaign.html, recipient, organizationName));
+    let html = this.unwrapEmailHtml(
+      this.applyVars(this.plainTextToHtml(campaign.html), recipient, organizationName),
+    );
     const campaignId = String(campaign._id);
     const recipientId = String(recipient._id || "test");
     const canTrack = !isTest && Types.ObjectId.isValid(recipientId) && recipientId.length === 24;
