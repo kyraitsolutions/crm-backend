@@ -4,6 +4,7 @@ import { RbacService } from "../services/rbac.service.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateRoleDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
 import { TRole } from "../types/roles-permissions.type.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class RoleController {
   constructor(private rbacService: RbacService) {}
@@ -50,7 +51,7 @@ export class RoleController {
 
   updateRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { roleId } = req.params;
+      const roleId = routeParam(req.params.roleId);
       // const { roleName, permissions } = req.body;
       const { name, permissions } = new UpdateRoleDto(req.body);
       const organizationId = req.user?.organizationId; // from auth middleware
@@ -75,7 +76,7 @@ export class RoleController {
 
   deleteRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { roleId } = req.params;
+      const roleId = routeParam(req.params.roleId);
       const result = await this.rbacService.deleteRole(roleId);
       httpResponse(req, res, 200, "Role deleted successfully", result);
     } catch (error) {
@@ -86,7 +87,7 @@ export class RoleController {
   // PERMISSIONS RELATED CONTROLLERS
   getRolePermissions = async (req: Request, res: Response) => {
     try {
-      const { roleId } = req.params;
+      const roleId = routeParam(req.params.roleId);
       const results = await this.rbacService.getPermissionsByRole(roleId);
 
       return httpResponse(

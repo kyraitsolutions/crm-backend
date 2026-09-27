@@ -11,7 +11,7 @@ export class ChatFlowRepository {
   }
   async createChatFlow(data: Partial<TChatFlow>): Promise<TChatFlow | null> {
     const chatflow = await ChatFlow.create([data]);
-    return chatflow[0].toJSON();
+    return chatflow[0].toJSON() as unknown as TChatFlow;
   }
   // async findChatFlowByAccountId(
   //   accountId: string,

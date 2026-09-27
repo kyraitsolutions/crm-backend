@@ -3,6 +3,7 @@ import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateFormDto } from "../dtos/form.dto.js";
 import { FormService } from "../services/form.service.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class FormController {
   private formService: FormService;
@@ -18,7 +19,7 @@ export class FormController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-      const accountId = req.params.accountId;
+      const accountId = routeParam(req.params.accountId);
       const createFormDto = new CreateFormDto(req.body);
       const result = await this.formService.createForm(
         user.id,
@@ -40,7 +41,7 @@ export class FormController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-      const accountId = req.params.accountId;
+      const accountId = routeParam(req.params.accountId);
 
       const forms = await this.formService.getForms(user.id, accountId);
       httpResponse(req, res, 200, "Forms fetched successfully", {
@@ -60,7 +61,8 @@ export class FormController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-      const { accountId, formId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const formId = routeParam(req.params.formId);
       const form = await this.formService.getFormById(
         user.id,
         accountId,
@@ -81,7 +83,8 @@ export class FormController {
   ): Promise<void> => {
     try {
       const user = req.user as any;
-      const { accountId, formId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const formId = routeParam(req.params.formId);
       const form = await this.formService.deleteFormById(
         user.id,
         accountId,
@@ -98,7 +101,8 @@ export class FormController {
   updateFormById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.user as any;
-      const { accountId, formId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const formId = routeParam(req.params.formId);
       const form = await this.formService.updateFormById(
         user.id,
         accountId,

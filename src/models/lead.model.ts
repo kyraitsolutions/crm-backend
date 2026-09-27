@@ -38,6 +38,7 @@ export interface Lead extends Document {
         "webform",
         "manual",
         "webhook",
+        "import",
       ];
     };
     url?: string;
@@ -107,9 +108,11 @@ const leadNoteSchema = new Schema(
     id: false,
     toJSON: {
       transform(_, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
+        const row = ret as { id?: unknown; _id?: unknown; __v?: unknown };
+        row.id = row._id;
+        delete row._id;
+        delete row.__v;
+        return row;
       },
     },
   },
@@ -160,6 +163,7 @@ const leadSchema = new Schema<Lead>(
           "import",
           "whatsapp",
           "instagram",
+          "chatbot",
         ],
         default: "manual",
         set: (v: string) => v?.toLowerCase(),
@@ -218,10 +222,11 @@ const leadSchema = new Schema<Lead>(
     versionKey: false,
     toJSON: {
       transform(_, ret) {
-        delete (ret as any).__v;
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
+        const row = ret as { id?: unknown; _id?: unknown; __v?: unknown };
+        row.id = row._id;
+        delete row._id;
+        delete row.__v;
+        return row;
       },
     },
   },

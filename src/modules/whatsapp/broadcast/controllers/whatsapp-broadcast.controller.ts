@@ -12,11 +12,12 @@ import {
   UpdateWhatsAppOptInDto,
 } from "../dtos/broadcast.dto.js";
 import { whatsappBroadcastService } from "../services/whatsapp-broadcast.service.js";
+import { routeParam } from "../../../../utils/route-param.js";
 
 export class WhatsAppBroadcastController {
   private orgAccount(req: Request) {
     const organizationId = asEntityId(req.user?.organizationId);
-    const accountId = String(req.params.accountId || "");
+    const accountId = String(routeParam(req.params.accountId) || "");
     if (!organizationId || !accountId) {
       throw HttpError.forbidden("Organization and account are required");
     }
@@ -69,7 +70,7 @@ export class WhatsAppBroadcastController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const context = buildRequestContext(req, req.params.accountId);
+      const context = buildRequestContext(req, routeParam(req.params.accountId));
       const dto = new CreateWhatsAppCampaignDto(req.body);
       const doc = await whatsappBroadcastService.createCampaign(
         {
@@ -91,7 +92,7 @@ export class WhatsAppBroadcastController {
       const campaign = await whatsappBroadcastService.getCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign fetched", { doc: campaign.toJSON() });
     } catch (error) {
@@ -105,7 +106,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.updateCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.body,
       );
       httpResponse(req, res, 200, "Campaign updated", { doc });
@@ -120,7 +121,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.deleteCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign deleted", { doc });
     } catch (error) {
@@ -149,7 +150,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.queueCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         { sendNow: true },
       );
       httpResponse(req, res, 200, "Campaign queued", { doc });
@@ -164,7 +165,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.queueCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         {
           sendNow: false,
           scheduledAt: req.body.scheduledAt,
@@ -183,7 +184,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.pauseCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign paused", { doc });
     } catch (error) {
@@ -197,7 +198,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.cancelCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign canceled", { doc });
     } catch (error) {
@@ -207,14 +208,14 @@ export class WhatsAppBroadcastController {
 
   resend = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const context = buildRequestContext(req, req.params.accountId);
+      const context = buildRequestContext(req, routeParam(req.params.accountId));
       const doc = await whatsappBroadcastService.resendCampaign(
         {
           organizationId: String(context.organizationId),
           accountId: String(context.accountId),
           userId: String(context.userId),
         },
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign resent", { doc });
     } catch (error) {
@@ -228,7 +229,7 @@ export class WhatsAppBroadcastController {
       const doc = await whatsappBroadcastService.campaignAnalytics(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign analytics", { doc });
     } catch (error) {
@@ -242,7 +243,7 @@ export class WhatsAppBroadcastController {
       const result = await whatsappBroadcastService.listRecipients(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.query as any,
       );
       httpResponse(req, res, 200, "Recipients fetched", result);
@@ -256,7 +257,7 @@ export class WhatsAppBroadcastController {
       const { organizationId, accountId } = this.orgAccount(req);
       const dto = new TestWhatsAppCampaignDto({
         ...req.body,
-        campaignId: req.params.id || req.body.campaignId,
+        campaignId: routeParam(req.params.id) || req.body.campaignId,
       });
       const doc = await whatsappBroadcastService.sendTest(organizationId, accountId, dto);
       httpResponse(req, res, 200, "Test message sent", { doc });

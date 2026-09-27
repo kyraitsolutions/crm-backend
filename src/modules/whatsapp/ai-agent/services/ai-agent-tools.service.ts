@@ -7,6 +7,7 @@ import { LeadModel } from "../../../../models/lead.model.js";
 import { Notification } from "../../../../models/notification.model.js";
 import { Task } from "../../../../models/tasks.model.js";
 import { ContactRepository } from "../../../../repositories/contact.repository.js";
+import { ContactService } from "../../../../services/contact.service.js";
 import logger from "../../../../utils/logger.js";
 import { phoneMatchValues } from "../../../../utils/phone.util.js";
 import { CANNED_MESSAGE_STATUS } from "../../canned/constants/canned.constant.js";
@@ -66,9 +67,23 @@ const interpolate = (text: string, ctx: ToolContext, lead?: any) => {
 export class AiAgentToolsService {
   private whatsappMessageService = new WhatsappMessageService();
   private contactRepository = new ContactRepository();
+  private contactService = new ContactService(new ContactRepository());
   private assetsCache = new Map<string, { at: number; value: any }>();
 
-  async findContact(accountId: string, phone: string, email?: string) {
+  async findContact(
+    accountId: string,
+    phone: string,
+    email?: string,
+    name?: string,
+  ) {
+    const upserted = await this.contactService.upsertFromLead({
+      accountId,
+      phone,
+      email,
+      name,
+      source: "whatsapp",
+    });
+    if (upserted) return upserted;
     return this.contactRepository.findExistingContact(accountId, email, phone);
   }
 
@@ -113,7 +128,7 @@ export class AiAgentToolsService {
     stage?: string;
     score?: { score: number; level: string; factors: string[] };
   }) {
-    if (!params.leadId) return null;
+    if (!this.isLeadId(params.leadId)) return null;
     const $set: Record<string, unknown> = {};
     const reserved = new Set(["name", "email", "phone", "mobile", "company", "message", "description"]);
     for (const [rawKey, rawValue] of Object.entries(params.fields || {})) {
@@ -142,7 +157,7 @@ export class AiAgentToolsService {
   }
 
   async markConverted(accountId: string, leadId: string, stage: string) {
-    if (!leadId) return null;
+    if (!this.isLeadId(leadId)) return null;
     return LeadModel.findOneAndUpdate(
       {
         _id: leadId,
@@ -455,35 +470,6 @@ export class AiAgentToolsService {
     });
   }
 
-  // private async queueWhatsAppLeadEmail(params: {
-  //   accountId: string;
-  //   conversationId?: string;
-  //   lead: any;
-  //   message?: string;
-  // }) {
-  //   const account = await AccountModel.findById(params.accountId).select("email accountName");
-  //   if (!account?.email) return;
-  //   const leadId = String(params.lead?.id || params.lead?._id || "");
-  //   await emailService
-  //     .queueLeadNotificationEmail({
-  //       email: String(account.email),
-  //       lead: {
-  //         name: params.lead?.name || params.lead?.phone,
-  //         phone: params.lead?.phone || params.lead?.mobile,
-  //         email: params.lead?.email,
-  //         message: String(params.message || params.lead?.message || "").slice(0, 800),
-  //         source: { name: "whatsapp" },
-  //         accountName: account.accountName,
-  //         inboxUrl: whatsappInboxUrl(params.accountId, params.conversationId),
-  //         leadUrl: leadDetailUrl(params.accountId, leadId),
-  //         receivedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
-  //       },
-  //     })
-  //     .catch((error) =>
-  //       logger.warn("WHATSAPP_NEW_LEAD_EMAIL_SKIPPED", { error: (error as Error).message }),
-  //     );
-  // }
-
   private async queueWhatsAppEscalationEmail(params: {
     accountId: string;
     conversationId: string;
@@ -562,6 +548,11 @@ export class AiAgentToolsService {
         { $set: { lastOutboundAt: new Date() } },
       ),
     ]);
+  }
+
+  private isLeadId(value: unknown) {
+    const id = String(value || "").trim();
+    return id.length === 24 && Types.ObjectId.isValid(id);
   }
 
   private escapeRegex(value: string) {

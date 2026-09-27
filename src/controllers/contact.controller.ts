@@ -23,10 +23,10 @@ export class ContactController {
         String(accountId || ""),
         payload,
         skip,
+        limit,
       );
 
-      console.log(contacts);
-      const totalPages = Math.ceil(contacts.totalDocs / limit) || 1;
+      const totalPages = Math.max(1, Math.ceil(Number(totalDocs || 0) / limit) || 1);
 
       httpResponse(req, res, 200, "contacts fetched successfully", {
         docs: contacts,
@@ -60,6 +60,28 @@ export class ContactController {
         docs: contact,
         limit: 10,
         skip: 0,
+      });
+    } catch (error) {
+      handleRouteError("ContactController", error, next, req);
+    }
+  };
+
+  updateContact = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    try {
+      const { accountId, contactId, ...data } = req.body || {};
+      const id = String(contactId || req.params.contactId || "");
+      const account = String(accountId || "");
+      if (!account || !id) {
+        httpResponse(req, res, 400, "accountId and contactId are required", {});
+        return;
+      }
+      const contact = await contactService.updateContact(account, id, data);
+      httpResponse(req, res, 200, "contact updated successfully", {
+        docs: contact,
       });
     } catch (error) {
       handleRouteError("ContactController", error, next, req);

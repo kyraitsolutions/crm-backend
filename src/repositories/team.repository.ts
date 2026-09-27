@@ -15,7 +15,7 @@ export class TeamRepository {
     });
 
     if (!isOrganizationMemberExists) {
-      return (await OrganizationMember.create([data], { session }))[0].toJSON();
+      return (await OrganizationMember.create([data], { session }))[0].toJSON() as unknown as TOrganizationMember;
     }
 
     throw new Error("User is already assinged to this organization");
@@ -30,11 +30,11 @@ export class TeamRepository {
   async getOrganizationMembersByUserIds(
     userIds: string[],
   ): Promise<TOrganizationMember[]> {
-    return await OrganizationMember.find({
+    return (await OrganizationMember.find({
       userId: { $in: userIds },
     })
       .populate("roleId", "name level")
-      .lean();
+      .lean()) as unknown as TOrganizationMember[];
   }
   async getOrganizationMembersByUserIdAndOrgId(id: string): Promise<any> {
     return await OrganizationMember.find({ userId: id })
@@ -306,7 +306,7 @@ export class TeamRepository {
       },
     );
 
-    return member?.toJSON() || null;
+    return (member?.toJSON() as unknown as TOrganizationMember) || null;
   }
 
   async deleteOrganizationMembers(

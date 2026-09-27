@@ -19,11 +19,11 @@ export class ActivityLogRepository {
       .skip(options?.skip ?? 0)
       .limit(Number(options?.limit));
 
-    return (await activityLogs).map((log) => log.toJSON());
+    return (await activityLogs).map((log) => log.toJSON()) as unknown as TActivityLog[];
   }
 
   async create(data: Partial<TActivityLog>): Promise<TActivityLog | null> {
-    return (await ActivityLog.create([data]))[0].toJSON();
+    return (await ActivityLog.create([data]))[0].toJSON() as unknown as TActivityLog;
   }
 
   async createMany(data: Partial<TActivityLog>[]) {

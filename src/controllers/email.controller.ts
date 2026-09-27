@@ -4,6 +4,7 @@ import logger from "../utils/logger.js";
 import httpResponse from "../utils/http.response.js";
 import { EmailService } from "../services/email.service.js";
 import { accountService } from "../container.js";
+import { routeParam } from "../utils/route-param.js";
 
 // TBD
 
@@ -38,7 +39,7 @@ export class EmailController {
     startEmailCampaign = async (req: Request, res: Response, next: NextFunction) => {
         try {
             // const user = req.user as any;
-            const { accountId } = req.params;
+            const accountId = routeParam(req.params.accountId);
             const { leadIds, subject, html } = req.body;
 
             await this.emailService.startCampaign({
@@ -59,7 +60,7 @@ export class EmailController {
     };
     getSubscribers=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {accountId}=req.params;  
+            const accountId = routeParam(req.params.accountId);
             
             const subscribers=await this.emailService.getSubscribers(accountId);
             
@@ -73,7 +74,7 @@ export class EmailController {
     };
     createTemplate=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {accountId}=req.params;  
+            const accountId = routeParam(req.params.accountId);
             const templateData=req.body;
             const template=await this.emailService.createTemplate(accountId,templateData);
             
@@ -86,7 +87,7 @@ export class EmailController {
     };
     getTemplates=async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const {accountId}=req.params;
+            const accountId = routeParam(req.params.accountId);
             const templates=await this.emailService.getTemplates(accountId);
 
             httpResponse(req, res, 200, "Templates fetched successfully", {
@@ -100,7 +101,7 @@ export class EmailController {
     sendMultipleMail=async(req:Request,res:Response,next:NextFunction)=>{
         try {
             // const user = req.user as any;
-            const { accountId } = req.params;
+            const accountId = routeParam(req.params.accountId);
             logger.info("Sending multiple emails", { accountId });
             const {leadId,contactId, name , emails, subject, html} = req.body;
             const result = await accountService.getAccountById(accountId);

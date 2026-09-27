@@ -8,20 +8,20 @@ export class AccountRepository {
   }
   async findAll(id: string): Promise<TAccount[] | null> {
     const accounts = await AccountModel.find({ createdBy: id });
-    return accounts.map((account) => account.toJSON());
+    return accounts.map((account) => account.toJSON()) as unknown as TAccount[];
   }
   async findAccountByEmail(email: string): Promise<TAccount | null> {
     const account = await AccountModel.findOne({ email });
-    return account ? account.toJSON() : null;
+    return account ? (account.toJSON() as unknown as TAccount) : null;
   }
 
   async findAccountsByIds(accountIds: string[]): Promise<TAccount[] | null> {
     const accounts = await AccountModel.find({ _id: { $in: accountIds } });
-    return accounts.map((account) => account.toJSON());
+    return accounts.map((account) => account.toJSON()) as unknown as TAccount[];
   }
   async findOne(accountId: string): Promise<TAccount | null> {
     const account = await AccountModel.findOne({ _id: accountId });
-    return account ? account.toJSON() : null;
+    return account ? (account.toJSON() as unknown as TAccount) : null;
   }
   async create(
     data: TCreateAccount,
@@ -34,6 +34,6 @@ export class AccountRepository {
 
   async delete(id: string): Promise<TAccount | null> {
     const result = await AccountModel.findByIdAndDelete(id);
-    return result ? result.toJSON() : null;
+    return result ? (result.toJSON() as unknown as TAccount) : null;
   }
 }

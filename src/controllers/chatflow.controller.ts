@@ -3,11 +3,12 @@ import { handleRouteError } from "../utils/asyncHandler.js";
 import { chatflowService } from "../container.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateChatFlowDto } from "../dtos/chatflow.dto.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class ChatFlowController {
   async createChatbotFlow(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const userId = req.user?.id;
       const orgId = req.user?.organizationId;
 
@@ -47,7 +48,7 @@ export class ChatFlowController {
     next: NextFunction,
   ) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const query = {
         page: Number(req.query.page) || 1,
         limit: Number(req.query.limit) || 5,
@@ -66,7 +67,8 @@ export class ChatFlowController {
 
   async getChatFlowById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, chatflowId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatflowId = routeParam(req.params.chatflowId);
       // const user = req.user as { id: string };
 
       const chatbotFlow = await chatflowService.getChatFlowById(
@@ -84,7 +86,7 @@ export class ChatFlowController {
 
   async updateChatFlow(req: Request, res: Response, next: NextFunction) {
     try {
-      const { chatflowId } = req.params;
+      const chatflowId = routeParam(req.params.chatflowId);
 
       const createChatbotFlowDto = {
         ...req.body,
@@ -105,7 +107,7 @@ export class ChatFlowController {
 
   async deleteChatFlowById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { chatflowId } = req.params;
+      const chatflowId = routeParam(req.params.chatflowId);
 
       const chatbotFlow = await chatflowService.deleteChatFlow(chatflowId);
 

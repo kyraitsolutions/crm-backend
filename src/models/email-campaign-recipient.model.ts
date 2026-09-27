@@ -73,9 +73,11 @@ const schema = new Schema<EmailCampaignRecipient>(
     versionKey: false,
     toJSON: {
       transform(_, ret) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
+        const row = ret as { id?: unknown; _id?: unknown; __v?: unknown };
+        row.id = row._id;
+        delete row._id;
+        delete row.__v;
+        return row;
       },
     },
   },

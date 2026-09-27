@@ -57,7 +57,6 @@ export class RbacRepository {
       },
       data,
       {
-        new: true,
         session,
       },
     );
@@ -84,11 +83,11 @@ export class RbacRepository {
       key: { $in: keys },
     });
 
-    return permissions.map((p) => p.toJSON());
+    return permissions.map((p) => p.toJSON()) as unknown as TPermission[];
   }
   async getAllPermissions(): Promise<TPermission[]> {
     const permissions = await PermissionModel.find();
-    return permissions.map((p) => p.toObject({ virtuals: true }));
+    return permissions.map((p) => p.toObject({ virtuals: true })) as unknown as TPermission[];
   }
   async getPermissionsByRole(roleId: string): Promise<string[]> {
     const permissions = await RolePermissionModel.aggregate([
@@ -133,9 +132,7 @@ export class RbacRepository {
     roleId: string,
     data: Partial<TRolePermission>[],
   ) {
-    return await RolePermissionModel.updateMany({ roleId }, data, {
-      new: true,
-    });
+    return await RolePermissionModel.updateMany({ roleId }, data);
   }
   async deleteRolePermissions(roleId: string, session?: ClientSession) {
     return await RolePermissionModel.deleteMany({ roleId }, { session });

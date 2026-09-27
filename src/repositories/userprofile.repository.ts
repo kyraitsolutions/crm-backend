@@ -13,21 +13,23 @@ export class UserProfileRepository {
     const userProfile = await UserProfileModel.create([{ ...data }], {
       session,
     });
-    return userProfile[0].toJSON();
+    return userProfile[0].toJSON() as unknown as TUserProfile;
   }
   async update(
     id: string,
     data: Partial<TUserProfile>,
     session?: ClientSession,
   ): Promise<TUserProfile | null> {
-    return await UserProfileModel.updateOne(
+    const updated = await UserProfileModel.findOneAndUpdate(
       { userId: id },
       { $set: data },
       { new: true, session },
     ).lean();
+    return updated as unknown as TUserProfile | null;
   }
   async delete(id: string): Promise<boolean> {
-    return await UserProfileModel.deleteOne({ userId: id }).lean();
+    const result = await UserProfileModel.deleteOne({ userId: id });
+    return result.deletedCount > 0;
   }
 
   async deleteByUserIds(

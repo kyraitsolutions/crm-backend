@@ -90,17 +90,17 @@ export class UserRepository {
   async findByEmail(email: string): Promise<TUser | null> {
     const user = await UserModel.findOne({ email: email });
     console.log("User found by email:", user);
-    return user ? user.toJSON() : null;
+    return user ? (user.toJSON() as unknown as TUser) : null;
   }
   async findByGoogleId(googleId: string): Promise<TUser | null> {
     const user = await UserModel.findOne({ googleId });
     console.log("User found by Google ID:", user);
-    return user ? user.toJSON() : null;
+    return user ? (user.toJSON() as unknown as TUser) : null;
   }
   async create(data: Partial<TUser>, session?: ClientSession): Promise<TUser> {
     // const role = await RoleModel.findOne({ name: "ADMIN" });
     const user = await UserModel.create([{ ...data }], { session });
-    return user[0].toJSON();
+    return user[0].toJSON() as unknown as TUser;
   }
   async update(
     id: string,

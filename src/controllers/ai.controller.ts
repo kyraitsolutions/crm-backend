@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { AiService } from "../services/ai.service.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class AIController {
   private aiService: AiService;
@@ -12,7 +13,8 @@ export class AIController {
 
   getLeadSummary = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId, leadId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const leadId = routeParam(req.params.leadId);
       const leadSummary = await this.aiService.getLeadSummary(
         accountId,
         leadId,
@@ -32,7 +34,7 @@ export class AIController {
     next: NextFunction,
   ) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const { aiPrompt } = req.body;
       const templateContent = await this.aiService.createTemplateContent(
         accountId,

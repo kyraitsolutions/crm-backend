@@ -107,10 +107,10 @@ export class WhatsAppAiSalesAgentService {
       accountId: params.accountId,
       conversationId: params.conversationId,
       messageId: `resume:${params.conversationId}:${Date.now()}`,
-      phone: String(conversation.contact?.phoneNumber || ""),
+      phone: String((conversation.contact as any)?.phoneNumber || ""),
       inboundText,
       inboundType: String(lastInbound?.type || "text"),
-      contactName: String(conversation.contact?.name || ""),
+      contactName: String((conversation.contact as any)?.name || ""),
     });
 
     logger.info("WHATSAPP_AI_AGENT_RESUMED", {

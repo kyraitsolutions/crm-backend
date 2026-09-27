@@ -52,10 +52,27 @@ export class LeadDto {
 
   constructor(data?: Partial<ILead>) {
     this.accountId = data?.accountId;
-    this.name = data?.name || "";
-    this.email = data?.email || "";
-    this.phone = data?.phone || "";
-    this.mobile = data?.mobile || "";
+    this.name =
+      data?.name ||
+      (data as any)?.full_name ||
+      (data as any)?.fullName ||
+      "";
+    this.email =
+      data?.email ||
+      (data as any)?.email_address ||
+      (data as any)?.emailAddress ||
+      "";
+    this.phone =
+      data?.phone ||
+      (data as any)?.phoneNumber ||
+      (data as any)?.phone_number ||
+      (data as any)?.mobileNumber ||
+      "";
+    this.mobile =
+      data?.mobile ||
+      (data as any)?.mobileNumber ||
+      (data as any)?.mobile_number ||
+      this.phone;
     this.message = data?.message || "";
     this.description = data?.description || "";
     this.company = data?.company || "";
@@ -67,8 +84,13 @@ export class LeadDto {
     this.stage = data?.stage || "new";
     this.status = data?.status || "active";
 
+    const sourceName =
+      typeof data?.source === "string"
+        ? data.source
+        : data?.source?.name;
+
     this.source = {
-      name: (data?.source?.name || "manual") as LeadSourceName,
+      name: (sourceName || "manual") as LeadSourceName,
       url: data?.source?.url || "",
       formId: data?.source?.formId || "",
       chatbotId: data?.source?.chatbotId || "",

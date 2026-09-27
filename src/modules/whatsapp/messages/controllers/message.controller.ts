@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import httpResponse from "../../../../utils/http.response.js";
 import { WhatsappMessageService } from "../services/message.service.js";
 import { SendMessageDto } from "../dtos/send-message.dto.js";
+import { routeParam } from "../../../../utils/route-param.js";
 
 export const parseMultipartJson = (body: Record<string, any>) => {
   const fields = ["text", "image", "video", "document", "audio", "template"];
@@ -19,7 +20,7 @@ export class MessageController {
   private messageService = new WhatsappMessageService();
 
   public async sendMessage(req: Request, res: Response) {
-    const { accountId } = req.params;
+    const accountId = routeParam(req.params.accountId);
     const body = parseMultipartJson({ ...req.body });
 
     const payload = new SendMessageDto({
@@ -32,7 +33,8 @@ export class MessageController {
   }
 
   async getMedia(req: Request, res: Response) {
-    const { accountId, mediaId } = req.params;
+    const accountId = routeParam(req.params.accountId);
+    const mediaId = routeParam(req.params.mediaId);
     const result = await this.messageService.getMedia(accountId, mediaId);
 
     res.setHeader(

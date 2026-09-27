@@ -4,6 +4,7 @@ import { handleRouteError } from "../utils/asyncHandler.js";
 import { Request, Response } from "express";
 import { TeamService } from "../services/team.service.js";
 import { CreateTeamMemberDto } from "../dtos/team.dto.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class TeamController {
   private teamService: TeamService;
@@ -35,7 +36,7 @@ export class TeamController {
   ): Promise<void> => {
     try {
       const teamMember = await this.teamService.getTeamMemberById(
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Team member fetched successfully", {
         docs: teamMember,
@@ -81,7 +82,7 @@ export class TeamController {
   ): Promise<void> => {
     try {
       const user = req.user;
-      const { userId } = req.params;
+      const userId = routeParam(req.params.userId);
       const { accountIds } = req.body;
 
       const assignment = await this.teamService.assignAccountToMember(
@@ -107,7 +108,7 @@ export class TeamController {
   ): Promise<void> => {
     try {
       const teamMember = await this.teamService.updateTeamMember(
-        req.params.id,
+        routeParam(req.params.id),
         req.body,
       );
       httpResponse(req, res, 200, "Team member updated successfully", {

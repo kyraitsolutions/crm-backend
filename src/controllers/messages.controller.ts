@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import { MessageService } from "../services/messages.service.js";
 import httpResponse from "../utils/http.response.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class MessageController {
   private messageService: MessageService;
@@ -16,7 +17,7 @@ export class MessageController {
     next: NextFunction,
   ) {
     try {
-      const { conversationId } = req.params;
+      const conversationId = routeParam(req.params.conversationId);
       const result =
         await this.messageService.getMessagesByConversationId(conversationId);
 

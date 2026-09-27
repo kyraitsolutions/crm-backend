@@ -34,7 +34,7 @@ export class ConversationRepository {
     session?: ClientSession,
   ): Promise<TConversation> {
     const conversation = await ConversationModel.create([data], { session });
-    return conversation[0].toJSON();
+    return conversation[0].toJSON() as unknown as TConversation;
   }
 
   async findConversationByVisitor({

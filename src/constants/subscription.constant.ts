@@ -37,6 +37,7 @@ export const USAGE_METRIC = {
   AI_CONVERSATIONS: "aiConversations",
   EMAILS: "emails",
   EMAIL_CAMPAIGNS: "emailCampaigns",
+  CONTACTS: "contacts",
 } as const;
 
 export type UsageMetric = (typeof USAGE_METRIC)[keyof typeof USAGE_METRIC];
@@ -52,6 +53,7 @@ export const PLAN_LIMIT = {
   EMAILS_PER_MONTH: "emailsPerMonth",
   EMAIL_CAMPAIGNS_PER_MONTH: "emailCampaignsPerMonth",
   EMAIL_RECIPIENTS_PER_CAMPAIGN: "emailRecipientsPerCampaign",
+  CONTACTS: "contacts",
 } as const;
 
 export const SUBSCRIPTION_STATUS = {

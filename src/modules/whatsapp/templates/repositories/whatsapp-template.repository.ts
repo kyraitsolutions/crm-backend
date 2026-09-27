@@ -55,7 +55,7 @@ export class WhatsappTemplateRepository {
     if (!docs) return { docs: [], total: 0, page: 0 };
 
     return {
-      docs: docs.map((doc) => doc.toJSON()),
+      docs: docs.map((doc) => doc.toJSON()) as unknown as TTemplate[],
       total,
       page,
     };

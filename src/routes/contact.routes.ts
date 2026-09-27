@@ -26,6 +26,13 @@ export class ContactRouter {
         this.contactController,
       ),
     );
+    this.router.put(
+      "/update",
+      AuthMiddleware.authenticate,
+      this.contactController.updateContact.bind(
+        this.contactController,
+      ),
+    );
   }
   public getRouter(): Router {
     return this.router;

@@ -1,6 +1,8 @@
 import { Types } from "mongoose";
 import { ConversationService } from "../../../../services/conversations.service.js";
 import { MessageService } from "../../../../services/messages.service.js";
+import { ContactService } from "../../../../services/contact.service.js";
+import { ContactRepository } from "../../../../repositories/contact.repository.js";
 import { IntegrationService } from "../../../integrations/services/integration.service.js";
 import { messageParser } from "../../messages/utils/messages-parser.js";
 import type { TConversation } from "../../../../types/conversation.type.js";
@@ -8,6 +10,7 @@ import type {
   TWhatsAppMessageEcho,
   TWhatsAppMessageEchoesValue,
 } from "../types/index.js";
+import logger from "../../../../utils/logger.js";
 
 type TWhatsAppIntegrationRef = {
   accountId: string;
@@ -18,6 +21,7 @@ export class MessageEchoHandler {
   private conversationService = new ConversationService();
   private messageService = new MessageService();
   private integrationService = new IntegrationService();
+  private contactService = new ContactService(new ContactRepository());
 
   async handle(value: TWhatsAppMessageEchoesValue) {
     const echoes = value.message_echoes ?? [];
@@ -80,6 +84,26 @@ export class MessageEchoHandler {
       },
     );
 
+    if (!conversation) return;
+
+    const conversationId = String(
+      (conversation as any).id || (conversation as any)._id || "",
+    );
+
+    const echoContact = await this.contactService.upsertFromLead({
+      accountId: String(integration.accountId),
+      name: conversation?.contact?.name,
+      phone: echo.to,
+      source: "whatsapp",
+    });
+    if (!echoContact) {
+      logger.warn("WHATSAPP_ECHO_CONTACT_NOT_CREATED", {
+        accountId: String(integration.accountId),
+        phone: echo.to,
+        conversationId,
+      });
+    }
+
     const parsedMessage = messageParser.parse({
       message: echo,
       from: "agent",
@@ -130,7 +154,7 @@ export class MessageEchoHandler {
     };
     const accountId = String(record.accountId || "").trim();
     if (!accountId) return null;
-    
+
     return {
       accountId,
       ...(record.organizationId

@@ -204,14 +204,14 @@ export class ConversationService {
 
     if (conversation) {
       const nextName = String((create as any)?.contact?.name || "").trim();
-      if (nextName && !String((conversation as any)?.contact?.name || "").trim()) {
+      if (nextName && !String(conversation?.contact?.name || "").trim()) {
         const updated = await ConversationModel.findByIdAndUpdate(
           (conversation as any)._id,
           { $set: { "contact.name": nextName } },
           { new: true },
         );
         if (updated) {
-          conversation = updated.toJSON() as TConversation;
+          conversation = updated.toJSON() as unknown as TConversation;
         }
       }
       return { conversation, isNew: false };

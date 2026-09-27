@@ -9,11 +9,12 @@ import {
 import { UpsertWhatsAppCannedMessageDto } from "../dtos/canned.dto.js";
 import { whatsappCannedMessageService } from "../services/whatsapp-canned-message.service.js";
 import { CANNED_MESSAGE_STATUS } from "../constants/canned.constant.js";
+import { routeParam } from "../../../../utils/route-param.js";
 
 export class WhatsAppCannedMessageController {
   private orgAccount(req: Request) {
     const organizationId = asEntityId(req.user?.organizationId);
-    const accountId = String(req.params.accountId || "");
+    const accountId = String(routeParam(req.params.accountId) || "");
     if (!organizationId || !accountId) {
       throw HttpError.forbidden("Organization and account are required");
     }
@@ -76,7 +77,7 @@ export class WhatsAppCannedMessageController {
       const dto = new UpsertWhatsAppCannedMessageDto(req.body || {});
       const doc = await whatsappCannedMessageService.update(
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         dto,
       );
       httpResponse(req, res, 200, "Canned message updated", { doc });
@@ -90,7 +91,7 @@ export class WhatsAppCannedMessageController {
       const { accountId } = this.orgAccount(req);
       const doc = await whatsappCannedMessageService.remove(
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Canned message deleted", { doc });
     } catch (error) {
@@ -103,7 +104,7 @@ export class WhatsAppCannedMessageController {
       const { accountId } = this.orgAccount(req);
       const doc = await whatsappCannedMessageService.toggleFavourite(
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Favourite updated", { doc });
     } catch (error) {
@@ -121,7 +122,7 @@ export class WhatsAppCannedMessageController {
       const { accountId } = this.orgAccount(req);
       const doc = await whatsappCannedMessageService.markUsed(
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Usage recorded", { doc });
     } catch (error) {

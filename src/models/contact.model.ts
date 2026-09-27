@@ -111,31 +111,43 @@ const contactSchema = new Schema<Contact>(
     timestamps: true,
     versionKey: false,
     toJSON: {
-      transform(_, ret: any) {
-        ret.id = ret._id;
-        delete ret._id;
-        return ret;
+      transform(_, ret) {
+        const row = ret as { id?: unknown; _id?: unknown; __v?: unknown };
+        row.id = row._id;
+        delete row._id;
+        delete row.__v;
+        return row;
       },
     },
   },
 );
 
+// Workspace-scoped identity (accountId = workspace). Import invariant 4:
+// this unique+partial index is the authority on email duplicates. Collation
+// treats case-folded emails as one key. Empty/missing email is excluded so
+// phone-only contacts do not collide on null.
 contactSchema.index(
   { accountId: 1, email: 1 },
   {
     unique: true,
-    sparse: true,
     name: "uniq_account_email",
     collation: { locale: "en", strength: 2 },
+    partialFilterExpression: {
+      email: { $type: "string", $gt: "" },
+    },
   },
 );
 
+// Workspace-scoped identity for phone. Same invariant as email: uniqueness
+// only when phone is a non-empty string. Import upserts filter on this key.
 contactSchema.index(
   { accountId: 1, phone: 1 },
   {
     unique: true,
-    sparse: true,
     name: "uniq_account_phone",
+    partialFilterExpression: {
+      phone: { $type: "string", $gt: "" },
+    },
   },
 );
 

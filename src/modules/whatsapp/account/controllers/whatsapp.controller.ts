@@ -3,6 +3,7 @@ import { handleRouteError } from "../../../../utils/asyncHandler.js";
 import httpResponse from "../../../../utils/http.response.js";
 import { RegisterPhoneNumberDto } from "../dtos/whatsapp.dto.js";
 import { WhatsAppService } from "../services/whatsapp.service.js";
+import { routeParam } from "../../../../utils/route-param.js";
 
 export class WhatsappAccountController {
   constructor(private service = new WhatsAppService()) {}
@@ -15,7 +16,7 @@ export class WhatsappAccountController {
     try {
       const registerPhoneNumberDtoPayload = new RegisterPhoneNumberDto({
         ...req.body,
-        accountId: req.body?.accountId || req.params.accountId,
+        accountId: req.body?.accountId || routeParam(req.params.accountId),
       });
 
       const result = await this.service.registerPhoneNumber(
@@ -37,7 +38,7 @@ export class WhatsappAccountController {
 
   syncContacts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const result = await this.service.syncContacts(accountId);
 
       httpResponse(req, res, 200, "Contacts synced successfully", {

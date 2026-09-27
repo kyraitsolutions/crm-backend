@@ -3,12 +3,13 @@ import { WhatsAppTemplateService } from "../services/whatsapp-template.service.j
 import httpResponse from "../../../../utils/http.response.js";
 import { parseQueryParams } from "../../../../utils/query.utils.js";
 import { CreateTemplateDto } from "../dtos/template.dto.js";
+import { routeParam } from "../../../../utils/route-param.js";
 export class WhatsappTemplateController {
   private whatsappTemplateService = new WhatsAppTemplateService();
 
   async getTemplates(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const query = parseQueryParams(req.query, {
         allowedFilters: ["category", "status", "language"],
       });
@@ -26,7 +27,7 @@ export class WhatsappTemplateController {
 
   async createTemplate(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       console.log(accountId)
       const createTemplateDto = new CreateTemplateDto(req.body);
 

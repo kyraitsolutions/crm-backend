@@ -12,7 +12,7 @@ export class IntegrationService {
     private integrationRepo = new IntegrationRepository(),
     private whatsappRepo = new WhatsAppAccountRepository(),
     private metaRepo = new MetaAccountRepository(),
-  ) {}
+  ) { }
 
   async getIntegration(payload: {
     accountId: string;

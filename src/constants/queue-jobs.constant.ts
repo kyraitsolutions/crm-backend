@@ -9,4 +9,9 @@ export const QUEUE_JOBS = {
   EMAIL_CAMPAIGN_SEND_BATCH: "email-campaign-send-batch",
   WHATSAPP_CAMPAIGN_PREPARE: "whatsapp-campaign-prepare",
   WHATSAPP_CAMPAIGN_SEND_BATCH: "whatsapp-campaign-send-batch",
+  CONTACT_IMPORT_VALIDATE: "import:validate",
+  CONTACT_IMPORT_CHUNK: "import:chunk",
+  CONTACT_IMPORT_FINALIZE: "import:finalize",
+  CONTACT_IMPORT_SWEEP: "import:sweep",
+  CONTACT_IMPORT_CLEANUP: "import:cleanup",
 };

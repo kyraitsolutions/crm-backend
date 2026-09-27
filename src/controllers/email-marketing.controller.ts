@@ -5,11 +5,12 @@ import { emailMarketingService } from "../services/email-marketing.service.js";
 import { buildRequestContext } from "../utils/request-context.utils.js";
 import { HttpError } from "../utils/http.error.js";
 import { asEntityId } from "../utils/request-context.utils.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class EmailMarketingController {
   private orgAccount(req: Request) {
     const organizationId = asEntityId(req.user?.organizationId);
-    const accountId = String(req.params.accountId || "");
+    const accountId = String(routeParam(req.params.accountId) || "");
     if (!organizationId || !accountId) {
       throw HttpError.forbidden("Organization and account are required");
     }
@@ -42,7 +43,7 @@ export class EmailMarketingController {
 
   create = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const context = buildRequestContext(req, req.params.accountId);
+      const context = buildRequestContext(req, routeParam(req.params.accountId));
       const doc = await emailMarketingService.createCampaign(
         {
           organizationId: String(context.organizationId),
@@ -63,7 +64,7 @@ export class EmailMarketingController {
       const campaign = await emailMarketingService.getCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign fetched", { doc: campaign.toJSON() });
     } catch (error) {
@@ -77,7 +78,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.updateCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.body,
       );
       httpResponse(req, res, 200, "Campaign updated", { doc });
@@ -92,7 +93,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.deleteCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign deleted", { doc });
     } catch (error) {
@@ -120,7 +121,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.queueCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         { sendNow: true },
       );
       httpResponse(req, res, 200, "Campaign queued", { doc });
@@ -135,7 +136,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.queueCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         {
           sendNow: false,
           scheduledAt: req.body.scheduledAt,
@@ -154,7 +155,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.pauseCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign paused", { doc });
     } catch (error) {
@@ -168,7 +169,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.cancelCampaign(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign canceled", { doc });
     } catch (error) {
@@ -182,7 +183,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.campaignAnalytics(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
       );
       httpResponse(req, res, 200, "Campaign analytics", { doc });
     } catch (error) {
@@ -196,7 +197,7 @@ export class EmailMarketingController {
       const result = await emailMarketingService.listRecipients(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.query as any,
       );
       httpResponse(req, res, 200, "Recipients fetched", result);
@@ -211,7 +212,7 @@ export class EmailMarketingController {
       const doc = await emailMarketingService.sendTest(
         organizationId,
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.body.to,
       );
       httpResponse(req, res, 200, "Test email sent", { doc });
@@ -232,7 +233,7 @@ export class EmailMarketingController {
 
   createTemplate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const context = buildRequestContext(req, req.params.accountId);
+      const context = buildRequestContext(req, routeParam(req.params.accountId));
       const doc = await emailMarketingService.createTemplate(
         String(context.accountId),
         String(context.organizationId),
@@ -250,7 +251,7 @@ export class EmailMarketingController {
       const { accountId } = this.orgAccount(req);
       const doc = await emailMarketingService.updateTemplate(
         accountId,
-        req.params.templateId,
+        routeParam(req.params.templateId),
         req.body,
       );
       httpResponse(req, res, 200, "Template updated", { doc });
@@ -264,7 +265,7 @@ export class EmailMarketingController {
       const { accountId } = this.orgAccount(req);
       const doc = await emailMarketingService.deleteTemplate(
         accountId,
-        req.params.templateId,
+        routeParam(req.params.templateId),
       );
       httpResponse(req, res, 200, "Template deleted", { doc });
     } catch (error) {
@@ -277,7 +278,7 @@ export class EmailMarketingController {
       const { accountId } = this.orgAccount(req);
       const doc = await emailMarketingService.duplicateTemplate(
         accountId,
-        req.params.templateId,
+        routeParam(req.params.templateId),
       );
       httpResponse(req, res, 200, "Template duplicated", { doc });
     } catch (error) {

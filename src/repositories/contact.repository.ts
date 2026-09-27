@@ -16,7 +16,8 @@ export class ContactRepository {
   async findExistingContact(
     accountId: string,
     email?: string | null,
-    phone?: string | null
+    phone?: string | null,
+    excludeId?: string | null,
   ) {
     const conditions: Record<string, unknown>[] = [];
 
@@ -36,7 +37,27 @@ export class ContactRepository {
     return await ContactModel.findOne({
       accountId,
       $or: conditions,
+      ...(excludeId ? { _id: { $ne: excludeId } } : {}),
     }).lean();
+  }
+
+  async findByAccountAndId(accountId: string, contactId: string) {
+    return await ContactModel.findOne({
+      _id: contactId,
+      accountId,
+    }).lean();
+  }
+
+  async updateContactByAccount(
+    accountId: string,
+    contactId: string,
+    update: Record<string, unknown>,
+  ): Promise<TContact | null> {
+    return (await ContactModel.findOneAndUpdate(
+      { _id: contactId, accountId },
+      update,
+      { new: true },
+    )) as unknown as TContact | null;
   }
 
   async updateContactById(

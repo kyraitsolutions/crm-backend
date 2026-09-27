@@ -225,11 +225,11 @@ export class WhatsAppLiveChatService {
       },
       workingHours: payload.workingHours
         ? {
-            timezone: payload.workingHours.timezone || current.workingHours.timezone,
-            days: payload.workingHours.days?.length
-              ? payload.workingHours.days
-              : current.workingHours.days,
-          }
+          timezone: payload.workingHours.timezone || current.workingHours.timezone,
+          days: payload.workingHours.days?.length
+            ? payload.workingHours.days
+            : current.workingHours.days,
+        }
         : current.workingHours,
       welcomeMessage,
       offHoursMessage,

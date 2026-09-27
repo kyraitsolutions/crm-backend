@@ -4,6 +4,7 @@ import { getMetaData } from "../../../utils/request-meta.utils.js";
 import { LeadDto } from "../../../dtos/lead.dto.js";
 import httpResponse from "../../../utils/http.response.js";
 import { WebhookService } from "../service/webhook.service.js";
+import { routeParam } from "../../../utils/route-param.js";
 
 export class WebhookController {
   constructor(
@@ -13,7 +14,7 @@ export class WebhookController {
 
   generateToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
 
       const { response, msg } = await this.webhookService.createToken({
         accountId,
@@ -31,7 +32,7 @@ export class WebhookController {
 
   getToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
 
       const response = await this.webhookService.getToken({
         accountId,
@@ -53,10 +54,25 @@ export class WebhookController {
   ) => {
     try {
       console.log(req.user);
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const meta = await getMetaData(req);
 
-      const leadData = req.body;
+      const leadData = {
+        ...req.body,
+        phone:
+          req.body?.phone ||
+          req.body?.phoneNumber ||
+          req.body?.phone_number ||
+          req.body?.mobile ||
+          req.body?.mobileNumber,
+        mobile:
+          req.body?.mobile ||
+          req.body?.mobileNumber ||
+          req.body?.mobile_number ||
+          req.body?.phone,
+        email: req.body?.email || req.body?.email_address,
+        name: req.body?.name || req.body?.full_name || req.body?.fullName,
+      };
       const leadDto = new LeadDto(leadData);
 
       const leadDataPayload = {

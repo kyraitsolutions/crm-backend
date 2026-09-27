@@ -8,13 +8,14 @@ import { asEntityId } from "../../../../utils/request-context.utils.js";
 import { aiAgentConfigService } from "../services/ai-agent-config.service.js";
 import { aiAgentKnowledgeService } from "../services/ai-agent-knowledge.service.js";
 import { aiAgentToolsService } from "../services/ai-agent-tools.service.js";
+import { routeParam } from "../../../../utils/route-param.js";
 
 export class WhatsAppAiAgentController {
   private subscriptionService = new SubscriptionService();
 
   private orgAccount(req: Request) {
     const organizationId = asEntityId(req.user?.organizationId);
-    const accountId = String(req.params.accountId || "");
+    const accountId = String(routeParam(req.params.accountId) || "");
     if (!organizationId || !accountId) {
       throw HttpError.forbidden("Organization and account are required");
     }
@@ -83,7 +84,7 @@ export class WhatsAppAiAgentController {
       await this.assertFeature(organizationId);
       const doc = await aiAgentKnowledgeService.update(
         accountId,
-        req.params.id,
+        routeParam(req.params.id),
         req.body || {},
       );
       httpResponse(req, res, 200, "Knowledge article updated", { doc });
@@ -96,7 +97,7 @@ export class WhatsAppAiAgentController {
     try {
       const { organizationId, accountId } = this.orgAccount(req);
       await this.assertFeature(organizationId);
-      const doc = await aiAgentKnowledgeService.remove(accountId, req.params.id);
+      const doc = await aiAgentKnowledgeService.remove(accountId, routeParam(req.params.id));
       httpResponse(req, res, 200, "Knowledge article deleted", { doc });
     } catch (error) {
       handleRouteError("WhatsAppAiAgentController.removeKnowledge", error, next, req);
@@ -107,7 +108,7 @@ export class WhatsAppAiAgentController {
     try {
       const { organizationId, accountId } = this.orgAccount(req);
       await this.assertFeature(organizationId);
-      const conversationId = String(req.params.conversationId || "");
+      const conversationId = String(routeParam(req.params.conversationId) || "");
       if (!conversationId) throw HttpError.badRequest("Conversation is required");
 
       const { whatsappAiSalesAgentService } = await import(

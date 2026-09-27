@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import AnalyticsService from "../services/analytics.service.js";
 import httpResponse from "../utils/http.response.js";
+import { routeParam } from "../utils/route-param.js";
 
 export default class AnalyticsController {
   private analyticsService: AnalyticsService;
@@ -17,7 +18,7 @@ export default class AnalyticsController {
     next: NextFunction,
   ) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const dashboardFilters = {
         module: req.query.module as string,
         range: req.query.range as string,
@@ -65,7 +66,7 @@ export default class AnalyticsController {
 
   getSearch = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { accountId } = req.params;
+            const accountId = routeParam(req.params.accountId);
             const {query} = req.query; // you may accept range filters here
             const result = await this.analyticsService.getSearch(accountId, query);
             httpResponse(req, res, 200, "Global search result fetched", { docs: result });

@@ -4,6 +4,7 @@ import { ChatBotService } from "../services/chat-bot.service.js";
 import { CreateChatBotDto, ResponseChatBotDto } from "../dtos/index.js";
 import httpResponse from "../utils/http.response.js";
 import { WebSocketServer, WebSocket } from "ws";
+import { routeParam } from "../utils/route-param.js";
 
 export class ChatBotController {
   private chatBotService: ChatBotService;
@@ -38,7 +39,8 @@ export class ChatBotController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const { accountId, chatbotId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatbotId = routeParam(req.params.chatbotId);
       const chatbot = await this.chatBotService.getChatBotById(
         accountId,
         chatbotId,
@@ -54,7 +56,7 @@ export class ChatBotController {
 
   async getChatBots(req: Request, res: Response, next: NextFunction) {
     try {
-      const accountId = req.params.accountId;
+      const accountId = routeParam(req.params.accountId);
       const query = {
         page: Number(req.query.page) || 1,
         limit: Number(req.query.limit) || 10,
@@ -71,7 +73,7 @@ export class ChatBotController {
   async createChatBot(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as any;
-      const accountId = req.params.accountId;
+      const accountId = routeParam(req.params.accountId);
       const chatBot = await this.chatBotService.createChatBot(
         user.id,
         accountId,
@@ -87,7 +89,8 @@ export class ChatBotController {
 
   async getChatbotFlowById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, chatbotId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatbotId = routeParam(req.params.chatbotId);
 
       const chatbotFlow = await this.chatBotService.getChatBotFlowById(
         accountId,
@@ -104,7 +107,8 @@ export class ChatBotController {
 
   async getChatBotWithFlow(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, chatbotId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatbotId = routeParam(req.params.chatbotId);
 
       const chatBotsWithFlow = await this.chatBotService.getChatBotWithFlow(
         accountId,
@@ -121,7 +125,8 @@ export class ChatBotController {
 
   async updateChatBot(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, chatbotId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatbotId = routeParam(req.params.chatbotId);
       const updateChatBotDto = new CreateChatBotDto(req.body);
       const chatBot = await this.chatBotService.updateChatBot(
         accountId,
@@ -138,7 +143,8 @@ export class ChatBotController {
 
   async deleteChatBot(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, chatbotId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const chatbotId = routeParam(req.params.chatbotId);
 
       const result = await this.chatBotService.deleteChatBot(
         accountId,

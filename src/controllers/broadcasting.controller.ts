@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { BroadcastService } from "../services/broadcast.service.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class BroadcastController {
   private broadcastService: BroadcastService;
@@ -16,7 +17,7 @@ export class BroadcastController {
   ) => {
     try {
       // const user = req.user as any;
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const { leadIds, subject, html } = req.body;
 
       await this.broadcastService.startCampaign({

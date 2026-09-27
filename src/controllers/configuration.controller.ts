@@ -3,6 +3,7 @@ import { handleRouteError } from "../utils/asyncHandler.js";
 import httpResponse from "../utils/http.response.js";
 import { configBootstrapService } from "../container.js";
 import { ConfigurationItemDto } from "../dtos/configuration.dto.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class ConfigurationController {
   getConfigurations = async (
@@ -40,7 +41,7 @@ export class ConfigurationController {
     try {
       const dto = new ConfigurationItemDto(req.body);
       const result = await configBootstrapService.createConfigItem(
-        req.params.configId,
+        routeParam(req.params.configId),
         dto,
       );
 
@@ -65,8 +66,8 @@ export class ConfigurationController {
       const dto = new ConfigurationItemDto(req.body);
 
       const result = await configBootstrapService.updateConfigItem(
-        req.params.configId,
-        req.params.itemId,
+        routeParam(req.params.configId),
+        routeParam(req.params.itemId),
         dto,
       );
 
@@ -89,8 +90,8 @@ export class ConfigurationController {
   ): Promise<void> => {
     try {
       const result = await configBootstrapService.deleteConfigItem(
-        req.params.configId,
-        req.params.itemId,
+        routeParam(req.params.configId),
+        routeParam(req.params.itemId),
       );
 
       httpResponse(
@@ -112,7 +113,7 @@ export class ConfigurationController {
   ): Promise<void> => {
     try {
       const result = await configBootstrapService.reorderConfigItems(
-        req.params.configId,
+        routeParam(req.params.configId),
         req.body.items,
       );
 

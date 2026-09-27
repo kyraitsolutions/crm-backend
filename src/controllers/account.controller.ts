@@ -5,6 +5,7 @@ import { CreateAccountDto } from "../dtos/account.dto.js";
 import { TUser } from "../types/user.type.js";
 import httpResponse from "../utils/http.response.js";
 import { TRole } from "../types/roles-permissions.type.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class AccountController {
   getAccounts = async (req: Request, res: Response, next: NextFunction) => {
@@ -25,7 +26,7 @@ export class AccountController {
     next: NextFunction,
   ): Promise<void> => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const result = await accountService.getAccountById(accountId);
 
       httpResponse(req, res, 200, "Account fetched successfully", result);
@@ -42,7 +43,7 @@ export class AccountController {
     try {
       const userId = req?.user?.id;
       const role = req?.user?.role;
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
 
       const result = await accountService.getAccountAccess(
         userId as string,
@@ -85,7 +86,7 @@ export class AccountController {
 
   deleteAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const id = req.params.id;
+      const id = routeParam(req.params.id);
       const result = await accountService.deleteAccount(id);
       httpResponse(req, res, 200, "Account deleted successfully", result);
     } catch (error) {

@@ -1,5 +1,5 @@
 import Queue from "bull";
-import { redisConfig } from "../../config/redis.config.js";
+import { createBullClient, redisConfig, redisErrorMessage } from "../../config/redis.config.js";
 import { defaultJobOptions } from "../../config/bull.config.js";
 
 export type WhatsAppAiAgentJobData = {
@@ -18,6 +18,7 @@ export const whatsappAiAgentQueue = new Queue<WhatsAppAiAgentJobData>(
   "whatsapp-ai-agent",
   {
     redis: redisConfig,
+    createClient: createBullClient,
     defaultJobOptions: {
       ...defaultJobOptions,
       attempts: 2,
@@ -31,7 +32,7 @@ whatsappAiAgentQueue.on("ready", () => {
 });
 
 whatsappAiAgentQueue.on("error", (error) => {
-  console.error("❌ WhatsApp AI Agent Queue Error", error);
+  console.error("❌ WhatsApp AI Agent Queue Error", redisErrorMessage(error));
 });
 
 whatsappAiAgentQueue.on("failed", (job, error) => {

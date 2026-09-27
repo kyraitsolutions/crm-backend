@@ -9,7 +9,7 @@ export class OrganizationRepository {
     session: ClientSession,
   ): Promise<TOrganization> {
     const organization = await Organization.create([data], { session });
-    return organization[0].toJSON();
+    return organization[0].toJSON() as unknown as TOrganization;
   }
 
   async update(
@@ -17,11 +17,12 @@ export class OrganizationRepository {
     data: Partial<TOrganization>,
     session?: ClientSession,
   ): Promise<TOrganization | null> {
-    return await Organization.updateOne(
+    const updated = await Organization.findOneAndUpdate(
       { _id: orgId },
       { $set: data },
       { new: true, session },
     ).lean();
+    return updated as unknown as TOrganization | null;
   }
   async findAll(): Promise<any> {
     return await Organization.find({});

@@ -13,7 +13,7 @@ export class ConfigRepository {
     const result = await ConfigDefinition.insertMany(data, {
       session,
     });
-    return result.map((item) => item.toJSON());
+    return result.map((item) => item.toJSON()) as unknown as TConfigDefinition[];
   }
 
   async findById(id: string): Promise<TConfigDefinition | null> {
@@ -30,7 +30,7 @@ export class ConfigRepository {
       return null;
     }
 
-    return config.toJSON();
+    return config.toJSON() as unknown as TConfigDefinition;
   }
 
   async addItem(

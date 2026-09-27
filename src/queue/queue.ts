@@ -1,16 +1,10 @@
 import Queue from "bull";
 import logger from "../utils/logger.js";
-import { config } from "../config/index.js";
+import { createBullClient, redisConfig, redisErrorMessage } from "../config/redis.config.js";
 
-// Create queues
 const emailQueue = new Queue("email processing", {
-  redis: {
-    host:
-      config.redis.host ||
-      "redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
-    port: parseInt(process.env.REDIS_PORT || "14482"),
-    password: process.env.REDIS_PASS || "",
-  },
+  redis: redisConfig,
+  createClient: createBullClient,
   defaultJobOptions: {
     removeOnComplete: 10,
     removeOnFail: 5,
@@ -71,7 +65,7 @@ emailQueue.on("ready", () => {
 });
 
 emailQueue.on("error", (err) => {
-  console.error("❌ Redis queue connection error:", err);
+  console.error("❌ Redis queue connection error:", redisErrorMessage(err));
 });
 
 // Job lifecycle logs

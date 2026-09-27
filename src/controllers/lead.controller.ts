@@ -9,6 +9,7 @@ import { LeadDto } from "../dtos/lead.dto.js";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import { buildRequestContext } from "../utils/request-context.utils.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class LeadController {
   private leadService: LeadService;
@@ -24,7 +25,7 @@ export class LeadController {
   ): Promise<void> => {
     try {
       const user = req.user as { id: string };
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const payload = req.body;
       const limit = payload.limit ? Number(payload.limit) : 10;
       const page = Math.max(Number(payload.page) || 1, 1);
@@ -56,7 +57,8 @@ export class LeadController {
 
   getLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId, leadId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const leadId = routeParam(req.params.leadId);
       const lead = await this.leadService.getLead(accountId, leadId);
 
       httpResponse(req, res, 200, "Lead fetched successfully", {
@@ -69,7 +71,7 @@ export class LeadController {
 
   createBulkLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const { leads, uniqueKey, mode } = req.body;
       const context = buildRequestContext(req, accountId);
 
@@ -90,7 +92,7 @@ export class LeadController {
 
   createLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const meta = await getMetaData(req);
       const leadData = req.body;
       const leadDto = new LeadDto(leadData);
@@ -150,7 +152,8 @@ export class LeadController {
 
   updateLead = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId, leadId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const leadId = routeParam(req.params.leadId);
       const result = await this.leadService.updateLead(
         accountId,
         leadId,
@@ -205,7 +208,8 @@ export class LeadController {
 
   getLeadSummary = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId, leadId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const leadId = routeParam(req.params.leadId);
       const leadSummary = await this.leadService.getLeadSummary(
         accountId,
         leadId,

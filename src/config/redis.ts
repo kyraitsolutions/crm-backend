@@ -1,6 +1,6 @@
 import { Redis, RedisOptions } from "ioredis";
 import logger from "../utils/logger.js";
-import { redisConfig } from "./redis.config.js";
+import { getSharedRedis, redisErrorMessage } from "./redis.config.js";
 
 export type JsonValue =
   | string
@@ -23,23 +23,7 @@ class RedisClient {
   private isConnected: boolean = false;
 
   constructor() {
-    // const redisHost ={
-    //   host:process.env.REDIS_HOST ||"redis-14482.c281.us-east-1-2.ec2.redns.redis-cloud.com",
-    //   port: parseInt(process.env.REDIS_PORT || "14482"),
-    //   password: process.env.REDIS_PASS || "uObO37toZgN8yO0AmkB4D73E4cpHe0MH",
-    // }
-
-    // const redisOptions: RedisClientConfig = {
-    //   enableReadyCheck: false,
-    //   maxRetriesPerRequest: null,
-    //   lazyConnect: true,
-    //   retryStrategy(times: number) {
-    //     return Math.min(times * 100, 2000);
-    //   },
-    // };
-    // this.client = new Redis(redisHost, redisOptions);
-    this.client = new Redis(redisConfig);
-
+    this.client = getSharedRedis();
     this.setupEventHandlers();
   }
 
@@ -55,7 +39,7 @@ class RedisClient {
 
     this.client.on("error", (error: Error) => {
       this.isConnected = false;
-      logger.error("Redis client error:", error);
+      logger.error("Redis client error", { error: redisErrorMessage(error) });
     });
 
     this.client.on("close", () => {
@@ -72,7 +56,9 @@ class RedisClient {
     try {
       await this.client.connect();
     } catch (error) {
-      logger.error("Failed to connect to Redis:", error);
+      logger.error("Failed to connect to Redis", {
+        error: redisErrorMessage(error),
+      });
       throw error;
     }
   }

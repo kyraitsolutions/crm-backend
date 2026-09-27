@@ -9,6 +9,7 @@ import { InitConversationDto } from "../dtos/conversation.dot.js";
 import { parseQueryParams } from "../utils/query.utils.js";
 import { asEntityId } from "../utils/request-context.utils.js";
 import { HttpError } from "../utils/http.error.js";
+import { routeParam } from "../utils/route-param.js";
 
 export class ConversationController {
   private service: ConversationService;
@@ -35,7 +36,7 @@ export class ConversationController {
   async getConversationById(req: Request, res: Response) {
     try {
       const result = await this.service.getConversationById(
-        req.params.conversationId,
+        routeParam(req.params.conversationId),
       );
 
       return res.status(200).json({
@@ -56,7 +57,7 @@ export class ConversationController {
     next: NextFunction,
   ) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const query = parseQueryParams(req.query, {
         allowedFilters: ["platform"],
       });
@@ -74,7 +75,7 @@ export class ConversationController {
   async getConversationByVisitor(req: Request, res: Response) {
     try {
       const result = await this.service.getConversationByVisitor(
-        req.params.visitorId,
+        routeParam(req.params.visitorId),
       );
 
       return res.status(200).json({
@@ -91,7 +92,7 @@ export class ConversationController {
 
   async deleteConversations(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const conversationIds = Array.isArray(req.body?.conversationIds)
         ? req.body.conversationIds.map(String)
         : req.body?.conversationId
@@ -119,7 +120,8 @@ export class ConversationController {
 
   async updateConversationProfile(req: Request, res: Response, next: NextFunction) {
     try {
-      const { accountId, conversationId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const conversationId = routeParam(req.params.conversationId);
       const organizationId = asEntityId(req.user?.organizationId);
       const result = await this.service.updateConversationProfile(
         accountId,

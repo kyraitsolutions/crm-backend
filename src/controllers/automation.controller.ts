@@ -3,6 +3,7 @@ import { handleRouteError } from "../utils/asyncHandler.js";
 import AutomationService from "../services/automation.service.js";
 import httpResponse from "../utils/http.response.js";
 import { AutomationDto, updateAutomationDto } from "../dtos/automation.dto.js";
+import { routeParam } from "../utils/route-param.js";
 
 export default class AutomationController {
   private service: AutomationService;
@@ -13,7 +14,7 @@ export default class AutomationController {
 
   getAutomations = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
       const result = await this.service.getAutomations(accountId);
       httpResponse(req, res, 200, "Automation fetched successfully", result);
     } catch (error) {
@@ -27,7 +28,7 @@ export default class AutomationController {
     next: NextFunction,
   ) => {
     try {
-      const { accountId } = req.params;
+      const accountId = routeParam(req.params.accountId);
 
       const automationDataPayload = new AutomationDto(req.body);
 
@@ -51,7 +52,8 @@ export default class AutomationController {
 
   updateAutomaton = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { accountId, automationId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const automationId = routeParam(req.params.automationId);
       const automationDataPayload = new updateAutomationDto(req.body);
 
       const context = {
@@ -78,7 +80,8 @@ export default class AutomationController {
     next: NextFunction,
   ) => {
     try {
-      const { accountId, automationId } = req.params;
+      const accountId = routeParam(req.params.accountId);
+      const automationId = routeParam(req.params.automationId);
 
       const context = {
         accountId: String(accountId),
