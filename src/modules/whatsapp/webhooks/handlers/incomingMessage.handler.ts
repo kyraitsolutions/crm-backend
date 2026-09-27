@@ -111,6 +111,7 @@ export class IncomingMessageHandler {
     await this.persistInbound(context);
     await this.handleBroadcast(context);
     try {
+      
       await this.dispatchLiveChat(context);
     } catch (error) {
       logger.error("WHATSAPP_LIVE_CHAT_INBOUND_FAILED", {
@@ -154,7 +155,9 @@ export class IncomingMessageHandler {
       phone: context.phone,
     });
 
-    switch (liveChatResult?.action) {
+    console.log("liveChatResult", liveChatResult);
+
+    switch (liveChatResult?.action) { 
       case "welcome":
       case "off_hours":
         logger.info("WHATSAPP_LIVE_CHAT_DISPATCHED", {
@@ -174,7 +177,9 @@ export class IncomingMessageHandler {
     context: TIncomingMessageContext,
     liveChatResult: TLiveChatAutoResolveResult,
   ) {
+    
     switch (liveChatResult.mode) {
+      
       case AUTO_RESOLVE_MODE.AI_AGENT:
         await this.enqueueAiAgent(context);
         return;
@@ -206,6 +211,10 @@ export class IncomingMessageHandler {
 
     const inboundText =
       this.inboundText(context.parsedMessage) || `[${inboundType}]`;
+    const interactive = context.parsedMessage.interactive || {};
+    const selectionId = String(
+      interactive.button_reply?.id || interactive.list_reply?.id || "",
+    ).trim();
 
     await enqueueWhatsAppAiAgentJob({
       organizationId: context.organizationId,
@@ -216,6 +225,7 @@ export class IncomingMessageHandler {
       inboundText,
       inboundType,
       contactName: context.contactName,
+      selectionId,
     });
   }
 

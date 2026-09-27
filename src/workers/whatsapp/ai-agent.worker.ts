@@ -1,7 +1,7 @@
 import { Job } from "bull";
 import { whatsappAiAgentQueue } from "../../queue/whatsapp/ai-agent.queue.js";
 import type { WhatsAppAiAgentJobData } from "../../queue/whatsapp/ai-agent.queue.js";
-import { whatsappAiSalesAgentService } from "../../modules/whatsapp/ai-agent/services/whatsapp-ai-sales-agent.service.js";
+import { whatsappInboundAgentService } from "../../modules/whatsapp/ai-agent/services/whatsapp-inbound-agent.service.js";
 import logger from "../../utils/logger.js";
 
 whatsappAiAgentQueue.process("process", 4, async (job: Job<WhatsAppAiAgentJobData>) => {
@@ -10,5 +10,5 @@ whatsappAiAgentQueue.process("process", 4, async (job: Job<WhatsAppAiAgentJobDat
     messageId: job.data.messageId,
     conversationId: job.data.conversationId,
   });
-  return whatsappAiSalesAgentService.handleIncoming(job.data);
+  return whatsappInboundAgentService.handleIncoming(job.data);
 });

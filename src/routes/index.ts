@@ -23,6 +23,7 @@ import { ActivityLogRouter } from "./activityLog.route.js";
 import { WebhookRouter } from "../modules/webhook/routes/webhook.route.js";
 import { HealthRouter } from "./health.routes.js";
 import { WhatsappRouter } from "../modules/whatsapp/routes/whatsapp.route.js";
+import { AiAgentRouter } from "../modules/ai-agent/routes/ai-agent.route.js";
 // import { TwilioRouter } from "../modules/salesAgent/routes/twilio.route.js";
 import { IntegrationsRouter } from "../modules/integrations/routes/index.js";
 import { MetaRouter } from "../modules/meta/routes/meta.route.js";
@@ -54,6 +55,7 @@ export class AppRoutes {
   private integrationRouter: IntegrationsRouter;
   private metaRouter: MetaRouter;
   private whatsappRouter: WhatsappRouter;
+  private aiAgentRouter: AiAgentRouter;
   private webhookRouter: WebhookRouter;
   // private twilioRouter:TwilioRouter;
   private healthRouter: HealthRouter;
@@ -82,6 +84,7 @@ export class AppRoutes {
     this.notificationRouter = new NotificationRouter();
     this.contactRouter = new ContactRouter();
     this.whatsappRouter = new WhatsappRouter();
+    this.aiAgentRouter = new AiAgentRouter();
     this.configurationRouter = new ConfigurationRouter();
     this.automationRouter = new AutomationRouter();
     this.activityLogRouter = new ActivityLogRouter();
@@ -124,6 +127,10 @@ export class AppRoutes {
     this.router.use("/integration", this.integrationRouter.getRouter());
     this.router.use("/meta", this.metaRouter.getRouter());
     this.router.use("/whatsapp", this.whatsappRouter.getRouter());
+    this.router.use(
+      "/ai-agent/account/:accountId",
+      this.aiAgentRouter.getRouter(),
+    );
     this.router.use("/webhook", this.webhookRouter.getRouter());
     // this.router.use("/twilio",this.twilioRouter.getRouter());
     this.router.use("/health", this.healthRouter.getRouter());

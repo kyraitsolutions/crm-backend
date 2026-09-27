@@ -11,6 +11,7 @@ export type WhatsAppAiAgentJobData = {
   inboundText: string;
   inboundType?: string;
   contactName?: string;
+  selectionId?: string;
 };
 
 export const whatsappAiAgentQueue = new Queue<WhatsAppAiAgentJobData>(

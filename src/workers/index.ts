@@ -7,6 +7,7 @@ async function start() {
 
   // Register all workers
   await import("./whatsapp/index.js");
+  await import("./ai-agent/knowledge-ingestion.worker.js");
   const { startSubscriptionLifecycleWorker } = await import(
     "./subscription.worker.js"
   );

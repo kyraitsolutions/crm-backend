@@ -77,6 +77,7 @@ export class App {
     // seedPlans()
     server.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
+      // void import("./workers/ai-agent/knowledge-ingestion.worker.js");
     });
   }
 }

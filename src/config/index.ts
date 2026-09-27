@@ -1,6 +1,16 @@
 import { ENV } from "../constants/index.js";
 
 export const config = {
+  ai: {
+    openaiApiKey: ENV.AI.OPENAI_API_KEY,
+    groqApiKey: ENV.AI.GROQ_API_KEY,
+    groqModel: ENV.AI.GROQ_MODEL,
+    sarvamApiKey: ENV.AI.SARVAM_API_KEY,
+    sarvamModel: ENV.AI.SARVAM_MODEL,
+    pineconeApiKey: ENV.AI.PINECONE_API_KEY,
+    pineconeIndex: ENV.AI.PINECONE_INDEX,
+  },
+  
   app: {
     port: Number(ENV.APP.PORT) || 3000,
   },

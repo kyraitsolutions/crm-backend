@@ -275,6 +275,25 @@ export class WhatsAppLiveChatService {
         {}) as Record<string, any>),
     };
 
+    const aiConfigured =
+      Boolean(settings.autoResolve?.enabled) &&
+      settings.autoResolve?.mode === AUTO_RESOLVE_MODE.AI_AGENT;
+    if (aiConfigured && liveChat.escalationReason) {
+      liveChat.humanIntervened = false;
+      liveChat.escalationReason = "";
+      liveChat.autoResolveActive = true;
+      await ConversationModel.updateOne(
+        { _id: conversation._id, accountId: params.accountId },
+        {
+          $set: {
+            "metadata.liveChat.humanIntervened": false,
+            "metadata.liveChat.autoResolveActive": true,
+          },
+          $unset: { "metadata.liveChat.escalationReason": 1 },
+        },
+      );
+    }
+
     const withinHours = isWithinWorkingHours(settings.workingHours);
     const autoActive =
       Boolean(settings.autoResolve?.enabled) &&
@@ -388,6 +407,7 @@ export class WhatsAppLiveChatService {
         "metadata.liveChat.autoResolveActive": false,
         "metadata.liveChat.intervenedAt": new Date(),
       },
+      $unset: { "metadata.liveChat.escalationReason": 1 },
     });
     const { whatsappChatflowService } = await import(
       "../../chatflow/services/whatsapp-chatflow.service.js"
@@ -497,8 +517,10 @@ export class WhatsAppLiveChatService {
 
     liveChat.autoResolveActive = true;
     liveChat.mode = mode;
-    liveChat.chatFlowId = settings.autoResolve.chatFlowId || null;
-    liveChat.aiAgentId = settings.autoResolve.aiAgentId || null;
+    liveChat.chatFlowId =
+      mode === AUTO_RESOLVE_MODE.FLOW ? settings.autoResolve.chatFlowId || null : null;
+    liveChat.aiAgentId =
+      mode === AUTO_RESOLVE_MODE.AI_AGENT ? settings.autoResolve.aiAgentId || null : null;
     liveChat.attachedAt = liveChat.attachedAt || new Date();
 
     const identifiers = {
@@ -506,9 +528,11 @@ export class WhatsAppLiveChatService {
     };
     if (mode === AUTO_RESOLVE_MODE.FLOW && settings.autoResolve.chatFlowId) {
       identifiers.chatFlowId = settings.autoResolve.chatFlowId;
+      delete identifiers.aiAgentId;
     }
     if (mode === AUTO_RESOLVE_MODE.AI_AGENT) {
       identifiers.aiAgentId = settings.autoResolve.aiAgentId;
+      delete identifiers.chatFlowId;
       if (!alreadyAttached) {
         try {
           await whatsAppAiAgentService.startConversation(organizationId);

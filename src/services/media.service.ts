@@ -1,7 +1,7 @@
 import { HttpError } from "../utils/http.error.js";
 // services/media.service.ts
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { S3KeyBuilder } from "../utils/s3-key.builder..utils.js";
 import { MEDIA } from "../constants/index.js";
@@ -30,6 +30,32 @@ export class MediaService {
       key,
       fileUrl: `https://${config.aws.cdnDomain}/${key}`,
     };
+  }
+
+  async deleteByFileUrl(fileUrl: string) {
+    const key = this.keyFromFileUrl(fileUrl);
+    if (!key || !config.aws.bucket) return;
+    await this.s3.send(
+      new DeleteObjectCommand({
+        Bucket: config.aws.bucket,
+        Key: key,
+      }),
+    );
+  }
+
+  private keyFromFileUrl(fileUrl: string) {
+    const raw = String(fileUrl || "").trim();
+    if (raw.startsWith("s3:")) return raw.slice(3);
+    try {
+      const url = new URL(raw);
+      const host = String(config.aws.cdnDomain || "")
+        .replace(/^https?:\/\//, "")
+        .replace(/\/$/, "");
+      if (!host || url.host !== host) return "";
+      return decodeURIComponent(url.pathname.replace(/^\/+/, ""));
+    } catch {
+      return "";
+    }
   }
 
   private validate(dto: CreateMediaUploadUrlDto) {

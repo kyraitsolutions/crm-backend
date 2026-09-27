@@ -39,6 +39,10 @@ export const ENV = {
   AI: {
     OPENAI_API_KEY: process.env.OPENAI_API_KEY || "",
     OPENAI_MODEL: process.env.OPENAI_MODEL || "gpt-4o-mini",
+    GROQ_API_KEY: process.env.GROQ_API_KEY || "",
+    GROQ_MODEL: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+    PINECONE_API_KEY: process.env.PINECONE_API_KEY || "",
+    PINECONE_INDEX: (process.env.PINECONE_INDEX || "").trim(),
     GOOGLE_GENAI_API_KEY: process.env.GOOGLE_GENAI_API_KEY || "",
     GOOGLE_GENAI_MODEL: process.env.GOOGLE_GENAI_MODEL || "gemini-3-flash-preview",
     SARVAM_API_KEY: process.env.SARVAM_API_KEY || "",
