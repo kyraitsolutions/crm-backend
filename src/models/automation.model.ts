@@ -39,6 +39,7 @@ const automationSchema = new Schema(
         "LEAD_ASSIGNED",
         "CONVERSATION_CREATED",
         "CONVERSATION_CLOSED",
+        "CONTACT_CREATED",
       ],
       set: (value: string) =>
         value

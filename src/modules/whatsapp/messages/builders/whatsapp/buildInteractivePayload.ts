@@ -94,13 +94,16 @@ export class BuildInteractivePayload {
   }
 
   private static shapeCarousel(interactive: any) {
+    const sharedButtons = this.carouselQuickReplies(interactive.action?.buttons);
     const cards = (interactive.action?.cards || [])
-      .map((card: any, index: number) => this.shapeCarouselCard(card, index))
+      .map((card: any, index: number) => this.shapeCarouselCard(card, index, sharedButtons))
       .filter(Boolean)
       .slice(0, LIMITS.carousel.maxCards);
 
     if (cards.length < LIMITS.carousel.minCards) {
-      throw new Error("WhatsApp carousels require between 2 and 10 cards.");
+      throw new Error(
+        "WhatsApp carousels need 2 to 10 cards, and each card needs an image plus a button or link.",
+      );
     }
 
     return this.omitEmpty({
@@ -110,18 +113,20 @@ export class BuildInteractivePayload {
     });
   }
 
-  private static shapeCarouselCard(card: any, index: number) {
+  private static shapeCarouselCard(card: any, index: number, sharedButtons: unknown[]) {
     const header = this.shapeHeader(card?.header, { mediaOnly: true });
     if (!header) return null;
 
     const bodyText = this.clip(card?.body?.text, LIMITS.carousel.cardBody);
-    const type = String(card?.type || card?.action?.name || "cta_url").trim();
-    const action = this.shapeCarouselAction(card?.action);
+    const cta = this.carouselCta(card?.action);
+    const ownButtons = this.carouselQuickReplies(card?.action?.buttons);
+    const buttons = ownButtons.length ? ownButtons : sharedButtons;
+    const action = cta || (buttons.length ? { buttons } : null);
     if (!action) return null;
 
     return this.omitEmpty({
       card_index: Number.isFinite(card?.card_index) ? Number(card.card_index) : index,
-      type,
+      type: cta ? "cta_url" : "button",
       header,
       ...(bodyText ? { body: { text: bodyText } } : {}),
       action,
@@ -138,33 +143,31 @@ export class BuildInteractivePayload {
     );
   }
 
-  private static shapeCarouselAction(action: any) {
-    if (!action || typeof action !== "object") return null;
+  private static carouselCta(action: any) {
+    if (!this.isCtaUrlAction(action)) return null;
+    const displayText = this.clip(action.parameters?.display_text, LIMITS.carousel.displayText);
+    const url = String(action.parameters?.url || "").trim();
+    if (!displayText || !url) return null;
+    return {
+      name: "cta_url",
+      parameters: { display_text: displayText, url },
+    };
+  }
 
-    if (this.isCtaUrlAction(action)) {
-      const displayText = this.clip(
-        action.parameters?.display_text,
-        LIMITS.carousel.displayText,
-      );
-      const url = String(action.parameters?.url || "").trim();
-      if (!displayText || !url) return null;
-      
-      return {
-        name: "cta_url",
-        parameters: {
-          display_text: displayText,
-          url,
-        },
-      };
+  private static carouselQuickReplies(buttons: any) {
+    const shaped = [];
+    for (const button of buttons || []) {
+      const reply = button?.quick_reply || button?.reply || {};
+      const id = this.clip(reply.id, LIMITS.button.id);
+      const title = this.clip(reply.title, LIMITS.button.title);
+      if (!id || !title) continue;
+      shaped.push({
+        type: "quick_reply",
+        quick_reply: { id, title },
+      });
+      if (shaped.length === 2) break;
     }
-
-    const buttons = (action.buttons || [])
-      .map((button: any) => this.shapeReplyButton(button))
-      .filter(Boolean)
-      .slice(0, LIMITS.button.max);
-
-    if (!buttons.length) return null;
-    return { buttons };
+    return shaped;
   }
 
   private static shapeCtaUrl(interactive: any) {

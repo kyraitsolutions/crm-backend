@@ -123,6 +123,15 @@ const PhoneNumberInfoSchema = new Schema(
       type: Boolean,
       default: false,
     },
+
+    /**
+     * Meta `is_on_biz_app` — true when the number is on WhatsApp Business App
+     * (coexistence / SMB signup). Only then are contact/history smb sync APIs valid.
+     */
+    isOnBizApp: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     _id: false,
@@ -212,6 +221,17 @@ const WhatsAppAccountSchema = new Schema(
     },
 
     lastProfileSyncAt: {
+      type: Date,
+      default: null,
+    },
+
+    /**
+     * Start of the Meta SMB contact-sync eligibility window (24h).
+     * - Set once when coexistence onboard succeeds (isOnBizApp) and this is null
+     * - Cleared on partner disconnect / uninstall
+     * - Not overwritten on later reconnects while still set
+     */
+    contactSyncWindowStartedAt: {
       type: Date,
       default: null,
     },

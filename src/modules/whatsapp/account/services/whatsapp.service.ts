@@ -1,10 +1,13 @@
 import { IntegrationProvider } from "../../../../models/integration.model.js";
 import { WhatsAppClient } from "../../../../providers/whatsapp/whatsapp.client.js";
 import { TApiResponse } from "../../../../types/api-response.type.js";
+import { HttpError } from "../../../../utils/http.error.js";
 import { IntegrationCredentialRepository } from "../../../integrations/repositories/integration-credential.repository.js";
 import { IntegrationRepository } from "../../../integrations/repositories/integration.repository.js";
 import { SyncStatus } from "../models/whatsapp-account.model.js";
 import { WhatsAppAccountRepository } from "../repositories/whatsapp-account.repository.js";
+
+const CONTACT_SYNC_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 export class WhatsAppService {
   constructor(
@@ -78,6 +81,28 @@ export class WhatsAppService {
 
     if (!account) {
       throw new Error("WhatsApp account not found.");
+    }
+
+    if (!account.phoneNumberInfo?.isOnBizApp) {
+      throw HttpError.badRequest(
+        "Contact sync is only available for WhatsApp Business App (coexistence) numbers.",
+      );
+    }
+
+    const windowStartedAt = account.contactSyncWindowStartedAt
+      ? new Date(account.contactSyncWindowStartedAt).getTime()
+      : 0;
+
+    if (!windowStartedAt) {
+      throw HttpError.badRequest(
+        "Contact sync window is not open. Reconnect WhatsApp Business App and try again.",
+      );
+    }
+
+    if (Date.now() - windowStartedAt > CONTACT_SYNC_WINDOW_MS) {
+      throw HttpError.badRequest(
+        "Contact sync is only available within 24 hours of onboarding.",
+      );
     }
 
     const credential = await this.credentialRepo.findByIntegrationId(

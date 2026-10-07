@@ -28,7 +28,7 @@ export class MetaIntegrationController {
       res,
       200,
       "Meta authorization URL generated successfully",
-      { doc: result },
+      result,
     );
     } catch (error) {
       return handleRouteError("MetaIntegrationController", error, next, req);

@@ -29,11 +29,11 @@ export type RuntimeLlmResult = {
   completionTokens: number;
 };
 
-const withTimeout = <T>(promise: Promise<T>) =>
+const withTimeout = <T>(promise: Promise<T>, timeoutMs = TIMEOUT_MS) =>
   Promise.race([
     promise,
     new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error("RUNTIME_LLM_TIMEOUT")), TIMEOUT_MS);
+      setTimeout(() => reject(new Error("RUNTIME_LLM_TIMEOUT")), timeoutMs);
     }),
   ]);
 
@@ -52,6 +52,7 @@ export class RuntimeLlm {
     json?: boolean;
     temperature?: number;
     maxTokens?: number;
+    timeoutMs?: number;
   }): Promise<RuntimeLlmResult> {
     if (config.ai.sarvamApiKey && config.ai.sarvamModel) return this.sarvam(params);
     // if (config.ai.groqApiKey && config.ai.groqModel) return this.grok(params);
@@ -63,12 +64,14 @@ export class RuntimeLlm {
     system: string;
     user: string;
     maxTokens?: number;
+    timeoutMs?: number;
   }): Promise<Record<string, unknown> | null> {
     const result = await this.complete({
       ...params,
       json: true,
       temperature: 0,
       maxTokens: params.maxTokens ?? 700,
+      timeoutMs: params.timeoutMs,
     });
     return parseJsonObject(result.text);
   }
@@ -148,6 +151,7 @@ export class RuntimeLlm {
     json?: boolean;
     temperature?: number;
     maxTokens?: number;
+    timeoutMs?: number;
   }): Promise<RuntimeLlmResult> {
     const client = new SarvamAIClient({
       apiSubscriptionKey: config.ai.sarvamApiKey,
@@ -157,6 +161,7 @@ export class RuntimeLlm {
       "Reply with one JSON object and no other text.",
       "Do not describe the layout.",
     ].join(" ");
+
     const readText = (response: unknown) =>
       String(
         (response as { choices?: Array<{ message?: { content?: string } }> })?.choices?.[0]
@@ -176,13 +181,14 @@ export class RuntimeLlm {
         max_tokens: params.maxTokens ?? 400,
       } as never);
 
-    let response = await withTimeout(ask(params.user));
+    let response = await withTimeout(ask(params.user), params.timeoutMs);
     let text = readText(response);
     if (params.json && !parseJsonObject(text)) {
       response = await withTimeout(
         ask(
           `${params.user}\n\nYour last reply was not JSON:\n${text.slice(0, 400)}\nReply again with only the JSON object.`,
         ),
+        params.timeoutMs,
       );
       text = readText(response);
     }
@@ -193,7 +199,7 @@ export class RuntimeLlm {
       latencyMs: Date.now() - started,
     });
 
-    console.log("response", text);
+
 
     return {
       text,

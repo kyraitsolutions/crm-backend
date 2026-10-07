@@ -55,11 +55,16 @@ const parseReply = (raw: string): ReplyJson | null => {
   const start = trimmed.indexOf("{");
   const end = trimmed.lastIndexOf("}");
   if (start < 0 || end <= start) return null;
-  try {
-    return JSON.parse(trimmed.slice(start, end + 1)) as ReplyJson;
-  } catch {
-    return null;
+  let slice = trimmed.slice(start, end + 1);
+  for (let extra = 0; extra < 3; extra += 1) {
+    try {
+      return JSON.parse(slice) as ReplyJson;
+    } catch {
+      if (!slice.endsWith("}")) return null;
+      slice = slice.slice(0, -1).trimEnd();
+    }
   }
+  return null;
 };
 
 const slug = (value: string, max: number) => {
@@ -307,27 +312,49 @@ const buttonNames = (named: string) =>
     .filter((part) => part.length > 0 && part.length <= LIMITS.button.title)
     .slice(0, LIMITS.button.max);
 
-export const imageFollowButtonTitles = (rules: string[]) => {
-  const rule = rules.find(
-    (item) => /button/i.test(item) && /(carousel|tap images|tap image)/i.test(item),
+const sentences = (rules: string[]) =>
+  rules.flatMap((rule) =>
+    rule
+      .split(/\n+|(?<=[.!?])\s+/)
+      .map((part) => part.trim())
+      .filter(Boolean),
   );
-  if (!rule) return [];
+
+const namedButtons = (sentence: string) => {
   const named =
-    rule.match(/buttons?\s*:\s*([^\n.]+)/i)?.[1] ||
-    rule.match(/buttons?\s+like\s+([^\n.]+)/i)?.[1] ||
+    sentence.match(/buttons?\s*:\s*([^.\n]+)/i)?.[1] ||
+    sentence.match(/buttons?\s+like\s+([^.\n]+)/i)?.[1] ||
+    sentence.match(/buttons?\s+(?:follow with name|named|called)\s+([^.\n]+)/i)?.[1] ||
     "";
   return buttonNames(named);
 };
 
+const imageFollowSentence = (sentence: string) =>
+  /button/i.test(sentence) &&
+  /(carousel|tap images|tap image|selects? images|images are more|more than \d)/i.test(sentence);
+
+export const imageFollowButtonTitles = (rules: string[]) => {
+  for (const sentence of sentences(rules)) {
+    if (!imageFollowSentence(sentence)) continue;
+    const titles = namedButtons(sentence);
+    if (titles.length) return titles;
+  }
+  return [];
+};
+
 export const selectionButtonTitles = (rules: string[]) => {
-  const rule = rules.find(
-    (item) =>
-      /button/i.test(item) &&
-      /(pick|picks|select|selects|chosen|chooses|one product)/i.test(item),
-  );
-  if (!rule) return [];
-  const named = rule.match(/buttons?\s*:\s*([^\n.]+)/i)?.[1] || "";
-  return buttonNames(named);
+  for (const sentence of sentences(rules)) {
+    if (imageFollowSentence(sentence)) continue;
+    if (
+      !/button/i.test(sentence) ||
+      !/(pick|picks|select|selects|chosen|chooses|one product)/i.test(sentence)
+    ) {
+      continue;
+    }
+    const titles = namedButtons(sentence);
+    if (titles.length) return titles;
+  }
+  return [];
 };
 
 export const normalizeAgentReply = (
@@ -338,7 +365,8 @@ export const normalizeAgentReply = (
   const parsed = parseReply(raw);
   
   if (!parsed) {
-    return { text: clipBody(raw, LIMITS.body) || clipBody(fallbackText, LIMITS.body), interactive: null };
+    const visible = /"messageType"\s*:/.test(raw) ? "" : clipBody(raw, LIMITS.body);
+    return { text: visible || clipBody(fallbackText, LIMITS.body), interactive: null };
   }
 
   const imageUrl = httpsUrl(parsed.imageUrl);

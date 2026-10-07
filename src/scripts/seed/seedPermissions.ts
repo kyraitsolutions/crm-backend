@@ -4,21 +4,24 @@ import { PermissionModel } from "../../models/permissions.model.js";
 export const seedPermissions = async () => {
   try {
     for (const key of PERMISSIONS) {
-      await PermissionModel.updateOne(
+      const [module, action] = key.split(".");
+      await PermissionModel.updateOne( 
         { key },
         {
           $setOnInsert: {
             key,
-            module: key.split(".")[0],
-            action: key.split(".")[1],
+            module,
+            action,
           },
         },
-        { upsert: true }, // 🔥 prevents duplicates
+        { upsert: true },
       );
+      
     }
 
-    console.log("✅ Permissions seeded successfully");
+    console.log(`✅ Permissions seeded successfully (${PERMISSIONS.length} keys)`);
   } catch (error) {
     console.error("❌ Error seeding permissions:", error);
+    throw error;
   }
 };

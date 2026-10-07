@@ -8,6 +8,7 @@ import { createWebSocketServer } from "./config/wsServer/wsServer.js";
 import http from "http";
 import { setupSwagger } from "./docs/swagger.js";
 import logger from "./utils/logger.js";
+import { seedPermissions } from "./scripts/seed/seedPermissions.js";
 // import { seedPlans } from "./scripts/seed/seedPlan.js";
 
 export class App {
@@ -73,7 +74,8 @@ export class App {
     const server = http.createServer(this.app);
     createWebSocketServer(server);
     // configureNumber()
-    // await seedPermissions();
+    // Idempotent upsert of permission catalog keys (does not grant to roles).
+    await seedPermissions();
     // seedPlans()
     server.listen(port, () => {
       logger.info(`Server is running on port ${port}`);
@@ -81,3 +83,4 @@ export class App {
     });
   }
 }
+ 

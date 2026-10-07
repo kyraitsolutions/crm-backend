@@ -88,6 +88,10 @@ export class MessageService {
           convo?.lastMessage?.text ||
           "";
         if (account?.organizationId) {
+          const assigneeId =
+            convo?.metadata?.liveChat?.assigneeId ||
+            convo?.assigneeId ||
+            null;
           await notificationService.notifyConversation({
             organizationId: String(account.organizationId),
             accountId,
@@ -97,8 +101,18 @@ export class MessageService {
             phone: convo?.contact?.phoneNumber,
             contactName: convo?.contact?.name,
             preview: String(preview).slice(0, 140),
+            assigneeId: assigneeId ? String(assigneeId) : null,
           });
         }
+      } else if (payload.direction === "outbound") {
+        // Allow a future unanswered-SLA alert after the next customer message.
+        const { ConversationModel } = await import(
+          "../models/conversations.model.js"
+        );
+        await ConversationModel.updateOne(
+          { _id: payload.conversationId },
+          { $unset: { "metadata.notificationSlaNotifiedAt": 1 } },
+        ).session(session);
       }
 
       await session.commitTransaction();

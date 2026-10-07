@@ -132,7 +132,7 @@ export class WhatsAppClient {
         access_token: accessToken,
 
         fields:
-          "id,display_phone_number,verified_name,quality_rating,messaging_limit_tier,account_mode,is_official_business_account,name_status,new_name_status,platform_type",
+          "id,display_phone_number,verified_name,quality_rating,messaging_limit_tier,account_mode,is_official_business_account,name_status,new_name_status,platform_type,is_on_biz_app",
       },
     });
 
@@ -142,22 +142,18 @@ export class WhatsAppClient {
 
     return {
       id: phone.id,
-
       displayPhoneNumber: phone.display_phone_number,
-
       verifiedName: phone.verified_name,
-
       qualityRating: phone.quality_rating,
-
       messagingLimitTier: phone.messaging_limit_tier,
-
       accountMode: phone.account_mode,
-
       platformType: phone.platform_type,
-
-      isOfficialBusinessAccount: phone.is_official_business_account,
-
+      isOfficialBusinessAccount: Boolean(phone.is_official_business_account),
       nameStatus: phone.name_status,
+      newNameStatus: phone.new_name_status ?? null,
+
+      // Meta: true => coexistence (WhatsApp Business App) signup
+      isOnBizApp: Boolean(phone.is_on_biz_app),
     };
   }
 
@@ -283,3 +279,15 @@ export class WhatsAppClient {
     return data;
   }
 }
+
+
+
+
+
+// accountUpdateHandler {
+//   [dev:server]   event: 'MM_LITE_TERMS_SIGNED',
+//   [dev:server]   waba_info: {
+//   [dev:server]     waba_id: '1088514357236564',
+//   [dev:server]     owner_business_id: '1212207895306221'
+//   [dev:server]   }
+//   [dev:server] }

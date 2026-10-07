@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { WebhookController } from "../controller/webhook.controller.js";
 import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/authorization.middleware.js";
 import { WebhookMiddleware } from "../middleware/webhook.middleware.js";
 
 export class WebhookRouter {
@@ -16,20 +17,19 @@ export class WebhookRouter {
     this.router.post(
       "/:accountId/token",
       AuthMiddleware.authenticate,
-      //   requirePermission("settings.update"),
+      requirePermission("webhooks.edit"),
       this.webhookController.generateToken.bind(this.webhookController),
     );
     this.router.get(
       "/:accountId/token",
       AuthMiddleware.authenticate,
-      //   requirePermission("settings.update"),
+      requirePermission("webhooks.view"),
       this.webhookController.getToken.bind(this.webhookController),
     );
 
     this.router.post(
       "/:accountId/lead",
       WebhookMiddleware.authenticate,
-      // requirePermission("leads.create"),
       this.webhookController.createWebhookLead.bind(this.webhookController),
     );
   }

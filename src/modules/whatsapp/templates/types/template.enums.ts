@@ -26,6 +26,7 @@ export const TemplateComponentType = {
   BODY: "BODY",
   FOOTER: "FOOTER",
   BUTTONS: "BUTTONS",
+  CAROUSEL: "CAROUSEL",
 } as const;
 
 export const HeaderFormat = {

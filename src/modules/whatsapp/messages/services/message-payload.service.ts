@@ -1,8 +1,9 @@
 import { BuildMediaMessagePayload } from "../builders/database/buildMediaMessage.payload.js";
 import { BuildTextMessagePayload } from "../builders/database/buildTextMessagePayload.js";
+import { buildStoredTemplateMessage } from "../utils/hydrate-template-display.js";
 
 export class MessagePayloadService {
-  static build(payload: any, context: any) {
+  static async build(payload: any, context: any) {
     const basePayload = {
       accountId: context.accountId,
       conversationId: context.conversationId,
@@ -29,14 +30,16 @@ export class MessagePayloadService {
           ...BuildMediaMessagePayload.build(payload, context),
         };
 
-      case "template":
+      case "template": {
+        const storedTemplate = await buildStoredTemplateMessage(
+          String(context.accountId),
+          payload,
+        );
         return {
           ...basePayload,
-          type: "template",
-          body: {
-            text: payload.template?.name || "template",
-          },
+          ...storedTemplate,
         };
+      }
 
       case "interactive":
         return {

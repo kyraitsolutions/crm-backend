@@ -2,6 +2,7 @@ import { Router } from "express";
 import { EmailMarketingController } from "../controllers/email-marketing.controller.js";
 import { EmailTrackingController } from "../controllers/email-tracking.controller.js";
 import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class EmailMarketingRouter {
   public router: Router;
@@ -22,106 +23,127 @@ export class EmailMarketingRouter {
     this.router.get(
       "/:accountId/overview",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.overview.bind(this.controller),
     );
     this.router.get(
       "/:accountId/campaigns",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.list.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.create"),
       this.controller.create.bind(this.controller),
     );
     this.router.get(
       "/:accountId/campaigns/:id",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.getOne.bind(this.controller),
     );
     this.router.patch(
       "/:accountId/campaigns/:id",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.edit"),
       this.controller.update.bind(this.controller),
     );
     this.router.delete(
       "/:accountId/campaigns/:id",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.delete"),
       this.controller.remove.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns/:id/send",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.send"),
       this.controller.send.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns/:id/schedule",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.send"),
       this.controller.schedule.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns/:id/pause",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.edit"),
       this.controller.pause.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns/:id/cancel",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.edit"),
       this.controller.cancel.bind(this.controller),
     );
     this.router.post(
       "/:accountId/campaigns/:id/test",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.send"),
       this.controller.test.bind(this.controller),
     );
     this.router.get(
       "/:accountId/campaigns/:id/analytics",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.analytics.bind(this.controller),
     );
     this.router.get(
       "/:accountId/campaigns/:id/recipients",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.recipients.bind(this.controller),
     );
     this.router.post(
       "/:accountId/audiences/preview",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.previewAudience.bind(this.controller),
     );
     this.router.get(
       "/:accountId/templates",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.templates.bind(this.controller),
     );
     this.router.post(
       "/:accountId/templates",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.create"),
       this.controller.createTemplate.bind(this.controller),
     );
     this.router.patch(
       "/:accountId/templates/:templateId",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.edit"),
       this.controller.updateTemplate.bind(this.controller),
     );
     this.router.delete(
       "/:accountId/templates/:templateId",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.delete"),
       this.controller.deleteTemplate.bind(this.controller),
     );
     this.router.post(
       "/:accountId/templates/:templateId/duplicate",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.create"),
       this.controller.duplicateTemplate.bind(this.controller),
     );
     this.router.get(
       "/:accountId/suppression",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.view"),
       this.controller.suppression.bind(this.controller),
     );
     this.router.post(
       "/:accountId/suppression",
       AuthMiddleware.authenticate,
+      requirePermission("emailMarketing.edit"),
       this.controller.addSuppression.bind(this.controller),
     );
   }

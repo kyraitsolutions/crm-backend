@@ -63,109 +63,7 @@ export class WhatsAppIntegrationService {
         accessToken,
       );
 
-      await this.whatsappRepo.findByPhoneNumberId(business.phoneNumberInfo.id);
-
-      // let contactSync: SyncState = account?.contactSync ?? {
-      //   status: SyncStatus.NOT_REQUESTED,
-      //   requestId: null,
-      //   lastAttemptAt: null,
-      //   lastErrorCode: null,
-      //   lastErrorMessage: null,
-      // };
-
-      // let historySync: SyncState = account?.historySync ?? {
-      //   status: SyncStatus.NOT_REQUESTED,
-      //   requestId: null,
-      //   lastAttemptAt: null,
-      //   lastErrorCode: null,
-      //   lastErrorMessage: null,
-      // };
-
-      // if (
-      //   contactSync.status !== SyncStatus.COMPLETED &&
-      //   contactSync.status !== SyncStatus.NOT_SUPPORTED
-      // ) {
-      //   try {
-      //     const response = await this.whatsappClient.startContactSync(
-      //       business.phoneNumberInfo.id,
-      //       accessToken,
-      //     );
-
-      //     contactSync = {
-      //       status: SyncStatus.COMPLETED,
-      //       requestId: response.request_id,
-      //       lastAttemptAt: new Date(),
-      //       lastErrorCode: null,
-      //       lastErrorMessage: null,
-      //     };
-      //   } catch (error) {
-      //     const err = error as AxiosError<MetaApiErrorResponse>;
-      //     const metaError = err.response?.data?.error;
-
-      //     if (metaError?.code === 131000) {
-      //       contactSync = {
-      //         status: SyncStatus.NOT_SUPPORTED,
-      //         requestId: null,
-      //         lastAttemptAt: new Date(),
-      //         lastErrorCode: metaError.code,
-      //         lastErrorMessage: metaError.message,
-      //       };
-      //     } else {
-      //       contactSync = {
-      //         status: SyncStatus.FAILED,
-      //         requestId: null,
-      //         lastAttemptAt: new Date(),
-      //         lastErrorCode: metaError?.code ?? null,
-      //         lastErrorMessage: metaError?.message ?? "Unknown Error",
-      //       };
-
-      //       throw error;
-      //     }
-      //   }
-      // }
-
-      // if (
-      //   historySync.status !== SyncStatus.COMPLETED &&
-      //   historySync.status !== SyncStatus.NOT_SUPPORTED
-      // ) {
-      //   try {
-      //     const response = await this.whatsappClient.startHistorySync(
-      //       business.phoneNumberInfo.id,
-      //       accessToken,
-      //     );
-
-      //     historySync = {
-      //       status: SyncStatus.COMPLETED,
-      //       requestId: response.request_id,
-      //       lastAttemptAt: new Date(),
-      //       lastErrorCode: null,
-      //       lastErrorMessage: null,
-      //     };
-      //   } catch (error) {
-      //     const err = error as AxiosError<MetaApiErrorResponse>;
-      //     const metaError = err.response?.data?.error;
-
-      //     if (metaError?.code === 131000) {
-      //       historySync = {
-      //         status: SyncStatus.NOT_SUPPORTED,
-      //         requestId: null,
-      //         lastAttemptAt: new Date(),
-      //         lastErrorCode: metaError.code,
-      //         lastErrorMessage: metaError.message,
-      //       };
-      //     } else {
-      //       historySync = {
-      //         status: SyncStatus.FAILED,
-      //         requestId: null,
-      //         lastAttemptAt: new Date(),
-      //         lastErrorCode: metaError?.code ?? null,
-      //         lastErrorMessage: metaError?.message ?? "Unknown Error",
-      //       };
-
-      //       throw error;
-      //     }
-      //   }
-      // }
+      // await this.whatsappRepo.findByPhoneNumberId(business.phoneNumberInfo.id);
 
       // 6. Create Integration for Whats'App
       const integration = await this.integrationRepo.createAndUpdate(
@@ -192,6 +90,9 @@ export class WhatsAppIntegrationService {
       );
 
       // 8. Create WhatsApp Account
+      // Coexistence (isOnBizApp): open / refresh 24h contact-sync window only when null
+      const isOnBizApp = Boolean(business.phoneNumberInfo?.isOnBizApp);
+      
       await this.whatsappRepo.createAndUpdate(
         {
           integrationId: integration.id,
@@ -200,12 +101,15 @@ export class WhatsAppIntegrationService {
           phoneNumberInfo: business.phoneNumberInfo,
           profile: business.businessProfile,
           webhookSubscribed: subscribedApps.success,
+          isConnected: true,
+          ...(isOnBizApp
+            ? { contactSyncWindowStartedAt: new Date() }
+            : {}),
         },
         session,
       );
 
       await session.commitTransaction();
-
       await this.activityLogService.logCreate({
         accountId: payload.accountId,
         organizationId: payload.organizationId,

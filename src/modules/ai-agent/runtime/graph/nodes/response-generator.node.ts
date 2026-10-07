@@ -12,7 +12,7 @@ import {
 } from "../../utils/interactive-reply.util.js";
 import { WHATSAPP_INTERACTIVE_LIMITS as LIMITS } from "../../../../whatsapp/messages/constants/whatsapp-interactive.constant.js";
 import { runtimeLlm } from "../../utils/llm.util.js";
-import { buildSystemPrompt } from "../../utils/prompt.util.js";
+import { buildSystemPrompt, customerDirectives } from "../../utils/prompt.util.js";
 import type { AgentStateType } from "../state.js";
 
 const faqAnswer = (state: AgentStateType) => {
@@ -49,14 +49,34 @@ const knowledgeReply = (state: AgentStateType) => {
   return (sentences.slice(0, 2).join("\n") || best).slice(0, 420);
 };
 
-const gaveUp = (text: string) =>
-  /\b(i don't have|i do not have|don't have that|do not have that|no information)\b|connect you with|hand over|handing over|handoff|team member/i.test(
-    text,
-  );
+const gaveUp = (text: string) => {
+  const gaveUpPhrase =
+    /\b(i don't have|i do not have|don't have that|do not have that|no information)\b|connect you with|hand over|handing over|handoff|team member/i.test(
+      text,
+    );
+  if (!gaveUpPhrase) return false;
+  if (/\b(website|https?:|www\.|\.com|\.in|address|call|email)\b/i.test(text)) return false;
+  return text.trim().length < 80;
+};
 
 const handoffMessage = (state: AgentStateType) =>
   state.agentConfig.safety.customerHandoffMessage ||
   "I'm connecting you with a team member who can help from here.";
+
+const hasLiveRecords = (results: AgentStateType["toolResults"]) =>
+  (results || []).some((result) => {
+    if (!result.ok || !result.data || typeof result.data !== "object") return false;
+    const data = result.data as { record?: unknown; body?: unknown; error?: unknown };
+    if (data.error && data.record == null && data.body == null) return false;
+    if (productForPrompt(data.record) || productForPrompt(data.body)) return true;
+    const body = data.body as { items?: unknown; products?: unknown; data?: unknown } | null;
+    return [body?.items, body?.products, body?.data].some((items) => Array.isArray(items) && items.length > 0);
+  });
+
+const noLiveReply = (message: string) =>
+  /\b(prod\w*cts?|catalog|items|services)\b/i.test(message)
+    ? "I don't have any products to show right now."
+    : "I don't have that information right now.";
 
 const fallbackReply = (state: AgentStateType) => {
   if (state.shouldHandoff || state.agentConfig.safety.onUnknownInfo !== false) {
@@ -69,17 +89,17 @@ const fallbackReply = (state: AgentStateType) => {
 
 export const responseGeneratorNode = async (state: AgentStateType) => {
   const started = Date.now();
-  const toolResults = state.toolResults || [];
-  console.log("TOOL_CALLS", JSON.stringify({
-    message: state.userMessage,
-    called: toolResults.length > 0,
-    selectionId: state.selectionId,
-    tools: toolResults.map((result) => ({
-      key: result.key,
-      ok: result.ok,
-      data: result.data,
-    })),
-  }, null, 2));
+  // const toolResults = state.toolResults || [];
+  // console.log("TOOL_CALLS", JSON.stringify({
+  //   message: state.userMessage,
+  //   called: toolResults.length > 0,
+  //   selectionId: state.selectionId,
+  //   tools: toolResults.map((result) => ({
+  //     key: result.key,
+  //     ok: result.ok,
+  //     data: result.data,
+  //   })),
+  // }, null, 2));
 
   if (state.shouldHandoff && state.assistantMessage) {
     return { latencyMs: Date.now() - started };
@@ -92,8 +112,9 @@ export const responseGeneratorNode = async (state: AgentStateType) => {
     })
     .find(Boolean);
   const gallery = freshProduct?.images || [];
+  
   if (followUpField(state.userMessage) === "image" && gallery.length >= LIMITS.carousel.minCards) {
-    const follow = imageFollowButtonTitles(state.agentConfig.groundRules || []);
+    const follow = imageFollowButtonTitles(customerDirectives(state.agentConfig));
     const reply = normalizeAgentReply(
       JSON.stringify({
         messageType: "carousel",
@@ -179,7 +200,7 @@ export const responseGeneratorNode = async (state: AgentStateType) => {
         return productForPrompt(data?.record) || productForPrompt(data?.body);
       })
       .find(Boolean);
-    const titles = selectionButtonTitles(state.agentConfig.groundRules || []);
+    const titles = selectionButtonTitles(customerDirectives(state.agentConfig));
     const message = state.userMessage.trim().toLowerCase();
     const selecting =
       Boolean(picked) &&
@@ -199,7 +220,26 @@ export const responseGeneratorNode = async (state: AgentStateType) => {
         true,
       );
     }
-    console.log("REPLY", JSON.stringify(reply, null, 2));
+    const inventedCatalog =
+      !hasLiveRecords(state.toolResults) &&
+      (/"messageType"\s*:/.test(reply.text) ||
+        reply.interactive?.type === "list" ||
+        reply.interactive?.type === "carousel" ||
+        Boolean(reply.imageUrl));
+    if (inventedCatalog) {
+      const text = noLiveReply(state.userMessage);
+      // console.log("REPLY", JSON.stringify({ text, interactive: null }, null, 2));
+      return {
+        shouldHandoff: false,
+        assistantMessage: text,
+        replyInteractive: null,
+        replyImage: null,
+        promptTokens: (state.promptTokens || 0) + result.promptTokens,
+        completionTokens: (state.completionTokens || 0) + result.completionTokens,
+        latencyMs: Date.now() - started,
+      };
+    }
+    // console.log("REPLY", JSON.stringify(reply, null, 2));
     const missingInfo = !reply.text || gaveUp(reply.text);
     const escalate = missingInfo && state.agentConfig.safety.onUnknownInfo !== false;
     return {

@@ -1,4 +1,4 @@
-import { TTemplateComponent } from "../types/template.types.js";
+import { TTemplateComponent, TVariableMapping } from "../types/template.types.js";
 
 export class CreateTemplateDto {
   name: string;
@@ -6,6 +6,10 @@ export class CreateTemplateDto {
   language: string = "en-IN";
   components: TTemplateComponent[] = [];
   parameter_format: string = "POSITIONAL";
+  /** Kyra-only CRM field mappings. Never sent to Meta. */
+  variableMappings: TVariableMapping[] = [];
+  /** Auth templates only — Meta message TTL in seconds. */
+  message_send_ttl_seconds?: number;
 
   constructor(data: CreateTemplateDto) {
     if (!data.name) throw new Error("name is required");
@@ -25,5 +29,7 @@ export class CreateTemplateDto {
     this.language = data.language || "en-IN";
     this.components = data.components || [];
     this.parameter_format = data.parameter_format || "POSITIONAL";
+    this.variableMappings = data.variableMappings || [];
+    this.message_send_ttl_seconds = data.message_send_ttl_seconds;
   }
 }

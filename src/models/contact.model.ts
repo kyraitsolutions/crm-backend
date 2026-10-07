@@ -30,6 +30,7 @@ export interface Contact {
 
   // Segmentation
   tags: string[];
+  attributes?: Record<string, string>;
 
   // System
   createdAt: Date;
@@ -105,6 +106,7 @@ const contactSchema = new Schema<Contact>(
     },
 
     tags: [{ type: String }],
+    attributes: { type: Schema.Types.Mixed, default: {} },
     lastActivity: { type: Date, default: Date.now },
   },
   {

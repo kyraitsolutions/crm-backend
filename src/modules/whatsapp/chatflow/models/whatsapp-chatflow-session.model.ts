@@ -21,6 +21,10 @@ export interface WhatsAppChatFlowSession extends Document {
   pauseReason: string | null;
   completedAt: Date | null;
   completedReason: string | null;
+  variables: Record<string, string>;
+  jumpCount: number;
+  delayToken: string;
+  resumeAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -68,6 +72,10 @@ const schema = new Schema<WhatsAppChatFlowSession>(
     pauseReason: { type: String, default: null },
     completedAt: { type: Date, default: null },
     completedReason: { type: String, default: null },
+    variables: { type: Schema.Types.Mixed, default: {} },
+    jumpCount: { type: Number, default: 0 },
+    delayToken: { type: String, default: "" },
+    resumeAt: { type: Date, default: null },
   },
   {
     timestamps: true,

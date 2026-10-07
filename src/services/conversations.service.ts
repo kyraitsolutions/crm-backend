@@ -14,16 +14,61 @@ import { buildSearchPreview } from "../utils/buildSearchPreview.js";
 import { notificationService, configBootstrapService } from "../container.js";
 import { HttpError } from "../utils/http.error.js";
 import { ConversationModel } from "../models/conversations.model.js";
+import { AutomationEngine } from "./automation-engine.service.js";
+import {
+  AUTOMATION_TRIGGERS,
+  CONVERSATION_CLOSED_STATUS_KEYS,
+} from "../constants/automation.constant.js";
+import logger from "../utils/logger.js";
 
 export class ConversationService {
   private repository: ConversationRepository;
   private accountRepository: AccountRepository;
   private messageRepository: MessageRepository;
+  private automationEngine = new AutomationEngine();
 
   constructor() {
     this.repository = new ConversationRepository();
     this.accountRepository = new AccountRepository();
     this.messageRepository = new MessageRepository();
+  }
+
+  private conversationPayload(
+    conversation: any,
+    organizationId?: string,
+  ): Record<string, unknown> {
+    const data =
+      typeof conversation?.toJSON === "function"
+        ? conversation.toJSON()
+        : conversation;
+    const id = String(data?.id || data?._id || "");
+    return {
+      ...data,
+      organizationId,
+      entityType: "conversation",
+      entityId: id,
+      id,
+    };
+  }
+
+  private async fireConversationCreated(
+    accountId: string,
+    organizationId: string | undefined,
+    conversation: any,
+  ) {
+    if (!accountId || !conversation) return;
+    try {
+      await this.automationEngine.process({
+        accountId,
+        trigger: AUTOMATION_TRIGGERS.CONVERSATION_CREATED,
+        payload: this.conversationPayload(conversation, organizationId),
+      });
+    } catch (error) {
+      logger.warn("Conversation created automation failed", {
+        accountId,
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   async initConversation(payload: InitConversationDto) {
@@ -70,6 +115,11 @@ export class ConversationService {
         await notificationService.notifyConversation(notificationPayload);
 
         await session.commitTransaction();
+        await this.fireConversationCreated(
+          payload.accountId,
+          String(account.organizationId),
+          conversation,
+        );
       }
       return conversation;
     } catch (error) {
@@ -234,6 +284,11 @@ export class ConversationService {
           phone: (create as any)?.contact?.phoneNumber || filter?.["contact.phoneNumber"],
           contactName: (create as any)?.contact?.name,
         });
+        await this.fireConversationCreated(
+          accountId,
+          String(account.organizationId),
+          conversation,
+        );
       }
     }
 
@@ -321,11 +376,47 @@ export class ConversationService {
       return conversation;
     }
 
-    return ConversationModel.findOneAndUpdate(
+    const previousStatus = String((conversation as any)?.status || "").toLowerCase();
+    const updated = await ConversationModel.findOneAndUpdate(
       { _id: conversationId, accountId, isDeleted: false },
       { $set },
       { new: true },
     );
+
+    const nextStatus = String((updated as any)?.status || "").toLowerCase();
+    if (
+      $set.status &&
+      nextStatus &&
+      nextStatus !== previousStatus &&
+      CONVERSATION_CLOSED_STATUS_KEYS.has(nextStatus) &&
+      !CONVERSATION_CLOSED_STATUS_KEYS.has(previousStatus)
+    ) {
+      try {
+        let orgId = organizationId;
+        if (!orgId) {
+          const account = await this.accountRepository.findOne(accountId);
+          orgId = account?.organizationId
+            ? String(account.organizationId)
+            : undefined;
+        }
+        await this.automationEngine.process({
+          accountId,
+          trigger: AUTOMATION_TRIGGERS.CONVERSATION_CLOSED,
+          payload: {
+            ...this.conversationPayload(updated, orgId),
+            previousStatus,
+          },
+        });
+      } catch (error) {
+        logger.warn("Conversation closed automation failed", {
+          accountId,
+          conversationId,
+          error: error instanceof Error ? error.message : String(error),
+        });
+      }
+    }
+
+    return updated;
   }
 }
 

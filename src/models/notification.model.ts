@@ -22,6 +22,16 @@ export interface Notification extends Document {
   isRead: boolean;
   readAt?: Date;
   meta?: Record<string, any>;
+  /** Phase 1+ optional fields (backward compatible). */
+  recipientId?: Schema.Types.ObjectId;
+  eventKey?: string;
+  module?: string;
+  entityType?: string;
+  entityId?: string;
+  deepLink?: string;
+  source?: string;
+  groupKey?: string;
+  priority?: "normal" | "high" | "critical";
   createdAt: Date;
   updatedAt: Date;
 }
@@ -82,6 +92,26 @@ const notificationSchema = new Schema(
       type: Object,
       default: {},
     },
+
+    // New configurable notification system fields (optional / nullable)
+    recipientId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+      index: true,
+    },
+    eventKey: { type: String, default: null, index: true },
+    module: { type: String, default: null, index: true },
+    entityType: { type: String, default: null },
+    entityId: { type: String, default: null },
+    deepLink: { type: String, default: null },
+    source: { type: String, default: null },
+    groupKey: { type: String, default: null, index: true },
+    priority: {
+      type: String,
+      enum: ["normal", "high", "critical"],
+      default: "normal",
+    },
   },
   {
     timestamps: true,
@@ -102,4 +132,21 @@ notificationSchema.index({ organizationId: 1, accountId: 1, createdAt: -1 });
 notificationSchema.index({ organizationId: 1, accountId: 1, isRead: 1 });
 notificationSchema.index({ organizationId: 1, accountId: 1, type: 1 });
 notificationSchema.index({ organizationId: 1, accountId: 1, channelType: 1 });
+notificationSchema.index({
+  organizationId: 1,
+  recipientId: 1,
+  createdAt: -1,
+});
+notificationSchema.index({
+  organizationId: 1,
+  recipientId: 1,
+  isRead: 1,
+  createdAt: -1,
+});
+notificationSchema.index({
+  organizationId: 1,
+  recipientId: 1,
+  groupKey: 1,
+  createdAt: -1,
+});
 export const Notification = model("Notification", notificationSchema);

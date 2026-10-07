@@ -26,7 +26,7 @@ export default class AutomationService {
     );
 
     if (isAutomationExists) {
-      throw HttpError.conflict("Automation already exists for this trigger");
+      throw HttpError.conflict("An automation with this name already exists");
     }
 
     const automation = await this.repository.create({
@@ -70,13 +70,14 @@ export default class AutomationService {
     }
 
     if (data.name) {
-      const isAutomationExists = await this.repository.findByName(
+      const duplicate = await this.repository.findByName(
         String(context.accountId),
         data.name,
+        automationId,
       );
 
-      if (isAutomationExists) {
-        throw HttpError.conflict("Automation already exists for this trigger");
+      if (duplicate) {
+        throw HttpError.conflict("An automation with this name already exists");
       }
     }
 

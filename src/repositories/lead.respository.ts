@@ -79,9 +79,10 @@ export class LeadRespository {
   }
 
   async updateLeadById(id: string, lead: any) {
-    const updatedLead = await LeadModel.findByIdAndUpdate(id, lead, {
+    const { id: _id, _id: __id, ...safeUpdate } = lead || {};
+    const updatedLead = await LeadModel.findByIdAndUpdate(id, safeUpdate, {
       new: true,
-      upsert: true,
+      runValidators: true,
     });
 
     return updatedLead?.toJSON();

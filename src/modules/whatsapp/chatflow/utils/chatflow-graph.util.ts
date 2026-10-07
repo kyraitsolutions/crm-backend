@@ -9,6 +9,9 @@ const WAIT_NODE_KINDS = new Set<ChatFlowNodeKind>([
   "button",
   "list",
   "question",
+  "ask_address",
+  "ask_location",
+  "ask_media",
   "chat",
 ]);
 
@@ -25,6 +28,21 @@ export function nodeKind(node?: ChatFlowRuntimeNode | null): ChatFlowNodeKind {
     case "list":
     case "carousel":
     case "question":
+    case "template":
+    case "keyword":
+    case "condition":
+    case "set_attribute":
+    case "add_tag":
+    case "remove_tag":
+    case "delay":
+    case "goto":
+    case "end":
+    case "api_request":
+    case "handoff":
+    case "ask_address":
+    case "ask_location":
+    case "ask_media":
+    case "connect_flow":
     case "chat":
     case "form":
       return kind;
@@ -113,7 +131,16 @@ export function resolveNextEdge(
   if (!currentNode) return null;
 
   const kind = nodeKind(currentNode);
-  if (kind === "question" || kind === "send_message" || kind === "carousel") {
+  if (
+    kind === "question" ||
+    kind === "send_message" ||
+    kind === "carousel" ||
+    kind === "template" ||
+    kind === "delay" ||
+    kind === "set_attribute" ||
+    kind === "add_tag" ||
+    kind === "remove_tag"
+  ) {
     return outgoingEdges(edges, currentNode.id)[0] || null;
   }
 

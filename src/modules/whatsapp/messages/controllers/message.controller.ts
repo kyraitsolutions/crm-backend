@@ -28,7 +28,11 @@ export class MessageController {
       file: req.file || null,
     }).validate();
 
-    const result = await this.messageService.send(String(accountId), payload);
+    const result = await this.messageService.send(String(accountId), payload, {
+      userId: req.user?.id,
+      name: req.user?.name,
+      email: req.user?.email,
+    });
     httpResponse(req, res, 200, "Message sent successfully", result);
   }
 

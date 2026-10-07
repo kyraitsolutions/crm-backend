@@ -92,7 +92,14 @@ export class WebhookRouterService {
           change.field,
           change.value,
         );
-        if (value) await templateHandler.handle(value);
+        if (value) {
+          await templateHandler.handle(
+            value,
+            change.field as
+              | "message_template_status_update"
+              | "message_template_quality_update",
+          );
+        }
         break;
       }
 

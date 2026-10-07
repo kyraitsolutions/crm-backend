@@ -1,5 +1,6 @@
 export const CHATFLOW_SESSION_STATUS = {
   WAITING: "waiting",
+  DELAYED: "delayed",
   PAUSED: "paused",
   COMPLETED: "completed",
   FAILED: "failed",

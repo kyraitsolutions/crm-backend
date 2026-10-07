@@ -364,7 +364,7 @@ export class AiAgentToolsService {
         },
       },
     );
-
+ 
     const who = lead?.name || ctx.contactName || ctx.phone;
     const notified = await this.notifyOnce({
       organizationId: ctx.organizationId,
@@ -453,20 +453,38 @@ export class AiAgentToolsService {
 
     const existing = await Notification.findOne({
       organizationId: params.organizationId,
-      type: "system_alert",
       typeId: params.typeId,
     }).select("_id");
     if (existing) return null;
 
-    return notificationService.notify({
+    const eventKey =
+      params.eventKey === "escalated"
+        ? "chatbot.handoff"
+        : params.eventKey.startsWith("lead.")
+          ? params.eventKey
+          : "chatbot.handoff";
+
+    return notificationService.dispatch({
+      eventKey,
       organizationId: params.organizationId,
       accountId: params.accountId,
+      source: "whatsapp",
+      entityType: "conversation",
+      entityId: params.conversationId || params.typeId,
       typeId: params.typeId,
-      type: "system_alert",
-      channelType: "whatsapp",
       title: params.title,
-      description: params.description,
-      meta: params.meta,
+      body: params.description,
+      deepLink: params.conversationId
+        ? `/conversations/${params.conversationId}`
+        : undefined,
+      groupKey: params.conversationId
+        ? `${eventKey}:${params.conversationId}`
+        : undefined,
+      payload: {
+        ...(params.meta || {}),
+        leadId: params.lead?.id,
+        phone: params.meta?.phone,
+      },
     });
   }
 

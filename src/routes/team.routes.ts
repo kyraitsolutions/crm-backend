@@ -37,7 +37,7 @@ export class TeamRouter {
     this.router.put(
       "/:id",
       AuthMiddleware.authenticate,
-      requirePermission("teams.update", true),
+      requirePermission("teams.edit", true),
       this.teamController.updateTeamMember.bind(this.teamController),
     );
     this.router.delete(

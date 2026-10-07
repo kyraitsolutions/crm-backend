@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/authorization.middleware.js";
 import { WhatsappTemplateController } from "../templates/controllers/whatsapp-template.controller.js";
 
 export class WhatsappTemplateRouter {
@@ -17,6 +18,7 @@ export class WhatsappTemplateRouter {
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
+      requirePermission("whatsapp.view"),
       this.controller.getTemplates.bind(this.controller),
     );
 
@@ -24,6 +26,7 @@ export class WhatsappTemplateRouter {
     this.router.post(
       "/",
       AuthMiddleware.authenticate,
+      requirePermission("whatsapp.create"),
       this.controller.createTemplate.bind(this.controller),
     );
   }

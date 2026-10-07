@@ -262,25 +262,29 @@ export class AccountRouter {
 
     // TODO: =============================================================================================
 
-    // TODO: Recyclebin
+    // Recyclebin
     this.router.get(
       "/:accountId/recyclebin",
       AuthMiddleware.authenticate,
+      requirePermission("recycleBin.view"),
       this.recyclebinController.list.bind(this.recyclebinController),
     );
     this.router.post(
       "/:accountId/recyclebin/restore",
       AuthMiddleware.authenticate,
+      requirePermission("recycleBin.edit"),
       this.recyclebinController.restore.bind(this.recyclebinController),
     );
     this.router.post(
       "/:accountId/recyclebin/delete",
       AuthMiddleware.authenticate,
+      requirePermission("recycleBin.edit"),
       this.recyclebinController.remove.bind(this.recyclebinController),
     );
     this.router.post(
       "/:accountId/recyclebin/empty",
       AuthMiddleware.authenticate,
+      requirePermission("recycleBin.edit"),
       this.recyclebinController.empty.bind(this.recyclebinController),
     );
 

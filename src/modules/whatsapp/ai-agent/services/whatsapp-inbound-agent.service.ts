@@ -36,6 +36,8 @@ export class WhatsAppInboundAgentService {
   private subscriptionService = new SubscriptionService();
 
   async handleIncoming(job: AiAgentJob) {
+    console.log("handleIncoming", job);
+    // console.log("job.inboundText", job.inboundText);
     const started = Date.now();
     const claimed = await this.claimRun(job);
     
@@ -83,6 +85,7 @@ export class WhatsAppInboundAgentService {
   }
 
   private async reply(job: AiAgentJob): Promise<InboundResult> {
+    
     const conversation = await ConversationModel.findById(job.conversationId);
     if (!conversation) return { skipped: true, reason: "conversation_missing" };
 
@@ -152,12 +155,14 @@ export class WhatsAppInboundAgentService {
         contactName: job.contactName || "",
         selectionId: job.selectionId || "",
       });
+      console.log("result", result); 
     } catch (error) {
       if (error instanceof HttpError && error.statusCode === 404) {
         return { skipped: true, reason: "agent_not_found" };
       }
       throw error;
     }
+
 
     const text = String(result.assistantMessage || "").trim();
     const interactive = this.interactivePayload(result.interactive);
@@ -170,6 +175,7 @@ export class WhatsAppInboundAgentService {
     const customerAskedForPerson = HUMAN_REQUEST_PHRASES.some((phrase) =>
       inbound.toLowerCase().includes(phrase),
     );
+
     if (customerAskedForPerson) {
       await this.pauseForHuman(job, "Customer asked for a person").catch((error) =>
         logger.warn("WHATSAPP_AI_AGENT_HANDOFF_SKIPPED", {
@@ -245,11 +251,7 @@ export class WhatsAppInboundAgentService {
     interactive: Record<string, unknown>,
     fallbackText: string,
   ) {
-    const action = interactive.action as { cards?: unknown; buttons?: unknown } | undefined;
-    const outbound =
-      interactive.type === "carousel" && action
-        ? { ...interactive, action: { cards: action.cards } }
-        : interactive;
+    console.log("interactive", interactive);
     try {
       await this.messages().then((service) =>
         service.send(job.accountId, {
@@ -257,7 +259,7 @@ export class WhatsAppInboundAgentService {
           to: job.phone,
           source: "automation",
           from: "bot",
-          interactive: outbound,
+          interactive,
         }),
       );
       await this.markSent(job.messageId);

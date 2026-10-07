@@ -88,4 +88,58 @@ export class WhatsAppLiveChatController {
       );
     }
   };
+
+  claimIntervention = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { organizationId, accountId } = this.orgAccount(req);
+      const conversationId = String(req.params.conversationId || "");
+      if (!conversationId) throw HttpError.badRequest("Conversation is required");
+      if (!req.user?.id) throw HttpError.unauthorized("Unauthorized");
+
+      const doc = await whatsappLiveChatService.claimIntervention({
+        organizationId,
+        accountId,
+        conversationId,
+        userId: String(req.user.id),
+        name: req.user.name,
+        email: req.user.email,
+      });
+      const message =
+        doc?.status === "request_sent"
+          ? "Intervention requested. Waiting for the teammate to accept."
+          : "Intervention claimed";
+      httpResponse(req, res, 200, message, { doc });
+    } catch (error) {
+      handleRouteError(
+        "WhatsAppLiveChatController.claimIntervention",
+        error,
+        next,
+        req,
+      );
+    }
+  };
+
+  acceptIntervention = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { organizationId, accountId } = this.orgAccount(req);
+      const conversationId = String(req.params.conversationId || "");
+      if (!conversationId) throw HttpError.badRequest("Conversation is required");
+      if (!req.user?.id) throw HttpError.unauthorized("Unauthorized");
+
+      const doc = await whatsappLiveChatService.acceptIntervention({
+        organizationId,
+        accountId,
+        conversationId,
+        userId: String(req.user.id),
+      });
+      httpResponse(req, res, 200, "Intervention request accepted", { doc });
+    } catch (error) {
+      handleRouteError(
+        "WhatsAppLiveChatController.acceptIntervention",
+        error,
+        next,
+        req,
+      );
+    }
+  };
 }

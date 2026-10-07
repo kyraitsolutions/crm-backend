@@ -19,12 +19,73 @@ import { ContactService } from "./contact.service.js";
 import { ContactRepository } from "../repositories/contact.repository.js";
 import { SubscriptionService } from "./subscription.service.js";
 import { USAGE_METRIC } from "../constants/subscription.constant.js";
-import { notificationService } from "../container.js";
+// import { notificationService } from "../container.js";
 import { emitToAccount } from "../config/wsServer/wsEmitter.js";
 import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
 import { asEntityId } from "../utils/request-context.utils.js";
 
 const BATCH_SIZE = 1000;
+const OBJECT_ID_RE = /^[a-f\d]{24}$/i;
+
+/** Normalize user-ref / ObjectId values for stable activity + automation compares */
+function leadRefId(value: unknown): string | null {
+  if (value == null || value === "") return null;
+  if (typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    for (const key of ["id", "_id", "userId"] as const) {
+      if (obj[key] != null && OBJECT_ID_RE.test(String(obj[key]))) {
+        return String(obj[key]);
+      }
+    }
+    if (
+      typeof (value as { toHexString?: () => string }).toHexString === "function"
+    ) {
+      return (value as { toHexString: () => string }).toHexString();
+    }
+  }
+  const str = String(value);
+  return OBJECT_ID_RE.test(str) ? str : null;
+}
+
+const USER_REF_ACTIVITY_FIELDS = new Set([
+  "assignedTo",
+  "assignedBy",
+  "ownerId",
+  "userId",
+  "createdBy",
+  "updatedBy",
+]);
+
+/**
+ * Build a minimal before/after snapshot for activity logging —
+ * only keys the client actually updated, with refs as plain ids.
+ */
+function pickLeadActivitySnapshot(
+  doc: Record<string, any> | null | undefined,
+  keys: string[],
+): Record<string, unknown> {
+  const snap: Record<string, unknown> = {};
+  if (!doc) return snap;
+
+  for (const key of keys) {
+    const value = doc[key];
+    if (USER_REF_ACTIVITY_FIELDS.has(key)) {
+      snap[key] = leadRefId(value);
+      continue;
+    }
+    if (
+      value &&
+      typeof value === "object" &&
+      typeof (value as { toHexString?: () => string }).toHexString === "function"
+    ) {
+      snap[key] = (value as { toHexString: () => string }).toHexString();
+      continue;
+    }
+    snap[key] = value ?? null;
+  }
+
+  return snap;
+}
 
 export class LeadService {
   private ai: GeminiAIUtil;
@@ -148,12 +209,13 @@ export class LeadService {
     const created = await this.leadRepository.create(lead);
     await this.syncContactFromLead(created, lead);
     await this.recordLeadUsage(account?.organizationId && String(account.organizationId));
+    const leadId = String((created as any)?._id || (created as any)?.id || "");
     if (account?.organizationId) {
       await this.activityLogService.logCreate({
         accountId: String(lead.accountId),
         organizationId: String(account.organizationId),
         entityType: "lead",
-        entityId: String((created as any)?._id || (created as any)?.id),
+        entityId: leadId,
         actor: { type: "system", name: "chatbot" },
         metadata: {
           leadName: (created as any)?.name,
@@ -161,6 +223,23 @@ export class LeadService {
         },
       });
     }
+
+    const createdJson =
+      typeof (created as any)?.toJSON === "function"
+        ? (created as any).toJSON()
+        : created;
+    await this.automationEngine.process({
+      accountId: String(lead.accountId || (createdJson as any)?.accountId),
+      trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+      payload: {
+        ...createdJson,
+        organizationId: account?.organizationId,
+        entityType: "lead",
+        entityId: leadId,
+        id: leadId,
+      },
+    });
+
     await this.notifyLeadCreated({
       organizationId: asEntityId(account?.organizationId),
       accountId: asEntityId(lead.accountId),
@@ -297,6 +376,38 @@ export class LeadService {
             }),
           ),
         );
+
+        // Fire LEAD_CREATED for newly inserted / upserted docs only
+        const newIds = [
+          ...Object.values((res as any).insertedIds || {}).map(String),
+          ...Object.values((res as any).upsertedIds || {}).map((u: any) =>
+            String(u?._id || u),
+          ),
+        ].filter(Boolean);
+
+        for (const id of newIds) {
+          try {
+            const doc = await LeadModel.findById(id).lean();
+            if (!doc) continue;
+            await this.automationEngine.process({
+              accountId: context.accountId,
+              trigger: AUTOMATION_TRIGGERS.LEAD_CREATED,
+              payload: {
+                ...doc,
+                organizationId: context.organizationId,
+                entityType: "lead",
+                entityId: id,
+                id,
+              },
+            });
+          } catch (autoErr) {
+            logger.warn("Bulk lead automation failed", {
+              leadId: id,
+              error:
+                autoErr instanceof Error ? autoErr.message : String(autoErr),
+            });
+          }
+        }
       } catch (err: any) {
         const writeErrors = err?.writeErrors || [];
         results.failed += writeErrors.length;
@@ -492,27 +603,34 @@ export class LeadService {
     lead: Lead,
     currentUser: any,
   ): Promise<TApiResponse<Lead | null>> {
-    const existingLead = await this.leadRepository.getLeadById(
+    // Lean plain document — do NOT use getLeadById here.
+    // That aggregate joins `emails` and replaces `assignedTo` with a profile,
+    // which invents fake activity diffs against the plain update result.
+    const existingLead = await LeadModel.findOne({
+      _id: leadId,
       accountId,
-      leadId,
-    );
+    }).lean();
 
     if (!existingLead) {
       throw HttpError.notFound("Lead not found");
     }
 
+    const PROTECTED_KEYS = new Set([
+      "_id",
+      "id",
+      "createdAt",
+      "updatedAt",
+      "accountId",
+      "organizationId",
+      "__v",
+    ]);
+
     const updateData: Record<string, any> = {};
     const customFields: Record<string, any> = {};
 
-    // const schemaPaths = Object.keys(LeadModel.schema.paths);
+    for (const [key, value] of Object.entries(lead || {})) {
+      if (PROTECTED_KEYS.has(key)) continue;
 
-    for (const [key, value] of Object.entries(lead)) {
-      // protected fields
-      if (["_id", "id", "createdAt", "updatedAt"].includes(key)) {
-        continue;
-      }
-
-      // schema field exists
       if (LeadModel.schema.path(key)) {
         updateData[key] = value;
       } else {
@@ -520,15 +638,35 @@ export class LeadService {
       }
     }
 
-    const updatedLead = await this.leadRepository.updateLeadById(leadId, lead);
+    if (Object.keys(customFields).length > 0) {
+      const previousCustom =
+        existingLead.customFields instanceof Map
+          ? Object.fromEntries(existingLead.customFields as Map<string, unknown>)
+          : ((existingLead.customFields as Record<string, unknown>) || {});
+      updateData.customFields = { ...previousCustom, ...customFields };
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      return { doc: existingLead as unknown as Lead };
+    }
+
+    const updatedLead = await this.leadRepository.updateLeadById(
+      leadId,
+      updateData,
+    );
     await this.syncContactFromLead({
       ...existingLead,
       ...updatedLead,
       accountId,
     });
 
+    // Activity: only fields the client actually sent — backend owns the diff.
+    const activityKeys = Object.keys(updateData);
+    const oldSnap = pickLeadActivitySnapshot(existingLead, activityKeys);
+    const newSnap = pickLeadActivitySnapshot(updatedLead, activityKeys);
+
     await this.activityLogService.logUpdate({
-      accountId: accountId,
+      accountId,
       organizationId: currentUser?.organizationId,
 
       entityType: "lead",
@@ -543,22 +681,125 @@ export class LeadService {
       },
 
       metadata: {
-        leadName: updatedLead?.name,
-        source: updatedLead?.source?.name,
+        leadName: updatedLead?.name ?? existingLead.name,
+        source:
+          String(
+            (updatedLead as any)?.source?.name ??
+              (existingLead as any)?.source?.name ??
+              "",
+          ) || undefined,
       },
 
-      oldDoc: existingLead,
-      newDoc: updatedLead as unknown as Lead,
+      oldDoc: oldSnap,
+      newDoc: newSnap,
     });
+
+    const prevStage = existingLead.stage;
+    const nextStage = (updatedLead as { stage?: string } | null)?.stage;
+    const prevAssigned = leadRefId(existingLead.assignedTo);
+    const nextAssigned = leadRefId(
+      (updatedLead as { assignedTo?: unknown } | null)?.assignedTo,
+    );
+
+    const stageChanged =
+      updateData.stage != null && String(prevStage || "") !== String(nextStage || "");
+    const assignedChanged =
+      updateData.assignedTo != null && prevAssigned !== nextAssigned;
+
+    const automationPayload = {
+      ...((updatedLead as any)?.toJSON?.() || updatedLead),
+      organizationId: currentUser?.organizationId,
+      entityType: "lead",
+      entityId: leadId,
+      id: leadId,
+    };
+
+    if (stageChanged) {
+      await this.automationEngine.process({
+        accountId,
+        trigger: AUTOMATION_TRIGGERS.LEAD_STAGE_CHANGED,
+        payload: {
+          ...automationPayload,
+          previousStage: prevStage,
+        },
+      });
+    }
+
+    if (assignedChanged) {
+      await this.automationEngine.process({
+        accountId,
+        trigger: AUTOMATION_TRIGGERS.LEAD_ASSIGNED,
+        payload: {
+          ...automationPayload,
+          previousAssignedTo: prevAssigned,
+        },
+      });
+    }
 
     return {
       doc: updatedLead as unknown as Lead,
     };
   }
   async updateLeadWs(lead: Lead): Promise<Lead | null> {
+    const leadId = String((lead as any)?.id || (lead as any)?._id || "");
+    const accountId = String((lead as any)?.accountId || "");
+    const before =
+      leadId && accountId
+        ? await LeadModel.findOne({ _id: leadId, accountId }).lean()
+        : null;
+
     const updated = await this.leadRepository.update(lead);
     if (updated) {
       await this.syncContactFromLead(updated);
+
+      const orgId =
+        (updated as any)?.organizationId ||
+        (before as any)?.organizationId ||
+        null;
+      const account = orgId
+        ? null
+        : await this.accountRepository.findOne(accountId);
+      const organizationId = String(
+        orgId || (account as any)?.organizationId || "",
+      );
+
+      const payload = {
+        ...((updated as any)?.toJSON?.() || updated),
+        organizationId,
+        entityType: "lead",
+        entityId: leadId,
+        id: leadId,
+      };
+
+      const stageChanged =
+        before &&
+        (lead as any)?.stage != null &&
+        String(before.stage || "") !== String((updated as any).stage || "");
+      const assignedChanged =
+        before &&
+        (lead as any)?.assignedTo != null &&
+        String(before.assignedTo || "") !==
+          String((updated as any).assignedTo || "");
+
+      if (stageChanged) {
+        await this.automationEngine.process({
+          accountId,
+          trigger: AUTOMATION_TRIGGERS.LEAD_STAGE_CHANGED,
+          payload: { ...payload, previousStage: before?.stage },
+        });
+      }
+      if (assignedChanged) {
+        await this.automationEngine.process({
+          accountId,
+          trigger: AUTOMATION_TRIGGERS.LEAD_ASSIGNED,
+          payload: {
+            ...payload,
+            previousAssignedTo: before?.assignedTo
+              ? String(before.assignedTo)
+              : null,
+          },
+        });
+      }
     }
     return updated;
   }
@@ -575,7 +816,10 @@ export class LeadService {
     try {
       const data = typeof lead?.toJSON === "function" ? lead.toJSON() : lead;
       const leadId = asEntityId(data?.id || data?._id || lead?._id);
-      await notificationService.notifyNewLead({
+      const { staffAlertService } = await import(
+        "../modules/notifications/services/staff-alert.service.js"
+      );
+      await staffAlertService.notifyLeadCreated({
         organizationId: asEntityId(organizationId),
         accountId: asEntityId(accountId),
         leadId,
@@ -583,6 +827,13 @@ export class LeadService {
         phone: data?.phone || data?.mobile,
         email: data?.email,
         source: data?.source?.name || data?.source,
+        assigneeId: data?.assignedTo ? String(data.assignedTo) : null,
+        leadScore:
+          typeof data?.score === "number"
+            ? data.score
+            : typeof data?.leadScore === "number"
+              ? data.leadScore
+              : null,
       });
       emitToAccount(asEntityId(accountId), WEBSOCKET_EVENTS["Chatbot Lead Created"], {
         lead: data,

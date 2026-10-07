@@ -2,6 +2,7 @@ import { Router } from "express";
 import { IntegrationController } from "../controllers/integration.controller.js";
 import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
 
+
 export class IntegrationRouter {
   public router: Router;
   private integrationController = new IntegrationController();
@@ -15,6 +16,7 @@ export class IntegrationRouter {
     this.router.get(
       "/:accountId/:provider",
       AuthMiddleware.authenticate,
+      // requirePermission("integrations.view"),
       this.integrationController.getIntegration.bind(
         this.integrationController,
       ),

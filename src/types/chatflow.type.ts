@@ -10,7 +10,31 @@ export const chatFlowNodeDataSchema = z.object({
 // chatflow node types
 export const chatFlowNodeSchema = z.object({
   id: z.string(), // use UUID from frontend
-  type: z.enum(["chat", "form"]).default("chat"),
+  type: z.enum([
+    "chat",
+    "form",
+    "send_message",
+    "button",
+    "list",
+    "carousel",
+    "question",
+    "template",
+    "phone",
+    "keyword",
+    "condition",
+    "set_attribute",
+    "add_tag",
+    "remove_tag",
+    "delay",
+    "goto",
+    "end",
+    "api_request",
+    "handoff",
+    "ask_address",
+    "ask_location",
+    "ask_media",
+    "connect_flow",
+  ]).default("send_message"),
   position: z
     .object({
       x: z.number().default(0),

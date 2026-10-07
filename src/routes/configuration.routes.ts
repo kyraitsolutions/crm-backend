@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ConfigurationController } from "../controllers/configuration.controller.js";
 import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class ConfigurationRouter {
   public router: Router;
@@ -11,37 +12,37 @@ export class ConfigurationRouter {
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
-    // get configurations by organization Id with filters
     this.router.get(
       "/",
       AuthMiddleware.authenticate,
+      requirePermission("configuration.view"),
       this.configurationController.getConfigurations.bind(
         this.configurationController,
       ),
     );
 
-    // create configuration item
     this.router.post(
       "/:configId",
       AuthMiddleware.authenticate,
+      requirePermission("configuration.edit"),
       this.configurationController.createConfigItem.bind(
         this.configurationController,
       ),
     );
 
-    // update configuration by id
     this.router.put(
       "/:configId/:itemId",
       AuthMiddleware.authenticate,
+      requirePermission("configuration.edit"),
       this.configurationController.updateConfigItem.bind(
         this.configurationController,
       ),
     );
 
-    // delete configuration Item by id
     this.router.delete(
       "/:configId/:itemId",
       AuthMiddleware.authenticate,
+      requirePermission("configuration.edit"),
       this.configurationController.deleteConfigItem.bind(
         this.configurationController,
       ),

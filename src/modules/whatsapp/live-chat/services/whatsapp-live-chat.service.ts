@@ -1,13 +1,16 @@
 import { Types } from "mongoose";
 import { FEATURE } from "../../../../constants/subscription.constant.js";
+import { ENV } from "../../../../constants/env.constants.js";
 import { AccountModel } from "../../../../models/accounts.model.js";
 import { ConversationModel } from "../../../../models/conversations.model.js";
 import { ChatFlow } from "../../../../models/chatflow.model.js";
+import { UserModel } from "../../../../models/user.model.js";
 import { SubscriptionService } from "../../../../services/subscription.service.js";
+import { emailService, notificationService } from "../../../../container.js";
+import { emitToAccount } from "../../../../config/wsServer/wsEmitter.js";
 import { whatsAppAiAgentService } from "../../../../services/whatsapp-ai-agent.service.js";
 import { HttpError } from "../../../../utils/http.error.js";
 import logger from "../../../../utils/logger.js";
-import { WhatsappMessageService } from "../../messages/services/message.service.js";
 import { WhatsappTemplateModel } from "../../templates/models/template.model.js";
 import { WhatsAppAiAgentConfigModel } from "../../ai-agent/models/whatsapp-ai-agent-config.model.js";
 import {
@@ -28,6 +31,7 @@ import {
   matchesAutoResolveWindow,
 } from "../utils/auto-resolve.util.js";
 import { isWithinWorkingHours } from "../utils/working-hours.util.js";
+import { WhatsappMessageService } from "../../messages/services/message.service.js";
 
 type AutoReply = {
   enabled?: boolean;
@@ -399,20 +403,392 @@ export class WhatsAppLiveChatService {
     return account?.organizationId ? String(account.organizationId) : "";
   }
 
-  async markHumanIntervention(conversationId: string) {
-    if (!conversationId) return;
+  async markHumanIntervention(
+    conversationId: string,
+    actor?: { userId?: string; name?: string; email?: string },
+  ) {
+    if (!conversationId) return null;
+
+    const conversation = await ConversationModel.findById(conversationId);
+    if (!conversation) return null;
+
+    const liveChat = {
+      ...(((conversation.metadata as Record<string, any> | undefined)?.liveChat ||
+        {}) as Record<string, any>),
+    };
+    const existingAssignee = String(liveChat.assigneeId || "");
+    const actorId = String(actor?.userId || "").trim();
+
+    if (actorId && existingAssignee && existingAssignee !== actorId) {
+      throw HttpError.forbidden(
+        "Another teammate is handling this chat. Request intervention to take over.",
+      );
+    }
+
+    const resolvedActor = actorId
+      ? await this.resolveInterventionActor(actor!)
+      : null;
+    const isFirstAssignee = Boolean(resolvedActor && !existingAssignee);
+
+    const $set: Record<string, unknown> = {
+      "metadata.liveChat.humanIntervened": true,
+      "metadata.liveChat.autoResolveActive": false,
+      "metadata.liveChat.intervenedAt": new Date(),
+    };
+    if (resolvedActor) {
+      $set["metadata.liveChat.assigneeId"] = resolvedActor.userId;
+      $set["metadata.liveChat.assigneeName"] = resolvedActor.name;
+      $set["metadata.liveChat.assigneeEmail"] = resolvedActor.email;
+    }
+
     await ConversationModel.findByIdAndUpdate(conversationId, {
-      $set: {
-        "metadata.liveChat.humanIntervened": true,
-        "metadata.liveChat.autoResolveActive": false,
-        "metadata.liveChat.intervenedAt": new Date(),
-      },
+      $set,
       $unset: { "metadata.liveChat.escalationReason": 1 },
     });
+
     const { whatsappChatflowService } = await import(
       "../../chatflow/services/whatsapp-chatflow.service.js"
     );
     await whatsappChatflowService.pauseByConversation(conversationId);
+
+    if (isFirstAssignee && resolvedActor?.email) {
+      await this.notifyInterventionAssignee({
+        accountId: String(conversation.accountId),
+        conversationId,
+        email: resolvedActor.email,
+        assigneeName: resolvedActor.name,
+        phone: String((conversation as any)?.contact?.phoneNumber || ""),
+        contactName: String((conversation as any)?.contact?.name || ""),
+        reason: "You took over this WhatsApp conversation.",
+      });
+    }
+
+    if (resolvedActor) {
+      const refreshed = await ConversationModel.findById(conversationId).lean();
+      if (refreshed) {
+        emitToAccount(String(conversation.accountId), "CONVERSATION_UPDATED", {
+          conversation: { ...refreshed, id: String(refreshed._id) },
+        });
+      }
+    }
+
+    return {
+      humanIntervened: true,
+      assigneeId: resolvedActor?.userId || existingAssignee || null,
+      assigneeName: resolvedActor?.name || liveChat.assigneeName || null,
+      assigneeEmail: resolvedActor?.email || liveChat.assigneeEmail || null,
+    };
+  }
+
+  /** First open claim, or request takeover from the current owner (needs accept). */
+  async claimIntervention(params: {
+    organizationId: string;
+    accountId: string;
+    conversationId: string;
+    userId: string;
+    name?: string;
+    email?: string;
+  }) {
+    const conversation = await ConversationModel.findOne({
+      _id: params.conversationId,
+      accountId: params.accountId,
+    });
+    if (!conversation) throw HttpError.notFound("Conversation not found");
+
+    const liveChat = {
+      ...(((conversation.metadata as Record<string, any> | undefined)?.liveChat ||
+        {}) as Record<string, any>),
+    };
+    const previousAssignee = String(liveChat.assigneeId || "");
+    const actor = await this.resolveInterventionActor({
+      userId: params.userId,
+      name: params.name,
+      email: params.email,
+    });
+    if (!actor) throw HttpError.badRequest("User is required");
+
+    // Already the owner — nothing to claim.
+    if (previousAssignee && previousAssignee === actor.userId) {
+      return {
+        humanIntervened: true,
+        assigneeId: actor.userId,
+        assigneeName: actor.name,
+        assigneeEmail: actor.email,
+        pending: false,
+        status: "already_owner" as const,
+      };
+    }
+
+    // Someone else owns it: create a request, in-app notify, and email the owner to accept.
+    if (previousAssignee) {
+      const ownerEmail = String(liveChat.assigneeEmail || "").trim();
+      const contactName = String((conversation as any)?.contact?.name || "");
+      const phone = String((conversation as any)?.contact?.phoneNumber || "");
+      const who = contactName || phone || "this customer";
+
+      await ConversationModel.updateOne(
+        { _id: params.conversationId, accountId: params.accountId },
+        {
+          $set: {
+            "metadata.liveChat.pendingRequest": {
+              userId: actor.userId,
+              name: actor.name,
+              email: actor.email,
+              requestedAt: new Date(),
+            },
+          },
+        },
+      );
+
+      await notificationService
+        .dispatch({
+          eventKey: "conversation.intervention_requested",
+          organizationId: params.organizationId,
+          accountId: params.accountId,
+          source: "whatsapp",
+          entityType: "conversation",
+          entityId: params.conversationId,
+          typeId: `${params.conversationId}:intervention_request`,
+          actorId: actor.userId,
+          assigneeId: previousAssignee,
+          recipientUserIds: previousAssignee ? [String(previousAssignee)] : undefined,
+          title: "Intervention requested",
+          body: `${actor.name} requested intervention on ${who}'s chat`,
+          deepLink: `/conversations/${params.conversationId}`,
+          payload: {
+            conversationId: params.conversationId,
+            accountId: params.accountId,
+            platform: "whatsapp",
+            kind: "intervention_request",
+            requesterId: actor.userId,
+            requesterName: actor.name,
+            assigneeId: previousAssignee,
+            phone,
+          },
+        })
+        .catch((error) =>
+          logger.warn("WHATSAPP_INTERVENTION_NOTIFICATION_SKIPPED", {
+            error: (error as Error).message,
+            conversationId: params.conversationId,
+          }),
+        );
+
+      if (ownerEmail) {
+        await this.notifyInterventionAssignee({
+          accountId: params.accountId,
+          conversationId: params.conversationId,
+          email: ownerEmail,
+          assigneeName: String(liveChat.assigneeName || "Teammate"),
+          phone,
+          contactName,
+          reason: `${actor.name} requested intervention on this WhatsApp chat. Open the inbox to accept and hand it over.`,
+        });
+      }
+
+      await this.emitConversationUpdated(params.accountId, params.conversationId);
+
+      return {
+        humanIntervened: true,
+        assigneeId: previousAssignee,
+        assigneeName: liveChat.assigneeName || null,
+        assigneeEmail: liveChat.assigneeEmail || null,
+        pending: true,
+        status: "request_sent" as const,
+        pendingRequest: {
+          userId: actor.userId,
+          name: actor.name,
+          email: actor.email,
+        },
+      };
+    }
+
+    // No owner yet: first claim becomes the owner (same as first dashboard send).
+    await ConversationModel.updateOne(
+      { _id: params.conversationId, accountId: params.accountId },
+      {
+        $set: {
+          "metadata.liveChat.humanIntervened": true,
+          "metadata.liveChat.autoResolveActive": false,
+          "metadata.liveChat.intervenedAt": new Date(),
+          "metadata.liveChat.assigneeId": actor.userId,
+          "metadata.liveChat.assigneeName": actor.name,
+          "metadata.liveChat.assigneeEmail": actor.email,
+        },
+        $unset: {
+          "metadata.liveChat.escalationReason": 1,
+          "metadata.liveChat.pendingRequest": 1,
+        },
+      },
+    );
+
+    const { whatsappChatflowService } = await import(
+      "../../chatflow/services/whatsapp-chatflow.service.js"
+    );
+    await whatsappChatflowService.pauseByConversation(
+      params.conversationId,
+      "human_intervened",
+    );
+
+    if (actor.email) {
+      await this.notifyInterventionAssignee({
+        accountId: params.accountId,
+        conversationId: params.conversationId,
+        email: actor.email,
+        assigneeName: actor.name,
+        phone: String((conversation as any)?.contact?.phoneNumber || ""),
+        contactName: String((conversation as any)?.contact?.name || ""),
+        reason: "You took over this WhatsApp conversation.",
+      });
+    }
+
+    await this.emitConversationUpdated(params.accountId, params.conversationId);
+
+    return {
+      humanIntervened: true,
+      assigneeId: actor.userId,
+      assigneeName: actor.name,
+      assigneeEmail: actor.email,
+      pending: false,
+      status: "claimed" as const,
+    };
+  }
+
+  /** Current owner accepts a pending request and transfers the chat. */
+  async acceptIntervention(params: {
+    organizationId: string;
+    accountId: string;
+    conversationId: string;
+    userId: string;
+  }) {
+    const conversation = await ConversationModel.findOne({
+      _id: params.conversationId,
+      accountId: params.accountId,
+    });
+    if (!conversation) throw HttpError.notFound("Conversation not found");
+
+    const liveChat = {
+      ...(((conversation.metadata as Record<string, any> | undefined)?.liveChat ||
+        {}) as Record<string, any>),
+    };
+    const ownerId = String(liveChat.assigneeId || "");
+    if (!ownerId || ownerId !== String(params.userId)) {
+      throw HttpError.forbidden("Only the teammate handling this chat can accept the request");
+    }
+
+    const pending = liveChat.pendingRequest || {};
+    const requesterId = String(pending.userId || "").trim();
+    if (!requesterId) {
+      throw HttpError.badRequest("There is no pending intervention request");
+    }
+
+    const requester = await this.resolveInterventionActor({
+      userId: requesterId,
+      name: pending.name,
+      email: pending.email,
+    });
+    if (!requester) throw HttpError.badRequest("Requester is invalid");
+
+    await ConversationModel.updateOne(
+      { _id: params.conversationId, accountId: params.accountId },
+      {
+        $set: {
+          "metadata.liveChat.humanIntervened": true,
+          "metadata.liveChat.autoResolveActive": false,
+          "metadata.liveChat.intervenedAt": new Date(),
+          "metadata.liveChat.assigneeId": requester.userId,
+          "metadata.liveChat.assigneeName": requester.name,
+          "metadata.liveChat.assigneeEmail": requester.email,
+        },
+        $unset: {
+          "metadata.liveChat.escalationReason": 1,
+          "metadata.liveChat.pendingRequest": 1,
+        },
+      },
+    );
+
+    if (requester.email) {
+      await this.notifyInterventionAssignee({
+        accountId: params.accountId,
+        conversationId: params.conversationId,
+        email: requester.email,
+        assigneeName: requester.name,
+        phone: String((conversation as any)?.contact?.phoneNumber || ""),
+        contactName: String((conversation as any)?.contact?.name || ""),
+        reason: "Your intervention request was accepted. You can reply in this WhatsApp chat now.",
+      });
+    }
+
+    await this.emitConversationUpdated(params.accountId, params.conversationId);
+
+    return {
+      humanIntervened: true,
+      assigneeId: requester.userId,
+      assigneeName: requester.name,
+      assigneeEmail: requester.email,
+      status: "accepted" as const,
+    };
+  }
+
+  private async emitConversationUpdated(accountId: string, conversationId: string) {
+    const refreshed = await ConversationModel.findById(conversationId).lean();
+    if (!refreshed) return;
+    emitToAccount(accountId, "CONVERSATION_UPDATED", {
+      conversation: { ...refreshed, id: String(refreshed._id) },
+    });
+  }
+
+  private async resolveInterventionActor(actor: {
+    userId?: string;
+    name?: string;
+    email?: string;
+  }) {
+    const userId = String(actor.userId || "").trim();
+    if (!userId) return null;
+    const user = await UserModel.findById(userId).select("email").lean();
+    const email = String(actor.email || user?.email || "").trim();
+    const name = String(actor.name || "").trim() || email || "Teammate";
+    return { userId, name, email };
+  }
+
+  private async notifyInterventionAssignee(params: {
+    accountId: string;
+    conversationId: string;
+    email: string;
+    assigneeName: string;
+    phone: string;
+    contactName: string;
+    reason: string;
+  }) {
+    const frontendBase = String(
+      ENV.URL.FRONTEND_URL ||
+        process.env.FRONTEND_URL ||
+        process.env.FRONT_END_CALLBACK_URL?.replace(/\/auth\/callback$/, "") ||
+        "https://crm.kyraitsolutions.com",
+    ).replace(/\/$/, "");
+    const inboxUrl = `${frontendBase}/dashboard/account/${params.accountId}/live-chat?channel=whatsapp&conversation=${params.conversationId}`;
+    const leadName = params.contactName || params.phone || "WhatsApp customer";
+
+    await emailService
+      .queueWhatsAppEscalationEmail({
+        email: params.email,
+        data: {
+          leadName,
+          leadPhone: params.phone,
+          leadEmail: "",
+          reason: params.reason,
+          scoreLabel: "",
+          intent: "human_intervention",
+          message: `${params.assigneeName}, open the inbox to continue this chat.`,
+          inboxUrl,
+          leadUrl: "",
+        },
+      })
+      .catch((error) =>
+        logger.warn("WHATSAPP_INTERVENTION_EMAIL_SKIPPED", {
+          error: (error as Error).message,
+          conversationId: params.conversationId,
+        }),
+      );
   }
 
   async resumeConversation(params: {
@@ -440,6 +816,14 @@ export class WhatsAppLiveChatService {
       Boolean(settings.autoResolve?.enabled) &&
       matchesAutoResolveWindow(settings.autoResolve?.scheduleMode, withinHours);
 
+    const clearAssigneeUnset = {
+      "metadata.liveChat.escalationReason": 1,
+      "metadata.liveChat.assigneeId": 1,
+      "metadata.liveChat.assigneeName": 1,
+      "metadata.liveChat.assigneeEmail": 1,
+      "metadata.liveChat.pendingRequest": 1,
+    };
+
     switch (mode) {
       case AUTO_RESOLVE_MODE.FLOW: {
         await ConversationModel.updateOne(
@@ -449,7 +833,7 @@ export class WhatsAppLiveChatService {
               "metadata.liveChat.humanIntervened": false,
               "metadata.liveChat.autoResolveActive": scheduled,
             },
-            $unset: { "metadata.liveChat.escalationReason": 1 },
+            $unset: clearAssigneeUnset,
           },
         );
         if (!scheduled) {
@@ -474,6 +858,10 @@ export class WhatsAppLiveChatService {
           accountId: params.accountId,
           conversationId: params.conversationId,
         });
+        await ConversationModel.updateOne(
+          { _id: params.conversationId, accountId: params.accountId },
+          { $unset: clearAssigneeUnset },
+        );
         return { ...result, mode };
       }
       default:
@@ -484,7 +872,7 @@ export class WhatsAppLiveChatService {
               "metadata.liveChat.humanIntervened": false,
               "metadata.liveChat.autoResolveActive": false,
             },
-            $unset: { "metadata.liveChat.escalationReason": 1 },
+            $unset: clearAssigneeUnset,
           },
         );
         return { resumed: true, queued: false, mode };

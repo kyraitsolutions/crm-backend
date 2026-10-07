@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { OrganizationController } from "../controllers/organization.controller.js";
 import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class OrganizationRouter {
   public router: Router;
@@ -22,6 +23,7 @@ export class OrganizationRouter {
     this.router.get(
       "/:organizationId",
       AuthMiddleware.authenticate,
+      requirePermission("organization.view"),
       this.organizationController.getOrganizationDetails.bind(
         this.organizationController,
       ),
@@ -29,6 +31,7 @@ export class OrganizationRouter {
     this.router.post(
       "/:organizationId",
       AuthMiddleware.authenticate,
+      requirePermission("organization.edit"),
       this.organizationController.updateOrganizationDetails.bind(
         this.organizationController,
       ),

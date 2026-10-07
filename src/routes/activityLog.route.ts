@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ActivityLogController from "../controllers/activityLog.controller.js";
 import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class ActivityLogRouter {
   public router: Router;
@@ -15,6 +16,7 @@ export class ActivityLogRouter {
     this.router.get(
       "/:accountId",
       AuthMiddleware.authenticate,
+      requirePermission("activityLogs.view"),
       this.activityLogController.getActivityLogs.bind(
         this.activityLogController,
       ),

@@ -15,22 +15,35 @@ export default class AutomationRepository {
     return await AutomationModel.create(data);
   }
 
-  async findByName(accountId: string, name: string) {
-    return await AutomationModel.findOne({
+  async findByName(accountId: string, name: string, excludeId?: string) {
+    const query: Record<string, unknown> = {
       accountId,
-      name,
-      isActive: true,
-    }).lean();
+      name: String(name).trim(),
+    };
+    if (excludeId) {
+      query._id = { $ne: excludeId };
+    }
+    return await AutomationModel.findOne(query).lean();
   }
 
   async findByTrigger(accountId: string, trigger: string) {
-    const automations = await AutomationModel.find({
-      accountId: new Types.ObjectId(accountId),
-      trigger,
-      isActive: true,
-    });
+    const normalized = String(trigger || "")
+      .trim()
+      .replace(/[-\s]+/g, "_")
+      .toUpperCase();
 
-    return automations;
+    // Support legacy LEAD_STATUS_CHANGED records when firing stage changes
+    const triggers =
+      normalized === "LEAD_STAGE_CHANGED"
+        ? ["LEAD_STAGE_CHANGED", "LEAD_STATUS_CHANGED"]
+        : [normalized];
+
+    return await AutomationModel.find({
+      accountId: new Types.ObjectId(accountId),
+      trigger: { $in: triggers },
+      isActive: true,
+      status: "published",
+    });
   }
 
   async update(accountId: string, id: string, data: any): Promise<any> {

@@ -9,13 +9,13 @@ const VariableMappingSchema = new Schema(
 
     component: {
       type: String,
-      enum: ["HEADER", "BODY", "BUTTON"],
+      enum: ["HEADER", "BODY", "BUTTONS"],
       required: true,
     },
 
     sourceType: {
       type: String,
-      enum: ["CONTACT", "BOOKING", "CUSTOM", "STATIC", "API"],
+      enum: ["CONTACT", "LEAD", "BOOKING", "CUSTOM", "STATIC", "API"],
       default: "CUSTOM",
     },
 

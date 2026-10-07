@@ -32,7 +32,7 @@ export class RBACRouter {
     this.router.put(
       "/:roleId",
       AuthMiddleware.authenticate,
-      requirePermission("role.update"),
+      requirePermission("role.edit"),
       this.roleController.updateRole,
     );
 
@@ -43,9 +43,17 @@ export class RBACRouter {
       this.roleController.deleteRole,
     );
 
+    // Catalog must be registered before /:roleId/...
+    this.router.get(
+      "/permissions/catalog",
+      AuthMiddleware.authenticate,
+      this.roleController.getPermissionCatalog.bind(this.roleController),
+    );
+
     // PERMISSIONS RELATED ROUTES
     this.router.get(
       "/:roleId/permissions",
+      AuthMiddleware.authenticate,
       this.roleController.getRolePermissions,
     );
   }

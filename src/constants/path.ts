@@ -9,4 +9,6 @@ export const EMAIL_TEMPLATES_PATH = {
   WELCOME: "src/templates/emails/welcome.hbs",
   TASK_ASSIGNED: "src/templates/emails/task-assigned.hbs",
   LEAD_ASSIGNED: "src/templates/emails/lead-assigned.hbs",
+  SYSTEM_NOTIFICATION: "src/templates/emails/system-notification.hbs",
+  NOTIFICATION_DIGEST: "src/templates/emails/notification-digest.hbs",
 };

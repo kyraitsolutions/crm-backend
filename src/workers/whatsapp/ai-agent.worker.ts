@@ -5,10 +5,11 @@ import { whatsappInboundAgentService } from "../../modules/whatsapp/ai-agent/ser
 import logger from "../../utils/logger.js";
 
 whatsappAiAgentQueue.process("process", 4, async (job: Job<WhatsAppAiAgentJobData>) => {
+  // console.log("whatsappAiAgentQueue.process", job);
   logger.info("WHATSAPP_AI_AGENT_JOB_START", {
     jobId: job.id,
     messageId: job.data.messageId,
     conversationId: job.data.conversationId,
-  });
+  }); 
   return whatsappInboundAgentService.handleIncoming(job.data);
-});
+}); 

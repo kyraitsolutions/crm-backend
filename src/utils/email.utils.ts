@@ -458,6 +458,67 @@ export class EmailUtils {
     }
   }
 
+  async sendSystemNotificationEmail(
+    email: string,
+    data: {
+      title: string;
+      body: string;
+      recipientName?: string;
+      moduleLabel?: string;
+      deepLinkUrl?: string;
+    },
+  ): Promise<boolean> {
+    try {
+      const html = this.compileTemplate(EMAIL_TEMPLATES_PATH.SYSTEM_NOTIFICATION, {
+        title: data.title,
+        body: data.body,
+        recipientName: data.recipientName || "there",
+        moduleLabel: data.moduleLabel || "Notification",
+        deepLinkUrl: data.deepLinkUrl || "",
+        year: new Date().getFullYear(),
+      });
+      const result = await this.sendEmail(email, data.title, html);
+      return Boolean(result.status);
+    } catch (error) {
+      logger.error("System notification email error", error);
+      return false;
+    }
+  }
+
+  async sendNotificationDigestEmail(
+    email: string,
+    data: {
+      recipientName?: string;
+      digestMode: "hourly" | "daily";
+      items: Array<{
+        title: string;
+        body: string;
+        moduleLabel?: string;
+        deepLinkUrl?: string;
+      }>;
+      settingsUrl?: string;
+    },
+  ): Promise<boolean> {
+    try {
+      const count = data.items.length;
+      const html = this.compileTemplate(EMAIL_TEMPLATES_PATH.NOTIFICATION_DIGEST, {
+        recipientName: data.recipientName || "there",
+        digestLabel: data.digestMode === "daily" ? "Daily" : "Hourly",
+        count,
+        single: count === 1,
+        items: data.items,
+        settingsUrl: data.settingsUrl || "",
+        year: new Date().getFullYear(),
+      });
+      const subject = `Kyra ${data.digestMode === "daily" ? "daily" : "hourly"} digest · ${count} update${count === 1 ? "" : "s"}`;
+      const result = await this.sendEmail(email, subject, html);
+      return Boolean(result.status);
+    } catch (error) {
+      logger.error("Notification digest email error", error);
+      return false;
+    }
+  }
+
   private compileTemplate(relativePath: string, data: Record<string, unknown>) {
     const source = fs.readFileSync(path.join(process.cwd(), relativePath), "utf8");
     return Handlebars.compile(source)(data);

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { MessageController } from "../messages/controllers/message.controller.js";
 import { upload } from "../../../config/multer.config.js";
+import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/authorization.middleware.js";
 
 export class WhatsAppMessageRouter {
   public router: Router;
@@ -17,6 +19,8 @@ export class WhatsAppMessageRouter {
   private initializeRoutes() {
     this.router.post(
       "/send",
+      AuthMiddleware.authenticate,
+      requirePermission("liveChat.edit"),
       upload.single("file"),
       this.controller.sendMessage.bind(this.controller),
     );

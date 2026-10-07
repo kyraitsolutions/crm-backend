@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { handleRouteError } from "../utils/asyncHandler.js";
 import { chatflowService } from "../container.js";
+import { chatFlowGenerateService } from "../modules/whatsapp/chatflow/services/chatflow-generate.service.js";
 import httpResponse from "../utils/http.response.js";
 import { CreateChatFlowDto } from "../dtos/chatflow.dto.js";
 import { routeParam } from "../utils/route-param.js";
@@ -102,6 +103,21 @@ export class ChatFlowController {
       });
     } catch (error) {
       handleRouteError("ChatFlowController", error, next, req);
+    }
+  }
+
+  async generateChatFlow(req: Request, res: Response, next: NextFunction) {
+    try {
+      const generated = await chatFlowGenerateService.generate({
+        name: req.body?.name,
+        prompt: req.body?.prompt,
+      });
+      return httpResponse(req, res, 200, "Chat flow generated", {
+        doc: generated,
+      });
+    } catch (error) {
+      handleRouteError("ChatFlowController", error, next, req);
+      return;
     }
   }
 

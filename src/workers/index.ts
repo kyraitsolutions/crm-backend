@@ -3,7 +3,7 @@ import { config } from "../config/index.js";
 import { startWorker } from "./email.worker.js";
 async function start() {
   await mongoose.connect(config.db.url);
-  console.log("✅ MongoDB connected inside worker process");
+  console.log("✅ MongoDB connected inside worker process"); 
 
   // Register all workers
   await import("./whatsapp/index.js");
@@ -12,6 +12,10 @@ async function start() {
     "./subscription.worker.js"
   );
   startSubscriptionLifecycleWorker();
+  const { startNotificationSlaWorker } = await import(
+    "./notification-sla.worker.js" 
+  );
+  startNotificationSlaWorker();
   startWorker();
 }
 

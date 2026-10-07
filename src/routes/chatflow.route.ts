@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { ChatFlowController } from "../controllers/chatflow.controller.js";
 import { AuthMiddleware } from "../middleware/index.js";
+import { requirePermission } from "../middleware/authorization.middleware.js";
 
 export class ChatFlowRouter {
   public router: Router;
@@ -11,40 +12,47 @@ export class ChatFlowRouter {
     this.initializeRoutes();
   }
   private initializeRoutes(): void {
-    // create chat flow
     this.router.post(
       "/:accountId/create",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.create"),
       this.chatFlowController.createChatbotFlow.bind(this.chatFlowController),
     );
 
-    // get all chat flow by account id
+    this.router.post(
+      "/:accountId/generate",
+      AuthMiddleware.authenticate,
+      requirePermission("chatbots.create"),
+      this.chatFlowController.generateChatFlow.bind(this.chatFlowController),
+    );
+
     this.router.get(
       "/:accountId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.view"),
       this.chatFlowController.getAllChatFlowByAccountId.bind(
         this.chatFlowController,
       ),
     );
 
-    // get chat flow by chatflow id
     this.router.get(
       "/:accountId/flow/:chatflowId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.view"),
       this.chatFlowController.getChatFlowById.bind(this.chatFlowController),
     );
 
-    // update chat flow by chatflow id
     this.router.put(
       "/:chatflowId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.edit"),
       this.chatFlowController.updateChatFlow.bind(this.chatFlowController),
     );
 
-    // delete chat flow by chatflow id
     this.router.delete(
       "/:chatflowId",
       AuthMiddleware.authenticate,
+      requirePermission("chatbots.delete"),
       this.chatFlowController.deleteChatFlowById.bind(this.chatFlowController),
     );
   }

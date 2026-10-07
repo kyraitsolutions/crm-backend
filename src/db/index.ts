@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { config } from "../config/index.js";
 import { ContactModel } from "../models/contact.model.js";
+import { syncNotificationEventTypes } from "../modules/notifications/services/sync-event-types.service.js";
 import logger from "../utils/logger.js";
 
 export async function initDB() {
@@ -36,6 +37,15 @@ export async function initDB() {
         error: error instanceof Error ? error.message : String(error),
       });
     }
+
+    try {
+      await syncNotificationEventTypes();
+    } catch (error) {
+      logger.warn("Notification event type sync skipped", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+
     logger.info("Database connected successfully");
   } catch (error) {
     logger.error("Database connection failed", {

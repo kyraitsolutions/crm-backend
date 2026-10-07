@@ -47,7 +47,20 @@ export class AuthMiddleware {
               }
             : {}),
 
-          // email: userProfile?.userId?.email,
+          ...((() => {
+            const profileUser = userProfile?.userId as
+              | { email?: string }
+              | string
+              | null
+              | undefined;
+            const email =
+              typeof profileUser === "object" && profileUser?.email
+                ? String(profileUser.email)
+                : typeof user.email === "string"
+                  ? user.email
+                  : "";
+            return email ? { email } : {};
+          })()),
           ...(organizationMember && {
             organizationId: organizationMember?.organizationId,
           }),

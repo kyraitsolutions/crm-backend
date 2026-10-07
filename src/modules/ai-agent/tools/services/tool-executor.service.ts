@@ -88,6 +88,7 @@ export class AiToolExecutorService {
       }
 
       const configured = (context.agentConfig.tools || []).find((tool) => tool.key === key);
+      
       if (configured?.type === AI_AGENT_TOOL_TYPE.CUSTOM_API) {
         return this.customApi(configured.config || {}, args, key, context);
       }

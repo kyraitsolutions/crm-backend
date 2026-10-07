@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import httpResponse from "../utils/http.response.js";
 import { LeadService } from "../services/lead.service.js";
 import { WebSocketServer } from "ws";
-import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js";
+import { WEBSOCKET_EVENTS } from "../constants/wsEvent.constants.js"; 
 import { AuthenticatedWebSocket } from "../types/websocket.type.js";
 import { getMetaData } from "../utils/request-meta.utils.js";
 import { LeadDto } from "../dtos/lead.dto.js";
@@ -12,7 +12,7 @@ import { buildPagination } from "../utils/paginationBuilder.js";
 import { routeParam } from "../utils/route-param.js";
 
 export class LeadController {
-  private leadService: LeadService;
+  private leadService: LeadService; 
 
   constructor() {
     this.leadService = new LeadService();

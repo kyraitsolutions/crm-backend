@@ -34,6 +34,7 @@ class MessageParser {
       case "image":
         return {
           ...base,
+          searchText: message.image?.caption || message.image?.id || "image",
           type: "image",
           media: {
             type: "image",
@@ -49,6 +50,7 @@ class MessageParser {
       case "video":
         return {
           ...base,
+          searchText: message.video?.id || "video",
           type: "video",
           media: {
             type: "video",
@@ -77,6 +79,7 @@ class MessageParser {
       case "document":
         return {
           ...base,
+          searchText: message.document?.filename || message.document?.id || "document",
           type: "document",
           media: {
             type: "document",
@@ -117,6 +120,20 @@ class MessageParser {
               title: message.button?.text || "",
             },
           },
+        };
+      }
+
+      case "location": {
+        const location = message.location;
+        const label = [location?.name, location?.address].filter(Boolean).join(", ");
+        const coords = [location?.latitude, location?.longitude].filter((value) => value != null).join(",");
+        const text = label || coords || "location";
+        return {
+          ...base,
+          type: "location",
+          searchText: text,
+          body: { text },
+          location,
         };
       }
 

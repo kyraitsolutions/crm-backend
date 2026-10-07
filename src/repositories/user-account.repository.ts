@@ -21,11 +21,17 @@ export class UserAccountRepository {
     return assignments;
   }
 
-  async deleteByUserAndOrg(userId: string, orgId: string) {
-    return UserAccount.deleteMany({
+  async deleteByUserAndOrg(
+    userId: string,
+    orgId: string,
+    session?: ClientSession,
+  ) {
+    const query = UserAccount.deleteMany({
       userId,
       organizationId: orgId,
     });
+    if (session) query.session(session);
+    return query;
   }
 
   async deleteByUserIds(

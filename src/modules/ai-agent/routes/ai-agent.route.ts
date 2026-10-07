@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AuthMiddleware } from "../../../middleware/auth.middleware.js";
+import { requirePermission } from "../../../middleware/authorization.middleware.js";
 import { AiAgentController } from "../controllers/ai-agent.controller.js";
 import { AiAgentRuntimeController } from "../controllers/ai-agent-runtime.controller.js";
 import { AiAgentToolsController } from "../controllers/ai-agent-tools.controller.js";
@@ -17,105 +18,78 @@ export class AiAgentRouter {
   }
 
   private initializeRoutes() {
-    this.router.get("/", AuthMiddleware.authenticate, this.controller.get);
-    this.router.post("/", AuthMiddleware.authenticate, this.controller.create);
-    this.router.put(
-      "/draft",
+    const view = [
       AuthMiddleware.authenticate,
-      this.controller.updateDraft,
-    );
-    this.router.post(
-      "/publish",
+      requirePermission("whatsapp.view"),
+    ] as const;
+    const edit = [
       AuthMiddleware.authenticate,
-      this.controller.publish,
-    );
-    this.router.post(
-      "/rollback",
-      AuthMiddleware.authenticate,
-      this.controller.rollback,
-    );
-    this.router.get(
-      "/versions",
-      AuthMiddleware.authenticate,
-      this.controller.listVersions,
-    );
+      requirePermission("whatsapp.edit"),
+    ] as const;
+
+    this.router.get("/", ...view, this.controller.get);
+    this.router.post("/", ...edit, this.controller.create);
+    this.router.put("/draft", ...edit, this.controller.updateDraft);
+    this.router.post("/publish", ...edit, this.controller.publish);
+    this.router.post("/rollback", ...edit, this.controller.rollback);
+    this.router.get("/versions", ...view, this.controller.listVersions);
     this.router.get(
       "/versions/:versionId",
-      AuthMiddleware.authenticate,
+      ...view,
       this.controller.getVersion,
     );
     this.router.get(
       "/skills/catalog",
-      AuthMiddleware.authenticate,
+      ...view,
       this.controller.listSkillsCatalog,
     );
-    this.router.post(
-      "/skills/draft",
-      AuthMiddleware.authenticate,
-      this.controller.draftSkill,
-    );
+    this.router.post("/skills/draft", ...edit, this.controller.draftSkill);
 
-    this.router.get(
-      "/knowledge",
-      AuthMiddleware.authenticate,
-      this.knowledgeController.list,
-    );
-    this.router.post(
-      "/knowledge",
-      AuthMiddleware.authenticate,
-      this.knowledgeController.create,
-    );
+    this.router.get("/knowledge", ...view, this.knowledgeController.list);
+    this.router.post("/knowledge", ...edit, this.knowledgeController.create);
 
     this.router.post(
       "/knowledge/retrieve",
-      AuthMiddleware.authenticate,
+      ...view,
       this.knowledgeController.retrieve,
     );
     this.router.post(
       "/knowledge/:id/reindex",
-      AuthMiddleware.authenticate,
+      ...edit,
       this.knowledgeController.reindex,
     );
     this.router.put(
       "/knowledge/:id",
-      AuthMiddleware.authenticate,
+      ...edit,
       this.knowledgeController.update,
     );
     this.router.delete(
       "/knowledge/:id",
-      AuthMiddleware.authenticate,
+      ...edit,
       this.knowledgeController.remove,
     );
 
     this.router.post(
       "/runtime/test",
-      AuthMiddleware.authenticate,
+      ...edit,
       this.runtimeController.invoke,
     );
     this.router.get(
       "/runtime/runs",
-      AuthMiddleware.authenticate,
+      ...view,
       this.runtimeController.listRuns,
     );
     this.router.get(
       "/runtime/runs/:runId",
-      AuthMiddleware.authenticate,
+      ...view,
       this.runtimeController.getRun,
     );
 
-    this.router.get(
-      "/tools",
-      AuthMiddleware.authenticate,
-      this.toolsController.list,
-    );
-    this.router.post(
-      "/tools/test",
-      AuthMiddleware.authenticate,
-      this.toolsController.test,
-    );
+    this.router.get("/tools", ...view, this.toolsController.list);
+    this.router.post("/tools/test", ...edit, this.toolsController.test);
     this.router.post(
       "/tools/execute",
-      AuthMiddleware.authenticate,
+      ...edit,
       this.toolsController.execute,
     );
   }

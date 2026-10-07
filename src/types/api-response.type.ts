@@ -35,6 +35,9 @@ type TActivityLogFilters = {
   entityType?: string;
   entityId?: string;
   action?: string;
+  actorType?: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 type TTemplateFilters = {

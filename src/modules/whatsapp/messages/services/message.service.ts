@@ -11,7 +11,7 @@ import { metaPayloadService } from "./meta-payload.service.js";
 import { AccountModel } from "../../../../models/accounts.model.js";
 import { SubscriptionService } from "../../../../services/subscription.service.js";
 import { USAGE_METRIC } from "../../../../constants/subscription.constant.js";
-import { whatsappLiveChatService } from "../../live-chat/services/whatsapp-live-chat.service.js";
+import { HttpError } from "../../../../utils/http.error.js";
 
 export class WhatsappMessageService {
   private integrationRepository = new IntegrationRepository();
@@ -29,7 +29,11 @@ export class WhatsappMessageService {
     this.messageRepository = new MessageRepository();
   }
 
-  async send(accountId: string, payload: any) {
+  async send(
+    accountId: string,
+    payload: any,
+    actor?: { userId?: string; name?: string; email?: string },
+  ) {
     const account = await AccountModel.findById(accountId).select("organizationId");
     if (account?.organizationId) {
       await new SubscriptionService().checkLimit(
@@ -104,6 +108,7 @@ export class WhatsappMessageService {
     }
 
     const metaPayload = metaPayloadService.build(payload, media);
+    console.log("payload", JSON.stringify(payload, null, 2)); 
 
     console.log("metaPayload", JSON.stringify(metaPayload, null, 2));
    
@@ -125,7 +130,25 @@ export class WhatsappMessageService {
     await this.messageRepository.createMessage(messagePayload as any);
 
     if (payload.source !== "automation" && conversation?.id) {
-      await whatsappLiveChatService.markHumanIntervention(String(conversation.id));
+      try {
+        // Lazy import — breaks circular init with WhatsAppLiveChatService
+        const { whatsappLiveChatService } = await import(
+          "../../live-chat/services/whatsapp-live-chat.service.js"
+        );
+        await whatsappLiveChatService.markHumanIntervention(
+          String(conversation.id),
+          actor?.userId
+            ? {
+                userId: actor.userId,
+                name: actor.name,
+                email: actor.email,
+              }
+            : undefined,
+        );
+      } catch (error) {
+        if (error instanceof HttpError) throw error;
+        throw error;
+      }
     }
 
     if (account?.organizationId) {

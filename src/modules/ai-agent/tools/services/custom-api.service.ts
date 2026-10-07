@@ -644,10 +644,12 @@ export const callCustomApi = async (
   const parsedUrl = await assertPublicHttpUrl(endpoint);
   const url = new URL(parsedUrl.toString());
   const params = config.params || {};
+
   for (const [name, value] of Object.entries(params)) {
     const next = fill(String(value || ""), vars).trim();
     if (next) url.searchParams.set(name, next);
   }
+  
   const headers: Record<string, string> = {
     accept: "application/json",
     ...(config.headers || {}),
@@ -656,12 +658,12 @@ export const callCustomApi = async (
     headers.authorization = `Bearer ${String(config.authToken)}`;
   }
   const method = String(config.method || "GET").toUpperCase();
-  console.log("CUSTOM_API_CALL", {
-    method,
-    url: url.toString(),
-    id: recordId,
-    message: String(vars.query || ""),
-  }); 
+  // console.log("CUSTOM_API_CALL", {
+  //   method,
+  //   url: url.toString(),
+  //   id: recordId,
+  //   message: String(vars.query || ""),
+  // }); 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), Number(config.timeoutMs) || 10000);
   try {

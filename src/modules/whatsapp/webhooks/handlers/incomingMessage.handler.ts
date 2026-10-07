@@ -177,7 +177,9 @@ export class IncomingMessageHandler {
     context: TIncomingMessageContext,
     liveChatResult: TLiveChatAutoResolveResult,
   ) {
-    
+
+
+    console.log("liveChatResult auto resolve", liveChatResult);
     switch (liveChatResult.mode) {
       
       case AUTO_RESOLVE_MODE.AI_AGENT:
@@ -197,6 +199,8 @@ export class IncomingMessageHandler {
 
   private async enqueueAiAgent(context: TIncomingMessageContext) {
     const inboundType = String(context.parsedMessage.type || "");
+
+    console.log("context.parsedMessage", context.parsedMessage);
     if (
       !context.parsedMessage.messageId ||
       SKIP_AUTOMATION_TYPES.has(inboundType)

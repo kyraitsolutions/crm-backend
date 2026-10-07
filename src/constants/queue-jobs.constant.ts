@@ -14,4 +14,6 @@ export const QUEUE_JOBS = {
   CONTACT_IMPORT_FINALIZE: "import:finalize",
   CONTACT_IMPORT_SWEEP: "import:sweep",
   CONTACT_IMPORT_CLEANUP: "import:cleanup",
+  NOTIFICATION_EMAIL: "notification-email",
+  NOTIFICATION_EMAIL_DIGEST: "notification-email-digest",
 };

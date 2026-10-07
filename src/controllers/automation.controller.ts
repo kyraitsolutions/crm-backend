@@ -35,8 +35,8 @@ export default class AutomationController {
       const context = {
         accountId: String(accountId),
         organizationId: String(req?.user?.organizationId),
-        userId: String(req?.user?.organizationId),
-        userName: String(req?.user?.name),
+        userId: String(req?.user?.id),
+        userName: String(req?.user?.name || ""),
       };
 
       const result = await this.service.createAutomation(
@@ -59,8 +59,8 @@ export default class AutomationController {
       const context = {
         accountId: String(accountId),
         organizationId: String(req?.user?.organizationId),
-        userId: String(req?.user?.organizationId),
-        userName: String(req?.user?.name),
+        userId: String(req?.user?.id),
+        userName: String(req?.user?.name || ""),
       };
 
       const result = await this.service.updateAutomation(
@@ -86,8 +86,8 @@ export default class AutomationController {
       const context = {
         accountId: String(accountId),
         organizationId: String(req?.user?.organizationId),
-        userId: String(req?.user?.organizationId),
-        userName: String(req?.user?.name),
+        userId: String(req?.user?.id),
+        userName: String(req?.user?.name || ""),
       };
 
       const result = await this.service.deleteAutomation(automationId, context);

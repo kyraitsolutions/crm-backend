@@ -14,22 +14,19 @@ export class AutomationEngine {
     );
 
 
-    console.log("Automations found for trigger", automations);
     for (const automation of automations) {
       const matched = this.conditionEvaluator.evaluate(
         automation.conditions,
         event.payload,
       );
 
-      if (!matched) {
-        console.log("Condition not matched for automation", automation._id);
-        continue;
-      }
+      if (!matched) continue;
 
       const eventDataPayload = {
         ...event.payload,
         automationId: automation._id,
         automationName: automation.name,
+        id: event.payload?.id || event.payload?.entityId || event.payload?._id,
       };
 
       await this.actionExecutor.execute(automation.actions, eventDataPayload);

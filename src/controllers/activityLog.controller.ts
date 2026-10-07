@@ -12,7 +12,14 @@ export default class ActivityLogController {
       const { accountId } = req.params;
       const organizationId = req.user?.organizationId;
       const query = parseQueryParams(req.query, {
-        allowedFilters: ["entityType", "entityId", "action"],
+        allowedFilters: [
+          "entityType",
+          "entityId",
+          "action",
+          "actorType",
+          "startDate",
+          "endDate",
+        ],
       });
 
       const result = await this.service.getActivityLogs(

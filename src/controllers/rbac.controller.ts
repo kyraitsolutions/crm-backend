@@ -5,6 +5,7 @@ import httpResponse from "../utils/http.response.js";
 import { CreateRoleDto, UpdateRoleDto } from "../dtos/rbac.dto.js";
 import { TRole } from "../types/roles-permissions.type.js";
 import { routeParam } from "../utils/route-param.js";
+import { getPermissionCatalog } from "../config/permissions.js";
 
 export class RoleController {
   constructor(private rbacService: RbacService) {}
@@ -85,6 +86,22 @@ export class RoleController {
   };
 
   // PERMISSIONS RELATED CONTROLLERS
+  getPermissionCatalog = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const catalog = getPermissionCatalog();
+       httpResponse(
+        req,
+        res,
+        200,
+        "Permission catalog fetched successfully",
+        catalog,
+      );
+    } catch (error) {
+      handleRouteError("RoleController", error, next, req);
+     
+    }
+  };
+
   getRolePermissions = async (req: Request, res: Response) => {
     try {
       const roleId = routeParam(req.params.roleId);

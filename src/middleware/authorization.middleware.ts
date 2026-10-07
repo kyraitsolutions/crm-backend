@@ -180,10 +180,18 @@ export const accountAccess = async (
   }
 };
 
+/**
+ * Require one permission key, or any of several (pass an array).
+ * OWNER always bypasses.
+ */
 export const requirePermission = (
-  permissionKey: string,
-  checkRoleAssign = false,
+  permissionKey: string | string[],
+  _checkRoleAssign = false,
 ) => {
+  const requiredKeys = Array.isArray(permissionKey)
+    ? permissionKey
+    : [permissionKey];
+
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.user || !req.user.id) {
@@ -194,31 +202,29 @@ export const requirePermission = (
       const orgId = req.user.organizationId;
       const accountId = req.params.accountId; // optional
 
-      // 1️⃣ Check organization membership
       const orgMember = await OrganizationMember.findOne({
         userId,
         organizationId: orgId,
       }).populate("roleId", "name level");
 
       if (!orgMember) {
-        return httpResponse(req, res, 403, "User is not part of this organization");
+        return httpResponse(
+          req,
+          res,
+          403,
+          "User is not part of this organization",
+        );
       }
 
-      let accountMember = null;
-      let activeRole: any = null;
-
-      activeRole =
+      let activeRole: any =
         typeof orgMember.roleId === "object" ? orgMember.roleId : null;
 
-      const roleName = activeRole?.name;
-
-      // 2️⃣ OWNER bypass (🔥 most important)
-      if (roleName === ROLES.OWNER) {
+      if (activeRole?.name === ROLES.OWNER) {
         return next();
       }
 
       if (accountId) {
-        accountMember = await UserAccount.findOne({
+        const accountMember = await UserAccount.findOne({
           userId,
           accountId,
         }).populate("roleId");
@@ -230,39 +236,21 @@ export const requirePermission = (
         activeRole = accountMember.roleId;
       }
 
-      // 4️⃣ Permission check
+      if (!activeRole?._id) {
+        return httpResponse(req, res, 403, "Permission denied");
+      }
+
       const rolePermissions = await RolePermissionModel.find({
         roleId: activeRole._id,
       }).populate("permissionId");
 
-      const hasPermission = rolePermissions.some(
-        (rp: any) => rp.permissionId.key === permissionKey,
+      const allowed = rolePermissions.some((rp: any) =>
+        requiredKeys.includes(rp.permissionId?.key),
       );
 
-      if (!hasPermission) {
+      if (!allowed) {
         return httpResponse(req, res, 403, "Permission denied");
       }
-
-      // 5️⃣ Role level check (for assigning roles)
-      // if (checkRoleAssign && req.body.roleId) {
-      //   const targetRole = await RolePermissionModel.findById(req.body.roleId);
-
-      //   console.log("targetRole", targetRole);
-
-      //   if (!targetRole) {
-      //     return res.status(404).json({ message: "Target role not found" });
-      //   }
-
-      //   if (activeRole.level <= targetRole?.level) {
-      //     return res.status(403).json({
-      //       message: "Cannot assign role equal or higher than your level",
-      //     });
-      //   }
-      // }
-
-      // // optional (good practice)
-      // req.activeRole = activeRole;
-      // req.accountMember = accountMember;
 
       next();
     } catch (error) {

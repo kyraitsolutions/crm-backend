@@ -16,6 +16,7 @@ import { TOrganizationMember } from "../types/organization.type.js";
 import { TUser } from "../types/user.type.js";
 import { EmailService } from "./email.service.js";
 import { OrganizationRepository } from "../repositories/organization.repository.js";
+import { AccountRepository } from "../repositories/account.repository.js";
 import {
   TApiResponse,
   TPaginatedResponse,
@@ -34,6 +35,7 @@ export class TeamService {
   private userprofileRepository: UserProfileRepository;
   private organizationRepository: OrganizationRepository;
   private userAccountRepository: UserAccountRepository;
+  private accountRepository: AccountRepository;
   private activityLogService: ActivityLogService;
   constructor() {
     this.userRepository = new UserRepository();
@@ -42,6 +44,7 @@ export class TeamService {
     this.userprofileRepository = new UserProfileRepository();
     this.organizationRepository = new OrganizationRepository();
     this.userAccountRepository = new UserAccountRepository();
+    this.accountRepository = new AccountRepository();
     this.activityLogService = new ActivityLogService();
   }
   async getTeamMembers(orgId: string): Promise<TPaginatedResponse<any>> {
@@ -235,8 +238,94 @@ export class TeamService {
         throw HttpError.notFound("Team member not found");
       }
 
-      const userId = existingMember.userId;
-      const orgId = existingMember.organizationId?.id;
+      const userId = String(existingMember.userId);
+      const orgId =
+        existingMember.organizationId?.id || existingMember.organizationId;
+
+      const [existingUser, existingProfile, existingAccountRows] =
+        await Promise.all([
+          this.userRepository.findById(userId),
+          this.userprofileRepository.findByUserId(userId),
+          this.userAccountRepository.getUserAccontsByUserId(userId),
+        ]);
+
+      const profile =
+        typeof (existingProfile as any)?.toJSON === "function"
+          ? (existingProfile as any).toJSON()
+          : existingProfile;
+
+      // Activity: only request fields that actually changed (never dump org-member internals)
+      const oldSnap: Record<string, unknown> = {};
+      const newSnap: Record<string, unknown> = {};
+
+      const track = (key: string, from: unknown, to: unknown) => {
+        const a = from == null ? "" : String(from).trim();
+        const b = to == null ? "" : String(to).trim();
+        if (a === b) return;
+        oldSnap[key] = from ?? null;
+        newSnap[key] = to ?? null;
+      };
+
+      if (teamMember.email !== undefined) {
+        track("email", existingUser?.email, teamMember.email);
+      }
+      if (teamMember.firstName !== undefined) {
+        track("firstName", profile?.firstName, teamMember.firstName);
+      }
+      if (teamMember.lastName !== undefined) {
+        track("lastName", profile?.lastName, teamMember.lastName);
+      }
+      if (teamMember.phone !== undefined) {
+        track("phone", profile?.phone, teamMember.phone);
+      }
+
+      if (teamMember.roleId !== undefined) {
+        const oldRoleId = String(
+          existingMember.roleId?.id ||
+            existingMember.roleId?._id ||
+            existingMember.roleId ||
+            "",
+        );
+        const newRoleId = String(teamMember.roleId);
+        if (oldRoleId !== newRoleId) {
+          const newRole = await rbacService.getRoleById(newRoleId);
+          oldSnap.role =
+            existingMember.roleId?.name || oldRoleId || null;
+          newSnap.role = newRole?.name || newRoleId;
+        }
+      }
+
+      if (Array.isArray(teamMember.accounts)) {
+        const normalizeAccounts = (
+          rows: { accountId?: string; roleId?: string }[],
+        ) =>
+          [...rows]
+            .map((r) => ({
+              accountId: String(r.accountId || ""),
+              roleId: String(r.roleId || ""),
+            }))
+            .filter((r) => r.accountId)
+            .sort((a, b) => a.accountId.localeCompare(b.accountId));
+
+        const beforeAccounts = normalizeAccounts(
+          (existingAccountRows || []).map((r: any) => ({
+            accountId: String(r.accountId),
+            roleId: String(r.roleId),
+          })),
+        );
+        const afterAccounts = normalizeAccounts(teamMember.accounts);
+
+        if (
+          JSON.stringify(beforeAccounts) !== JSON.stringify(afterAccounts)
+        ) {
+          oldSnap.accounts = await this.describeAccountAssignments(
+            beforeAccounts,
+          );
+          newSnap.accounts = await this.describeAccountAssignments(
+            afterAccounts,
+          );
+        }
+      }
 
       // 2️⃣ Update USER (email)
       if (teamMember.email) {
@@ -271,21 +360,31 @@ export class TeamService {
 
       // 5️⃣ Update USER ACCOUNTS
       if (teamMember.accounts) {
-        await this.assignAccountToMember(userId, orgId, teamMember.accounts);
+        await this.assignAccountToMember(
+          userId,
+          String(orgId),
+          teamMember.accounts,
+          session,
+        );
       }
 
       await session.commitTransaction();
       session.endSession();
 
-      await this.activityLogService.logUpdate({
-        oldDoc: existingMember,
-        newDoc: teamMember,
-        organizationId: String(orgId || ""),
-        entityType: "teamMember",
-        entityId: String(id),
-        actor: { type: "user", name: "" },
-        metadata: { email: teamMember.email },
-      });
+      if (Object.keys(oldSnap).length > 0) {
+        await this.activityLogService.logUpdate({
+          oldDoc: oldSnap,
+          newDoc: newSnap,
+          organizationId: String(orgId || ""),
+          entityType: "teamMember",
+          entityId: String(id),
+          actor: { type: "user", name: "" },
+          metadata: {
+            email: teamMember.email || existingUser?.email,
+            name: `${teamMember.firstName || profile?.firstName || ""} ${teamMember.lastName || profile?.lastName || ""}`.trim(),
+          },
+        });
+      }
 
       return { message: "Team member updated successfully" };
     } catch (error) {
@@ -293,6 +392,26 @@ export class TeamService {
       session.endSession();
       throw error;
     }
+  }
+
+  /** Human-readable account assignment labels for activity logs */
+  private async describeAccountAssignments(
+    accounts: { accountId: string; roleId: string }[],
+  ): Promise<string[]> {
+    const labels: string[] = [];
+    for (const row of accounts) {
+      const [account, role] = await Promise.all([
+        this.accountRepository.findOne(row.accountId),
+        rbacService.getRoleById(row.roleId),
+      ]);
+      const accountName =
+        (account as any)?.accountName ||
+        (account as any)?.name ||
+        row.accountId;
+      const roleName = role?.name || row.roleId;
+      labels.push(`${accountName} (${roleName})`);
+    }
+    return labels;
   }
 
   async deleteTeamMembers(
@@ -405,7 +524,7 @@ export class TeamService {
       }
     }
 
-    await this.userAccountRepository.deleteByUserAndOrg(userId, orgId);
+    await this.userAccountRepository.deleteByUserAndOrg(userId, orgId, session);
     const payload = accounts.map((account) => ({
       userId,
       accountId: account.accountId,

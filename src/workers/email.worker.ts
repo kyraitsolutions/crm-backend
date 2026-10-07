@@ -168,4 +168,34 @@ async function registerProcessors() {
     );
     await whatsappBroadcastService.sendBatch(campaignId, recipientIds);
   });
+
+  emailQueue.process(QUEUE_JOBS.NOTIFICATION_EMAIL, 5, async (job) => {
+    const { notificationEmailService } = await import(
+      "../modules/notifications/services/notification-email.service.js"
+    );
+    logger.info("Processing notification email", {
+      deliveryId: job.data?.deliveryId,
+      eventKey: job.data?.eventKey,
+    });
+    await notificationEmailService.sendInstant(job.data);
+  });
+
+  emailQueue.process(QUEUE_JOBS.NOTIFICATION_EMAIL_DIGEST, 1, async () => {
+    const { notificationEmailService } = await import(
+      "../modules/notifications/services/notification-email.service.js"
+    );
+    await notificationEmailService.flushDigests();
+  });
+
+  // Register hourly digest repeater (idempotent).
+  try {
+    const { notificationEmailService } = await import(
+      "../modules/notifications/services/notification-email.service.js"
+    );
+    await notificationEmailService.ensureDigestScheduler();
+  } catch (error) {
+    logger.warn("Notification digest scheduler setup skipped", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
 }

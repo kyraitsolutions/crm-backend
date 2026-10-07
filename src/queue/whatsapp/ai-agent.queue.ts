@@ -40,7 +40,11 @@ whatsappAiAgentQueue.on("failed", (job, error) => {
 });
 
 export async function enqueueWhatsAppAiAgentJob(data: WhatsAppAiAgentJobData) {
+  console.log("enqueueWhatsAppAiAgentJob", data);
+  // console.log("data.messageId", data.messageId);
+  console.log("data.conversationId", data.conversationId);
   if (!data.messageId) return null;
+
   try {
     return await whatsappAiAgentQueue.add("process", data, {
       jobId: data.messageId,

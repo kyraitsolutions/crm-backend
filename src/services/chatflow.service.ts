@@ -8,6 +8,7 @@ import { ChatFlowRepository } from "../repositories/chatflow.repository.js";
 import { TQueryParams } from "../types/api-response.type.js";
 import { buildPagination } from "../utils/paginationBuilder.js";
 import { ActivityLogService } from "./activityLog.service.js";
+import { correctEmptyBranches } from "../modules/whatsapp/chatflow/utils/chatflow-generate.util.js";
 
 export class ChatFlowService {
   private activityLogService = new ActivityLogService();
@@ -16,6 +17,17 @@ export class ChatFlowService {
     private chatflowRepo: ChatFlowRepository,
     private accountRepository: AccountRepository,
   ) {}
+
+  private normalizeGraph<T extends { nodes?: unknown; edges?: unknown }>(payload: T): T {
+    if (!Array.isArray(payload.nodes) || !Array.isArray(payload.edges)) {
+      return payload;
+    }
+    correctEmptyBranches(
+      payload.nodes as Array<Record<string, any>>,
+      payload.edges as Array<Record<string, any>>,
+    );
+    return payload;
+  }
 
   async createChatFlow(
     accountId: string,
@@ -27,10 +39,10 @@ export class ChatFlowService {
       throw HttpError.notFound("Account not found for this account id");
     }
 
-    const chatFlowPayload = {
+    const chatFlowPayload = this.normalizeGraph({
       ...createChatBotFlowDto,
       accountId: String(accountId),
-    };
+    });
 
     const chatFlow = await this.chatflowRepo.createChatFlow(chatFlowPayload);
 
@@ -96,9 +108,10 @@ export class ChatFlowService {
   }
 
   async updateChatFlow(chatflowId: string, chatbotFlowPayload: any) {
+    const payload = this.normalizeGraph({ ...chatbotFlowPayload });
     const updated = await this.chatflowRepo.updateChatFlow(
       chatflowId,
-      chatbotFlowPayload,
+      payload,
     );
     const accountId = String((updated as any)?.accountId || chatbotFlowPayload?.accountId || "");
     const account = accountId

@@ -9,6 +9,8 @@ import {
 } from "../utils/phone.util.js";
 import logger from "../utils/logger.js";
 import { ActivityLogService } from "./activityLog.service.js";
+import { AutomationEngine } from "./automation-engine.service.js";
+import { AUTOMATION_TRIGGERS } from "../constants/automation.constant.js";
 
 const isObjectIdString = (value: string) => /^[a-fA-F0-9]{24}$/.test(value);
 
@@ -60,6 +62,7 @@ export type ContactIdentityInput = {
 export class ContactService {
   private activityLogService = new ActivityLogService();
   private accountRepository = new AccountRepository();
+  private automationEngine = new AutomationEngine();
 
   constructor(private contactRepository: ContactRepository) {}
 
@@ -189,6 +192,33 @@ export class ContactService {
       contactPayload as TCreateContact,
     );
     await this.recordContactActivity("create", contact);
+
+    try {
+      const contactId = String((contact as any)?._id || (contact as any)?.id || "");
+      const accountId = String((contact as any)?.accountId || payload.accountId);
+      const account = await this.accountRepository.findOne(accountId);
+      const organizationId = String((account as any)?.organizationId || "");
+      const data =
+        typeof (contact as any)?.toJSON === "function"
+          ? (contact as any).toJSON()
+          : contact;
+      await this.automationEngine.process({
+        accountId,
+        trigger: AUTOMATION_TRIGGERS.CONTACT_CREATED,
+        payload: {
+          ...data,
+          organizationId,
+          entityType: "contact",
+          entityId: contactId,
+          id: contactId,
+        },
+      });
+    } catch (error) {
+      logger.warn("Contact created automation failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+
     return contact;
   }
 
